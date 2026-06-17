@@ -24,6 +24,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Notifications\ConsoleChannel` (+ `Contracts\ConsoleChannelInterface`) — a
   standalone console output channel, decoupled from any host notification base.
 
+### Fixed
+- `Observers\ConsoleCommandObserver` declared a `Formatting` namespace while
+  living under `src/Observers/`, a PSR-4 mismatch that triggered a
+  class-redeclaration fatal when the class was autoloaded by its intended FQCN.
+  The namespace now matches the directory (`…\Observers`).
+
+### Documentation
+- `docs/notifications.md` now documents the host-adapter pattern for wrapping
+  `Notifications\ConsoleChannel` in a framework notification system.
+
 ### Notes
 - This package is intentionally **seeding-agnostic**; the seeding console
   formatter lives in `laranail/package-tools`.
