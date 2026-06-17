@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Simtabi\Laranail\ConsoleTools\Formatting;
+namespace Simtabi\Laranail\ConsoleTools\Observers;
 
 use Closure;
 use Illuminate\Console\Events\CommandFinished;
