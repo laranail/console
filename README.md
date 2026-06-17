@@ -1,8 +1,8 @@
 # laranail/console-tools
 
 Console & terminal-UI toolkit for Laravel packages — a fluent output
-formatter, progress bars, an enhanced Artisan command base with a
-service-based architecture, and database-seeding output formatting.
+formatter, progress bars, and an enhanced Artisan command base with a
+service-based architecture.
 
 Extracted from the `laranail/laranail` core so any package can depend on
 the console layer without pulling in the whole framework.
@@ -22,7 +22,7 @@ auto-discovered.
 use Simtabi\Laranail\ConsoleTools\Formatting\ConsoleUIFormatter;
 
 echo ConsoleUIFormatter::success('Done!');
-echo ConsoleUIFormatter::statusLine('UserSeeder', 'DONE', '12.30', true);
+echo ConsoleUIFormatter::statusLine('BuildAssets', 'DONE', '12.30', true);
 ```
 
 Build commands on the enhanced base:
@@ -48,7 +48,12 @@ final class SyncCommand extends LaranailCommand
 | Page | What's inside |
 |------|---------------|
 | [Installation](docs/installation.md) | Requirements, install, auto-discovery |
-| [Architecture](docs/architecture.md) | Component map: formatting, commands, services |
+| [Architecture](docs/architecture.md) | Component map across the package |
+| [Formatting](docs/formatting.md) | `ConsoleUIFormatter` + `ConsoleProgressBar` |
+| [Commands](docs/commands.md) | `LaranailCommand` base + the nine command services |
+| [Observers & events](docs/observers-events.md) | `ConsoleCommandObserver`, `CommandEvents` |
+| [Runners](docs/runners.md) | `ConsoleRunner` / `BaseRunner` conditional execution |
+| [Notifications](docs/notifications.md) | Standalone console output channel |
 | [Configuration](docs/configuration.md) | Optional configuration knobs |
 
 ## License

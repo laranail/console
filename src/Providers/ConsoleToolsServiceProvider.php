@@ -6,14 +6,21 @@ namespace Simtabi\Laranail\ConsoleTools\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Override;
-use Simtabi\Laranail\ConsoleTools\Formatting\Contracts\SeederConsoleFormatterInterface;
-use Simtabi\Laranail\ConsoleTools\Formatting\SeederConsoleFormatter;
 
+/**
+ * Service provider for laranail/console-tools.
+ *
+ * The package's classes are either static (ConsoleUIFormatter), instantiated
+ * directly by consumers (ConsoleProgressBar, the command base + services), or
+ * extended by consumers (LaranailCommand) — none require container bindings,
+ * so this provider intentionally registers nothing today. It is kept for
+ * auto-discovery stability and as the wiring point for any future bindings.
+ */
 final class ConsoleToolsServiceProvider extends ServiceProvider
 {
     #[Override]
     public function register(): void
     {
-        $this->app->singleton(SeederConsoleFormatterInterface::class, static fn (): SeederConsoleFormatter => new SeederConsoleFormatter);
+        //
     }
 }

@@ -15,12 +15,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   with colors, badges, status lines, tree structures and statistics.
 - `Formatting\ConsoleProgressBar` — Symfony ProgressBar wrapper with
   memory tracking and formatted status output.
-- `Formatting\SeederConsoleFormatter` (+ contract) — tree-structured console
-  output for database seeding operations.
 - `Commands\LaranailCommand` — enhanced Artisan command base with a
   service-based architecture (performance, events, signals, metadata,
   logging, errors, configuration, interaction, display).
 - `Commands\Services\*` — the nine command services + `CommandServiceManager`.
-- `Observers\ConsoleCommandObserver`, `Runners\ConsoleRunner`,
-  `Events\CommandEvents`.
-- `Concerns\HasDisplayFormatting`, `Concerns\HasConfigurationAccess`.
+- `Observers\ConsoleCommandObserver` and the self-contained `Events\CommandEvents`.
+- `Runners\BaseRunner` + `Runners\ConsoleRunner` — fluent conditional execution.
+- `Notifications\ConsoleChannel` (+ `Contracts\ConsoleChannelInterface`) — a
+  standalone console output channel, decoupled from any host notification base.
+
+### Notes
+- This package is intentionally **seeding-agnostic**; the seeding console
+  formatter lives in `laranail/package-tools`.

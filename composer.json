@@ -1,6 +1,6 @@
 {
   "name": "laranail/console-tools",
-  "description": "Console & terminal-UI toolkit for Laravel packages — fluent output formatter, progress bars, an enhanced Artisan command base with service-based architecture, and seeding output formatting.",
+  "description": "Console & terminal-UI toolkit for Laravel packages — fluent output formatter, progress bars, and an enhanced Artisan command base with service-based architecture.",
   "keywords": [
     "laravel",
     "console",
