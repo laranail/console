@@ -15,14 +15,9 @@ use Throwable;
  */
 class CommandErrorService
 {
-    protected string $commandName = '';
-
     protected array $context = [];
 
-    public function __construct(string $commandName = '')
-    {
-        $this->commandName = $commandName;
-    }
+    public function __construct(protected string $commandName = '') {}
 
     /**
      * Set command name for context
@@ -61,7 +56,7 @@ class CommandErrorService
     {
         $logData = array_merge($this->context, $additionalContext, [
             'command' => $this->commandName,
-            'exception' => get_class($e),
+            'exception' => $e::class,
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
             'line' => $e->getLine(),

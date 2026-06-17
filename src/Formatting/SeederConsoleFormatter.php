@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\ConsoleTools\Formatting;
 
+use Exception;
 use Illuminate\Console\OutputStyle;
 use Illuminate\Support\Str;
 use Simtabi\Laranail\ConsoleTools\Formatting\Contracts\SeederConsoleFormatterInterface;
@@ -46,7 +47,7 @@ class SeederConsoleFormatter implements SeederConsoleFormatterInterface
 
     private ?OutputStyle $output = null;
 
-    private ConsoleUIFormatter $formatter;
+    private readonly ConsoleUIFormatter $formatter;
 
     private array $statistics = [];
 
@@ -134,7 +135,7 @@ class SeederConsoleFormatter implements SeederConsoleFormatterInterface
     /**
      * {@inheritDoc}
      */
-    public function displaySeederError(string $seederClass, \Exception $exception, float $duration, bool $isLast = false): void
+    public function displaySeederError(string $seederClass, Exception $exception, float $duration, bool $isLast = false): void
     {
         $durationMs = number_format($duration * 1000);
         $seederLine = ConsoleUIFormatter::statusLine($seederClass, 'FAILED', $durationMs, $isLast);
@@ -168,7 +169,7 @@ class SeederConsoleFormatter implements SeederConsoleFormatterInterface
         $this->displayFinalStatus();
     }
 
-    private function displayErrorDetails(\Exception $exception): void
+    private function displayErrorDetails(Exception $exception): void
     {
         if (! $this->display['show_error_details']) {
             return;
@@ -227,14 +228,14 @@ class SeederConsoleFormatter implements SeederConsoleFormatterInterface
 
     private function writeLine(string $line): void
     {
-        if ($this->output) {
+        if ($this->output instanceof OutputStyle) {
             $this->output->writeln($line);
         }
     }
 
     private function write(string $text): void
     {
-        if ($this->output) {
+        if ($this->output instanceof OutputStyle) {
             $this->output->write($text);
         }
     }
@@ -287,10 +288,10 @@ class SeederConsoleFormatter implements SeederConsoleFormatterInterface
     private function extractSeederName(string $seederClass): string
     {
         $parts = Str::of($seederClass)->explode('\\');
-        $className = $parts->last();
+        $className = (string) $parts->last();
 
         if (Str::endsWith($className, 'Seeder')) {
-            $className = Str::substr($className, 0, -7);
+            return Str::substr($className, 0, -7);
         }
 
         return $className;
@@ -316,7 +317,7 @@ class SeederConsoleFormatter implements SeederConsoleFormatterInterface
 
         $dotCount = $availableWidth - $seederNameWidth;
 
-        return Str::repeat('.', max(1, $dotCount));
+        return Str::repeat('.', (int) max(1, $dotCount));
     }
 
     /**

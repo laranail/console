@@ -43,13 +43,13 @@ final class ConsoleCommandObserver
         $this->events = $events ?? app(Dispatcher::class);
 
         // Register listeners once this instance is constructed
-        $this->events->listen(CommandStarting::class, function (CommandStarting $event) {
+        $this->events->listen(CommandStarting::class, function (CommandStarting $event): void {
             if ($this->matches($event->command) && $this->passesPredicate($event)) {
                 $this->callStartCallbacks($event);
             }
         });
 
-        $this->events->listen(CommandFinished::class, function (CommandFinished $event) {
+        $this->events->listen(CommandFinished::class, function (CommandFinished $event): void {
             if ($this->matches($event->command) && $this->passesPredicate($event)) {
                 $this->callFinishCallbacks($event);
             }

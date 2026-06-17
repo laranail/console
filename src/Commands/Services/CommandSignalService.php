@@ -24,15 +24,12 @@ class CommandSignalService
      */
     protected array $signalHandlers = [];
 
-    /**
-     * Command name for logging
-     */
-    protected string $commandName = '';
-
-    public function __construct(string $commandName = '')
-    {
-        $this->commandName = $commandName;
-    }
+    public function __construct(
+        /**
+         * Command name for logging
+         */
+        protected string $commandName = ''
+    ) {}
 
     /**
      * Set up signal handling for graceful shutdown
@@ -49,7 +46,7 @@ class CommandSignalService
      */
     protected function registerSignalHandler(int $signal): void
     {
-        $this->signalHandlers[$signal] = function (int $receivedSignal) {
+        $this->signalHandlers[$signal] = function (int $receivedSignal): void {
             $this->handleSignal($receivedSignal);
         };
 

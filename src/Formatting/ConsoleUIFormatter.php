@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\ConsoleTools\Formatting;
 
 use Illuminate\Support\Str;
+use Stringable;
+use Throwable;
 
 /**
  * Fluent helper class for formatting Symfony Console output with badge support
@@ -22,7 +24,7 @@ use Illuminate\Support\Str;
  *     ->isBadge(ConsoleUIFormatter::BADGE_STYLE_SUCCESS)
  *     ->render();
  */
-class ConsoleUIFormatter
+class ConsoleUIFormatter implements Stringable
 {
     // Foreground Colors
     public const string BLACK = 'black';
@@ -533,7 +535,7 @@ class ConsoleUIFormatter
         $value = trim((string) $value);
 
         // If allowed values are specified, validate against them
-        if (! empty($allowedValues)) {
+        if ($allowedValues !== []) {
             return in_array($value, $allowedValues, true) ? $value : $default;
         }
 
@@ -541,7 +543,7 @@ class ConsoleUIFormatter
         $value = preg_replace('/[^a-zA-Z0-9\-_\.]/', '', $value);
 
         // Limit length to prevent buffer overflow attacks
-        return substr($value, 0, 100);
+        return substr((string) $value, 0, 100);
     }
 
     /**
@@ -551,13 +553,13 @@ class ConsoleUIFormatter
     {
         // Check for NO_COLOR environment variable (standard)
         $noColor = $this->secureEnv('NO_COLOR', ['1', 'true', 'yes', 'on'], '');
-        if (! empty($noColor)) {
+        if ($noColor !== '' && $noColor !== '0') {
             return false;
         }
 
         // Get and validate TERM environment variable
         $term = $this->secureEnv('TERM');
-        if (empty($term)) {
+        if ($term === '' || $term === '0') {
             return false;
         }
 
@@ -599,7 +601,7 @@ class ConsoleUIFormatter
 
             // Sanitize locale string
             $locale = trim($locale);
-            if (empty($locale)) {
+            if ($locale === '' || $locale === '0') {
                 return false;
             }
 
@@ -623,7 +625,7 @@ class ConsoleUIFormatter
             // Fallback: Check if we can handle basic Unicode characters
             return extension_loaded('mbstring');
 
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             // Log error in development, fail safely in production
             if (app()->environment('local', 'development')) {
                 error_log('Unicode detection error: ' . $e->getMessage());
@@ -652,7 +654,7 @@ class ConsoleUIFormatter
      */
     public function render(): string
     {
-        if (empty($this->message)) {
+        if ($this->message === '' || $this->message === '0') {
             return '';
         }
 
@@ -682,12 +684,12 @@ class ConsoleUIFormatter
             $tags[] = 'bg=' . $this->backgroundColor;
         }
 
-        if (! empty($this->textStyles)) {
+        if ($this->textStyles !== []) {
             $tags[] = 'options=' . implode(',', $this->textStyles);
         }
 
         // No formatting needed
-        if (empty($tags)) {
+        if ($tags === []) {
             return $displayMessage;
         }
 
@@ -764,7 +766,7 @@ class ConsoleUIFormatter
             $formatter->addBackgroundColor($background);
         }
 
-        if (! empty($styles)) {
+        if ($styles !== []) {
             $formatter->addTextStyles($styles);
         }
 
@@ -967,13 +969,13 @@ class ConsoleUIFormatter
 
         $line = $treeSymbol . ' ' . $statusSymbol . ' ' . $name;
 
-        if ($duration) {
+        if ($duration !== '' && $duration !== '0') {
             $line .= ' ' . $duration . 'ms';
         }
 
         $line .= ' ' . $formatter->colorize(strtoupper($status), $statusColor, true);
 
-        if ($reason) {
+        if ($reason !== '' && $reason !== '0') {
             $line .= ' ' . $formatter->colorize("({$reason})", self::GRAY);
         }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\ConsoleTools\Commands\Services;
 
-use Illuminate\Console\Command;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
 use Illuminate\Contracts\Events\Dispatcher;
@@ -20,8 +19,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CommandEventService
 {
-    protected Dispatcher $events;
-
     protected CommandEvents $commandEvent;
 
     /**
@@ -34,9 +31,8 @@ class CommandEventService
      */
     protected bool $useCustomEvents = true;
 
-    public function __construct(Dispatcher $events)
+    public function __construct(protected Dispatcher $events)
     {
-        $this->events = $events;
         $this->commandEvent = new CommandEvents;
     }
 

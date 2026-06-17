@@ -94,7 +94,7 @@ class CommandMetadataService
      */
     public function isEmpty(): bool
     {
-        return empty($this->metadata);
+        return $this->metadata === [];
     }
 
     /**
@@ -144,7 +144,7 @@ class CommandMetadataService
      */
     public function toJson(int $options = 0): string
     {
-        return json_encode($this->metadata, $options);
+        return json_encode($this->metadata, $options) ?: '';
     }
 
     /**

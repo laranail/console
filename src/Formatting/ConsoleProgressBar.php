@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\ConsoleTools\Formatting;
 
+use Countable;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -49,7 +50,7 @@ class ConsoleProgressBar
     {
         $this->taskLabel = $taskLabel;
 
-        if ($taskLabel && ($color || ! empty($styles))) {
+        if ($taskLabel && ($color || $styles !== [])) {
             $this->formatter
                 ->reset()
                 ->addMessage($taskLabel);
@@ -58,7 +59,7 @@ class ConsoleProgressBar
                 $this->formatter->addTextColor($color);
             }
 
-            if (! empty($styles)) {
+            if ($styles !== []) {
                 $this->formatter->addTextStyles($styles);
             }
         }
@@ -89,7 +90,7 @@ class ConsoleProgressBar
             return count($data);
         }
 
-        if ($data instanceof \Countable) {
+        if ($data instanceof Countable) {
             return count($data);
         }
 
@@ -112,7 +113,7 @@ class ConsoleProgressBar
         $this->progressBar = new ProgressBar($this->consoleOutput, $this->count($data));
 
         // define the placeholder format using ConsoleUIFormatter
-        ProgressBar::setPlaceholderFormatterDefinition('memory', function (ProgressBar $bar) {
+        ProgressBar::setPlaceholderFormatterDefinition('memory', function (ProgressBar $bar): string {
             static $i = 0;
             $memory = 100000 * $i;
             $color = $i++ ? ConsoleUIFormatter::RED : ConsoleUIFormatter::BLUE;
@@ -182,7 +183,7 @@ class ConsoleProgressBar
             ->addTextStyles(ConsoleUIFormatter::BOLD)
             ->render();
 
-        $formattedMessage = ! empty($message) ? "| {$completionMessage}" : '';
+        $formattedMessage = $message === '' || $message === '0' ? '' : "| {$completionMessage}";
 
         // Format the label using ConsoleUIFormatter
         $formattedLabel = $this->formatter
@@ -275,7 +276,7 @@ class ConsoleProgressBar
             ->render();
 
         // Create badge for completion message
-        $completionBadge = ! empty($message) ? ConsoleUIFormatter::badge($message, $badgeStyle) : '';
+        $completionBadge = $message === '' || $message === '0' ? '' : ConsoleUIFormatter::badge($message, $badgeStyle);
 
         $this->consoleOutput->write(" | {$formattedLabel} {$completionBadge} \r");
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\ConsoleTools\Formatting\Contracts;
 
+use Exception;
 use Illuminate\Console\OutputStyle;
 
 /**
@@ -48,11 +49,11 @@ interface SeederConsoleFormatterInterface
      * Display seeder error status
      *
      * @param string $seederClass Full seeder class name
-     * @param \Exception $exception The exception that occurred
+     * @param Exception $exception The exception that occurred
      * @param float $duration Execution duration in seconds
      * @param bool $isLast Whether this is the last seeder
      */
-    public function displaySeederError(string $seederClass, \Exception $exception, float $duration, bool $isLast = false): void;
+    public function displaySeederError(string $seederClass, Exception $exception, float $duration, bool $isLast = false): void;
 
     /**
      * Display seeder skipped status

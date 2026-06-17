@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\ConsoleTools\Commands;
 
 use Illuminate\Console\Command;
+use Override;
 use Simtabi\Laranail\ConsoleTools\Commands\Services\CommandServiceManager;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,7 +48,7 @@ abstract class LaranailCommand extends Command
         parent::__construct();
 
         // Initialize service manager
-        $this->services = new CommandServiceManager($this->getName());
+        $this->services = new CommandServiceManager($this->getCommandName());
 
         // Set up signal handling for graceful shutdown
         $this->setupSignalHandling();
@@ -56,6 +57,7 @@ abstract class LaranailCommand extends Command
     /**
      * Override the run method to add event dispatching and timing
      */
+    #[Override]
     public function run(InputInterface $input, OutputInterface $output): int
     {
         // Set output for display service
@@ -71,11 +73,13 @@ abstract class LaranailCommand extends Command
 
         // Dispatch starting events
         $this->services->events()->dispatchStarting(
-            $this->getName(),
+            $this->getCommandName(),
             $input,
             $output,
             $this->services->metadata()->all()
         );
+
+        $exitCode = self::FAILURE;
 
         try {
             $exitCode = parent::run($input, $output);
@@ -89,7 +93,7 @@ abstract class LaranailCommand extends Command
 
             // Dispatch finished events
             $this->services->events()->dispatchFinished(
-                $this->getName(),
+                $this->getCommandName(),
                 $input,
                 $output,
                 $exitCode,
@@ -106,7 +110,7 @@ abstract class LaranailCommand extends Command
     protected function setupSignalHandling(): void
     {
         // Handle SIGTERM and SIGINT for graceful shutdown
-        $this->trap([SIGTERM, SIGINT], function (int $signal) {
+        $this->trap([SIGTERM, SIGINT], function (int $signal): void {
             $this->info('Received termination signal. Gracefully shutting down...');
             $this->services->signals()->stop();
 
@@ -187,7 +191,7 @@ abstract class LaranailCommand extends Command
     public function getPerformanceSummary(): array
     {
         return $this->services->performance()->getPerformanceSummary(
-            $this->getName(),
+            $this->getCommandName(),
             $this->services->metadata()->all()
         );
     }
@@ -484,7 +488,11 @@ abstract class LaranailCommand extends Command
      */
     protected function isNonInteractive(): bool
     {
-        return $this->option('no-interaction') || $this->option('force');
+        if ($this->option('no-interaction')) {
+            return true;
+        }
+
+        return (bool) $this->option('force');
     }
 
     /**

@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\ConsoleTools\Commands\Services;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\App;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 /**
  * Command Service Manager
@@ -34,11 +35,8 @@ class CommandServiceManager
 
     protected CommandDisplayService $display;
 
-    protected string $commandName = '';
-
-    public function __construct(string $commandName = '', ?OutputInterface $output = null)
+    public function __construct(protected string $commandName = '', ?OutputInterface $output = null)
     {
-        $this->commandName = $commandName;
         $this->initializeServices($output);
     }
 
@@ -56,7 +54,7 @@ class CommandServiceManager
         $this->config = new CommandConfigurationService;
         $this->interaction = new CommandInteractionService;
 
-        if ($output) {
+        if ($output instanceof OutputInterface) {
             $this->display = new CommandDisplayService($output);
         }
     }
@@ -183,7 +181,7 @@ class CommandServiceManager
     /**
      * Handle command exception
      */
-    public function handleException(\Throwable $exception): void
+    public function handleException(Throwable $exception): void
     {
         $this->logger->logError($exception, [
             'execution_time' => $this->performance->getFormattedExecutionTime(),

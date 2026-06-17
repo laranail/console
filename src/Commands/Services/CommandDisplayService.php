@@ -16,12 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CommandDisplayService
 {
-    protected OutputInterface $output;
-
-    public function __construct(OutputInterface $output)
-    {
-        $this->output = $output;
-    }
+    public function __construct(protected OutputInterface $output) {}
 
     /**
      * Display a success message with emoji
@@ -60,7 +55,7 @@ class CommandDisplayService
      */
     public function showProgressBar(int $total, string $title = 'Processing'): ProgressBar
     {
-        $progressBar = $this->output->createProgressBar($total);
+        $progressBar = new ProgressBar($this->output, $total);
         $progressBar->setFormat("{$title}: %current%/%max% [%bar%] %percent:3s%% %message%");
         $progressBar->setMessage('Starting...');
 
@@ -115,7 +110,7 @@ class CommandDisplayService
      */
     public function list(array $items, string $title = ''): void
     {
-        if ($title) {
+        if ($title !== '' && $title !== '0') {
             $this->output->writeln("<comment>{$title}</comment>");
         }
 
@@ -129,7 +124,7 @@ class CommandDisplayService
      */
     public function keyValue(array $data, string $title = ''): void
     {
-        if ($title) {
+        if ($title !== '' && $title !== '0') {
             $this->output->writeln("<comment>{$title}</comment>");
         }
 

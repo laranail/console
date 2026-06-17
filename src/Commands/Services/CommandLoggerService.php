@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\ConsoleTools\Commands\Services;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Command Logger Service
@@ -16,19 +17,16 @@ use Illuminate\Support\Facades\Log;
 class CommandLoggerService
 {
     /**
-     * Command name for context
-     */
-    protected string $commandName = '';
-
-    /**
      * Additional context data
      */
     protected array $context = [];
 
-    public function __construct(string $commandName = '')
-    {
-        $this->commandName = $commandName;
-    }
+    public function __construct(
+        /**
+         * Command name for context
+         */
+        protected string $commandName = ''
+    ) {}
 
     /**
      * Set command name for logging context
@@ -99,10 +97,10 @@ class CommandLoggerService
     /**
      * Log command error
      */
-    public function logError(\Throwable $exception, array $additionalContext = []): void
+    public function logError(Throwable $exception, array $additionalContext = []): void
     {
         Log::error('Command execution failed', array_merge($this->getContext(), [
-            'exception' => get_class($exception),
+            'exception' => $exception::class,
             'message' => $exception->getMessage(),
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),

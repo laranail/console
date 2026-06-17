@@ -6,13 +6,14 @@ namespace Simtabi\Laranail\ConsoleTools\Tests\Unit\Events;
 
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\ConsoleTools\Events\CommandEvents;
+use stdClass;
 use Symfony\Component\Console\Input\ArrayInput;
 
 final class CommandEventsTest extends TestCase
 {
     public function test_starting_factory_populates_fields(): void
     {
-        $command = new \stdClass;
+        $command = new stdClass;
         $input = new ArrayInput([]);
 
         $event = CommandEvents::starting($command, $input);
@@ -27,7 +28,7 @@ final class CommandEventsTest extends TestCase
 
     public function test_terminating_factory_captures_exit_code(): void
     {
-        $event = CommandEvents::terminating(new \stdClass, new ArrayInput([]), 1, null, ['k' => 'v']);
+        $event = CommandEvents::terminating(new stdClass, new ArrayInput([]), 1, null, ['k' => 'v']);
 
         self::assertSame('terminating', $event->action);
         self::assertSame(1, $event->exitCode);

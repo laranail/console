@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\ConsoleTools\Commands\Services;
 
 use function Laravel\Prompts\confirm;
+use function Laravel\Prompts\error;
 use function Laravel\Prompts\multiselect;
 use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
@@ -95,7 +96,7 @@ class CommandInteractionService
             return $options[$default] ?? '';
         }
 
-        return select(
+        return (string) select(
             label: $label,
             options: $options,
             default: $default
@@ -127,7 +128,7 @@ class CommandInteractionService
             return $callback();
         }
 
-        return spin($callback, $message);
+        return spin(static fn () => $callback(), $message);
     }
 
     /**
@@ -140,13 +141,13 @@ class CommandInteractionService
         }
 
         do {
-            $answer = $this->ask($question, $default);
+            $answer = $this->askText($question, default: (string) $default);
 
             if ($validator === null || $validator($answer)) {
                 return $answer;
             }
 
-            $this->error('Invalid input. Please try again.');
+            error('Invalid input. Please try again.');
         } while (true);
     }
 
@@ -159,7 +160,7 @@ class CommandInteractionService
             return $default;
         }
 
-        return $this->confirm($question, $default);
+        return $this->askConfirm($question, $default);
     }
 
     /**
