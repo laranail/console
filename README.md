@@ -59,6 +59,11 @@ $name = Console::prompter()->text('Your name', required: true)->getResult();
 `Console::prompter()` returns the shared `Prompter`. The two sub-domains are
 fully decoupled — they only meet in the `Console` aggregator.
 
+> Formatter and status strings carry Symfony Console markup (e.g.
+> `<fg=green>…</>`). Write them through a console output — `$output->writeln(…)`
+> or a command's `$this->line(…)` — so colour renders on a TTY and is stripped
+> cleanly when piped. Plain widgets (box, tree, table, gauge…) `echo` fine.
+
 ## Security & portability
 
 - All rendered text is stripped of terminal control characters (no ANSI/`\r`
