@@ -1,5 +1,10 @@
 # laranail/console-tools
 
+[![Latest version on Packagist](https://img.shields.io/packagist/v/laranail/console-tools.svg)](https://packagist.org/packages/laranail/console-tools)
+[![Tests](https://github.com/laranail/console-tools/actions/workflows/tests.yml/badge.svg)](https://github.com/laranail/console-tools/actions/workflows/tests.yml)
+[![Static analysis](https://github.com/laranail/console-tools/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/laranail/console-tools/actions/workflows/static-analysis.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 Console & terminal-UI toolkit for Laravel packages — a fluent output
 formatter, progress bars, and an enhanced Artisan command base with a
 service-based architecture.
@@ -45,16 +50,23 @@ final class SyncCommand extends LaranailCommand
 
 ## <a id="documentation"></a>Documentation
 
-| Page | What's inside |
-|------|---------------|
-| [Installation](docs/installation.md) | Requirements, install, auto-discovery |
-| [Architecture](docs/architecture.md) | Component map across the package |
-| [Formatting](docs/formatting.md) | `ConsoleUIFormatter` + `ConsoleProgressBar` |
-| [Commands](docs/commands.md) | `LaranailCommand` base + the nine command services |
-| [Observers & events](docs/observers-events.md) | `ConsoleCommandObserver`, `CommandEvents` |
-| [Runners](docs/runners.md) | `ConsoleRunner` / `BaseRunner` conditional execution |
-| [Notifications](docs/notifications.md) | Standalone console output channel |
-| [Configuration](docs/configuration.md) | Optional configuration knobs |
+Hosted at [`opensource.simtabi.com/console-tools/docs/`](https://opensource.simtabi.com/console-tools/docs/)
+(product page: [`opensource.simtabi.com/console-tools/`](https://opensource.simtabi.com/console-tools/)).
+The same pages live under [`docs/`](docs/):
+
+**Guides**
+
+- [Installation](docs/installation.md) — requirements, install, auto-discovery
+- [Architecture](docs/architecture.md) — component map across the package
+- [Configuration](docs/configuration.md) — the optional configuration knobs
+
+**Tools & features**
+
+- [Formatting](docs/tools/formatting.md) — `ConsoleUIFormatter` + `ConsoleProgressBar`
+- [Commands](docs/tools/commands.md) — the `LaranailCommand` base and its nine command services
+- [Runners](docs/tools/runners.md) — `ConsoleRunner` / `BaseRunner` conditional execution
+- [Observers & events](docs/tools/observers-events.md) — `ConsoleCommandObserver`, `CommandEvents`
+- [Notifications](docs/tools/notifications.md) — standalone console output channel
 
 ## License
 

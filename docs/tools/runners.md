@@ -37,4 +37,4 @@ conditions.
 
 ---
 
-[← Docs index](../README.md#documentation)
+[← Docs index](../../README.md#documentation)

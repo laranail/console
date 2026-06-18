@@ -42,4 +42,4 @@ Public fields: `action`, `type`, `request`, `metadata`, `firedAt`,
 
 ---
 
-[← Docs index](../README.md#documentation)
+[← Docs index](../../README.md#documentation)

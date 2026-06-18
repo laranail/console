@@ -66,9 +66,11 @@ abstract class LaranailCommand extends Command
         // Start command execution
         $this->services->startCommand();
 
-        // Configure non-interactive mode if needed
+        // Configure non-interactive mode. Read interactivity from the passed
+        // $input: the application sets it before run() is invoked, whereas
+        // $this->input is not populated until parent::run() binds it below.
         $this->services->configure([
-            'non_interactive' => $this->isNonInteractive(),
+            'non_interactive' => ! $input->isInteractive(),
         ]);
 
         // Dispatch starting events
