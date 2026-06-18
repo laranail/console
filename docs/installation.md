@@ -24,6 +24,16 @@ php artisan vendor:publish --tag=console-config
 php artisan vendor:publish --tag=console-lang
 ```
 
+See [Configuration](configuration.md) for every `config/console.php` key.
+
+## Verify
+
+```php
+use Simtabi\Laranail\Console\Facades\Console;
+
+echo Console::status()->success('console toolkit installed');
+```
+
 ---
 
 [← Docs index](../README.md#documentation)

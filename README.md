@@ -93,6 +93,30 @@ fully decoupled — they only meet in the `Console` aggregator.
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
 | [Prompts & forms](docs/tools/prompter.md) | The Prompter, forms and validators |
 
+Changelog: [CHANGELOG.md](CHANGELOG.md).
+
+## Local development
+
+```bash
+composer install
+composer test                 # vendor/bin/pest
+composer lint                 # pint + phpstan + rector --dry-run
+composer audit                # composer audit (security advisories)
+```
+
+## Sister packages
+
+- [`laranail/database-tools`](https://github.com/laranail/database-tools) — standalone Laravel database utilities (traits, casts, schema macros, backup).
+- [`laranail/package-tools`](https://github.com/laranail/package-tools) — runtime base library for building Laravel packages.
+- [`laranail/package-scaffolder`](https://github.com/laranail/package-scaffolder) — generator that scaffolds new packages.
+- [`laranail/laranail`](https://github.com/laranail/laranail) — Simtabi's Laravel utility toolbox.
+
+## Contributing & security
+
+- [CONTRIBUTING.md](CONTRIBUTING.md) — development guidelines and PR expectations.
+- [SECURITY.md](SECURITY.md) — how to report a vulnerability (opensource@simtabi.com).
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — community expectations.
+
 ## License
 
 MIT © Simtabi LLC. See [LICENSE](LICENSE).
