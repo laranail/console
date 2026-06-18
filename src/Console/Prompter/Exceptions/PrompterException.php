@@ -1,25 +1,31 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Exceptions;
 
-use Exception;
+use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 
-class PrompterException extends Exception
+/**
+ * Prompter-domain exception. Messages resolve from `console::prompter.*` with a
+ * safe fallback (via {@see ConsoleException::fromKey()}), so a missing key never
+ * produces an empty-message exception.
+ */
+class PrompterException extends ConsoleException
 {
-
-    protected static function trans(string $key, array $variables = []): ?string
+    /**
+     * @param array<string, scalar|null> $variables
+     */
+    public static function triggerErrorMessage(string $key, array $variables = []): static
     {
-        return trans("prompter::prompter.{$key}", $variables);
+        return static::fromKey("prompter.{$key}", $variables);
     }
 
-    public static function triggerErrorMessage(string $key, array $variables = []): self
+    /**
+     * @param array<string, scalar|null> $variables
+     */
+    public static function badMethodCall(array $variables = []): static
     {
-        return new self(self::trans($key, $variables));
+        return static::triggerErrorMessage('bad_method_call', $variables);
     }
-
-    public static function badMethodCall(array $variables = []): self
-    {
-        return self::triggerErrorMessage('bad_method_call', $variables);
-    }
-
 }
