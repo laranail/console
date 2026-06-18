@@ -114,12 +114,19 @@ final class Box
         $g = $this->style->glyphs();
         $lines = array_map([ConsoleUIFormatter::class, 'sanitizeText'], $this->lines);
 
-        $contentWidth = 0;
-        foreach ([...$lines, $this->title, $this->footer] as $line) {
-            $contentWidth = max($contentWidth, DisplayWidth::of($line));
+        $bodyWidth = 0;
+        foreach ($lines as $line) {
+            $bodyWidth = max($bodyWidth, DisplayWidth::of($line));
         }
 
-        $inner = ($this->width !== null ? max($this->width - 2, 1) : $contentWidth + ($this->padding * 2));
+        $inner = ($this->width !== null ? max($this->width - 2, 1) : $bodyWidth + ($this->padding * 2));
+
+        // Ensure a titled/footed rule fits: leading edge glyph + " label ".
+        foreach ([$this->title, $this->footer] as $label) {
+            if ($label !== '') {
+                $inner = max($inner, DisplayWidth::of($label) + 3);
+            }
+        }
         $pad = str_repeat(' ', $this->padding);
 
         $top = $this->rule($g['tl'], $g['tr'], $g['h'], $inner, $this->title);

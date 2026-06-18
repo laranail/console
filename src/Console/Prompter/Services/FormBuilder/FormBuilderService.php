@@ -71,9 +71,15 @@ class FormBuilderService
      */
     protected function resolveDefaultValidator(FormFieldService $formField): \Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface
     {
+        // A choice prompt returns the option *key* for associative option maps
+        // and the *value* for list options, so validate against whichever the
+        // user can actually select.
+        $options = $formField->options ?? [];
+        $identifiers = array_is_list($options) ? $options : array_keys($options);
+
         return match ($formField->type) {
-            FieldType::SELECT => new SelectFieldValidator($formField->options ?? []),
-            FieldType::RADIO  => new RadioFieldValidator($formField->options ?? []),
+            FieldType::SELECT => new SelectFieldValidator($identifiers),
+            FieldType::RADIO  => new RadioFieldValidator($identifiers),
             default           => FieldType::getDefaultValidator($formField->type),
         };
     }

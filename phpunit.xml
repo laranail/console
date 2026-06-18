@@ -9,14 +9,8 @@
          cacheDirectory=".phpunit.cache">
 
     <testsuites>
-        <testsuite name="Unit">
-            <directory>tests/Tools/Unit</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>tests/Tools/Integration</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory>tests/Tools/Feature</directory>
+        <testsuite name="Tools">
+            <directory>tests/Tools</directory>
         </testsuite>
         <testsuite name="Prompter">
             <directory>tests/Prompter</directory>
