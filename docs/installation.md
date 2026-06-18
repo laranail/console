@@ -8,6 +8,7 @@ composer require laranail/console
 
 - PHP `^8.3` (8.3, 8.4, 8.5 supported)
 - Laravel `^13.0`
+- `ext-mbstring`
 
 ## Service provider
 
@@ -28,10 +29,14 @@ See [Configuration](configuration.md) for every `config/console.php` key.
 
 ## Verify
 
+`status()` returns Symfony Console markup, so write it through an output (inside a
+command, use `$this->line(...)`):
+
 ```php
 use Simtabi\Laranail\Console\Facades\Console;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
-echo Console::status()->success('console toolkit installed');
+(new ConsoleOutput)->writeln(Console::status()->success('console toolkit installed'));
 ```
 
 ---

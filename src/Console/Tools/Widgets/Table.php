@@ -149,7 +149,15 @@ final class Table implements Stringable
      */
     private function buildGroupedRows(): array
     {
-        $columns = max(count($this->headers), 1);
+        // Span the full table: the widest of the header row and every group row.
+        $columns = count($this->headers);
+        foreach ($this->groups as $rows) {
+            foreach ($rows as $row) {
+                $columns = max($columns, count($row));
+            }
+        }
+        $columns = max($columns, 1);
+
         $built = [];
         $first = true;
 
