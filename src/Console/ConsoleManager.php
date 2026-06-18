@@ -6,6 +6,10 @@ namespace Simtabi\Laranail\Console;
 
 use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
+use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Unified entry point for the laranail/console package.
@@ -18,11 +22,35 @@ use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 final class ConsoleManager
 {
     /**
-     * Console output toolkit (formatter, badges, status lines, widgets).
+     * Console output toolkit (formatter, badges, status lines).
      */
     public function ui(): ConsoleUIFormatter
     {
         return ConsoleUIFormatter::create();
+    }
+
+    /**
+     * A fluent activity spinner.
+     */
+    public function spinner(string $message = ''): Spinner
+    {
+        return Spinner::make($message);
+    }
+
+    /**
+     * A flavoured progress bar (percent / elapsed / ETA / rate).
+     */
+    public function progress(?OutputInterface $output = null, int $max = 0): ProgressBar
+    {
+        return ProgressBar::make($output, $max);
+    }
+
+    /**
+     * Detected terminal capabilities (TTY, colour, Unicode, width).
+     */
+    public function capabilities(): Capabilities
+    {
+        return Capabilities::detect();
     }
 
     /**
