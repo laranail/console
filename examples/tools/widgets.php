@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
@@ -40,6 +41,11 @@ $out->writeln('');
 
 $out->writeln(Rule::make('CONFIG')->width(40)->render());
 $out->writeln(Box::make(['Driver: pgsql', 'Host:   localhost'])->title('Database')->render());
+$out->writeln('');
+
+$color = new Color;
+$out->writeln($color->fg('Brand colour (#ff8800)', '#ff8800'));
+$out->writeln($color->gradient('Gradient welcome banner', ['#00ffff', '#ff00ff']));
 $out->writeln('');
 
 $out->writeln(Tree::make('app')

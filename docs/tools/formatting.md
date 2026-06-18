@@ -1,56 +1,59 @@
 # Formatting
 
-Two classes under `Simtabi\Laranail\Console\Tools\Formatting`.
+`ConsoleUIFormatter` (under `Simtabi\Laranail\Console\Tools\Formatting`) is a fluent
++ static helper for colourised Symfony Console output: colours, backgrounds, text
+styles, badges, status lines, tree symbols, links, and a small reporting toolkit.
+Colour/Unicode support is auto-detected via the shared
+[Capabilities](support.md#capabilities).
 
-## ConsoleUIFormatter
+## Two output modes
 
-A fluent + static helper for colourised Symfony Console output: colors,
-background colors, text styles, badges, status lines, tree symbols,
-statistics lines and headers. Terminal color/Unicode support is
-auto-detected.
+- **Markup** — `success()`, `error()`, `warning()`, `info()`, `format()`,
+  `badge()`, `render()` return Symfony Console markup (`<fg=green>…</>`). Write
+  them **through an output** so colour renders (echoing prints literal tags):
+
+  ```php
+  use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+
+  $output->writeln(ConsoleUIFormatter::success('Done!'));
+  $output->writeln(ConsoleUIFormatter::badge('NEW', ConsoleUIFormatter::BADGE_STYLE_SUCCESS));
+
+  $output->writeln(
+      ConsoleUIFormatter::create()
+          ->addMessage('Processing')
+          ->addTextColor(ConsoleUIFormatter::GREEN)
+          ->addTextStyles(ConsoleUIFormatter::BOLD)
+          ->render()
+  );
+  ```
+
+- **Raw ANSI (echo-safe)** — `colorize()`, and the `statusLine()`/`header()`/
+  `statisticsLine()` reporting helpers, emit ready-to-print strings:
+
+  ```php
+  echo ConsoleUIFormatter::create()->colorize('OK', ConsoleUIFormatter::GREEN, bold: true);
+  echo ConsoleUIFormatter::statusLine('BuildAssets', 'DONE', '12.30', isLast: true);
+  ```
+
+## Reporting toolkit
+
+Static helpers for execution summaries (all echo-safe):
 
 ```php
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-
-// Static one-liners
-echo ConsoleUIFormatter::success('Done!');
-echo ConsoleUIFormatter::error('Failed');
-echo ConsoleUIFormatter::warning('Careful');
-echo ConsoleUIFormatter::info('Note');
-
-// Status line: label, status, duration, isLast
-echo ConsoleUIFormatter::statusLine('BuildAssets', 'DONE', '12.30', true);
-
-// Fluent builder
-echo ConsoleUIFormatter::create()
-    ->addMessage('Processing')
-    ->addTextColor(ConsoleUIFormatter::GREEN)
-    ->addTextStyles(ConsoleUIFormatter::BOLD)
-    ->render();
-
-// Badges
-echo ConsoleUIFormatter::badge('NEW', ConsoleUIFormatter::BADGE_STYLE_SUCCESS);
+echo ConsoleUIFormatter::displaySummary($stats);            // full summary block
+echo ConsoleUIFormatter::displayStatisticsTable([...]);     // label/value/badge rows
+echo ConsoleUIFormatter::displayPerformanceMetrics($stats); // timings + success rate
+echo ConsoleUIFormatter::header('Modules', 12, 'items');
+echo ConsoleUIFormatter::link('https://example.com', 'Docs'); // OSC-8, scheme allow-listed
 ```
 
-Color/style/badge constants (`GREEN`, `RED`, `BOLD`, `BADGE_STYLE_*`, …)
-and `TREE_SYMBOLS`/`ANSI_COLORS` maps are public on the class.
+Colour/style/badge constants (`GREEN`, `RED`, `BOLD`, `BADGE_STYLE_*`, …) and the
+`TREE_SYMBOLS`/`ANSI_COLORS` maps are public on the class.
 
-## ConsoleProgressBar
+## Progress bars
 
-A wrapper around Symfony's `ProgressBar` that integrates `ConsoleUIFormatter`
-styling and tracks memory. Call `startProgressBar()` before advancing.
-
-```php
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleProgressBar;
-
-$bar = (new ConsoleProgressBar)->startProgressBar('Importing', $rows);
-foreach ($rows as $row) {
-    // ... work ...
-    $bar->advanceProgressBar();
-}
-$bar->finishProgressBar('Imported');
-```
-
----
+For progress, use the flavoured [`ProgressBar` widget](widgets.md#progress-bar)
+(`Console::progress()`) — percent/ETA/rate, glyph styles, and instance-scoped
+placeholders.
 
 [← Docs index](../../README.md#documentation)

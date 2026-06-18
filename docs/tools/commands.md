@@ -40,7 +40,7 @@ of nine focused services:
 | `CommandMetadataService` | per-command metadata (`addMetadata()`, `getMetadata()`) |
 | `CommandLoggerService` | structured lifecycle logging |
 | `CommandErrorService` | `executeWithErrorHandling()` / `executeWithFallback()` |
-| `CommandConfigurationService` | namespaced config access |
+| `CommandConfigurationService` | cached config access (`get`, `getEnv`, `has`, `set`) |
 | `CommandInteractionService` | Laravel Prompts wrappers (`askText`, `askConfirm`, `askSelect`, `showSpinner`) |
 | `CommandDisplayService` | emoji status output, tables, progress bars |
 
@@ -86,8 +86,11 @@ Methods: `success()`, `warning()`, `error()`, `info()`, `header()`,
 
 `$this->getServices()->interaction()` wraps Laravel Prompts for input. Every
 prompt honours non-interactive mode: call `setNonInteractive(true)` (or pass
-`non_interactive` to `configureServices()`) and each method returns its
-default instead of blocking, so commands stay scriptable in CI.
+`non_interactive` to `configureServices()`) and optional prompts return their
+default instead of blocking, so commands stay scriptable in CI. A **required**
+value with no usable default — notably `askPassword()` — throws a
+`NonInteractiveException` rather than silently returning empty (toggle via
+`console.interaction.non_interactive_required_throws`).
 
 ```php
 $ask = $this->getServices()->interaction();

@@ -11,7 +11,7 @@ A Rich-class console toolkit for Laravel. One package, two namespaces:
   flavoured progress bars, boxes, trees, tables, banners, gauges, sparklines,
   a multi-task progress widget, plus an enhanced Artisan command base.
 - **`Console\Prompter`** — terminal **input**: a fluent wrapper over
-  `laravel/prompts` with a form builder and 25+ validators.
+  `laravel/prompts` with a form builder and 25 validators.
 
 Targets PHP `^8.3` (8.3–8.5) on Laravel `^13`.
 
@@ -35,21 +35,26 @@ php artisan vendor:publish --tag=console-lang
 ```php
 use Simtabi\Laranail\Console\Facades\Console;
 
-// Output
-echo Console::status()->success('Build complete');
+// Inside an Artisan command you have $this->output; elsewhere use any
+// Symfony OutputInterface (e.g. new ConsoleOutput()).
+
+// Output — markup-bearing helpers go through the output:
+$output->writeln(Console::status()->success('Build complete'));
+
+// Plain renderers return finished strings and echo fine:
 echo Console::box(['Name: app', 'Env:  prod'])->title('Config')->render();
 echo Console::tree('project')->child('src', fn ($t) => $t->child('Console'))->render();
 echo Console::gauge(72, 100)->label('Disk')->showValue()->render();
 
 Console::spinner('Compiling…')->run(fn () => compile());
 
-$bar = Console::progress(max: count($items))->format('detailed')->glyphs('blocks');
+$bar = Console::progress($output, max: count($items))->format('detailed')->glyphs('blocks');
 $bar->start();
 foreach ($items as $item) { process($item); $bar->advance(); }
 $bar->finish();
 
 // Multi-task progress (exits non-zero if any task fails)
-$tasks = Console::tasks();
+$tasks = Console::tasks($output);
 $tasks->task('Compile', 100)->advance(100)->succeed();
 exit($tasks->finish());
 
@@ -58,13 +63,19 @@ $name = Console::prompter()->text('Your name', required: true)->getResult();
 ```
 
 `Console::ui()` returns the underlying fluent `ConsoleUIFormatter`;
-`Console::prompter()` returns the shared `Prompter`. The two sub-domains are
-fully decoupled — they only meet in the `Console` aggregator.
+`Console::prompter()` returns a fresh `Prompter` per call. The two sub-domains
+are fully decoupled — they only meet in the `Console` aggregator. See the
+[runnable examples](examples/) for end-to-end demos.
 
-> Formatter and status strings carry Symfony Console markup (e.g.
-> `<fg=green>…</>`). Write them through a console output — `$output->writeln(…)`
-> or a command's `$this->line(…)` — so colour renders on a TTY and is stripped
-> cleanly when piped. Plain widgets (box, tree, table, gauge…) `echo` fine.
+### Writing through an output
+
+The package has three output styles — know which you're holding:
+
+| Style | APIs | How to print |
+|-------|------|--------------|
+| **Symfony markup** (e.g. `<fg=green>…</>`) | `Console::status()`, `ConsoleUIFormatter::success()/format()/badge()` | `$output->writeln(...)` / `$this->line(...)` — renders colour on a TTY, stripped when piped. Echoing prints literal tags. |
+| **Finished strings** | `box`, `tree`, `table`, `rule`, `gauge`, `sparkline`, `banner`, `steps`, `callout`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
+| **Self-writing** | `spinner`, `progress`, `tasks` | They write to the output you pass them. |
 
 ## Security & portability
 
@@ -85,8 +96,9 @@ fully decoupled — they only meet in the `Console` aggregator.
 | [Architecture](docs/architecture.md) | Umbrella, sub-domains, the manager |
 | [Configuration](docs/configuration.md) | Every `config/console.php` key |
 | [Internationalization](docs/i18n.md) | Translating console strings |
-| [Output formatter](docs/tools/formatting.md) | Colours, badges, status, links |
+| [Output formatter](docs/tools/formatting.md) | Colours, badges, status, links, reports |
 | [Output widgets](docs/tools/widgets.md) | Spinner, progress, box, tree, table, gauge… |
+| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, BorderStyle |
 | [Commands](docs/tools/commands.md) | The Artisan command base + services |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
