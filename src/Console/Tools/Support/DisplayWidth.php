@@ -45,6 +45,33 @@ final class DisplayWidth
     }
 
     /**
+     * Truncate a (plain) string to a maximum visible width, accounting for
+     * wide characters. Intended for decoration-free text such as titles.
+     */
+    public static function truncate(string $text, int $max): string
+    {
+        if ($max <= 0) {
+            return '';
+        }
+
+        if (self::of($text) <= $max) {
+            return $text;
+        }
+
+        $out = '';
+
+        foreach (mb_str_split($text) as $char) {
+            if (self::of($out . $char) > $max) {
+                break;
+            }
+
+            $out .= $char;
+        }
+
+        return $out;
+    }
+
+    /**
      * Centre a string within a target visible width.
      */
     public static function center(string $text, int $width, string $pad = ' '): string

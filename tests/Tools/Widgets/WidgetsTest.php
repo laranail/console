@@ -83,6 +83,19 @@ final class WidgetsTest extends TestCase
         self::assertStringContainsString('SETUP', Rule::make('SETUP')->width(40)->render());
     }
 
+    public function test_rule_never_exceeds_width_even_with_a_long_title(): void
+    {
+        // A titled rule must always honour the requested width, degrading to a
+        // plain rule when the title can't fit (rather than blanking/overflowing).
+        foreach ([3, 4, 5, 6, 10] as $width) {
+            $rendered = Rule::make('A Very Long Section Title')->width($width)->render();
+            self::assertSame($width, DisplayWidth::of($rendered), "width $width left/overflow");
+
+            $centered = Rule::make('A Very Long Section Title')->width($width)->center()->render();
+            self::assertSame($width, DisplayWidth::of($centered), "width $width center/overflow");
+        }
+    }
+
     public function test_table_contains_headers_and_rows(): void
     {
         $rendered = Table::make()->headers(['Name'])->rows([['app']])->render();

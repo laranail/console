@@ -25,7 +25,7 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
  * @method static Prompter search(string $label, Closure $options, string $placeholder = '', int $scroll = 5, mixed $validate = null, string $hint = '', bool|string $required = true)
  * @method static Prompter multisearch(string $label, Closure $options, string $placeholder = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = 'Use the space bar to select options.')
  * @method static Prompter spin(Closure $callback, string $message = '')
- * @method static Prompter note(string $message, ?string $type = null)
+ * @method static Prompter note(string $message)
  * @method static Prompter error(string $message)
  * @method static Prompter warning(string $message)
  * @method static Prompter alert(string $message)

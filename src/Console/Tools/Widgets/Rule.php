@@ -63,23 +63,20 @@ final class Rule implements Stringable
 
     public function render(): string
     {
-        $width = $this->width ?? $this->capabilities->width();
+        $width = max($this->width ?? $this->capabilities->width(), 1);
         $line = $this->style->glyphs()['h'];
 
-        if ($this->title === '') {
-            return str_repeat($line, max($width, 1));
+        // A titled rule needs the " title " label plus at least two rule chars.
+        // If the width can't fit even a one-character title, fall back to a
+        // plain rule so we never emit a blank/overflowing line.
+        $titleBudget = $width - 4; // 2 rule chars + 2 surrounding spaces
+
+        if ($this->title === '' || $titleBudget < 1) {
+            return str_repeat($line, $width);
         }
 
-        // Keep the rule within the requested width: a title that can't fit
-        // alongside at least two rule chars is truncated (titles are plain text).
-        $title = $this->title;
-        if (DisplayWidth::of($title) + 2 > $width - 2) {
-            $title = rtrim(mb_substr($title, 0, max($width - 5, 0)));
-        }
-
-        $label = ' ' . $title . ' ';
-        $labelWidth = DisplayWidth::of($label);
-        $remaining = max($width - $labelWidth, 2);
+        $label = ' ' . DisplayWidth::truncate($this->title, $titleBudget) . ' ';
+        $remaining = $width - DisplayWidth::of($label); // >= 2 by construction
 
         if ($this->align === 'center') {
             $left = intdiv($remaining, 2);
@@ -87,7 +84,7 @@ final class Rule implements Stringable
             return str_repeat($line, $left) . $label . str_repeat($line, $remaining - $left);
         }
 
-        return $line . $line . $label . str_repeat($line, max($remaining - 2, 0));
+        return $line . $line . $label . str_repeat($line, $remaining - 2);
     }
 
     public function __toString(): string

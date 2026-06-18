@@ -13,7 +13,7 @@ use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
  *
  * This class manages context-related methods.
  *
- * @method void note(string $message, ?string $type = null)
+ * @method void note(string $message)
  * @method void error(string $message)
  * @method void warning(string $message)
  * @method void alert(string $message)

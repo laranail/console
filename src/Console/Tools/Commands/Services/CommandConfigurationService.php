@@ -19,14 +19,12 @@ class CommandConfigurationService
      */
     public function get(string $key, mixed $default = null): mixed
     {
-        if (isset($this->configCache[$key])) {
+        // array_key_exists (not isset) so a cached null is still a cache hit.
+        if (array_key_exists($key, $this->configCache)) {
             return $this->configCache[$key];
         }
 
-        $value = config($key, $default);
-        $this->configCache[$key] = $value;
-
-        return $value;
+        return $this->configCache[$key] = config($key, $default);
     }
 
     /**
