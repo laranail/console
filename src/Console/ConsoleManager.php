@@ -16,6 +16,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
@@ -121,6 +122,16 @@ final class ConsoleManager
     public function banner(string $title): Banner
     {
         return Banner::make($title);
+    }
+
+    /**
+     * A wizard/pipeline breadcrumb (done / current / pending).
+     *
+     * @param list<string> $steps
+     */
+    public function steps(array $steps = []): StepFlow
+    {
+        return StepFlow::make($steps);
     }
 
     /**
