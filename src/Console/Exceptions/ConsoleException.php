@@ -35,7 +35,9 @@ class ConsoleException extends RuntimeException
     {
         $namespaced = "console::{$key}";
 
-        if (function_exists('trans')) {
+        // Only use the translator when a container has actually bound it, so
+        // the exception is still usable outside a booted Laravel application.
+        if (function_exists('app') && app()->bound('translator')) {
             $message = trans($namespaced, $replace);
 
             if (is_string($message) && $message !== $namespaced) {

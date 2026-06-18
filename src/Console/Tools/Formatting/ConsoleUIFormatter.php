@@ -299,9 +299,54 @@ class ConsoleUIFormatter implements Stringable
      */
     public function addMessage(string $message): self
     {
-        $this->message = $message;
+        $this->message = self::sanitizeText($message);
 
         return $this;
+    }
+
+    /**
+     * Strip terminal control characters (C0 controls, ESC, DEL) from a string,
+     * preserving tab and newline. Prevents ANSI/CR output-spoofing injection
+     * when rendering user-controlled text.
+     */
+    public static function sanitizeText(string $text): string
+    {
+        return (string) preg_replace('/[\x00-\x08\x0B-\x1F\x7F]/', '', $text);
+    }
+
+    /**
+     * Constrain a colour token to safe characters so it cannot break out of or
+     * inject extra attributes into a `<fg=...>` / `<bg=...>` formatter tag.
+     */
+    private static function sanitizeColorToken(string $color): string
+    {
+        return (string) preg_replace('/[^A-Za-z0-9#]/', '', $color);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private static function allowedLinkSchemes(): array
+    {
+        if (function_exists('app') && app()->bound('config')) {
+            /** @var list<string> $schemes */
+            $schemes = (array) config('console.links.allowed_schemes', ['http', 'https', 'mailto']);
+
+            return $schemes;
+        }
+
+        return ['http', 'https', 'mailto'];
+    }
+
+    /**
+     * Whether a URL is safe to emit as an OSC-8 hyperlink: free of control
+     * characters and using an allow-listed scheme.
+     */
+    private static function isAllowedUrl(string $url): bool
+    {
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+
+        return $scheme !== '' && in_array($scheme, self::allowedLinkSchemes(), true);
     }
 
     /**
@@ -386,8 +431,18 @@ class ConsoleUIFormatter implements Stringable
      */
     public function setHref(string $url): self
     {
-        $this->href = $url;
-        $this->isClickable = true;
+        // Strip control characters and the OSC-8 separator, then require an
+        // allow-listed scheme. A rejected URL degrades to plain, non-clickable
+        // text rather than emitting an attacker-controlled hyperlink.
+        $url = str_replace(';', '', self::sanitizeText($url));
+
+        if (self::isAllowedUrl($url)) {
+            $this->href = $url;
+            $this->isClickable = true;
+        } else {
+            $this->href = null;
+            $this->isClickable = false;
+        }
 
         return $this;
     }
@@ -478,6 +533,7 @@ class ConsoleUIFormatter implements Stringable
         $boldCode = $bold ? self::ANSI_COLORS['bold'] : '';
         $backgroundCode = $background ? self::ANSI_COLORS[$background] : '';
         $resetCode = self::ANSI_COLORS['reset'];
+        $text = self::sanitizeText($text);
 
         return "{$boldCode}{$backgroundCode}{$colorCode}{$text}{$resetCode}";
     }
@@ -677,11 +733,11 @@ class ConsoleUIFormatter implements Stringable
         $tags = [];
 
         if ($this->foregroundColor) {
-            $tags[] = 'fg=' . $this->foregroundColor;
+            $tags[] = 'fg=' . self::sanitizeColorToken($this->foregroundColor);
         }
 
         if ($this->backgroundColor) {
-            $tags[] = 'bg=' . $this->backgroundColor;
+            $tags[] = 'bg=' . self::sanitizeColorToken($this->backgroundColor);
         }
 
         if ($this->textStyles !== []) {

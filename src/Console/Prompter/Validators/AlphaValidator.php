@@ -15,6 +15,6 @@ class AlphaValidator extends AbstractValidator
     }
     public function validate(mixed $value): ?string
     {
-        return preg_match('/^[a-zA-Z]+$/', $value) ? null : $this->errorMessage;
+        return is_string($value) && preg_match('/^[a-zA-Z]+$/', $value) === 1 ? null : $this->errorMessage;
     }
 }

@@ -2,20 +2,41 @@
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
+use DateTimeImmutable;
+
 /**
- * Class TimeFieldValidator
- *
- * Validates time fields.
+ * Validates time fields against explicit time formats.
  */
 class TimeFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    /** @var list<string> */
+    protected array $formats;
+
+    /**
+     * @param list<string>|null $formats
+     */
+    public function __construct(?array $formats = null, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
         parent::__construct($errorMessage, 'time', $replace, $locale);
+
+        $this->formats = $formats ?? ['H:i', 'H:i:s', 'g:i A', 'g:i a'];
     }
 
     public function validate(mixed $value): ?string
     {
-        return (bool) strtotime($value) ? null : $this->errorMessage;
+        if (! is_string($value) || $value === '') {
+            return $this->errorMessage;
+        }
+
+        foreach ($this->formats as $format) {
+            $time = DateTimeImmutable::createFromFormat('!' . $format, $value);
+            $errors = DateTimeImmutable::getLastErrors();
+
+            if ($time !== false && ($errors === false || ($errors['warning_count'] === 0 && $errors['error_count'] === 0))) {
+                return null;
+            }
+        }
+
+        return $this->errorMessage;
     }
 }

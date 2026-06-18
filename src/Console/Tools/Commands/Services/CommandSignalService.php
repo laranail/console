@@ -7,56 +7,61 @@ namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Command Signal Service
+ * Handles operating-system signals for graceful command shutdown.
  *
- * Handles operating system signals for graceful command shutdown.
- * Provides signal handling capabilities that can be reused across commands.
+ * Real handlers are installed via ext-pcntl when it is available; on platforms
+ * without it (e.g. Windows) the service degrades to a no-op so commands still
+ * run. {@see simulateSignal()} drives the same handlers in tests.
  */
 class CommandSignalService
 {
-    /**
-     * Whether the command should continue running
-     */
     protected bool $shouldKeepRunning = true;
 
-    /**
-     * Registered signal handlers
-     */
+    /** @var array<int, callable> */
     protected array $signalHandlers = [];
 
-    public function __construct(
-        /**
-         * Command name for logging
-         */
-        protected string $commandName = ''
-    ) {}
+    public function __construct(protected string $commandName = '') {}
 
     /**
-     * Set up signal handling for graceful shutdown
+     * Install handlers for the given signals (defaults to SIGTERM + SIGINT).
+     *
+     * Signal constants are only referenced when ext-pcntl is loaded, so calling
+     * this on a platform without pcntl is safe.
+     *
+     * @param array<int, int> $signals
      */
-    public function setupSignalHandling(array $signals = [SIGTERM, SIGINT]): void
+    public function setupSignalHandling(array $signals = []): void
     {
+        if (! extension_loaded('pcntl')) {
+            return;
+        }
+
+        $signals = $signals !== [] ? $signals : [SIGTERM, SIGINT];
+
         foreach ($signals as $signal) {
             $this->registerSignalHandler($signal);
         }
     }
 
     /**
-     * Register a signal handler
+     * Register a single signal handler with the OS.
      */
     protected function registerSignalHandler(int $signal): void
     {
-        $this->signalHandlers[$signal] = function (int $receivedSignal): void {
+        $handler = function (int $receivedSignal): void {
             $this->handleSignal($receivedSignal);
         };
 
-        // Note: In a real implementation, you would use pcntl_signal() here
-        // For now, we'll simulate the behavior
-        $this->logSignalRegistration($signal);
+        $this->signalHandlers[$signal] = $handler;
+
+        if (extension_loaded('pcntl')) {
+            pcntl_async_signals(true);
+            pcntl_signal($signal, $handler);
+        }
     }
 
     /**
-     * Handle received signal
+     * Flip the running flag and record the signal.
      */
     protected function handleSignal(int $signal): void
     {
@@ -64,64 +69,38 @@ class CommandSignalService
 
         Log::info('Command received termination signal', [
             'command' => $this->commandName,
-            'signal' => $signal,
+            'signal'  => $signal,
         ]);
     }
 
-    /**
-     * Log signal registration (placeholder for actual signal registration)
-     */
-    protected function logSignalRegistration(int $signal): void
-    {
-        Log::debug('Signal handler registered', [
-            'command' => $this->commandName,
-            'signal' => $signal,
-        ]);
-    }
-
-    /**
-     * Check if command should continue running
-     */
     public function shouldKeepRunning(): bool
     {
         return $this->shouldKeepRunning;
     }
 
-    /**
-     * Stop the command gracefully
-     */
     public function stop(): void
     {
         $this->shouldKeepRunning = false;
     }
 
-    /**
-     * Resume the command
-     */
     public function resume(): void
     {
         $this->shouldKeepRunning = true;
     }
 
     /**
-     * Get registered signal handlers
+     * @return array<int, int>
      */
     public function getSignalHandlers(): array
     {
         return array_keys($this->signalHandlers);
     }
 
-    /**
-     * Check if a specific signal is being handled
-     */
     public function isHandlingSignal(int $signal): bool
     {
         return isset($this->signalHandlers[$signal]);
     }
 
-    /**
-     * Set command name for logging
-     */
     public function setCommandName(string $commandName): self
     {
         $this->commandName = $commandName;
@@ -129,21 +108,18 @@ class CommandSignalService
         return $this;
     }
 
-    /**
-     * Get command name
-     */
     public function getCommandName(): string
     {
         return $this->commandName;
     }
 
     /**
-     * Simulate signal reception (for testing purposes)
+     * Invoke a registered handler as if the signal had been received (tests).
      */
     public function simulateSignal(int $signal): void
     {
         if (isset($this->signalHandlers[$signal])) {
-            $this->signalHandlers[$signal]($signal);
+            ($this->signalHandlers[$signal])($signal);
         }
     }
 }

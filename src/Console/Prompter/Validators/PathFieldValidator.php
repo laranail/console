@@ -2,16 +2,15 @@
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
-use Illuminate\Support\Facades\File;
-
 /**
- * Class PathFieldValidator
+ * Validates that a value is a well-formed filesystem path.
  *
- * Validates path fields.
+ * Validates the path's *shape* only — it never touches the filesystem, so it
+ * cannot be used to probe which paths exist. Null bytes and parent-directory
+ * traversal segments are rejected.
  */
 class PathFieldValidator extends AbstractValidator
 {
-
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
         parent::__construct($errorMessage, 'path', $replace, $locale);
@@ -19,6 +18,20 @@ class PathFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return File::exists($value) && is_string($value) ? null : $this->errorMessage;
+        if (! is_string($value) || $value === '') {
+            return $this->errorMessage;
+        }
+
+        if (str_contains($value, "\0")) {
+            return $this->errorMessage;
+        }
+
+        $segments = preg_split('#[/\\\\]#', $value) ?: [];
+
+        if (in_array('..', $segments, true)) {
+            return $this->errorMessage;
+        }
+
+        return null;
     }
 }

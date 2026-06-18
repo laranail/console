@@ -183,15 +183,10 @@ class CommandServiceManager
      */
     public function handleException(Throwable $exception): void
     {
-        $this->logger->logError($exception, [
-            'execution_time' => $this->performance->getFormattedExecutionTime(),
-            'memory_usage' => $this->performance->getMemoryUsage(),
-            'metadata' => $this->metadata->all(),
-        ]);
-
         $this->error->logError($exception, [
             'execution_time' => $this->performance->getFormattedExecutionTime(),
             'memory_usage' => $this->performance->getMemoryUsage(),
+            'metadata' => $this->metadata->all(),
         ]);
     }
 

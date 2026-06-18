@@ -16,6 +16,6 @@ class EmailFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return filter_var($value, FILTER_VALIDATE_EMAIL) ? null : $this->errorMessage;
+        return is_string($value) && filter_var($value, FILTER_VALIDATE_EMAIL) !== false ? null : $this->errorMessage;
     }
 }

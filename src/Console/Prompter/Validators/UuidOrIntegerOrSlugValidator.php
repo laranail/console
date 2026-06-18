@@ -51,7 +51,7 @@ class UuidOrIntegerOrSlugValidator extends AbstractValidator
      */
     private function isInteger(mixed $value): bool
     {
-        return is_numeric($value) && (int)$value == $value;
+        return is_int($value) || (is_string($value) && filter_var($value, FILTER_VALIDATE_INT) !== false);
     }
 
     /**

@@ -82,7 +82,6 @@ enum FieldType: string
             self::NULL_OR_EMPTY->value => 'Null or Empty',
             self::ARRAY->value => 'Array',
             self::OBJECT->value => 'Object',
-            self::OBJECT->value => 'Object',
             self::UUID->value => 'UUID',
             self::ALPHA->value => 'Alpha',
             self::ALPHANUMERIC->value => 'Alphanumeric',
@@ -160,26 +159,26 @@ enum FieldType: string
     {
         $methods = [
             self::TEXT->value => 'text',
-            self::NUMBER->value => 'number',
-            self::EMAIL->value => 'email',
+            self::NUMBER->value => 'text',
+            self::EMAIL->value => 'text',
             self::PASSWORD->value => 'password',
             self::TEXTAREA->value => 'textarea',
-            self::DATE->value => 'date',
-            self::TIME->value => 'time',
+            self::DATE->value => 'text',
+            self::TIME->value => 'text',
             self::SELECT->value => 'select',
-            self::CHECKBOX->value => 'checkbox',
-            self::RADIO->value => 'radio',
+            self::CHECKBOX->value => 'confirm',
+            self::RADIO->value => 'select',
             self::PATH->value => 'text',
-            self::USERNAME->value => 'text', // Assuming form method supports text for username
-            self::PHONE->value => 'text', // Assuming form method supports text for phone
-            self::COLOR->value => 'text', // Assuming form method supports text for color
-            self::NULL_OR_EMPTY->value => 'text', // Assuming form method supports text for null/empty
-            self::ARRAY->value => 'textarea', // Assuming form method supports textarea for array
-            self::OBJECT->value => 'textarea', // Assuming form method supports textarea for object
-            self::UUID->value => 'text', // Assuming form method supports text for uuid
-            self::ALPHA->value => 'text', // Assuming form method supports text for alpha
-            self::ALPHANUMERIC->value => 'text', // Assuming form method supports text for alphanumeric
-            self::UUID_OR_INTEGER_OR_SLUG->value => 'text', // Assuming form method supports text for uuid_or_integer_or_slug
+            self::USERNAME->value => 'text',
+            self::PHONE->value => 'text',
+            self::COLOR->value => 'text',
+            self::NULL_OR_EMPTY->value => 'text',
+            self::ARRAY->value => 'textarea',
+            self::OBJECT->value => 'textarea',
+            self::UUID->value => 'text',
+            self::ALPHA->value => 'text',
+            self::ALPHANUMERIC->value => 'text',
+            self::UUID_OR_INTEGER_OR_SLUG->value => 'text',
         ];
 
         if (!isset($methods[$formField->type->value])) {

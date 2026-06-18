@@ -16,6 +16,6 @@ class PhoneNumberValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return preg_match('/^\+?[0-9]{10,15}$/', $value) ? null : $this->errorMessage;
+        return is_string($value) && preg_match('/^\+?[0-9]{10,15}$/', $value) === 1 ? null : $this->errorMessage;
     }
 }

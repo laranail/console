@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Notifications;
 
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Notifications\Contracts\ConsoleChannelInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Standalone console notification channel.
  *
- * Writes timestamped, optionally data-annotated messages to a Symfony
- * console output (or `echo` when none is provided). Self-contained — it
- * does not depend on any host notification base class.
+ * Writes timestamped, optionally data-annotated messages to a Symfony console
+ * output. Message text and notification level are sanitised so externally
+ * sourced content cannot inject formatter markup or terminal escape sequences.
  */
 final class ConsoleChannel implements ConsoleChannelInterface
 {
+    /**
+     * Notification levels that map to safe, built-in Symfony output tags.
+     */
+    private const ALLOWED_LEVELS = ['info', 'comment', 'error', 'question'];
+
     /** @var array<string, mixed> */
     private array $config;
 
@@ -42,16 +49,21 @@ final class ConsoleChannel implements ConsoleChannelInterface
      */
     public function send(string $message, array $data = []): bool
     {
-        $formatted = $this->formatMessage($message, $data);
+        $output = $this->output ?? new ConsoleOutput();
+        $level = $this->resolveLevel($data['level'] ?? null);
 
-        if ($this->output instanceof OutputInterface) {
-            $level = is_string($data['level'] ?? null) ? $data['level'] : 'info';
-            $this->output->writeln("<{$level}>{$formatted}</{$level}>");
-        } else {
-            echo $formatted . "\n";
-        }
+        // escape() neutralises any `<tag>` in the content; sanitizeText() strips
+        // terminal control characters. The level is taken from a fixed set.
+        $body = $output->getFormatter()->escape($this->formatMessage($message, $data));
+
+        $output->writeln("<{$level}>{$body}</{$level}>");
 
         return true;
+    }
+
+    private function resolveLevel(mixed $level): string
+    {
+        return is_string($level) && in_array($level, self::ALLOWED_LEVELS, true) ? $level : 'info';
     }
 
     /**
@@ -59,10 +71,10 @@ final class ConsoleChannel implements ConsoleChannelInterface
      */
     private function formatMessage(string $message, array $data): string
     {
-        $output = '[' . date('Y-m-d H:i:s') . "] {$message}";
+        $output = '[' . date('Y-m-d H:i:s') . '] ' . ConsoleUIFormatter::sanitizeText($message);
 
         if ($data !== [] && ($this->config['show_data'] ?? true)) {
-            $output .= ' | Data: ' . (json_encode($data) ?: '');
+            $output .= ' | Data: ' . ConsoleUIFormatter::sanitizeText((string) (json_encode($data) ?: ''));
         }
 
         return $output;

@@ -19,6 +19,6 @@ class RadioFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return in_array($value, $this->options) ? null : $this->errorMessage;
+        return in_array($value, $this->options, true) ? null : $this->errorMessage;
     }
 }

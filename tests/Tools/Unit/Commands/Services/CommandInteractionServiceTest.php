@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandInteractionService;
+use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
 
 /**
  * Exercises the non-interactive branches, which short-circuit Laravel
@@ -32,9 +33,12 @@ final class CommandInteractionServiceTest extends TestCase
         self::assertSame('preset', $this->service()->askText('Name?', '', 'preset'));
     }
 
-    public function test_ask_password_returns_empty_string_when_non_interactive(): void
+    public function test_ask_password_throws_when_non_interactive(): void
     {
-        self::assertSame('', $this->service()->askPassword('Secret?'));
+        // A required secret must never be silently empty in non-interactive mode.
+        $this->expectException(NonInteractiveException::class);
+
+        $this->service()->askPassword('Secret?');
     }
 
     public function test_ask_confirm_returns_default_when_non_interactive(): void

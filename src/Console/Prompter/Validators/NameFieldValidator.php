@@ -16,6 +16,6 @@ class NameFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return preg_match('/^[\p{L} \'-]+$/u', $value) ? null : $this->errorMessage;
+        return is_string($value) && preg_match('/^[\p{L} \'-]+$/u', $value) === 1 ? null : $this->errorMessage;
     }
 }

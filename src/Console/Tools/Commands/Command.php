@@ -13,24 +13,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
 /**
- * Enhanced BaseCommand class with comprehensive functionality
- *
- * Merged from both Core and Nails BaseCommand classes with service-based architecture.
+ * Enhanced Artisan command base with a service-based architecture.
  *
  * Features:
- * - Service-based architecture for better separation of concerns
- * - Laravel 12 native console events integration
- * - Signal handling for graceful shutdown
- * - Performance monitoring and memory tracking
- * - Comprehensive error handling and logging
- * - Metadata management
- * - Laravel Prompts integration
- * - Interactive prompts and validation
- * - Enhanced display methods
- * - Configuration access
- * - Testing support with WithConsoleEvents trait
+ * - Discrete services for performance, events, signals, metadata, logging,
+ *   errors, configuration, interaction and display
+ * - Native console event integration with graceful-shutdown signal handling
+ * - Performance/memory tracking and structured, redacted error logging
+ * - Laravel Prompts integration for interactive input
  *
- * @see https://github.com/bmitch/consoleEvents
  * @see https://laravel.com/docs/artisan
  */
 abstract class Command extends BaseCommand
@@ -86,9 +77,12 @@ abstract class Command extends BaseCommand
         try {
             $exitCode = parent::run($input, $output);
         } catch (Throwable $e) {
+            // Structured, redacted logging (single source of truth) plus a
+            // user-facing message. The command exits non-zero rather than
+            // bubbling a raw stack trace to the terminal.
             $this->services->handleException($e);
             $this->handleException($e);
-            $exitCode = 1;
+            $exitCode = self::FAILURE;
         } finally {
             // End command execution
             $this->services->endCommand($exitCode);
@@ -111,7 +105,14 @@ abstract class Command extends BaseCommand
      */
     protected function setupSignalHandling(): void
     {
-        // Handle SIGTERM and SIGINT for graceful shutdown
+        // Signal handling requires ext-pcntl; the SIGTERM/SIGINT constants are
+        // only defined when it is loaded (e.g. not on Windows). Bail out early
+        // so constructing a command never fatals on platforms without it.
+        if (! extension_loaded('pcntl')) {
+            return;
+        }
+
+        // Handle SIGTERM and SIGINT for graceful shutdown.
         $this->trap([SIGTERM, SIGINT], function (int $signal): void {
             $this->info('Received termination signal. Gracefully shutting down...');
             $this->services->signals()->stop();
@@ -131,8 +132,13 @@ abstract class Command extends BaseCommand
     {
         $this->error("Command failed: {$e->getMessage()}");
 
-        if ($this->option('verbose')) {
+        // File/line on -v; the full stack trace only on -vvv (debug). Traces can
+        // carry sensitive call arguments, so they are not shown at lower levels.
+        if ($this->isVerbose()) {
             $this->line("File: {$e->getFile()}:{$e->getLine()}");
+        }
+
+        if ($this->isDebug()) {
             $this->line("Trace: {$e->getTraceAsString()}");
         }
     }

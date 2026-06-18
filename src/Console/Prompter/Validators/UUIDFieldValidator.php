@@ -3,9 +3,7 @@
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
 /**
- * Class UUIDFieldValidator
- *
- * Validates UUID fields.
+ * Validates RFC 4122 UUID fields (any version 1–5).
  */
 class UUIDFieldValidator extends AbstractValidator
 {
@@ -14,18 +12,10 @@ class UUIDFieldValidator extends AbstractValidator
         parent::__construct($errorMessage, 'uuid', $replace, $locale);
     }
 
-    /**
-     * Validate the given value.
-     *
-     * @param mixed $value The value to validate.
-     * @return string|null The error message if validation fails, or null if validation passes.
-     */
     public function validate(mixed $value): ?string
     {
-        if (is_string($value) && preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[4][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value)) {
-            return null;
-        }
+        $pattern = '/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/';
 
-        return $this->errorMessage;
+        return is_string($value) && preg_match($pattern, $value) === 1 ? null : $this->errorMessage;
     }
 }

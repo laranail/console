@@ -3,9 +3,7 @@
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
 /**
- * Class StringFieldValidator
- *
- * Validates string fields with length constraints.
+ * Validates string fields with character-length constraints.
  */
 class StringFieldValidator extends AbstractValidator
 {
@@ -19,9 +17,15 @@ class StringFieldValidator extends AbstractValidator
         $this->minLength = $minLength;
         $this->maxLength = $maxLength;
     }
+
     public function validate(mixed $value): ?string
     {
-        $length = strlen($value);
-        return is_string($value) && $length >= $this->minLength && $length <= $this->maxLength ? null : $this->errorMessage;
+        if (! is_string($value)) {
+            return $this->errorMessage;
+        }
+
+        $length = mb_strlen($value);
+
+        return $length >= $this->minLength && $length <= $this->maxLength ? null : $this->errorMessage;
     }
 }

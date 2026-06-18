@@ -8,20 +8,19 @@ use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
- * Command Error Service
+ * Structured error logging for console commands.
  *
- * Handles error logging, exception management, and error context
- * for console commands. Provides structured error handling.
+ * Context is scrubbed of sensitive keys before logging, and full stack traces
+ * are only included when the application is in debug mode (configurable), so
+ * traces carrying credentials never leak into shared log channels.
  */
 class CommandErrorService
 {
+    /** @var array<string, mixed> */
     protected array $context = [];
 
     public function __construct(protected string $commandName = '') {}
 
-    /**
-     * Set command name for context
-     */
     public function setCommandName(string $commandName): self
     {
         $this->commandName = $commandName;
@@ -29,9 +28,6 @@ class CommandErrorService
         return $this;
     }
 
-    /**
-     * Add context data
-     */
     public function addContext(string $key, mixed $value): self
     {
         $this->context[$key] = $value;
@@ -40,7 +36,7 @@ class CommandErrorService
     }
 
     /**
-     * Add multiple context entries
+     * @param array<string, mixed> $context
      */
     public function addContextMany(array $context): self
     {
@@ -50,39 +46,44 @@ class CommandErrorService
     }
 
     /**
-     * Log error with context
+     * Log an exception with scrubbed context.
+     *
+     * @param array<string, mixed> $additionalContext
      */
     public function logError(Throwable $e, array $additionalContext = []): void
     {
-        $logData = array_merge($this->context, $additionalContext, [
-            'command' => $this->commandName,
+        $context = $this->scrub(array_merge($this->context, $additionalContext));
+
+        $logData = array_merge($context, [
+            'command'   => $this->commandName,
             'exception' => $e::class,
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString(),
+            'message'   => $e->getMessage(),
+            'file'      => $e->getFile(),
+            'line'      => $e->getLine(),
             'timestamp' => now()->toISOString(),
         ]);
 
-        Log::error('Command Error', $logData);
+        if (! $this->traceInDebugOnly() || (bool) config('app.debug')) {
+            $logData['trace'] = $e->getTraceAsString();
+        }
+
+        $channel = config('console.logging.channel');
+
+        ($channel ? Log::channel($channel) : Log::getFacadeRoot())
+            ->error('Command Error', $logData);
     }
 
-    /**
-     * Execute callback with error handling
-     */
     public function executeWithErrorHandling(callable $callback, string $operation = 'operation'): mixed
     {
         try {
             return $callback();
         } catch (Throwable $e) {
             $this->logError($e, ['operation' => $operation]);
+
             throw $e;
         }
     }
 
-    /**
-     * Execute callback with fallback on error
-     */
     public function executeWithFallback(callable $callback, mixed $fallback = null, string $operation = 'operation'): mixed
     {
         try {
@@ -95,20 +96,48 @@ class CommandErrorService
     }
 
     /**
-     * Get current context
+     * @return array<string, mixed>
      */
     public function getContext(): array
     {
         return $this->context;
     }
 
-    /**
-     * Clear context
-     */
     public function clearContext(): self
     {
         $this->context = [];
 
         return $this;
+    }
+
+    /**
+     * Redact values whose key matches a configured sensitive token.
+     *
+     * @param array<string, mixed> $context
+     * @return array<string, mixed>
+     */
+    protected function scrub(array $context): array
+    {
+        $redactKeys = (array) config('console.logging.redact_keys', ['password', 'secret', 'token', 'key', 'authorization']);
+
+        foreach ($context as $key => $value) {
+            foreach ($redactKeys as $needle) {
+                if (is_string($key) && stripos($key, (string) $needle) !== false) {
+                    $context[$key] = '[redacted]';
+                    continue 2;
+                }
+            }
+
+            if (is_array($value)) {
+                $context[$key] = $this->scrub($value);
+            }
+        }
+
+        return $context;
+    }
+
+    protected function traceInDebugOnly(): bool
+    {
+        return (bool) config('console.logging.trace_in_debug_only', true);
     }
 }

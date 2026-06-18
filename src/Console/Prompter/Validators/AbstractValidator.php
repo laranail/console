@@ -23,7 +23,7 @@ abstract class AbstractValidator implements ValidatorInterface
      */
     public function __construct(?string $errorMessage = null, string $defaultMessageKey = '', array $replace = [], ?string $locale = null)
     {
-        $this->errorMessage = $errorMessage ?? __('prompter::validators.' . $defaultMessageKey, $replace, $locale);
+        $this->errorMessage = $errorMessage ?? __('console::validators.' . $defaultMessageKey, $replace, $locale);
     }
 
     /**

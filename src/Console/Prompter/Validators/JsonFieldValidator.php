@@ -3,8 +3,6 @@
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
 /**
- * Class JsonFieldValidator
- *
  * Validates JSON fields.
  */
 class JsonFieldValidator extends AbstractValidator
@@ -16,7 +14,12 @@ class JsonFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
+        if (! is_string($value) || $value === '') {
+            return $this->errorMessage;
+        }
+
         json_decode($value);
+
         return json_last_error() === JSON_ERROR_NONE ? null : $this->errorMessage;
     }
 }
