@@ -79,6 +79,7 @@ fully decoupled — they only meet in the `Console` aggregator.
 | [Configuration](docs/configuration.md) | Every `config/console.php` key |
 | [Internationalization](docs/i18n.md) | Translating console strings |
 | [Output formatter](docs/tools/formatting.md) | Colours, badges, status, links |
+| [Output widgets](docs/tools/widgets.md) | Spinner, progress, box, tree, table, gauge… |
 | [Commands](docs/tools/commands.md) | The Artisan command base + services |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |

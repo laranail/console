@@ -1,13 +1,13 @@
 # Contributing
 
-Thank you for your interest in `laranail/console-tools`.
+Thank you for your interest in `laranail/console`.
 
 ## Quick start
 
 ```bash
-git clone https://github.com/laranail/console-tools.git
-cd console-tools
-bash .scripts/init.sh
+git clone https://github.com/laranail/console.git
+cd console
+composer install
 composer test
 ```
 

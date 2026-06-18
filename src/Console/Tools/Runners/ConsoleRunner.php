@@ -69,11 +69,12 @@ class ConsoleRunner extends BaseRunner
 
         return $this->when(
             function () use ($commands): bool {
-                if (! isset($_SERVER['argv'][1])) {
-                    return false;
-                }
+                // The command is the first non-option argument after the script
+                // name; skip leading global options like `-v`.
+                $args = array_slice($_SERVER['argv'] ?? [], 1);
+                $command = Arr::first($args, static fn (string $arg): bool => ! str_starts_with($arg, '-'));
 
-                return in_array($_SERVER['argv'][1], $commands, true);
+                return $command !== null && in_array($command, $commands, true);
             },
             'command_' . implode('_or_', $commands)
         );
@@ -91,13 +92,36 @@ class ConsoleRunner extends BaseRunner
     }
 
     /**
-     * Only run with specific verbosity
+     * Only run at or above a given output verbosity (1 = -v, 2 = -vv, 3 = -vvv).
      */
     public function whenVerbose(int $level = 1): static
     {
         return $this->when(
-            fn () => app('events')->hasListeners('illuminate.query'),
+            fn (): bool => $this->detectVerbosity() >= $level,
             "verbose_level_{$level}"
         );
+    }
+
+    /**
+     * Derive the requested verbosity from the CLI flags, mirroring how Symfony
+     * Console interprets `-v`/`-vv`/`-vvv`/`--verbose` and `-q`/`--quiet`.
+     */
+    protected function detectVerbosity(): int
+    {
+        $verbosity = 0;
+
+        foreach (array_slice($_SERVER['argv'] ?? [], 1) as $arg) {
+            if ($arg === '--quiet' || $arg === '-q') {
+                return 0;
+            }
+
+            if ($arg === '--verbose') {
+                $verbosity = max($verbosity, 1);
+            } elseif (preg_match('/^-v+$/', (string) $arg) === 1) {
+                $verbosity = max($verbosity, strlen((string) $arg) - 1);
+            }
+        }
+
+        return $verbosity;
     }
 }
