@@ -8,11 +8,16 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -82,6 +87,48 @@ final class ConsoleManager
     public function tree(string $label = ''): Tree
     {
         return Tree::make($label);
+    }
+
+    /**
+     * Build a nested tree.
+     */
+    public function table(): Table
+    {
+        return Table::make();
+    }
+
+    /**
+     * A single-value gauge/meter.
+     */
+    public function gauge(float $value, float $max = 100.0): Gauge
+    {
+        return Gauge::make($value, $max);
+    }
+
+    /**
+     * An inline block-eighths sparkline.
+     *
+     * @param list<int|float> $values
+     */
+    public function sparkline(array $values): Sparkline
+    {
+        return Sparkline::make($values);
+    }
+
+    /**
+     * A centred start-of-run banner/masthead.
+     */
+    public function banner(string $title): Banner
+    {
+        return Banner::make($title);
+    }
+
+    /**
+     * A multi-task progress widget (exit non-zero on any failure).
+     */
+    public function tasks(?OutputInterface $output = null): TaskProgress
+    {
+        return TaskProgress::make($output);
     }
 
     /**
