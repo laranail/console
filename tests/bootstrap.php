@@ -7,7 +7,7 @@ declare(strict_types=1);
 | Test Bootstrap
 |--------------------------------------------------------------------------
 |
-| Bootstraps the test environment for laranail/console-tools.
+| Bootstraps the test environment for laranail/console.
 |
 */
 

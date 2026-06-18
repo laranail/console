@@ -10,13 +10,16 @@
 
     <testsuites>
         <testsuite name="Unit">
-            <directory>tests/Unit</directory>
+            <directory>tests/Tools/Unit</directory>
         </testsuite>
         <testsuite name="Integration">
-            <directory>tests/Integration</directory>
+            <directory>tests/Tools/Integration</directory>
         </testsuite>
         <testsuite name="Feature">
-            <directory>tests/Feature</directory>
+            <directory>tests/Tools/Feature</directory>
+        </testsuite>
+        <testsuite name="Prompter">
+            <directory>tests/Prompter</directory>
         </testsuite>
     </testsuites>
 

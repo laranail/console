@@ -1,16 +1,20 @@
 {
-  "name": "laranail/console-tools",
-  "description": "Console & terminal-UI toolkit for Laravel packages — fluent output formatter, progress bars, and an enhanced Artisan command base with service-based architecture.",
+  "name": "laranail/console",
+  "description": "A Rich-class console toolkit for Laravel — fluent output formatter, spinners, progress bars, boxes, trees and tables, plus a fluent prompts/forms layer with validators.",
   "keywords": [
     "laravel",
     "console",
     "artisan",
     "terminal",
+    "tui",
     "formatter",
-    "laranail",
-    "console-tools"
+    "spinner",
+    "progress",
+    "prompts",
+    "forms",
+    "laranail"
   ],
-  "homepage": "https://opensource.simtabi.com/console-tools/",
+  "homepage": "https://opensource.simtabi.com/console/",
   "license": "MIT",
   "authors": [
     {
@@ -26,9 +30,9 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/laranail/console-tools/issues",
-    "source": "https://github.com/laranail/console-tools",
-    "docs": "https://opensource.simtabi.com/console-tools/docs/"
+    "issues": "https://github.com/laranail/console/issues",
+    "source": "https://github.com/laranail/console",
+    "docs": "https://opensource.simtabi.com/console/docs/"
   },
   "require": {
     "php": "^8.3 || ^8.4 || ^8.5",
@@ -51,16 +55,19 @@
   },
   "autoload": {
     "psr-4": {
-      "Simtabi\\Laranail\\ConsoleTools\\": "src/"
-    }
+      "Simtabi\\Laranail\\Console\\": "src/Console/"
+    },
+    "files": [
+      "src/Console/Prompter/functions.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
-      "Simtabi\\Laranail\\ConsoleTools\\Tests\\": "tests/"
+      "Simtabi\\Laranail\\Console\\Tools\\Tests\\": "tests/Tools/",
+      "Simtabi\\Laranail\\Console\\Prompter\\Tests\\": "tests/Prompter/"
     }
   },
   "scripts": {
-    "setup": "bash .scripts/init.sh",
     "test": "vendor/bin/pest --colors=always",
     "test-coverage": "@test --coverage",
     "test-dirty": "@test --dirty --compact",
@@ -79,14 +86,22 @@
     ],
     "composer-audit": "@composer audit"
   },
+  "replace": {
+    "laranail/console-tools": "*",
+    "laranail/prompter": "*"
+  },
   "extra": {
     "branch-alias": {
       "dev-main": "0.1.x-dev"
     },
     "laravel": {
       "providers": [
-        "Simtabi\\Laranail\\ConsoleTools\\Providers\\ConsoleToolsServiceProvider"
-      ]
+        "Simtabi\\Laranail\\Console\\Providers\\ConsoleServiceProvider"
+      ],
+      "aliases": {
+        "Console": "Simtabi\\Laranail\\Console\\Facades\\Console",
+        "Prompter": "Simtabi\\Laranail\\Console\\Prompter\\Facades\\PrompterFacade"
+      }
     }
   },
   "config": {
