@@ -26,6 +26,6 @@ class PrompterException extends ConsoleException
      */
     public static function badMethodCall(array $variables = []): static
     {
-        return static::triggerErrorMessage('bad_method_call', $variables);
+        return static::triggerErrorMessage('bad_context_method_call', $variables);
     }
 }

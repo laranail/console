@@ -111,12 +111,21 @@ final class Box implements Stringable
         $g = $this->style->glyphs();
         $lines = array_map(ConsoleUIFormatter::sanitizeText(...), $this->lines);
 
+        // Always render at least one interior row so the box is a closed
+        // rectangle even for empty content.
+        if ($lines === []) {
+            $lines = [''];
+        }
+
         $bodyWidth = 0;
         foreach ($lines as $line) {
             $bodyWidth = max($bodyWidth, DisplayWidth::of($line));
         }
 
-        $inner = ($this->width !== null ? max($this->width - 2, 1) : $bodyWidth + ($this->padding * 2));
+        // A fixed width() is a *minimum*: grow the interior to fit the content so
+        // a long line never overflows the frame (DisplayWidth::pad only grows).
+        $contentInner = $bodyWidth + ($this->padding * 2);
+        $inner = $this->width !== null ? max($this->width - 2, $contentInner, 1) : $contentInner;
 
         // Ensure a titled/footed rule fits: leading edge glyph + " label ".
         foreach ([$this->title, $this->footer] as $label) {

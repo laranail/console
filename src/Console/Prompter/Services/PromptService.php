@@ -160,6 +160,15 @@ class PromptService
     }
 
     /**
+     * Whether a prompt type is dispatchable (the methods live in a closure map,
+     * so method_exists() does not see them).
+     */
+    public function has(string $method): bool
+    {
+        return isset($this->methods[$method]);
+    }
+
+    /**
      * Provides access to context-related methods.
      *
      * @return ContextBuilderService An instance of ContextBuilder with context-related methods.

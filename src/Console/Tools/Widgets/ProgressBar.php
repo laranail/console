@@ -34,15 +34,12 @@ final class ProgressBar
 
     private readonly Capabilities $capabilities;
 
-    private bool $rateRegistered = false;
-
     public function __construct(OutputInterface $output, int $max = 0, ?Capabilities $capabilities = null)
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->bar = new SymfonyProgressBar($output, $max);
 
-        $this->registerRatePlaceholder();
-        $this->applyThreeTierTimes();
+        $this->registerPlaceholders();
         $this->format($this->config('progress.format', 'detailed'));
         $this->glyphs($this->config('progress.glyphs', 'blocks'));
     }
@@ -111,26 +108,24 @@ final class ProgressBar
         return $this->bar;
     }
 
-    private function registerRatePlaceholder(): void
+    /**
+     * Register the rate/elapsed/estimated placeholders on THIS bar only.
+     *
+     * Instance scoping (vs the static setPlaceholderFormatterDefinition) is
+     * deliberate: it must not mutate the process-wide defaults that every other
+     * Symfony progress bar in the host app relies on.
+     */
+    private function registerPlaceholders(): void
     {
-        if ($this->rateRegistered) {
-            return;
-        }
-
-        SymfonyProgressBar::setPlaceholderFormatterDefinition('rate', static function (SymfonyProgressBar $bar): string {
+        $this->bar->setPlaceholderFormatter('rate', static function (SymfonyProgressBar $bar): string {
             $elapsed = max(microtime(true) - (float) $bar->getStartTime(), 0.0001);
 
             return number_format($bar->getProgress() / $elapsed, 1, '.', '');
         });
 
-        $this->rateRegistered = true;
-    }
+        $this->bar->setPlaceholderFormatter('elapsed', static fn (SymfonyProgressBar $bar): string => TimeFormat::duration(microtime(true) - (float) $bar->getStartTime()));
 
-    private function applyThreeTierTimes(): void
-    {
-        SymfonyProgressBar::setPlaceholderFormatterDefinition('elapsed', static fn (SymfonyProgressBar $bar): string => TimeFormat::duration(microtime(true) - (float) $bar->getStartTime()));
-
-        SymfonyProgressBar::setPlaceholderFormatterDefinition('estimated', static function (SymfonyProgressBar $bar): string {
+        $this->bar->setPlaceholderFormatter('estimated', static function (SymfonyProgressBar $bar): string {
             if ($bar->getMaxSteps() === 0 || $bar->getProgress() === 0) {
                 return '∞';
             }

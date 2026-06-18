@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter;
 use Closure;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\FormBuilder;
+use Simtabi\Laranail\Console\Prompter\Enums\ContextType;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
 use Simtabi\Laranail\Console\Prompter\Services\PromptService;
@@ -68,13 +69,22 @@ class Prompter
      */
     public function __call(string $method, array $arguments): self
     {
-        if (method_exists($this->promptManager, $method)) {
+        // Prompt types live in PromptService's closure map (dispatched via its
+        // own __call), so method_exists() can't see them — ask has() instead.
+        if ($this->promptManager->has($method)) {
             $this->result = $this->promptManager->$method(...$arguments);
-        } else {
-            throw PrompterException::triggerErrorMessage('method_does_not_exist', ['method' => $method, 'class' => static::class]);
+
+            return $this;
         }
 
-        return $this;
+        // Context output methods (note/info/warning/error/alert/intro/outro).
+        if (ContextType::tryFrom($method) instanceof ContextType) {
+            $this->result = $this->context()->{$method}(...$arguments);
+
+            return $this;
+        }
+
+        throw PrompterException::triggerErrorMessage('method_does_not_exist', ['method' => $method, 'class' => static::class]);
     }
 
     /**

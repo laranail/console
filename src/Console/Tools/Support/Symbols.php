@@ -37,8 +37,8 @@ final readonly class Symbols
         'arrow' => '->',
         'branch' => '|-',
         'last' => '\\-',
-        'stem' => '|  ',
-        'gap' => '   ',
+        'stem' => '| ',
+        'gap' => '  ',
     ];
 
     public function __construct(private bool $unicode) {}

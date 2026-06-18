@@ -70,7 +70,14 @@ final class Rule implements Stringable
             return str_repeat($line, max($width, 1));
         }
 
-        $label = ' ' . $this->title . ' ';
+        // Keep the rule within the requested width: a title that can't fit
+        // alongside at least two rule chars is truncated (titles are plain text).
+        $title = $this->title;
+        if (DisplayWidth::of($title) + 2 > $width - 2) {
+            $title = rtrim(mb_substr($title, 0, max($width - 5, 0)));
+        }
+
+        $label = ' ' . $title . ' ';
         $labelWidth = DisplayWidth::of($label);
         $remaining = max($width - $labelWidth, 2);
 
