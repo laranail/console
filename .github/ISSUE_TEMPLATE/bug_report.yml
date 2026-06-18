@@ -1,5 +1,5 @@
 name: Bug report
-description: Report a defect in laranail/console-tools
+description: Report a defect in laranail/console
 labels: [bug]
 body:
   - type: textarea
@@ -21,6 +21,6 @@ body:
     attributes:
       label: Versions
       description: Package, PHP and Laravel versions.
-      placeholder: 'console-tools 0.1.0, PHP 8.3, Laravel 13'
+      placeholder: 'console 0.1.0, PHP 8.3, Laravel 13'
     validations:
       required: true

@@ -58,7 +58,7 @@
       "Simtabi\\Laranail\\Console\\": "src/Console/"
     },
     "files": [
-      "src/Console/Prompter/functions.php"
+      "helpers/helpers.php"
     ]
   },
   "autoload-dev": {

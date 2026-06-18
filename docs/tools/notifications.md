@@ -1,13 +1,13 @@
 # Console notification channel
 
-`Simtabi\Laranail\ConsoleTools\Notifications\ConsoleChannel` is a
+`Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel` is a
 self-contained console output channel (implements the local
 `Notifications\Contracts\ConsoleChannelInterface`). It writes timestamped,
 optionally data-annotated messages to a Symfony console output, or `echo`s
 when no output is supplied.
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Notifications\ConsoleChannel;
+use Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel;
 
 $channel = new ConsoleChannel(config: ['show_data' => true], output: $output);
 $channel->send('Deployment finished', ['level' => 'info', 'duration' => '12s']);
@@ -30,7 +30,7 @@ notification channel as a thin adapter:
 ```php
 namespace App\Notifications\Channels;
 
-use Simtabi\Laranail\ConsoleTools\Notifications\ConsoleChannel as ConsoleWriter;
+use Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel as ConsoleWriter;
 use Vendor\Notifications\Contracts\NotificationChannelInterface;
 
 final class ConsoleChannel implements NotificationChannelInterface

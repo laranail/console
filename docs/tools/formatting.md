@@ -1,6 +1,6 @@
 # Formatting
 
-Two classes under `Simtabi\Laranail\ConsoleTools\Formatting`.
+Two classes under `Simtabi\Laranail\Console\Tools\Formatting`.
 
 ## ConsoleUIFormatter
 
@@ -10,7 +10,7 @@ statistics lines and headers. Terminal color/Unicode support is
 auto-detected.
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 // Static one-liners
 echo ConsoleUIFormatter::success('Done!');
@@ -41,7 +41,7 @@ A wrapper around Symfony's `ProgressBar` that integrates `ConsoleUIFormatter`
 styling and tracks memory. Call `startProgressBar()` before advancing.
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Formatting\ConsoleProgressBar;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleProgressBar;
 
 $bar = (new ConsoleProgressBar)->startProgressBar('Importing', $rows);
 foreach ($rows as $row) {

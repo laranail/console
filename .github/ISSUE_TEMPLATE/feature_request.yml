@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an enhancement for laranail/console-tools
+description: Suggest an enhancement for laranail/console
 labels: [enhancement]
 body:
   - type: textarea

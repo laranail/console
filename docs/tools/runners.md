@@ -1,6 +1,6 @@
 # Runners
 
-Conditional execution helpers under `Simtabi\Laranail\ConsoleTools\Runners`.
+Conditional execution helpers under `Simtabi\Laranail\Console\Tools\Runners`.
 
 ## ConsoleRunner
 
@@ -9,7 +9,7 @@ starts with a built-in "running in console" guard, plus command /
 maintenance / scheduled / verbosity conditions.
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Runners\ConsoleRunner;
+use Simtabi\Laranail\Console\Tools\Runners\ConsoleRunner;
 
 ConsoleRunner::make()
     ->whenNotInMaintenance()

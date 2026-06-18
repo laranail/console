@@ -1,13 +1,13 @@
 # Commands
 
-`Simtabi\Laranail\ConsoleTools\Commands\LaranailCommand` is an enhanced
+`Simtabi\Laranail\Console\Tools\Commands\Command` is an enhanced
 Artisan command base with a service-based architecture. Extend it instead
 of `Illuminate\Console\Command`.
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Commands\LaranailCommand;
+use Simtabi\Laranail\Console\Tools\Commands\Command;
 
-final class SyncCommand extends LaranailCommand
+final class SyncCommand extends Command
 {
     protected $signature = 'app:sync';
 

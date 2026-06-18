@@ -1,7 +1,7 @@
 # Installation
 
 ```bash
-composer require laranail/console-tools
+composer require laranail/console
 ```
 
 ## Requirements
@@ -11,9 +11,18 @@ composer require laranail/console-tools
 
 ## Service provider
 
-`ConsoleToolsServiceProvider` is auto-discovered via
-`extra.laravel.providers` — no manual registration needed. It binds the
-console formatter and command services into the container.
+`ConsoleServiceProvider` is auto-discovered via `extra.laravel.providers` — no
+manual registration needed. It loads the package config and translations, binds
+the `ConsoleManager` (the `Console` facade), and registers the per-sub-domain
+child providers. The `Console` and `Prompter` facades and the global
+`prompter()` helper are registered automatically too.
+
+## Publishing config & translations
+
+```bash
+php artisan vendor:publish --tag=console-config
+php artisan vendor:publish --tag=console-lang
+```
 
 ---
 

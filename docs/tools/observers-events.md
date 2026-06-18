@@ -2,13 +2,13 @@
 
 ## ConsoleCommandObserver
 
-`Simtabi\Laranail\ConsoleTools\Observers\ConsoleCommandObserver` listens to
+`Simtabi\Laranail\Console\Tools\Observers\ConsoleCommandObserver` listens to
 Laravel's console lifecycle (`CommandStarting`/`CommandFinished`) with
 flexible matching — literal names, wildcards (`cache:*`), regex (`/^queue:/`),
 callables, or arrays of any of those.
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Observers\ConsoleCommandObserver;
+use Simtabi\Laranail\Console\Tools\Observers\ConsoleCommandObserver;
 
 ConsoleCommandObserver::for('migrate')
     ->onFinish(function ($event): void {
@@ -26,12 +26,12 @@ buffered output of a finished command.
 
 ## CommandEvents
 
-`Simtabi\Laranail\ConsoleTools\Events\CommandEvents` is a self-contained
+`Simtabi\Laranail\Console\Tools\Events\CommandEvents` is a self-contained
 lifecycle event (no dependency on a host event base). The command base
 dispatches it; you can also build it directly:
 
 ```php
-use Simtabi\Laranail\ConsoleTools\Events\CommandEvents;
+use Simtabi\Laranail\Console\Tools\Events\CommandEvents;
 
 $event = CommandEvents::starting($command, $input);      // action: 'starting'
 $event = CommandEvents::terminating($command, $input, 0); // action: 'terminating', exitCode: 0
