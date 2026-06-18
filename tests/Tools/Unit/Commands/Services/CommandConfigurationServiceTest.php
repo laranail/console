@@ -18,22 +18,16 @@ final class CommandConfigurationServiceTest extends TestCase
 
     public function test_get_reads_from_laravel_config(): void
     {
-        config()->set('laranail.core.driver', 'redis');
+        config()->set('some.driver', 'redis');
 
-        self::assertSame('redis', (new CommandConfigurationService)->getCore('driver'));
+        self::assertSame('redis', (new CommandConfigurationService)->get('some.driver'));
     }
 
-    public function test_namespaced_getters_prefix_keys(): void
+    public function test_get_env_prefixes_the_app_namespace(): void
     {
-        config()->set('laranail.installer.path', '/opt');
-        config()->set('laranail.updater.channel', 'stable');
         config()->set('app.timezone', 'UTC');
 
-        $service = new CommandConfigurationService;
-
-        self::assertSame('/opt', $service->getInstaller('path'));
-        self::assertSame('stable', $service->getUpdater('channel'));
-        self::assertSame('UTC', $service->getEnv('timezone'));
+        self::assertSame('UTC', (new CommandConfigurationService)->getEnv('timezone'));
     }
 
     public function test_get_caches_resolved_values(): void

@@ -23,7 +23,23 @@ abstract class AbstractValidator implements ValidatorInterface
      */
     public function __construct(?string $errorMessage = null, string $defaultMessageKey = '', array $replace = [], ?string $locale = null)
     {
-        $this->errorMessage = $errorMessage ?? __('console::validators.' . $defaultMessageKey, $replace, $locale);
+        $this->errorMessage = $errorMessage ?? __('console::validators.' . $defaultMessageKey, $replace, $locale ?? self::configuredLocale());
+    }
+
+    /**
+     * The package's configured translation locale (`console.locale`), or null to
+     * follow the application locale. Read defensively so validators also work
+     * outside a booted application.
+     */
+    protected static function configuredLocale(): ?string
+    {
+        if (function_exists('app') && app()->bound('config')) {
+            $locale = config('console.locale');
+
+            return is_string($locale) ? $locale : null;
+        }
+
+        return null;
     }
 
     /**

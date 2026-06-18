@@ -30,30 +30,6 @@ class CommandConfigurationService
     }
 
     /**
-     * Get core configuration value
-     */
-    public function getCore(string $key, mixed $default = null): mixed
-    {
-        return $this->get("laranail.core.{$key}", $default);
-    }
-
-    /**
-     * Get installer configuration value
-     */
-    public function getInstaller(string $key, mixed $default = null): mixed
-    {
-        return $this->get("laranail.installer.{$key}", $default);
-    }
-
-    /**
-     * Get updater configuration value
-     */
-    public function getUpdater(string $key, mixed $default = null): mixed
-    {
-        return $this->get("laranail.updater.{$key}", $default);
-    }
-
-    /**
      * Get environment value via config
      */
     public function getEnv(string $key, mixed $default = null): mixed
