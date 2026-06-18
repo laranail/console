@@ -25,43 +25,8 @@ use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
 
 /**
- * Class PromptManager
+ * Dispatches the supported Laravel Prompts types via a closure map.
  *
- * This class manages various prompt types for user input.
- *
- * Usage example:
- * $prompts = new PromptManager(
- *     new TextPrompt(),
- *     new TextareaPrompt(),
- *     new PasswordPrompt(),
- *     new SelectPrompt(),
- *     new MultiSelectPrompt(),
- *     new ConfirmPrompt(),
- *     new PausePrompt(),
- *     new SuggestPrompt(),
- *     new SearchPrompt(),
- *     new MultiSearchPrompt(),
- *     new Spinner(),
- *     new Table(),
- *     new Progress(),
- *     new FormBuilder(),
- *     new ContextBuilder()
- * );
- * $userName = $prompts->text('Enter your name');
- *
- * @method string text(string $label, string $placeholder = '', string $default = '', bool|string $required = false, mixed $validate = null, string $hint = '')
- * @method string textarea(string $label, string $placeholder = '', string $default = '', bool|string $required = false, ?Closure $validate = null, string $hint = '', int $rows = 5)
- * @method string password(string $label, string $placeholder = '', bool|string $required = false, mixed $validate = null, string $hint = '')
- * @method int|string select(string $label, array|Collection $options, int|string|null $default = null, int $scroll = 5, mixed $validate = null, string $hint = '', bool|string $required = true)
- * @method array multiselect(string $label, array|Collection $options, array|Collection $default = [], int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = 'Use the space bar to select options.')
- * @method bool confirm(string $label, bool $default = true, string $yes = 'Yes', string $no = 'No', bool|string $required = false, mixed $validate = null, string $hint = '')
- * @method bool pause(string $message = 'Press enter to continue...')
- * @method string suggest(string $label, array|Collection|Closure $options, string $placeholder = '', string $default = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = '')
- * @method int|string search(string $label, Closure $options, string $placeholder = '', int $scroll = 5, mixed $validate = null, string $hint = '', bool|string $required = true)
- * @method array multisearch(string $label, Closure $options, string $placeholder = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = 'Use the space bar to select options.')
- * @method mixed spin(Closure $callback, string $message = '')
- * @method void table(array|Collection $headers = [], array|Collection|null $rows = null)
- * @method Progress|array progress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '')
  * @method FormBuilder form()
  */
 class PromptService

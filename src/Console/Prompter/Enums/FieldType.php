@@ -140,7 +140,7 @@ enum FieldType: string
             self::ALPHA => new AlphaValidator,
             self::ALPHANUMERIC => new AlphanumericValidator,
             self::UUID_OR_INTEGER_OR_SLUG => new UuidOrIntegerOrSlugValidator,
-            default => throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $type]),
+            default => throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $type->value]),
         };
     }
 

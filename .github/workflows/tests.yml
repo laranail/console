@@ -54,3 +54,6 @@ jobs:
 
       - name: Run Pest
         run: vendor/bin/pest --colors=always
+
+      - name: Smoke-test examples
+        run: composer examples

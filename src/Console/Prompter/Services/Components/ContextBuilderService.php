@@ -9,7 +9,7 @@ use Simtabi\Laranail\Console\Prompter\Enums\ContextType;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 
 /**
- * Class ContextService
+ * Wraps Laravel Prompts context output (note/info/warning/...).
  *
  * This class manages context-related methods.
  *
