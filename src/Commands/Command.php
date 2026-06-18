@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\ConsoleTools\Commands;
 
-use Illuminate\Console\Command;
+use Illuminate\Console\Command as BaseCommand;
 use Override;
 use Simtabi\Laranail\ConsoleTools\Commands\Services\CommandServiceManager;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -33,7 +33,7 @@ use Throwable;
  * @see https://github.com/bmitch/consoleEvents
  * @see https://laravel.com/docs/artisan
  */
-abstract class LaranailCommand extends Command
+abstract class Command extends BaseCommand
 {
     /**
      * Command service manager
