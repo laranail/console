@@ -12,8 +12,10 @@ use Simtabi\Laranail\Console\Tools\Support\Symbols;
  * One-line status messages with a coloured glyph prefix.
  *
  * Glyphs come from the shared {@see Symbols} map (Unicode or ASCII per
- * {@see Capabilities}); colour is applied through {@see ConsoleUIFormatter}
- * tags so it honours NO_COLOR/non-TTY automatically.
+ * {@see Capabilities}). The returned string carries Symfony Console **markup**
+ * (e.g. `<fg=green>…</>`), so write it through an output (`$output->writeln()`
+ * or a command's `$this->line()`) to render — colour then resolves on a TTY and
+ * is stripped when piped. Echoing it directly prints the literal tags.
  */
 final readonly class StatusLine
 {

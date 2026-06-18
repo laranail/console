@@ -8,6 +8,7 @@ use function Laravel\Prompts\spin;
 
 use Simtabi\Laranail\Console\Tools\Enums\SpinnerFrames;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -45,7 +46,7 @@ final class Spinner
         $this->output = $output ?? new ConsoleOutput;
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->symbols = Symbols::for($this->capabilities);
-        $this->frames = SpinnerFrames::fromName($this->config('spinner.frames', 'braille'));
+        $this->frames = SpinnerFrames::fromName((string) Config::get('spinner.frames', 'braille'));
     }
 
     public static function make(string $message = ''): self
@@ -69,6 +70,10 @@ final class Spinner
 
     /**
      * Animate the spinner while $callback runs; return the callback's result.
+     *
+     * Note: run() delegates animation to Laravel Prompts, which uses its own
+     * frame set and TTY handling — so a custom frames() set applies only to the
+     * manual start()/advance()/finish() mode, not to run().
      */
     public function run(callable $callback): mixed
     {
@@ -123,14 +128,5 @@ final class Spinner
         $this->output->writeln($this->symbols->get($status) . ' ' . ($message ?? $this->message));
 
         return $this;
-    }
-
-    private function config(string $key, mixed $default): mixed
-    {
-        if (function_exists('app') && app()->bound('config')) {
-            return config("console.{$key}", $default);
-        }
-
-        return $default;
     }
 }

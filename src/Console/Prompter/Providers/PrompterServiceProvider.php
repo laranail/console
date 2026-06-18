@@ -19,6 +19,8 @@ final class PrompterServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->singleton(Prompter::class, static fn (): Prompter => Prompter::getInstance());
+        // bind (not singleton): each resolution is an isolated Prompter so the
+        // fluent $result never bleeds across callers (incl. Octane workers).
+        $this->app->bind(Prompter::class, static fn (): Prompter => Prompter::create());
     }
 }

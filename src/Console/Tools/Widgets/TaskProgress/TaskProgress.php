@@ -67,18 +67,26 @@ final class TaskProgress
             return $this;
         }
 
-        // Non-TTY: emit a line only when a task reaches a terminal state once.
+        // Non-TTY (CI logs): emit one line per state change, so started, warned
+        // and terminal transitions are all recorded — and a task that never
+        // finishes still leaves its "running" line rather than vanishing.
         foreach ($this->tasks as $task) {
-            if ($task->status->isTerminal() && $task->finishedAt !== null && ! isset($this->emitted[spl_object_id($task)])) {
-                $this->output->writeln($this->row($task));
-                $this->emitted[spl_object_id($task)] = true;
+            $id = spl_object_id($task);
+            if ($task->status === TaskStatus::Pending) {
+                continue;
             }
+            if (($this->emitted[$id] ?? null) === $task->status) {
+                continue;
+            }
+
+            $this->emitted[$id] = $task->status;
+            $this->output->writeln($this->row($task));
         }
 
         return $this;
     }
 
-    /** @var array<int, bool> */
+    /** @var array<int, TaskStatus> last status emitted on a non-TTY, per task */
     private array $emitted = [];
 
     /**

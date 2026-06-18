@@ -33,7 +33,6 @@ return [
     */
     'spinner' => [
         'frames' => env('CONSOLE_SPINNER_FRAMES', 'braille'),
-        'interval_ms' => (int) env('CONSOLE_SPINNER_INTERVAL', 80),
     ],
 
     /*

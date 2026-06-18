@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Formatting;
 
 use Illuminate\Support\Str;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Config;
 use Stringable;
-use Throwable;
 
 /**
  * Fluent helper class for formatting Symfony Console output with badge support
@@ -328,14 +329,10 @@ class ConsoleUIFormatter implements Stringable
      */
     private function allowedLinkSchemes(): array
     {
-        if (function_exists('app') && app()->bound('config')) {
-            /** @var list<string> $schemes */
-            $schemes = (array) config('console.links.allowed_schemes', ['http', 'https', 'mailto']);
+        /** @var list<string> $schemes */
+        $schemes = (array) Config::get('links.allowed_schemes', ['http', 'https', 'mailto']);
 
-            return $schemes;
-        }
-
-        return ['http', 'https', 'mailto'];
+        return $schemes;
     }
 
     /**
@@ -576,119 +573,21 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Securely validate and sanitize environment variable
-     *
-     * @param string $key Environment variable key
-     * @param array $allowedValues Optional array of allowed values
-     * @param string $default Default value if validation fails
-     * @return string Sanitized value
-     */
-    private function secureEnv(string $key, array $allowedValues = [], string $default = ''): string
-    {
-        $value = env($key, $default);
-
-        // Convert to string and trim
-        $value = trim((string) $value);
-
-        // If allowed values are specified, validate against them
-        if ($allowedValues !== []) {
-            return in_array($value, $allowedValues, true) ? $value : $default;
-        }
-
-        // Basic sanitization: remove potentially dangerous characters
-        $value = preg_replace('/[^a-zA-Z0-9\-_\.]/', '', $value);
-
-        // Limit length to prevent buffer overflow attacks
-        return substr((string) $value, 0, 100);
-    }
-
-    /**
-     * Detect if terminal supports color (secure implementation)
+     * Detect colour support via the shared Capabilities detector, so the whole
+     * package degrades by one consistent set of rules (NO_COLOR/FORCE_COLOR/
+     * TERM/TTY).
      */
     private function detectColorSupport(): bool
     {
-        // Check for NO_COLOR environment variable (standard)
-        $noColor = $this->secureEnv('NO_COLOR', ['1', 'true', 'yes', 'on'], '');
-        if ($noColor !== '' && $noColor !== '0') {
-            return false;
-        }
-
-        // Get and validate TERM environment variable
-        $term = $this->secureEnv('TERM');
-        if ($term === '' || $term === '0') {
-            return false;
-        }
-
-        // Check for dumb terminals (no color support)
-        $dumbTerminals = ['dumb', 'unknown', 'cons25', 'console'];
-        if (in_array(strtolower($term), $dumbTerminals, true)) {
-            return false;
-        }
-
-        // Check for color-capable terminals
-        $colorTerminals = ['xterm', 'xterm-256color', 'screen', 'tmux', 'linux', 'cygwin'];
-        $termLower = strtolower($term);
-
-        foreach ($colorTerminals as $colorTerm) {
-            if (Str::startsWith($termLower, $colorTerm)) {
-                return true;
-            }
-        }
-
-        // Default to false for unknown terminals (secure by default)
-        return false;
+        return Capabilities::detect()->supportsColor();
     }
 
     /**
-     * Detect if terminal supports Unicode (secure implementation)
+     * Detect Unicode support via the shared Capabilities detector.
      */
     private function detectUnicodeSupport(): bool
     {
-        try {
-            // Read the configured locale from the environment. This is
-            // side-effect free; querying via setlocale() with an int arg is
-            // a TypeError on PHP 8+.
-            $locale = getenv('LC_ALL') ?: (getenv('LC_CTYPE') ?: getenv('LANG'));
-
-            // Validate locale is not empty or null
-            if (empty($locale) || ! is_string($locale)) {
-                return false;
-            }
-
-            // Sanitize locale string
-            $locale = trim($locale);
-            if ($locale === '' || $locale === '0') {
-                return false;
-            }
-
-            // Check for UTF-8 support in locale
-            $localeLower = strtolower($locale);
-            $utfPatterns = ['utf', 'utf8', 'utf-8'];
-
-            foreach ($utfPatterns as $pattern) {
-                if (Str::contains($localeLower, $pattern)) {
-                    return true;
-                }
-            }
-
-            // Additional check: Verify UTF-8 encoding capability
-            if (function_exists('mb_check_encoding')) {
-                $testString = '✓ Unicode Test';
-
-                return mb_check_encoding($testString, 'UTF-8');
-            }
-
-            // Fallback: Check if we can handle basic Unicode characters
-            return extension_loaded('mbstring');
-
-        } catch (Throwable $e) {
-            // Log error in development, fail safely in production
-            if (app()->environment('local', 'development')) {
-                error_log('Unicode detection error: ' . $e->getMessage());
-            }
-
-            return false;
-        }
+        return Capabilities::detect()->supportsUnicode();
     }
 
     /**

@@ -6,10 +6,10 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
 
 if (! function_exists('prompter')) {
     /**
-     * Resolve the shared Prompter instance.
+     * Get a fresh Prompter instance (isolated $result per call).
      */
     function prompter(): Prompter
     {
-        return Prompter::getInstance();
+        return Prompter::create();
     }
 }

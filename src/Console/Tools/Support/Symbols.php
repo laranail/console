@@ -45,7 +45,7 @@ final readonly class Symbols
 
     public static function for(Capabilities $capabilities): self
     {
-        return new self($capabilities->supportsUnicode());
+        return new self($capabilities->symbolMode() === 'fancy');
     }
 
     public static function fancy(): self

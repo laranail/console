@@ -55,12 +55,17 @@ final class Gauge implements Stringable
     public function render(): string
     {
         $ratio = $this->max > 0 ? max(0.0, min(1.0, $this->value / $this->max)) : 0.0;
+        $percent = (int) round($ratio * 100);
         $filled = (int) round($ratio * $this->barWidth);
+
+        // Don't show a full bar unless we're actually at 100% (rounding could
+        // otherwise fill the bar at, say, 99%).
+        if ($filled === $this->barWidth && $percent < 100) {
+            $filled = $this->barWidth - 1;
+        }
 
         [$full, $empty] = $this->unicode ? ['█', '░'] : ['#', '-'];
         $bar = str_repeat($full, $filled) . str_repeat($empty, $this->barWidth - $filled);
-
-        $percent = (int) round($ratio * 100);
         $out = ($this->label !== '' ? $this->label . '  ' : '') . "[{$bar}] {$percent}%";
 
         if ($this->showValue) {

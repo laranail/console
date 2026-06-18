@@ -12,13 +12,4 @@ return [
     'render_failed' => 'The :widget widget could not render: :reason',
     'invalid_color' => "':value' is not a valid hex colour or known colour name.",
 
-    // Status labels
-    'status' => [
-        'success' => 'Success',
-        'error' => 'Error',
-        'warning' => 'Warning',
-        'info' => 'Info',
-        'pending' => 'Pending',
-    ],
-
 ];

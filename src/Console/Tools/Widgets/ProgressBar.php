@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Enums\ProgressStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Symfony\Component\Console\Helper\ProgressBar as SymfonyProgressBar;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -19,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * fallback, a transfer-rate placeholder, and three-tier time formatting for the
  * elapsed and ETA fields.
  */
-final class ProgressBar
+final readonly class ProgressBar
 {
     /** @var array<string, array{0:string,1:string,2:string}> bar, empty, progress */
     private const array GLYPHS = [
@@ -30,9 +31,9 @@ final class ProgressBar
         'gradient' => ['▓', '░', '▒'],
     ];
 
-    private readonly SymfonyProgressBar $bar;
+    private SymfonyProgressBar $bar;
 
-    private readonly Capabilities $capabilities;
+    private Capabilities $capabilities;
 
     public function __construct(OutputInterface $output, int $max = 0, ?Capabilities $capabilities = null)
     {
@@ -40,8 +41,8 @@ final class ProgressBar
         $this->bar = new SymfonyProgressBar($output, $max);
 
         $this->registerPlaceholders();
-        $this->format($this->config('progress.format', 'detailed'));
-        $this->glyphs($this->config('progress.glyphs', 'blocks'));
+        $this->format((string) Config::get('progress.format', 'detailed'));
+        $this->glyphs((string) Config::get('progress.glyphs', 'blocks'));
     }
 
     public static function make(?OutputInterface $output = null, int $max = 0): self
@@ -135,14 +136,5 @@ final class ProgressBar
 
             return TimeFormat::duration($estimated - $elapsed);
         });
-    }
-
-    private function config(string $key, string $default): string
-    {
-        if (function_exists('app') && app()->bound('config')) {
-            return (string) config("console.{$key}", $default);
-        }
-
-        return $default;
     }
 }

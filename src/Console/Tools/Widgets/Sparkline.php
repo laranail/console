@@ -43,12 +43,18 @@ final readonly class Sparkline implements Stringable
 
         $min = min($this->values);
         $max = max($this->values);
-        $span = ($max - $min) ?: 1;
 
         if (! $this->unicode) {
             return sprintf('min %s, max %s, n %d', $this->trim($min), $this->trim($max), count($this->values));
         }
 
+        // A flat series has no range: render a mid tick so it doesn't read as
+        // "all minimum".
+        if ($max === $min) {
+            return str_repeat(self::TICKS[intdiv(count(self::TICKS), 2)], count($this->values));
+        }
+
+        $span = $max - $min;
         $out = '';
         foreach ($this->values as $value) {
             $level = (int) round((($value - $min) / $span) * (count(self::TICKS) - 1));

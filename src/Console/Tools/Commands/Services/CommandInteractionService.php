@@ -13,6 +13,7 @@ use function Laravel\Prompts\spin;
 use function Laravel\Prompts\text;
 
 use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
+use Simtabi\Laranail\Console\Tools\Support\Config;
 
 /**
  * Handles interactive user input for console commands via Laravel Prompts.
@@ -174,10 +175,6 @@ class CommandInteractionService
      */
     protected function requiredThrows(): bool
     {
-        if (function_exists('app') && app()->bound('config')) {
-            return (bool) config('console.interaction.non_interactive_required_throws', true);
-        }
-
-        return true;
+        return (bool) Config::get('interaction.non_interactive_required_throws', true);
     }
 }

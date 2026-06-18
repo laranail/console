@@ -91,7 +91,7 @@ final class ConsoleManager
     }
 
     /**
-     * Build a nested tree.
+     * Build a data table.
      */
     public function table(): Table
     {
@@ -163,6 +163,6 @@ final class ConsoleManager
      */
     public function prompter(): Prompter
     {
-        return Prompter::getInstance();
+        return Prompter::create();
     }
 }

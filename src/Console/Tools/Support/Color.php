@@ -56,9 +56,7 @@ final readonly class Color
 
         [$r, $g, $b] = self::hexToRgb($hex);
 
-        return $this->capabilities->supportsTrueColor()
-            ? "\033[38;2;{$r};{$g};{$b}m{$text}\033[0m"
-            : "\033[" . (30 + $this->nearestAnsi($r, $g, $b)) . "m{$text}\033[0m";
+        return $this->openSgr($r, $g, $b) . $text . "\033[0m";
     }
 
     /**
@@ -92,12 +90,51 @@ final readonly class Color
             $g = (int) round($g1 + ($g2 - $g1) * $local);
             $b = (int) round($b1 + ($b2 - $b1) * $local);
 
-            $out .= $this->capabilities->supportsTrueColor()
-                ? "\033[38;2;{$r};{$g};{$b}m{$char}"
-                : "\033[" . (30 + $this->nearestAnsi($r, $g, $b)) . "m{$char}";
+            $out .= $this->openSgr($r, $g, $b) . $char;
         }
 
         return $out . "\033[0m";
+    }
+
+    /**
+     * Opening SGR sequence for an RGB colour at the best available depth:
+     * 24-bit truecolor → xterm 256 → nearest ANSI-16.
+     */
+    private function openSgr(int $r, int $g, int $b): string
+    {
+        if ($this->capabilities->supportsTrueColor()) {
+            return "\033[38;2;{$r};{$g};{$b}m";
+        }
+
+        if ($this->capabilities->supports256Color()) {
+            return "\033[38;5;" . $this->rgbTo256($r, $g, $b) . 'm';
+        }
+
+        return "\033[" . (30 + $this->nearestAnsi($r, $g, $b)) . 'm';
+    }
+
+    /**
+     * Quantize an RGB triple to the xterm 256-colour palette (6×6×6 cube +
+     * grayscale ramp).
+     */
+    private function rgbTo256(int $r, int $g, int $b): int
+    {
+        if ($r === $g && $g === $b) {
+            if ($r < 8) {
+                return 16;
+            }
+
+            if ($r > 248) {
+                return 231;
+            }
+
+            return 232 + (int) round(($r - 8) / 247 * 24);
+        }
+
+        return 16
+            + 36 * (int) round($r / 255 * 5)
+            + 6 * (int) round($g / 255 * 5)
+            + (int) round($b / 255 * 5);
     }
 
     /**

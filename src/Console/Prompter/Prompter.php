@@ -48,7 +48,20 @@ class Prompter
     }
 
     /**
-     * Get or create a singleton instance of Prompter.
+     * Create a fresh Prompter. Preferred over getInstance(): each fluent chain
+     * gets its own $result, so sequential/concurrent (e.g. Octane) callers never
+     * clobber one another's last value.
+     */
+    public static function create(): self
+    {
+        return new self;
+    }
+
+    /**
+     * Get the shared singleton instance.
+     *
+     * @deprecated Use {@see create()} (or the `prompter()` helper / `Prompter`
+     *             facade), which return an isolated instance per call.
      */
     public static function getInstance(): self
     {
@@ -97,7 +110,7 @@ class Prompter
      */
     public static function __callStatic(string $method, array $arguments): self
     {
-        return self::getInstance()->__call($method, $arguments);
+        return self::create()->__call($method, $arguments);
     }
 
     /**

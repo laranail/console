@@ -19,7 +19,15 @@ final class TimeFormat
         }
 
         if ($seconds < 60) {
-            return rtrim(rtrim(number_format($seconds, 1, '.', ''), '0'), '.') . 's';
+            // Guard the rounding boundary: 59.97s rounds to "60.0" at one
+            // decimal, which belongs in the minutes tier, not "60s".
+            $rounded = round($seconds, 1);
+
+            if ($rounded < 60.0) {
+                return rtrim(rtrim(number_format($rounded, 1, '.', ''), '0'), '.') . 's';
+            }
+
+            $seconds = 60.0;
         }
 
         if ($seconds < 3600) {

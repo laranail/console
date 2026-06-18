@@ -35,9 +35,6 @@ parameters:
         # (NO_COLOR/TERM/FORCE_COLOR); these are not Laravel config keys.
         -
             identifier: larastan.noEnvCallsOutsideOfConfig
-            path: src/Console/Tools/Formatting/ConsoleUIFormatter.php
-        -
-            identifier: larastan.noEnvCallsOutsideOfConfig
             path: src/Console/Tools/Support/Capabilities.php
         # Performance metrics index by a computed numeric key; harmless.
         -

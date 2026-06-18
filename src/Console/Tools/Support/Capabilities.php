@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
+use Symfony\Component\Console\Terminal;
+
 /**
  * Detects terminal capabilities — TTY, colour, Unicode and width — honouring
  * the package configuration and the de-facto environment standards
@@ -49,7 +51,7 @@ final class Capabilities
             return $this->colors;
         }
 
-        $configured = $this->config('output.colors', 'auto');
+        $configured = Config::get('output.colors', 'auto');
 
         if ($configured === 'always' || $configured === true) {
             return $this->colors = true;
@@ -89,13 +91,28 @@ final class Capabilities
         return $colorTerm === 'truecolor' || $colorTerm === '24bit';
     }
 
+    /**
+     * Whether the terminal supports the xterm 256-colour palette.
+     */
+    public function supports256Color(): bool
+    {
+        if (! $this->supportsColor()) {
+            return false;
+        }
+        if ($this->supportsTrueColor()) {
+            return true;
+        }
+
+        return str_contains((string) getenv('TERM'), '256color');
+    }
+
     public function supportsUnicode(): bool
     {
         if ($this->unicode !== null) {
             return $this->unicode;
         }
 
-        $configured = $this->config('output.unicode', 'auto');
+        $configured = Config::get('output.unicode', 'auto');
 
         if ($configured === true || $configured === 'true') {
             return $this->unicode = true;
@@ -125,7 +142,7 @@ final class Capabilities
             return $this->width;
         }
 
-        $configured = $this->config('output.width', null);
+        $configured = Config::get('output.width');
 
         if (is_int($configured) || (is_string($configured) && ctype_digit($configured))) {
             return $this->width = (int) $configured;
@@ -133,15 +150,28 @@ final class Capabilities
 
         $cols = (int) getenv('COLUMNS');
 
-        return $this->width = $cols > 0 ? $cols : $default;
-    }
-
-    private function config(string $key, mixed $default): mixed
-    {
-        if (function_exists('app') && app()->bound('config')) {
-            return config("console.{$key}", $default);
+        if ($cols > 0) {
+            return $this->width = $cols;
         }
 
-        return $default;
+        // Fall back to the real terminal before the static default.
+        $terminal = (new Terminal)->getWidth();
+
+        return $this->width = $terminal > 0 ? $terminal : $default;
+    }
+
+    /**
+     * Resolve the glyph set to use: 'fancy' (Unicode) or 'ascii'. Honours the
+     * `output.symbols` config (auto|fancy|ascii); `auto` follows Unicode support.
+     */
+    public function symbolMode(): string
+    {
+        $mode = Config::get('output.symbols', 'auto');
+
+        return match ($mode) {
+            'fancy' => 'fancy',
+            'ascii' => 'ascii',
+            default => $this->supportsUnicode() ? 'fancy' : 'ascii',
+        };
     }
 }
