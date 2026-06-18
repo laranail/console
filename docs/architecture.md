@@ -10,7 +10,7 @@ Console
 ├── Providers\ConsoleServiceProvider   # config + lang + registers child providers
 ├── Exceptions\ConsoleException        # base, fromKey() with safe fallback
 ├── Tools\                   # OUTPUT
-│   ├── Formatting\          # ConsoleUIFormatter, ConsoleProgressBar
+│   ├── Formatting\          # ConsoleUIFormatter
 │   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress…
 │   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color
 │   ├── Commands\            # Command (enhanced base) + Services\ (nine services)

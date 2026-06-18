@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Prompter dispatch**: prompt methods (`text`, `select`, …) and context methods
+  (`note`, `warning`, …) now dispatch correctly through the fluent `Prompter`;
+  previously every call threw because the dispatcher used `method_exists()` on the
+  closure-map-backed `PromptService`.
+- `ProgressBar` no longer registers its custom placeholders on Symfony's
+  process-wide defaults (instance-scoped), so unrelated progress bars are
+  unaffected.
+- `Box`/`Rule` treat a fixed `width()` as a minimum and never overflow the frame;
+  ASCII tree connectors align; `badMethodCall` resolves the correct lang key.
+
+### Changed
+- Unified terminal capability detection through `Tools\Support\Capabilities`
+  (single source of truth) and a shared `Tools\Support\Config` accessor.
+- `Prompter` resolves a fresh instance per call/chain (no shared `$result` state);
+  `getInstance()` is deprecated in favour of `create()`.
+- `Color` degrades truecolor → 256-colour → ANSI-16; `Capabilities::width()` falls
+  back to the real terminal.
+
+### Added
+- `Table` gains `grouped()` and `tree()` variants; validators honour
+  `console.locale`; new `docs/tools/support.md`; the examples are smoke-tested in CI.
+
+### Removed
+- Dead `Formatting\ConsoleProgressBar` (superseded by the `ProgressBar` widget),
+  the unused `Enums\UUIDType`, and foreign `laranail.core/installer/updater`
+  config accessors.
+
 ## [0.1.0] - 2026-06-18
 
 ### Added
