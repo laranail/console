@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 
 /**
  * Command Performance Service
@@ -103,7 +103,7 @@ class CommandPerformanceService
     }
 
     /**
-     * Get comprehensive performance summary
+     * Return the performance summary
      */
     public function getPerformanceSummary(string $commandName, array $metadata = []): array
     {

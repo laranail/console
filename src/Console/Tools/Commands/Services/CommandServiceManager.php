@@ -191,7 +191,7 @@ class CommandServiceManager
     }
 
     /**
-     * Get comprehensive command summary
+     * Return the command summary
      */
     public function getCommandSummary(): array
     {

@@ -13,14 +13,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
 /**
- * Enhanced Artisan command base with a service-based architecture.
- *
- * Features:
- * - Discrete services for performance, events, signals, metadata, logging,
- *   errors, configuration, interaction and display
- * - Native console event integration with graceful-shutdown signal handling
- * - Performance/memory tracking and structured, redacted error logging
- * - Laravel Prompts integration for interactive input
+ * Enhanced Artisan command base that delegates performance, events, signals,
+ * metadata, logging, errors, configuration, interaction and display to discrete
+ * services via a service-based architecture.
  *
  * @see https://laravel.com/docs/artisan
  */
