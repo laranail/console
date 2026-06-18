@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Symfony\Component\Console\Helper\Table as SymfonyTable;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,16 +15,16 @@ use Symfony\Component\Console\Output\OutputInterface;
  * including a GitHub-flavoured markdown emitter. Falls back to the ASCII style
  * without Unicode support.
  */
-final class Table
+final class Table implements Stringable
 {
     /** @var array<string, string> preset => Symfony built-in style */
-    private const STYLES = [
-        'ascii'      => 'default',
-        'light'      => 'box',
-        'double'     => 'box-double',
-        'compact'    => 'compact',
+    private const array STYLES = [
+        'ascii' => 'default',
+        'light' => 'box',
+        'double' => 'box-double',
+        'compact' => 'compact',
         'borderless' => 'borderless',
-        'markdown'   => 'markdown',
+        'markdown' => 'markdown',
     ];
 
     /** @var list<string> */
@@ -34,11 +35,11 @@ final class Table
 
     private string $style = 'light';
 
-    public function __construct(private readonly Capabilities $capabilities = new Capabilities()) {}
+    public function __construct(private readonly Capabilities $capabilities = new Capabilities) {}
 
     public static function make(): self
     {
-        return new self();
+        return new self;
     }
 
     /**
@@ -70,7 +71,7 @@ final class Table
 
     public function render(?OutputInterface $output = null): string
     {
-        $buffer = new BufferedOutput();
+        $buffer = new BufferedOutput;
         $style = $this->capabilities->supportsUnicode() ? $this->style : 'ascii';
 
         $table = new SymfonyTable($buffer);

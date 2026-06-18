@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -16,6 +18,6 @@ class PhoneNumberValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && preg_match('/^\+?[0-9]{10,15}$/', $value) === 1 ? null : $this->errorMessage;
+        return is_string($value) && preg_match('/^\+?\d{10,15}$/', $value) === 1 ? null : $this->errorMessage;
     }
 }

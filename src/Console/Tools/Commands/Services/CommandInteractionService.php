@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
-use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
-
 use function Laravel\Prompts\confirm;
 use function Laravel\Prompts\error;
 use function Laravel\Prompts\multiselect;
@@ -13,6 +11,8 @@ use function Laravel\Prompts\password;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\spin;
 use function Laravel\Prompts\text;
+
+use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
 
 /**
  * Handles interactive user input for console commands via Laravel Prompts.
@@ -99,7 +99,7 @@ class CommandInteractionService
 
     /**
      * @param array<int|string, string> $options
-     * @param array<int, int|string>    $default
+     * @param array<int, int|string> $default
      * @return array<int, int|string>
      */
     public function askMultiSelect(string $label, array $options, array $default = []): array

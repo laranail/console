@@ -12,9 +12,9 @@ namespace Simtabi\Laranail\Console\Tools\Support;
  * suppressed entirely when {@see Capabilities::supportsColor()} is false, so
  * NO_COLOR and non-TTY pipes stay clean.
  */
-final class Color
+final readonly class Color
 {
-    private readonly Capabilities $capabilities;
+    private Capabilities $capabilities;
 
     public function __construct(?Capabilities $capabilities = null)
     {
@@ -75,7 +75,7 @@ final class Color
             return $text;
         }
 
-        $rgbStops = array_map(static fn (string $h): array => self::hexToRgb($h), array_values($stops));
+        $rgbStops = array_values(array_map(self::hexToRgb(...), $stops));
         $segments = count($rgbStops) - 1;
         $out = '';
 

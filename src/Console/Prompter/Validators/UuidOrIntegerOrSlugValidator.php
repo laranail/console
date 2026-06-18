@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -11,26 +13,22 @@ use Illuminate\Support\Str;
  */
 class UuidOrIntegerOrSlugValidator extends AbstractValidator
 {
-    protected string $uuidVersion;
-
-    public function __construct(string $uuidVersion = 'uuid', ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(protected string $uuidVersion = 'uuid', ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
         parent::__construct($errorMessage, 'uuid_or_integer_or_slug', $replace, $locale);
-        $this->uuidVersion = $uuidVersion;
     }
+
     public function validate(mixed $value): ?string
     {
         if ($this->isUuid($value) || $this->isInteger($value) || $this->isSlug($value)) {
             return null;
         }
+
         return $this->errorMessage;
     }
 
     /**
      * Check if the value is a valid UUID.
-     *
-     * @param mixed $value
-     * @return bool
      */
     private function isUuid(mixed $value): bool
     {
@@ -45,9 +43,6 @@ class UuidOrIntegerOrSlugValidator extends AbstractValidator
 
     /**
      * Check if the value is a valid integer.
-     *
-     * @param mixed $value
-     * @return bool
      */
     private function isInteger(mixed $value): bool
     {
@@ -56,9 +51,6 @@ class UuidOrIntegerOrSlugValidator extends AbstractValidator
 
     /**
      * Check if the value is a valid slug.
-     *
-     * @param mixed $value
-     * @return bool
      */
     private function isSlug(mixed $value): bool
     {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter;
 
@@ -31,7 +33,8 @@ use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 class Prompter
 {
     protected PromptService $promptManager;
-    protected mixed $result;
+
+    protected mixed $result = null;
 
     private static ?self $instance = null;
 
@@ -40,20 +43,18 @@ class Prompter
      */
     private function __construct()
     {
-        $this->promptManager = new PromptService();
-        $this->result        = null;
+        $this->promptManager = new PromptService;
     }
 
     /**
      * Get or create a singleton instance of Prompter.
-     *
-     * @return Prompter
      */
     public static function getInstance(): self
     {
-        if (self::$instance === null) {
-            self::$instance = new self();
+        if (! self::$instance instanceof Prompter) {
+            self::$instance = new self;
         }
+
         return self::$instance;
     }
 
@@ -62,7 +63,7 @@ class Prompter
      *
      * @param string $method The name of the method.
      * @param array $arguments The arguments to pass to the method.
-     * @return self
+     *
      * @throws PrompterException If the method does not exist.
      */
     public function __call(string $method, array $arguments): self
@@ -72,6 +73,7 @@ class Prompter
         } else {
             throw PrompterException::triggerErrorMessage('method_does_not_exist', ['method' => $method, 'class' => static::class]);
         }
+
         return $this;
     }
 
@@ -80,7 +82,7 @@ class Prompter
      *
      * @param string $method The name of the method.
      * @param array $arguments The arguments to pass to the method.
-     * @return self
+     *
      * @throws PrompterException If the method does not exist.
      */
     public static function __callStatic(string $method, array $arguments): self
@@ -90,8 +92,6 @@ class Prompter
 
     /**
      * Provides access to context-related methods.
-     *
-     * @return ContextBuilderService
      */
     public function context(): ContextBuilderService
     {
@@ -100,8 +100,6 @@ class Prompter
 
     /**
      * Get the result of the last prompt.
-     *
-     * @return mixed
      */
     public function getResult(): mixed
     {
@@ -110,8 +108,6 @@ class Prompter
 
     /**
      * Get the PromptManager instance.
-     *
-     * @return PromptService
      */
     public function getPrompts(): PromptService
     {
@@ -120,8 +116,6 @@ class Prompter
 
     /**
      * Return the form builder.
-     *
-     * @return FormBuilder
      */
     public function form(): FormBuilder
     {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -13,6 +15,7 @@ class ArrayValidator extends AbstractValidator
     {
         parent::__construct($errorMessage, 'array', $replace, $locale);
     }
+
     public function validate(mixed $value): ?string
     {
         return is_array($value) ? null : $this->errorMessage;

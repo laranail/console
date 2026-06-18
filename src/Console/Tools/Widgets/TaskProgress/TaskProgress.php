@@ -7,9 +7,9 @@ namespace Simtabi\Laranail\Console\Tools\Widgets\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -32,7 +32,7 @@ final class TaskProgress
 
     public function __construct(?OutputInterface $output = null, ?Capabilities $capabilities = null)
     {
-        $this->output = $output ?? new ConsoleOutput();
+        $this->output = $output ?? new ConsoleOutput;
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->interactive = $this->capabilities->isInteractive() && $this->output instanceof ConsoleOutputInterface;
 
@@ -59,7 +59,7 @@ final class TaskProgress
      */
     public function draw(): self
     {
-        $rows = array_map(fn (Task $task): string => $this->row($task), $this->tasks);
+        $rows = array_map($this->row(...), $this->tasks);
 
         if ($this->section instanceof ConsoleSectionOutput) {
             $this->section->overwrite(implode("\n", $rows));

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Enums;
 
@@ -15,13 +17,13 @@ enum ContextType: string
     public static function keysWithLabels(): array
     {
         return [
-            self::NOTE->value    => 'Note',
-            self::ERROR->value   => 'Error',
+            self::NOTE->value => 'Note',
+            self::ERROR->value => 'Error',
             self::WARNING->value => 'Warning',
-            self::ALERT->value   => 'Alert',
-            self::INFO->value    => 'Info',
-            self::INTRO->value   => 'Intro',
-            self::OUTRO->value   => 'Outro',
+            self::ALERT->value => 'Alert',
+            self::INFO->value => 'Info',
+            self::INTRO->value => 'Intro',
+            self::OUTRO->value => 'Outro',
         ];
     }
 
@@ -31,6 +33,7 @@ enum ContextType: string
         foreach (self::cases() as $case) {
             $keys[$case->value] = $case->name;
         }
+
         return $keys;
     }
 

@@ -22,11 +22,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class ProgressBar
 {
     /** @var array<string, array{0:string,1:string,2:string}> bar, empty, progress */
-    private const GLYPHS = [
-        'blocks'   => ['█', '░', '█'],
-        'ascii'    => ['#', '-', '>'],
-        'dots'     => ['●', '○', '●'],
-        'arrows'   => ['►', '▷', '►'],
+    private const array GLYPHS = [
+        'blocks' => ['█', '░', '█'],
+        'ascii' => ['#', '-', '>'],
+        'dots' => ['●', '○', '●'],
+        'arrows' => ['►', '▷', '►'],
         'gradient' => ['▓', '░', '▒'],
     ];
 
@@ -49,7 +49,7 @@ final class ProgressBar
 
     public static function make(?OutputInterface $output = null, int $max = 0): self
     {
-        return new self($output ?? new ConsoleOutput(), $max);
+        return new self($output ?? new ConsoleOutput, $max);
     }
 
     public function format(ProgressStyle|string $style): self

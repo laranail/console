@@ -6,11 +6,12 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 
 /**
  * A single-value horizontal gauge/meter, e.g. `Disk  [██████░░] 72% (180/250)`.
  */
-final class Gauge
+final class Gauge implements Stringable
 {
     private string $label = '';
 

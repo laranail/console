@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Enums;
 
@@ -17,8 +19,6 @@ enum UUIDType: string
 
     /**
      * Get all UUID types as array keys with custom labels.
-     *
-     * @return array
      */
     public static function keysWithLabels(): array
     {
@@ -33,8 +33,6 @@ enum UUIDType: string
 
     /**
      * Get all enum values as array keys.
-     *
-     * @return array
      */
     public static function keys(): array
     {
@@ -42,13 +40,12 @@ enum UUIDType: string
         foreach (self::cases() as $case) {
             $keys[$case->value] = $case->name;
         }
+
         return $keys;
     }
 
     /**
      * Get the label for a specific UUID type.
-     *
-     * @return string
      */
     public function label(): string
     {

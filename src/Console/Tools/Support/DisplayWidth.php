@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\Helper;
 
 /**
@@ -20,7 +21,7 @@ final class DisplayWidth
      */
     public static function of(string $text): int
     {
-        return Helper::width(Helper::removeDecoration(new \Symfony\Component\Console\Formatter\OutputFormatter(), $text));
+        return Helper::width(Helper::removeDecoration(new OutputFormatter, $text));
     }
 
     /**

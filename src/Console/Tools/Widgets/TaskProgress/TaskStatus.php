@@ -21,13 +21,13 @@ enum TaskStatus: string
     public function glyph(bool $unicode = true): string
     {
         return match ($this) {
-            self::Pending   => $unicode ? '○' : '[ ]',
-            self::Running   => $unicode ? '◉' : '[*]',
-            self::Success   => $unicode ? '✓' : '[OK]',
-            self::Failed    => $unicode ? '✗' : '[X]',
-            self::Skipped   => $unicode ? '⊘' : '[-]',
-            self::Paused    => $unicode ? '⏸' : '[=]',
-            self::Warning   => $unicode ? '⚠' : '[!]',
+            self::Pending => $unicode ? '○' : '[ ]',
+            self::Running => $unicode ? '◉' : '[*]',
+            self::Success => $unicode ? '✓' : '[OK]',
+            self::Failed => $unicode ? '✗' : '[X]',
+            self::Skipped => $unicode ? '⊘' : '[-]',
+            self::Paused => $unicode ? '⏸' : '[=]',
+            self::Warning => $unicode ? '⚠' : '[!]',
             self::Cancelled => $unicode ? '⊗' : '[c]',
         };
     }

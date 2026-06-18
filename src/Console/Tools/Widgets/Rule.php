@@ -8,11 +8,12 @@ use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Stringable;
 
 /**
  * A full-width horizontal divider with an optional inline title.
  */
-final class Rule
+final class Rule implements Stringable
 {
     private string $title = '';
 
@@ -22,14 +23,14 @@ final class Rule
 
     private string $align = 'left';
 
-    public function __construct(private readonly Capabilities $capabilities = new Capabilities())
+    public function __construct(private readonly Capabilities $capabilities = new Capabilities)
     {
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Light : BorderStyle::Ascii;
     }
 
     public static function make(string $title = ''): self
     {
-        return (new self())->title($title);
+        return (new self)->title($title);
     }
 
     public function title(string $title): self

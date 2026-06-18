@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 
 /**
  * An inline mini-chart built from block-eighths (`▁▂▃▄▅▆▇█`).
@@ -12,16 +13,16 @@ use Simtabi\Laranail\Console\Tools\Support\Capabilities;
  * Unicode-only: without it there is no faithful ASCII equivalent, so the
  * sparkline degrades to a compact numeric summary.
  */
-final class Sparkline
+final readonly class Sparkline implements Stringable
 {
-    private const TICKS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+    private const array TICKS = ['▁', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
 
-    private readonly bool $unicode;
+    private bool $unicode;
 
     /**
      * @param list<int|float> $values
      */
-    public function __construct(private readonly array $values, ?Capabilities $capabilities = null)
+    public function __construct(private array $values, ?Capabilities $capabilities = null)
     {
         $this->unicode = ($capabilities ?? Capabilities::detect())->supportsUnicode();
     }

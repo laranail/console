@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -16,6 +18,6 @@ class UsernameValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && preg_match('/^[a-zA-Z0-9_]{3,20}$/', $value) === 1 ? null : $this->errorMessage;
+        return is_string($value) && preg_match('/^\w{3,20}$/', $value) === 1 ? null : $this->errorMessage;
     }
 }

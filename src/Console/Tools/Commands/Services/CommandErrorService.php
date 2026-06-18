@@ -55,11 +55,11 @@ class CommandErrorService
         $context = $this->scrub(array_merge($this->context, $additionalContext));
 
         $logData = array_merge($context, [
-            'command'   => $this->commandName,
+            'command' => $this->commandName,
             'exception' => $e::class,
-            'message'   => $e->getMessage(),
-            'file'      => $e->getFile(),
-            'line'      => $e->getLine(),
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
             'timestamp' => now()->toISOString(),
         ]);
 
@@ -124,6 +124,7 @@ class CommandErrorService
             foreach ($redactKeys as $needle) {
                 if (is_string($key) && stripos($key, (string) $needle) !== false) {
                     $context[$key] = '[redacted]';
+
                     continue 2;
                 }
             }

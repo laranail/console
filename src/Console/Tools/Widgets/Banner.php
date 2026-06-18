@@ -7,12 +7,13 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Stringable;
 
 /**
  * A start-of-run masthead: a centred title with optional subtitle, rendered as
  * a rule-wrapped block or a framed box.
  */
-final class Banner
+final class Banner implements Stringable
 {
     private string $subtitle = '';
 
@@ -20,7 +21,7 @@ final class Banner
 
     private ?int $width = null;
 
-    public function __construct(private string $title, private readonly Capabilities $capabilities = new Capabilities())
+    public function __construct(private string $title, private readonly Capabilities $capabilities = new Capabilities)
     {
         $this->title = ConsoleUIFormatter::sanitizeText($title);
     }

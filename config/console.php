@@ -20,9 +20,9 @@ return [
     */
     'output' => [
         'unicode' => env('CONSOLE_UNICODE', 'auto'),
-        'colors'  => env('CONSOLE_COLORS', 'auto'),
+        'colors' => env('CONSOLE_COLORS', 'auto'),
         'symbols' => env('CONSOLE_SYMBOLS', 'auto'),
-        'width'   => env('CONSOLE_WIDTH'),
+        'width' => env('CONSOLE_WIDTH'),
     ],
 
     /*
@@ -32,7 +32,7 @@ return [
     | frames: braille | dots | line | breath
     */
     'spinner' => [
-        'frames'      => env('CONSOLE_SPINNER_FRAMES', 'braille'),
+        'frames' => env('CONSOLE_SPINNER_FRAMES', 'braille'),
         'interval_ms' => (int) env('CONSOLE_SPINNER_INTERVAL', 80),
     ],
 
@@ -68,9 +68,9 @@ return [
     | channel              : log channel name, or null for the default
     */
     'logging' => [
-        'redact_keys'        => ['password', 'secret', 'token', 'key', 'authorization'],
+        'redact_keys' => ['password', 'secret', 'token', 'key', 'authorization'],
         'trace_in_debug_only' => true,
-        'channel'            => env('CONSOLE_LOG_CHANNEL'),
+        'channel' => env('CONSOLE_LOG_CHANNEL'),
     ],
 
     /*

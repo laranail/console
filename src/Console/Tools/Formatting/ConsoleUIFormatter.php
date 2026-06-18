@@ -318,7 +318,7 @@ class ConsoleUIFormatter implements Stringable
      * Constrain a colour token to safe characters so it cannot break out of or
      * inject extra attributes into a `<fg=...>` / `<bg=...>` formatter tag.
      */
-    private static function sanitizeColorToken(string $color): string
+    private function sanitizeColorToken(string $color): string
     {
         return (string) preg_replace('/[^A-Za-z0-9#]/', '', $color);
     }
@@ -326,7 +326,7 @@ class ConsoleUIFormatter implements Stringable
     /**
      * @return list<string>
      */
-    private static function allowedLinkSchemes(): array
+    private function allowedLinkSchemes(): array
     {
         if (function_exists('app') && app()->bound('config')) {
             /** @var list<string> $schemes */
@@ -342,11 +342,11 @@ class ConsoleUIFormatter implements Stringable
      * Whether a URL is safe to emit as an OSC-8 hyperlink: free of control
      * characters and using an allow-listed scheme.
      */
-    private static function isAllowedUrl(string $url): bool
+    private function isAllowedUrl(string $url): bool
     {
         $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
 
-        return $scheme !== '' && in_array($scheme, self::allowedLinkSchemes(), true);
+        return $scheme !== '' && in_array($scheme, $this->allowedLinkSchemes(), true);
     }
 
     /**
@@ -436,7 +436,7 @@ class ConsoleUIFormatter implements Stringable
         // text rather than emitting an attacker-controlled hyperlink.
         $url = str_replace(';', '', self::sanitizeText($url));
 
-        if (self::isAllowedUrl($url)) {
+        if ($this->isAllowedUrl($url)) {
             $this->href = $url;
             $this->isClickable = true;
         } else {
@@ -733,11 +733,11 @@ class ConsoleUIFormatter implements Stringable
         $tags = [];
 
         if ($this->foregroundColor) {
-            $tags[] = 'fg=' . self::sanitizeColorToken($this->foregroundColor);
+            $tags[] = 'fg=' . $this->sanitizeColorToken($this->foregroundColor);
         }
 
         if ($this->backgroundColor) {
-            $tags[] = 'bg=' . self::sanitizeColorToken($this->backgroundColor);
+            $tags[] = 'bg=' . $this->sanitizeColorToken($this->backgroundColor);
         }
 
         if ($this->textStyles !== []) {

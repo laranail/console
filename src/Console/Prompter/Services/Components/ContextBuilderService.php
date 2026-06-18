@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Services\Components;
 
@@ -46,9 +48,6 @@ class ContextBuilderService
 
     /**
      * Create a context method.
-     *
-     * @param ContextType $type
-     * @return callable
      */
     private function createContextMethod(ContextType $type): callable
     {
@@ -73,7 +72,7 @@ class ContextBuilderService
         }
 
         throw PrompterException::badMethodCall([
-            'method'  => $method,
+            'method' => $method,
             'methods' => rtrim(implode(', ', array_keys($this->contexts)), ', '),
         ]);
     }

@@ -33,7 +33,7 @@ final class ValidatorSecurityTest extends TestCase
         ];
 
         foreach ($validators as $validator) {
-            foreach ([123, [], null, new stdClass(), 1.5, true] as $input) {
+            foreach ([123, [], null, new stdClass, 1.5, true] as $input) {
                 self::assertSame('e', $validator->validate($input), $validator::class . ' on ' . gettype($input));
             }
         }

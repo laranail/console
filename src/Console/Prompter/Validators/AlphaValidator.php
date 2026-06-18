@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -13,6 +15,7 @@ class AlphaValidator extends AbstractValidator
     {
         parent::__construct($errorMessage, 'alpha', $replace, $locale);
     }
+
     public function validate(mixed $value): ?string
     {
         return is_string($value) && preg_match('/^[a-zA-Z]+$/', $value) === 1 ? null : $this->errorMessage;

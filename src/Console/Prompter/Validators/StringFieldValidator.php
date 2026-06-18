@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -7,15 +9,9 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 class StringFieldValidator extends AbstractValidator
 {
-    protected int $minLength;
-    protected int $maxLength;
-
-    public function __construct(int $minLength = 0, int $maxLength = 255, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(protected int $minLength = 0, protected int $maxLength = 255, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
         parent::__construct($errorMessage, 'string', $replace, $locale);
-
-        $this->minLength = $minLength;
-        $this->maxLength = $maxLength;
     }
 
     public function validate(mixed $value): ?string

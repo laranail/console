@@ -17,8 +17,8 @@ enum ProgressStyle: string
     public function format(): string
     {
         return match ($this) {
-            self::Minimal  => ' %bar% %percent:3s%%',
-            self::Classic  => ' %bar% %percent:3s%% %current%/%max%',
+            self::Minimal => ' %bar% %percent:3s%%',
+            self::Classic => ' %bar% %percent:3s%% %current%/%max%',
             self::Detailed => ' %bar% %percent:3s%% %current%/%max% • %elapsed% • ETA %estimated% • %rate%/s',
         };
     }

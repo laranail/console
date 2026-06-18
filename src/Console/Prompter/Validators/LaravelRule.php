@@ -17,21 +17,17 @@ use Illuminate\Support\Facades\Validator;
  */
 final class LaravelRule extends AbstractValidator
 {
-    private readonly ?string $explicitMessage;
-
     /**
      * @param array<int|string, mixed>|string $rules
-     * @param array<string, string>           $messages
+     * @param array<string, string> $messages
      */
     public function __construct(
         private readonly array|string $rules,
         private readonly array $messages = [],
-        ?string $errorMessage = null,
+        private readonly ?string $explicitMessage = null,
         ?string $locale = null,
     ) {
-        $this->explicitMessage = $errorMessage;
-
-        parent::__construct($errorMessage ?? '', '', [], $locale);
+        parent::__construct($this->explicitMessage ?? '', '', [], $locale);
     }
 
     public function validate(mixed $value): ?string

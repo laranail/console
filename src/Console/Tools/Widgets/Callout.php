@@ -6,12 +6,13 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Stringable;
 
 /**
  * A framed admonition with a status glyph and title spliced into the top rule,
  * e.g. a "warning" or "info" callout. Built on {@see Box}.
  */
-final class Callout
+final class Callout implements Stringable
 {
     private string $title = '';
 
@@ -22,7 +23,7 @@ final class Callout
     /**
      * @param list<string> $lines
      */
-    public function __construct(private readonly string $status, private array $lines, ?Capabilities $capabilities = null)
+    public function __construct(private readonly string $status, private readonly array $lines, ?Capabilities $capabilities = null)
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->symbols = Symbols::for($this->capabilities);

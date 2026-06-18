@@ -7,12 +7,13 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Stringable;
 
 /**
  * A wizard/pipeline breadcrumb showing done / current / pending steps, e.g.
  * `✓ Detect → ● Plan → ○ Apply → ○ Verify`.
  */
-final class StepFlow
+final class StepFlow implements Stringable
 {
     /** @var list<string> */
     private array $steps;
@@ -31,7 +32,7 @@ final class StepFlow
         $capabilities ??= Capabilities::detect();
         $this->symbols = Symbols::for($capabilities);
         $this->unicode = $capabilities->supportsUnicode();
-        $this->steps = array_map([ConsoleUIFormatter::class, 'sanitizeText'], $steps);
+        $this->steps = array_map(ConsoleUIFormatter::sanitizeText(...), $steps);
     }
 
     /**
@@ -66,9 +67,9 @@ final class StepFlow
 
         foreach ($this->steps as $i => $label) {
             $glyph = match (true) {
-                $i < $this->current  => $this->symbols->get('success'),
+                $i < $this->current => $this->symbols->get('success'),
                 $i === $this->current => $this->unicode ? '●' : '[*]',
-                default              => $this->symbols->get('pending'),
+                default => $this->symbols->get('pending'),
             };
 
             $rendered[] = $glyph . ' ' . $label;

@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Notifications;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Notifications\Contracts\ConsoleChannelInterface;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -21,7 +22,7 @@ final class ConsoleChannel implements ConsoleChannelInterface
     /**
      * Notification levels that map to safe, built-in Symfony output tags.
      */
-    private const ALLOWED_LEVELS = ['info', 'comment', 'error', 'question'];
+    private const array ALLOWED_LEVELS = ['info', 'comment', 'error', 'question'];
 
     /** @var array<string, mixed> */
     private array $config;
@@ -49,12 +50,12 @@ final class ConsoleChannel implements ConsoleChannelInterface
      */
     public function send(string $message, array $data = []): bool
     {
-        $output = $this->output ?? new ConsoleOutput();
+        $output = $this->output ?? new ConsoleOutput;
         $level = $this->resolveLevel($data['level'] ?? null);
 
         // escape() neutralises any `<tag>` in the content; sanitizeText() strips
         // terminal control characters. The level is taken from a fixed set.
-        $body = $output->getFormatter()->escape($this->formatMessage($message, $data));
+        $body = OutputFormatter::escape($this->formatMessage($message, $data));
 
         $output->writeln("<{$level}>{$body}</{$level}>");
 
@@ -74,7 +75,7 @@ final class ConsoleChannel implements ConsoleChannelInterface
         $output = '[' . date('Y-m-d H:i:s') . '] ' . ConsoleUIFormatter::sanitizeText($message);
 
         if ($data !== [] && ($this->config['show_data'] ?? true)) {
-            $output .= ' | Data: ' . ConsoleUIFormatter::sanitizeText((string) (json_encode($data) ?: ''));
+            $output .= ' | Data: ' . ConsoleUIFormatter::sanitizeText(json_encode($data) ?: '');
         }
 
         return $output;

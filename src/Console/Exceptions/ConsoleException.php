@@ -14,6 +14,8 @@ use Throwable;
  * whole package with a single type. Messages are resolved from the `console::`
  * translation namespace with a safe fallback, so a missing key never produces
  * an empty-message exception.
+ *
+ * @phpstan-consistent-constructor
  */
 class ConsoleException extends RuntimeException
 {
@@ -46,7 +48,7 @@ class ConsoleException extends RuntimeException
         }
 
         // Fallback: humanise the leaf key and interpolate replacements.
-        $leaf = str_replace(['_', '.'], ' ', (string) (strrchr($key, '.') ?: $key));
+        $leaf = str_replace(['_', '.'], ' ', strrchr($key, '.') ?: $key);
         $message = ucfirst(trim(ltrim($leaf, ' ')));
 
         foreach ($replace as $search => $value) {

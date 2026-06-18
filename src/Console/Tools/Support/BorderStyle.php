@@ -57,6 +57,6 @@ enum BorderStyle: string
         string $teeRight,
         string $cross,
     ): array {
-        return compact('tl', 'tr', 'bl', 'br', 'h', 'v', 'teeDown', 'teeUp', 'teeLeft', 'teeRight', 'cross');
+        return ['tl' => $tl, 'tr' => $tr, 'bl' => $bl, 'br' => $br, 'h' => $h, 'v' => $v, 'teeDown' => $teeDown, 'teeUp' => $teeUp, 'teeLeft' => $teeLeft, 'teeRight' => $teeRight, 'cross' => $cross];
     }
 }

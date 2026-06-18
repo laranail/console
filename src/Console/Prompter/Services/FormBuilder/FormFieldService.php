@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Services\FormBuilder;
 
@@ -13,15 +15,22 @@ use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
  */
 class FormFieldService
 {
-    public FieldType $type;
     public string $label = '';
+
     public string $placeholder = '';
+
     public bool $required = false;
+
     public string $hint = '';
+
     public ?string $default = null;
+
     public ?array $options = null;
+
     public ?ValidatorInterface $validator = null;
+
     public ?Closure $customValidator = null;
+
     public ?string $customErrorMessage = null;
 
     /**
@@ -29,10 +38,7 @@ class FormFieldService
      *
      * @param FieldType $type The type of the form field.
      */
-    public function __construct(FieldType $type)
-    {
-        $this->type = $type;
-    }
+    public function __construct(public FieldType $type) {}
 
     /**
      * Set the label of the form field.
@@ -43,6 +49,7 @@ class FormFieldService
     public function label(string $label): self
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -55,6 +62,7 @@ class FormFieldService
     public function placeholder(string $placeholder): self
     {
         $this->placeholder = $placeholder;
+
         return $this;
     }
 
@@ -67,6 +75,7 @@ class FormFieldService
     public function required(bool $required): self
     {
         $this->required = $required;
+
         return $this;
     }
 
@@ -79,6 +88,7 @@ class FormFieldService
     public function hint(string $hint): self
     {
         $this->hint = $hint;
+
         return $this;
     }
 
@@ -91,6 +101,7 @@ class FormFieldService
     public function default(?string $default): self
     {
         $this->default = $default;
+
         return $this;
     }
 
@@ -103,6 +114,7 @@ class FormFieldService
     public function options(?array $options): self
     {
         $this->options = $options;
+
         return $this;
     }
 
@@ -115,6 +127,7 @@ class FormFieldService
     public function validator(?ValidatorInterface $validator): self
     {
         $this->validator = $validator;
+
         return $this;
     }
 
@@ -127,6 +140,7 @@ class FormFieldService
     public function customValidator(?Closure $customValidator): self
     {
         $this->customValidator = $customValidator;
+
         return $this;
     }
 
@@ -139,6 +153,7 @@ class FormFieldService
     public function customErrorMessage(?string $customErrorMessage): self
     {
         $this->customErrorMessage = $customErrorMessage;
+
         return $this;
     }
 }

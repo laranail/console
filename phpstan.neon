@@ -12,29 +12,52 @@ parameters:
         # (largely inherited) console layer; not a correctness concern.
         -
             identifier: missingType.iterableValue
+        # @method docblock hints over laravel/prompts mirror its own loosely
+        # typed Collection/Progress generics; IDE hints, not a correctness concern.
+        -
+            identifier: missingType.generics
+        # PromptService is a thin pass-through to laravel/prompts; its generic
+        # template friction (spin/table/progress) is inherent to that API.
+        -
+            identifier: argument.type
+            path: src/Console/Prompter/Services/PromptService.php
+        -
+            identifier: argument.templateType
+            path: src/Console/Prompter/Services/PromptService.php
+        -
+            identifier: return.unusedType
+            path: src/Console/Prompter/Services/PromptService.php
+        # Exhaustive enum match keeps a defensive default arm for forward-compat.
+        -
+            identifier: match.alwaysTrue
+            path: src/Console/Prompter/Enums/FieldType.php
         # ConsoleProgressBar is a stateful wrapper: $progressBar is null until
         # startProgressBar() is called and $consoleOutput is set in the ctor;
         # its call contract assumes start-before-use.
         -
             identifier: method.nonObject
-            path: src/Formatting/ConsoleProgressBar.php
+            path: src/Console/Tools/Formatting/ConsoleProgressBar.php
         -
             identifier: argument.type
-            path: src/Formatting/ConsoleProgressBar.php
+            path: src/Console/Tools/Formatting/ConsoleProgressBar.php
         -
             identifier: return.phpDocType
-            path: src/Formatting/ConsoleProgressBar.php
+            path: src/Console/Tools/Formatting/ConsoleProgressBar.php
         # Terminal capability detection legitimately reads process env vars
-        # (NO_COLOR/TERM); these are not Laravel config keys.
+        # (NO_COLOR/TERM/FORCE_COLOR); these are not Laravel config keys.
         -
             identifier: larastan.noEnvCallsOutsideOfConfig
-            path: src/Formatting/ConsoleUIFormatter.php
+            path: src/Console/Tools/Formatting/ConsoleUIFormatter.php
+        -
+            identifier: larastan.noEnvCallsOutsideOfConfig
+            path: src/Console/Tools/Support/Capabilities.php
         # Performance metrics index by a computed numeric key; harmless.
         -
             identifier: offsetAccess.invalidOffset
-            path: src/Commands/Services/CommandPerformanceService.php
+            path: src/Console/Tools/Commands/Services/CommandPerformanceService.php
         # Command observer matches against names that may arrive as mixed.
         -
             identifier: argument.type
-            path: src/Observers/ConsoleCommandObserver.php
+            path: src/Console/Tools/Observers/ConsoleCommandObserver.php
+    reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false

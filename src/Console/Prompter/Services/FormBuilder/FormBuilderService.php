@@ -1,8 +1,12 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Services\FormBuilder;
 
+use Closure;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
+use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
 use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Validators\RadioFieldValidator;
@@ -13,15 +17,10 @@ use Simtabi\Laranail\Console\Prompter\Validators\SelectFieldValidator;
  */
 class FormBuilderService
 {
-    protected PromptsFormBuilder $form;
-
     /** @var array<string, FormFieldService> */
     protected array $fields = [];
 
-    public function __construct(PromptsFormBuilder $form)
-    {
-        $this->form = $form;
-    }
+    public function __construct(protected PromptsFormBuilder $form) {}
 
     /**
      * Add a field configuration to the form.
@@ -69,7 +68,7 @@ class FormBuilderService
      *
      * @throws PrompterException
      */
-    protected function resolveDefaultValidator(FormFieldService $formField): \Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface
+    protected function resolveDefaultValidator(FormFieldService $formField): ValidatorInterface
     {
         // A choice prompt returns the option *key* for associative option maps
         // and the *value* for list options, so validate against whichever the
@@ -79,8 +78,8 @@ class FormBuilderService
 
         return match ($formField->type) {
             FieldType::SELECT => new SelectFieldValidator($identifiers),
-            FieldType::RADIO  => new RadioFieldValidator($identifiers),
-            default           => FieldType::getDefaultValidator($formField->type),
+            FieldType::RADIO => new RadioFieldValidator($identifiers),
+            default => FieldType::getDefaultValidator($formField->type),
         };
     }
 
@@ -92,21 +91,21 @@ class FormBuilderService
      */
     protected function addFieldToForm(string $name, FormFieldService $formField): void
     {
-        $method   = FieldType::getValidatorMethod($formField);
+        $method = FieldType::getValidatorMethod($formField);
         $validate = $this->makeValidator($formField);
 
         $common = [
-            'label'    => $formField->label,
+            'label' => $formField->label,
             'required' => $formField->required,
             'validate' => $validate,
-            'hint'     => $formField->hint,
-            'name'     => $name,
+            'hint' => $formField->hint,
+            'name' => $name,
         ];
 
         $parameters = match ($method) {
             'text', 'textarea' => $common + [
                 'placeholder' => $formField->placeholder,
-                'default'     => $formField->default ?? '',
+                'default' => $formField->default ?? '',
             ],
             'password' => $common + [
                 'placeholder' => $formField->placeholder,
@@ -127,10 +126,10 @@ class FormBuilderService
     /**
      * Build the per-field validation closure shared by every prompt method.
      */
-    protected function makeValidator(FormFieldService $formField): \Closure
+    protected function makeValidator(FormFieldService $formField): Closure
     {
         return static function (mixed $value) use ($formField): ?string {
-            $isEmpty = $value === null || $value === '' || $value === [];
+            $isEmpty = in_array($value, [null, '', []], true);
 
             if ($formField->required && $isEmpty) {
                 return $formField->customErrorMessage ?? __('console::prompter.field_required');
@@ -140,7 +139,7 @@ class FormBuilderService
                 return null;
             }
 
-            if ($formField->customValidator) {
+            if ($formField->customValidator instanceof Closure) {
                 return ($formField->customValidator)($value);
             }
 

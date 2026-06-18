@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -26,6 +28,7 @@ class BooleanFieldValidator extends AbstractValidator
     {
         parent::__construct($errorMessage, 'boolean', $replace, $locale);
     }
+
     public function validate(mixed $value): ?string
     {
         return in_array($value, $this->validBooleans, true) ? null : $this->errorMessage;

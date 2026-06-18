@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Enums;
 
@@ -56,11 +58,8 @@ enum FieldType: string
     case ALPHANUMERIC = 'alphanumeric';
     case UUID_OR_INTEGER_OR_SLUG = 'uuid_or_integer_or_slug';
 
-
     /**
      * Get all enum values as array keys with custom labels.
-     *
-     * @return array
      */
     public static function keysWithLabels(): array
     {
@@ -91,8 +90,6 @@ enum FieldType: string
 
     /**
      * Get all enum values as array keys.
-     *
-     * @return array
      */
     public static function keys(): array
     {
@@ -100,13 +97,12 @@ enum FieldType: string
         foreach (self::cases() as $case) {
             $keys[$case->value] = $case->name;
         }
+
         return $keys;
     }
 
     /**
      * Get the label for a specific enum value.
-     *
-     * @return string
      */
     public function label(): string
     {
@@ -117,33 +113,33 @@ enum FieldType: string
      * Get the default validator for a given field type.
      *
      * @param self $type The type of the form field.
-     * @return ValidatorInterface
+     *
      * @throws PrompterException
      */
     public static function getDefaultValidator(self $type): ValidatorInterface
     {
         return match ($type) {
-            self::TEXT => new TextFieldValidator(),
-            self::NUMBER => new NumberFieldValidator(),
-            self::EMAIL => new EmailFieldValidator(),
-            self::PASSWORD => new PasswordFieldValidator(),
-            self::TEXTAREA => new TextAreaFieldValidator(),
-            self::DATE => new DateFieldValidator(),
-            self::TIME => new TimeFieldValidator(),
+            self::TEXT => new TextFieldValidator,
+            self::NUMBER => new NumberFieldValidator,
+            self::EMAIL => new EmailFieldValidator,
+            self::PASSWORD => new PasswordFieldValidator,
+            self::TEXTAREA => new TextAreaFieldValidator,
+            self::DATE => new DateFieldValidator,
+            self::TIME => new TimeFieldValidator,
             self::SELECT => new SelectFieldValidator([]),
-            self::CHECKBOX => new CheckboxFieldValidator(),
+            self::CHECKBOX => new CheckboxFieldValidator,
             self::RADIO => new RadioFieldValidator([]),
-            self::PATH => new PathFieldValidator(),
-            self::USERNAME => new UsernameValidator(),
-            self::PHONE => new PhoneNumberValidator(),
-            self::COLOR => new ColorValidator(),
-            self::NULL_OR_EMPTY => new NullOrEmptyValidator(),
-            self::ARRAY => new ArrayValidator(),
-            self::OBJECT => new ObjectValidator(),
-            self::UUID => new UUIDFieldValidator(),
-            self::ALPHA => new AlphaValidator(),
-            self::ALPHANUMERIC => new AlphanumericValidator(),
-            self::UUID_OR_INTEGER_OR_SLUG => new UuidOrIntegerOrSlugValidator(),
+            self::PATH => new PathFieldValidator,
+            self::USERNAME => new UsernameValidator,
+            self::PHONE => new PhoneNumberValidator,
+            self::COLOR => new ColorValidator,
+            self::NULL_OR_EMPTY => new NullOrEmptyValidator,
+            self::ARRAY => new ArrayValidator,
+            self::OBJECT => new ObjectValidator,
+            self::UUID => new UUIDFieldValidator,
+            self::ALPHA => new AlphaValidator,
+            self::ALPHANUMERIC => new AlphanumericValidator,
+            self::UUID_OR_INTEGER_OR_SLUG => new UuidOrIntegerOrSlugValidator,
             default => throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $type]),
         };
     }
@@ -151,8 +147,6 @@ enum FieldType: string
     /**
      * Get the mapped validator method.
      *
-     * @param FormFieldService $formField
-     * @return string
      * @throws PrompterException
      */
     public static function getValidatorMethod(FormFieldService $formField): string
@@ -181,7 +175,7 @@ enum FieldType: string
             self::UUID_OR_INTEGER_OR_SLUG->value => 'text',
         ];
 
-        if (!isset($methods[$formField->type->value])) {
+        if (! isset($methods[$formField->type->value])) {
             throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $formField->type->value]);
         }
 

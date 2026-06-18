@@ -15,18 +15,18 @@ use Simtabi\Laranail\Console\Tools\Support\Symbols;
  * {@see Capabilities}); colour is applied through {@see ConsoleUIFormatter}
  * tags so it honours NO_COLOR/non-TTY automatically.
  */
-final class StatusLine
+final readonly class StatusLine
 {
     /** @var array<string, string> status => formatter colour */
-    private const COLORS = [
+    private const array COLORS = [
         'success' => 'green',
-        'error'   => 'red',
+        'error' => 'red',
         'warning' => 'yellow',
-        'info'    => 'blue',
+        'info' => 'blue',
         'pending' => 'gray',
     ];
 
-    private readonly Symbols $symbols;
+    private Symbols $symbols;
 
     public function __construct(?Capabilities $capabilities = null)
     {

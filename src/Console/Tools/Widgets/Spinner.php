@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use function Laravel\Prompts\spin;
+
 use Simtabi\Laranail\Console\Tools\Enums\SpinnerFrames;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
-
-use function Laravel\Prompts\spin;
 
 /**
  * A fluent activity spinner.
@@ -43,7 +42,7 @@ final class Spinner
 
     public function __construct(?OutputInterface $output = null, ?Capabilities $capabilities = null)
     {
-        $this->output = $output ?? new ConsoleOutput();
+        $this->output = $output ?? new ConsoleOutput;
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->symbols = Symbols::for($this->capabilities);
         $this->frames = SpinnerFrames::fromName($this->config('spinner.frames', 'braille'));
@@ -51,7 +50,7 @@ final class Spinner
 
     public static function make(string $message = ''): self
     {
-        return (new self())->message($message);
+        return (new self)->message($message);
     }
 
     public function message(string $message): self

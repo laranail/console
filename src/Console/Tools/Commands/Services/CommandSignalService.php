@@ -69,7 +69,7 @@ class CommandSignalService
 
         Log::info('Command received termination signal', [
             'command' => $this->commandName,
-            'signal'  => $signal,
+            'signal' => $signal,
         ]);
     }
 

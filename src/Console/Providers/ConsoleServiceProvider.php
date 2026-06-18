@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Override;
 use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Prompter\Providers\PrompterServiceProvider;
 use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
@@ -18,15 +19,16 @@ use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
  */
 final class ConsoleServiceProvider extends ServiceProvider
 {
-    private const CONFIG_PATH = __DIR__ . '/../../../config/console.php';
+    private const string CONFIG_PATH = __DIR__ . '/../../../config/console.php';
 
-    private const LANG_PATH = __DIR__ . '/../../../resources/lang';
+    private const string LANG_PATH = __DIR__ . '/../../../resources/lang';
 
+    #[Override]
     public function register(): void
     {
         $this->mergeConfigFrom(self::CONFIG_PATH, 'console');
 
-        $this->app->singleton(ConsoleManager::class, static fn (): ConsoleManager => new ConsoleManager());
+        $this->app->singleton(ConsoleManager::class, static fn (): ConsoleManager => new ConsoleManager);
 
         $this->app->register(ToolsServiceProvider::class);
         $this->app->register(PrompterServiceProvider::class);

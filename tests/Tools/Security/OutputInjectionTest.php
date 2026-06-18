@@ -21,7 +21,7 @@ final class OutputInjectionTest extends TestCase
         self::assertStringNotContainsString("\x1b", $clean);
         self::assertStringNotContainsString("\r", $clean);
         self::assertStringNotContainsString("\x07", $clean);
-        self::assertSame("a[2Jbcd", $clean);
+        self::assertSame('a[2Jbcd', $clean);
     }
 
     public function test_sanitize_keeps_newlines_and_tabs(): void
@@ -44,7 +44,7 @@ final class OutputInjectionTest extends TestCase
      */
     public function test_channel_pins_level_and_escapes_content(): void
     {
-        $out = new BufferedOutput();
+        $out = new BufferedOutput;
         (new ConsoleChannel(['show_data' => false], $out))->send('hello', ['level' => 'fg=red;href=http://evil']);
 
         $written = $out->fetch();
@@ -57,7 +57,7 @@ final class OutputInjectionTest extends TestCase
 
     public function test_channel_strips_control_chars_from_message(): void
     {
-        $out = new BufferedOutput();
+        $out = new BufferedOutput;
         (new ConsoleChannel([], $out))->send("danger\x1b[2J", []);
 
         self::assertStringNotContainsString("\x1b", $out->fetch());

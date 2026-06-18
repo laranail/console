@@ -35,7 +35,7 @@ final class FormBuilderTest extends TestCase
      */
     public function test_building_all_field_types_does_not_throw(): void
     {
-        $service = new FormBuilderService(new PromptsFormBuilder());
+        $service = new FormBuilderService(new PromptsFormBuilder);
 
         foreach (FieldType::cases() as $i => $type) {
             $field = (new FormFieldService($type))->label('Field ' . $type->value);
@@ -55,7 +55,7 @@ final class FormBuilderTest extends TestCase
     public function test_choice_fields_get_options_aware_default_validators(): void
     {
         $field = (new FormFieldService(FieldType::SELECT))->label('Pick')->options(['x' => 'X']);
-        $service = new FormBuilderService(new PromptsFormBuilder());
+        $service = new FormBuilderService(new PromptsFormBuilder);
         $service->addField('pick', $field);
 
         // The default validator should accept a valid option and reject others.

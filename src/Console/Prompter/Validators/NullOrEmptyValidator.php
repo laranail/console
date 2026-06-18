@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
@@ -9,7 +11,6 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 class NullOrEmptyValidator extends AbstractValidator
 {
-
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
         parent::__construct($errorMessage, 'null_or_empty', $replace, $locale);

@@ -28,7 +28,7 @@ final class WidgetsTest extends TestCase
     private function assertAligned(string $rendered): void
     {
         $lines = explode("\n", $rendered);
-        $widths = array_map(static fn (string $l): int => DisplayWidth::of($l), $lines);
+        $widths = array_map(DisplayWidth::of(...), $lines);
 
         self::assertCount(1, array_unique($widths), 'Lines are not equal width: ' . implode(',', $widths));
     }
@@ -54,7 +54,7 @@ final class WidgetsTest extends TestCase
     public function test_tree_renders_nodes(): void
     {
         $rendered = Tree::make('root')
-            ->child('a', fn (Tree $t) => $t->child('a1'))
+            ->child('a', fn (Tree $t): Tree => $t->child('a1'))
             ->child('b')
             ->render();
 
@@ -106,7 +106,7 @@ final class WidgetsTest extends TestCase
 
     public function test_progress_bar_renders(): void
     {
-        $out = new BufferedOutput();
+        $out = new BufferedOutput;
         (new ProgressBar($out, 5))->start()->advance(2)->finish();
 
         self::assertNotSame('', $out->fetch());
@@ -119,7 +119,7 @@ final class WidgetsTest extends TestCase
 
     public function test_task_progress_exit_code_reflects_failures(): void
     {
-        $out = new BufferedOutput();
+        $out = new BufferedOutput;
 
         $ok = TaskProgress::make($out);
         $ok->task('a')->succeed();

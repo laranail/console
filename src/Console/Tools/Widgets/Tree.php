@@ -7,14 +7,15 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Stringable;
 
 /**
  * Renders a nested tree with `├─ │ └─` connectors (ASCII fallbacks without
  * Unicode), each node optionally prefixed with a status glyph.
  */
-final class Tree
+final class Tree implements Stringable
 {
-    private string $label;
+    private readonly string $label;
 
     /** @var list<Tree> */
     private array $children = [];

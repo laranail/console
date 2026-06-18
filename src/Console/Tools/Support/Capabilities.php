@@ -22,20 +22,14 @@ final class Capabilities
 
     private ?int $width = null;
 
-    /** @var resource|null */
-    private $stream;
-
     /**
      * @param resource|null $stream Output stream to probe (defaults to STDOUT).
      */
-    public function __construct($stream = null)
-    {
-        $this->stream = $stream;
-    }
+    public function __construct(private $stream = null) {}
 
     public static function detect(): self
     {
-        return new self();
+        return new self;
     }
 
     public function isInteractive(): bool

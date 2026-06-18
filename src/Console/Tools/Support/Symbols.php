@@ -9,39 +9,39 @@ namespace Simtabi\Laranail\Console\Tools\Support;
  * ASCII variants. The variant is chosen once from {@see Capabilities} so the
  * rest of the package never sprinkles conditional "is Unicode supported?" checks.
  */
-final class Symbols
+final readonly class Symbols
 {
-    private const FANCY = [
-        'success'  => '✓',
-        'error'    => '✗',
-        'warning'  => '⚠',
-        'info'     => 'ℹ',
-        'pending'  => '○',
-        'running'  => '◉',
-        'bullet'   => '•',
-        'arrow'    => '→',
-        'branch'   => '├─',
-        'last'     => '└─',
-        'stem'     => '│ ',
-        'gap'      => '  ',
+    private const array FANCY = [
+        'success' => '✓',
+        'error' => '✗',
+        'warning' => '⚠',
+        'info' => 'ℹ',
+        'pending' => '○',
+        'running' => '◉',
+        'bullet' => '•',
+        'arrow' => '→',
+        'branch' => '├─',
+        'last' => '└─',
+        'stem' => '│ ',
+        'gap' => '  ',
     ];
 
-    private const ASCII = [
-        'success'  => '[OK]',
-        'error'    => '[X]',
-        'warning'  => '[!]',
-        'info'     => '[i]',
-        'pending'  => '[ ]',
-        'running'  => '[*]',
-        'bullet'   => '*',
-        'arrow'    => '->',
-        'branch'   => '|-',
-        'last'     => '\\-',
-        'stem'     => '|  ',
-        'gap'      => '   ',
+    private const array ASCII = [
+        'success' => '[OK]',
+        'error' => '[X]',
+        'warning' => '[!]',
+        'info' => '[i]',
+        'pending' => '[ ]',
+        'running' => '[*]',
+        'bullet' => '*',
+        'arrow' => '->',
+        'branch' => '|-',
+        'last' => '\\-',
+        'stem' => '|  ',
+        'gap' => '   ',
     ];
 
-    public function __construct(private readonly bool $unicode) {}
+    public function __construct(private bool $unicode) {}
 
     public static function for(Capabilities $capabilities): self
     {

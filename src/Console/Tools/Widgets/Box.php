@@ -8,6 +8,7 @@ use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Stringable;
 
 /**
  * Frames text in a box drawn from a single {@see BorderStyle} family.
@@ -17,11 +18,8 @@ use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
  * glyph families is impossible by construction — all glyphs come from one enum
  * case.
  */
-final class Box
+final class Box implements Stringable
 {
-    /** @var list<string> */
-    private array $lines;
-
     private string $title = '';
 
     private string $footer = '';
@@ -35,9 +33,8 @@ final class Box
     /**
      * @param list<string> $lines
      */
-    public function __construct(array $lines = [], private readonly Capabilities $capabilities = new Capabilities())
+    public function __construct(private array $lines = [], private readonly Capabilities $capabilities = new Capabilities)
     {
-        $this->lines = $lines;
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Rounded : BorderStyle::Ascii;
     }
 
@@ -112,7 +109,7 @@ final class Box
     public function render(): string
     {
         $g = $this->style->glyphs();
-        $lines = array_map([ConsoleUIFormatter::class, 'sanitizeText'], $this->lines);
+        $lines = array_map(ConsoleUIFormatter::sanitizeText(...), $this->lines);
 
         $bodyWidth = 0;
         foreach ($lines as $line) {
