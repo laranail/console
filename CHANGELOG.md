@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-06-18
+
 ### Added
 - Merged the console output toolkit and the prompts/forms toolkit into a single
   `laranail/console` package with two decoupled sub-domains, `Console\Tools`
