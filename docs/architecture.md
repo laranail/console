@@ -10,9 +10,12 @@ Console
 ├── Providers\ConsoleServiceProvider   # config + lang + registers child providers
 ├── Exceptions\ConsoleException        # base, fromKey() with safe fallback
 ├── Tools\                   # OUTPUT
-│   ├── Formatting\          # ConsoleUIFormatter
-│   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress…
-│   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color
+│   ├── Formatting\          # ConsoleUIFormatter (colour/badge/link primitives)
+│   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress,
+│   │                        #   Summary, Header, Banner, Panel/PanelBlock, Menu\…
+│   ├── Contracts\           # Renderable (panel composition)
+│   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color,
+│   │                        #   Emoji, Figlet, Keypress, Terminal, Sgr/ControlChars/Csi
 │   ├── Commands\            # Command (enhanced base) + Services\ (nine services)
 │   ├── Runners\             # BaseRunner + ConsoleRunner
 │   ├── Observers\, Events\  # command lifecycle hooks + CommandEvents

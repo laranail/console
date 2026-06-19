@@ -16,9 +16,14 @@ accept an environment override.
 | `output.symbols` | `auto` | `auto` \| `fancy` \| `ascii`. Status/tree/box glyph set. |
 | `output.width` | `null` | Fixed column width, or `null` to auto-detect. Env: `CONSOLE_WIDTH`. |
 | `spinner.frames` | `braille` | `braille` \| `dots` \| `line` \| `breath`. |
-| `spinner.interval_ms` | `80` | Frame interval for manual spinners. |
 | `progress.format` | `detailed` | `minimal` \| `classic` \| `detailed`. |
 | `progress.glyphs` | `blocks` | `blocks` \| `ascii` \| `dots` \| `arrows` \| `gradient`. |
+| `emoji.mode` | `auto` | `auto` \| `unicode` \| `ascii`. Env: `CONSOLE_EMOJI_MODE`. |
+| `emoji.custom` | `[]` | Extra/override emoji: `name => [unicode, ascii]` or a single string. |
+| `banner.font` | `null` | Default FIGlet font name (e.g. `block`) or `.flf` path; `null` = plain title. Env: `CONSOLE_BANNER_FONT`. |
+| `banner.width` | `null` | Default banner inner width, or `null` to auto-fit. Env: `CONSOLE_BANNER_WIDTH`. |
+| `menu.foreground` | `null` | `Console::menu()` frame colour (hex/name) or `null`. Env: `CONSOLE_MENU_FG`. |
+| `menu.width` | `null` | `Console::menu()` frame width, or `null` to auto-fit. Env: `CONSOLE_MENU_WIDTH`. |
 | `links.allowed_schemes` | `['http','https','mailto']` | URL schemes permitted in terminal hyperlinks; others render as plain text. |
 | `logging.redact_keys` | `['password','secret','token','key','authorization']` | Context keys scrubbed before an exception is logged. |
 | `logging.trace_in_debug_only` | `true` | Only log stack traces when `app.debug` is true. |
