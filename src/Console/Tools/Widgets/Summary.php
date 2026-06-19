@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Stringable;
@@ -45,7 +46,7 @@ final readonly class Summary implements Stringable
 
         $title = $this->title ?? Lang::get('widgets.summary.title', 'EXECUTION SUMMARY');
 
-        $output[] = $fmt->colorize(str_repeat('─', 60), ConsoleUIFormatter::GRAY);
+        $output[] = $fmt->colorize(str_repeat('─', (int) Config::get('summary.divider_width', 60)), ConsoleUIFormatter::GRAY);
         $output[] = $fmt->colorize($title, ConsoleUIFormatter::BRIGHT_CYAN, true);
         $output[] = '';
 
@@ -82,7 +83,7 @@ final readonly class Summary implements Stringable
         $output = [];
 
         foreach ($items as [$label, $value, $style]) {
-            $output[] = sprintf('   %s %s', str_pad($label . ':', 16), ConsoleUIFormatter::badge($value, $style));
+            $output[] = sprintf('   %s %s', str_pad($label . ':', $this->labelPad()), ConsoleUIFormatter::badge($value, $style));
         }
 
         return implode("\n", $output);
@@ -99,13 +100,13 @@ final readonly class Summary implements Stringable
 
         $output[] = sprintf(
             '   %s %s',
-            str_pad(Lang::get('widgets.summary.total_time', 'Total Time:'), 16),
+            str_pad(Lang::get('widgets.summary.total_time', 'Total Time:'), $this->labelPad()),
             $fmt->colorize(TimeFormat::fromMillis($totalTime), $this->performanceColor($totalTime), true),
         );
 
         $output[] = sprintf(
             '   %s %s',
-            str_pad(Lang::get('widgets.summary.average_time', 'Average Time:'), 16),
+            str_pad(Lang::get('widgets.summary.average_time', 'Average Time:'), $this->labelPad()),
             $fmt->colorize(TimeFormat::fromMillis($totalTime / $total), $this->performanceColor($totalTime / $total)),
         );
 
@@ -117,13 +118,13 @@ final readonly class Summary implements Stringable
 
             $output[] = sprintf(
                 '   %s %s %s',
-                str_pad(Lang::get('widgets.summary.fastest', 'Fastest:'), 16),
+                str_pad(Lang::get('widgets.summary.fastest', 'Fastest:'), $this->labelPad()),
                 $fmt->colorize($fastest['class'], ConsoleUIFormatter::GREEN),
                 $fmt->colorize('(' . TimeFormat::fromMillis((float) $fastest['time']) . ')', ConsoleUIFormatter::GRAY),
             );
             $output[] = sprintf(
                 '   %s %s %s',
-                str_pad(Lang::get('widgets.summary.slowest', 'Slowest:'), 16),
+                str_pad(Lang::get('widgets.summary.slowest', 'Slowest:'), $this->labelPad()),
                 $fmt->colorize($slowest['class'], ConsoleUIFormatter::YELLOW),
                 $fmt->colorize('(' . TimeFormat::fromMillis((float) $slowest['time']) . ')', ConsoleUIFormatter::GRAY),
             );
@@ -131,14 +132,14 @@ final readonly class Summary implements Stringable
 
         $successRate = ((int) ($stats['success'] ?? 0) / $total) * 100;
         $rateColor = match (true) {
-            $successRate >= 100 => ConsoleUIFormatter::GREEN,
-            $successRate >= 80 => ConsoleUIFormatter::YELLOW,
+            $successRate >= (float) Config::get('summary.rate_good', 100) => ConsoleUIFormatter::GREEN,
+            $successRate >= (float) Config::get('summary.rate_warn', 80) => ConsoleUIFormatter::YELLOW,
             default => ConsoleUIFormatter::RED,
         };
 
         $output[] = sprintf(
             '   %s %s',
-            str_pad(Lang::get('widgets.summary.success_rate', 'Success Rate:'), 16),
+            str_pad(Lang::get('widgets.summary.success_rate', 'Success Rate:'), $this->labelPad()),
             $fmt->colorize(number_format($successRate, 1) . '%', $rateColor, true),
         );
 
@@ -157,8 +158,9 @@ final readonly class Summary implements Stringable
             $output[] = sprintf('   %d. %s', $index + 1, $fmt->colorize($error['class'] ?? '', ConsoleUIFormatter::YELLOW));
 
             $message = $error['message'] ?? '';
-            if (mb_strlen($message) > 80) {
-                $message = mb_substr($message, 0, 77) . '...';
+            $messageMax = (int) Config::get('summary.message_max', 80);
+            if (mb_strlen($message) > $messageMax) {
+                $message = mb_substr($message, 0, $messageMax - 3) . '...';
             }
 
             $output[] = sprintf(
@@ -187,6 +189,11 @@ final readonly class Summary implements Stringable
         };
 
         return ConsoleUIFormatter::badges($badges);
+    }
+
+    private function labelPad(): int
+    {
+        return (int) Config::get('summary.label_pad', 16);
     }
 
     private function performanceColor(float $ms): string

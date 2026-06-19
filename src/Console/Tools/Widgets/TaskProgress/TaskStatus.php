@@ -31,12 +31,4 @@ enum TaskStatus: string
             self::Cancelled => $unicode ? '⊗' : '[c]',
         };
     }
-
-    public function isTerminal(): bool
-    {
-        return match ($this) {
-            self::Success, self::Failed, self::Skipped, self::Cancelled => true,
-            default => false,
-        };
-    }
 }

@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates name fields (full name / first and/or last name).
  */
-class NameFieldValidator extends RegexValidator
+final class NameFieldValidator extends RegexValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

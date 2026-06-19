@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
  *
  * Validates that the input is either a UUID, an integer ID, or a slug.
  */
-class UuidOrIntegerOrSlugValidator extends AbstractValidator
+final class UuidOrIntegerOrSlugValidator extends AbstractValidator
 {
     public function __construct(protected string $uuidVersion = 'uuid', ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

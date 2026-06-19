@@ -62,6 +62,23 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Execution summary
+    |--------------------------------------------------------------------------
+    | Layout for Console::summary(). divider_width is the top rule length;
+    | label_pad aligns the metric labels; message_max truncates long error
+    | messages; rate_good / rate_warn are the success-rate colour thresholds
+    | (>= good is green, >= warn is yellow, else red).
+    */
+    'summary' => [
+        'divider_width' => 60,
+        'label_pad' => 16,
+        'message_max' => 80,
+        'rate_good' => 100,
+        'rate_warn' => 80,
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Emoji
     |--------------------------------------------------------------------------
     | mode   : auto | unicode | ascii — "auto" follows Unicode capability.

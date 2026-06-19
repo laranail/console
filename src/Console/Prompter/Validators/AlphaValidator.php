@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates fields that should contain only alphabetic characters.
  */
-class AlphaValidator extends RegexValidator
+final class AlphaValidator extends RegexValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

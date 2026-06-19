@@ -7,7 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 /**
  * Validates RFC 4122 UUID fields (any version 1–5).
  */
-class UUIDFieldValidator extends RegexValidator
+final class UUIDFieldValidator extends RegexValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

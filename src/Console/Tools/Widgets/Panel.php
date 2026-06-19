@@ -111,13 +111,7 @@ final class Panel implements Renderable, Stringable
 
     public function totalWidth(): int
     {
-        $lines = $this->renderLines();
-        $width = 0;
-        foreach ($lines as $line) {
-            $width = max($width, DisplayWidth::of($line));
-        }
-
-        return $width;
+        return DisplayWidth::maxWidth($this->renderLines());
     }
 
     public function totalHeight(): int

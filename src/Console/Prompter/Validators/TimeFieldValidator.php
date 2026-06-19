@@ -9,7 +9,7 @@ use DateTimeImmutable;
 /**
  * Validates time fields against explicit time formats.
  */
-class TimeFieldValidator extends AbstractValidator
+final class TimeFieldValidator extends AbstractValidator
 {
     /** @var list<string> */
     protected array $formats;

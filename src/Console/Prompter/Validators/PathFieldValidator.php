@@ -11,7 +11,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  * cannot be used to probe which paths exist. Null bytes and parent-directory
  * traversal segments are rejected.
  */
-class PathFieldValidator extends AbstractValidator
+final class PathFieldValidator extends AbstractValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

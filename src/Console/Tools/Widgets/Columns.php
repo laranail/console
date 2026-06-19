@@ -105,10 +105,7 @@ final class Columns implements Stringable
             return min($this->count, $total);
         }
 
-        $widest = 0;
-        foreach ($this->items as $item) {
-            $widest = max($widest, DisplayWidth::of($item));
-        }
+        $widest = DisplayWidth::maxWidth($this->items);
 
         $cols = $widest > 0
             ? intdiv($this->capabilities->width() + $this->gap, $widest + $this->gap)
