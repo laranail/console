@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Stringable;
 
@@ -17,7 +18,7 @@ final class Header implements Stringable
 {
     private int $count = 0;
 
-    private string $itemLabel = 'items';
+    private ?string $itemLabel = null;
 
     private readonly Symbols $symbols;
 
@@ -33,7 +34,7 @@ final class Header implements Stringable
         return new self($title);
     }
 
-    public function count(int $count, string $itemLabel = 'items'): self
+    public function count(int $count, ?string $itemLabel = null): self
     {
         $this->count = $count;
         $this->itemLabel = $itemLabel;
@@ -48,7 +49,9 @@ final class Header implements Stringable
         $title = $fmt->colorize(trim($glyph . ' ' . $this->title), ConsoleUIFormatter::CYAN, true);
 
         if ($this->count > 0) {
-            return $title . ' ' . $fmt->colorize("({$this->count} {$this->itemLabel})", ConsoleUIFormatter::GRAY);
+            $label = $this->itemLabel ?? Lang::get('widgets.header.items', 'items');
+
+            return $title . ' ' . $fmt->colorize("({$this->count} {$label})", ConsoleUIFormatter::GRAY);
         }
 
         return $title;

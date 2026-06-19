@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Stringable;
 
@@ -25,13 +26,13 @@ final readonly class Summary implements Stringable
      */
     public function __construct(
         private array $stats,
-        private string $title = 'EXECUTION SUMMARY',
+        private ?string $title = null,
     ) {}
 
     /**
      * @param array<string, mixed> $stats
      */
-    public static function make(array $stats, string $title = 'EXECUTION SUMMARY'): self
+    public static function make(array $stats, ?string $title = null): self
     {
         return new self($stats, $title);
     }
@@ -42,26 +43,28 @@ final readonly class Summary implements Stringable
         $stats = $this->stats;
         $output = [];
 
+        $title = $this->title ?? Lang::get('widgets.summary.title', 'EXECUTION SUMMARY');
+
         $output[] = $fmt->colorize(str_repeat('─', 60), ConsoleUIFormatter::GRAY);
-        $output[] = $fmt->colorize($this->title, ConsoleUIFormatter::BRIGHT_CYAN, true);
+        $output[] = $fmt->colorize($title, ConsoleUIFormatter::BRIGHT_CYAN, true);
         $output[] = '';
 
-        $output[] = $fmt->colorize('Execution Statistics:', ConsoleUIFormatter::WHITE, true);
+        $output[] = $fmt->colorize(Lang::get('widgets.summary.statistics', 'Execution Statistics:'), ConsoleUIFormatter::WHITE, true);
         $output[] = $this->statisticsTable([
-            ['Total', (string) ($stats['total'] ?? 0), ConsoleUIFormatter::BADGE_STYLE_INFO],
-            ['Successful', (string) ($stats['success'] ?? 0), ConsoleUIFormatter::BADGE_STYLE_SUCCESS],
-            ['Failed', (string) ($stats['failed'] ?? 0), ($stats['failed'] ?? 0) > 0 ? ConsoleUIFormatter::BADGE_STYLE_DANGER : ConsoleUIFormatter::BADGE_STYLE_SECONDARY],
+            [Lang::get('widgets.summary.total', 'Total'), (string) ($stats['total'] ?? 0), ConsoleUIFormatter::BADGE_STYLE_INFO],
+            [Lang::get('widgets.summary.successful', 'Successful'), (string) ($stats['success'] ?? 0), ConsoleUIFormatter::BADGE_STYLE_SUCCESS],
+            [Lang::get('widgets.summary.failed', 'Failed'), (string) ($stats['failed'] ?? 0), ($stats['failed'] ?? 0) > 0 ? ConsoleUIFormatter::BADGE_STYLE_DANGER : ConsoleUIFormatter::BADGE_STYLE_SECONDARY],
         ]);
         $output[] = '';
 
-        $output[] = $fmt->colorize('Performance Metrics:', ConsoleUIFormatter::WHITE, true);
+        $output[] = $fmt->colorize(Lang::get('widgets.summary.performance', 'Performance Metrics:'), ConsoleUIFormatter::WHITE, true);
         $output[] = $this->performanceMetrics();
         $output[] = '';
 
         if (! empty($stats['errors'])) {
             /** @var list<array<string, string>> $errors */
             $errors = $stats['errors'];
-            $output[] = $fmt->colorize('Failed Items:', ConsoleUIFormatter::RED, true);
+            $output[] = $fmt->colorize(Lang::get('widgets.summary.failed_items', 'Failed Items:'), ConsoleUIFormatter::RED, true);
             $output[] = $this->errorDetails($errors);
             $output[] = '';
         }
@@ -96,13 +99,13 @@ final readonly class Summary implements Stringable
 
         $output[] = sprintf(
             '   %s %s',
-            str_pad('Total Time:', 16),
+            str_pad(Lang::get('widgets.summary.total_time', 'Total Time:'), 16),
             $fmt->colorize(TimeFormat::fromMillis($totalTime), $this->performanceColor($totalTime), true),
         );
 
         $output[] = sprintf(
             '   %s %s',
-            str_pad('Average Time:', 16),
+            str_pad(Lang::get('widgets.summary.average_time', 'Average Time:'), 16),
             $fmt->colorize(TimeFormat::fromMillis($totalTime / $total), $this->performanceColor($totalTime / $total)),
         );
 
@@ -114,13 +117,13 @@ final readonly class Summary implements Stringable
 
             $output[] = sprintf(
                 '   %s %s %s',
-                str_pad('Fastest:', 16),
+                str_pad(Lang::get('widgets.summary.fastest', 'Fastest:'), 16),
                 $fmt->colorize($fastest['class'], ConsoleUIFormatter::GREEN),
                 $fmt->colorize('(' . TimeFormat::fromMillis((float) $fastest['time']) . ')', ConsoleUIFormatter::GRAY),
             );
             $output[] = sprintf(
                 '   %s %s %s',
-                str_pad('Slowest:', 16),
+                str_pad(Lang::get('widgets.summary.slowest', 'Slowest:'), 16),
                 $fmt->colorize($slowest['class'], ConsoleUIFormatter::YELLOW),
                 $fmt->colorize('(' . TimeFormat::fromMillis((float) $slowest['time']) . ')', ConsoleUIFormatter::GRAY),
             );
@@ -135,7 +138,7 @@ final readonly class Summary implements Stringable
 
         $output[] = sprintf(
             '   %s %s',
-            str_pad('Success Rate:', 16),
+            str_pad(Lang::get('widgets.summary.success_rate', 'Success Rate:'), 16),
             $fmt->colorize(number_format($successRate, 1) . '%', $rateColor, true),
         );
 
@@ -175,12 +178,12 @@ final readonly class Summary implements Stringable
         $success = (int) ($stats['success'] ?? 0);
 
         $badges = match (true) {
-            $failed === 0 => [['ALL COMPLETED', ConsoleUIFormatter::BADGE_STYLE_SUCCESS]],
+            $failed === 0 => [[Lang::get('widgets.summary.badge_all_completed', 'ALL COMPLETED'), ConsoleUIFormatter::BADGE_STYLE_SUCCESS]],
             $success > 0 => [
-                ['COMPLETED WITH ERRORS', ConsoleUIFormatter::BADGE_STYLE_WARNING],
-                [$failed . ' FAILED', ConsoleUIFormatter::BADGE_STYLE_DANGER],
+                [Lang::get('widgets.summary.badge_completed_with_errors', 'COMPLETED WITH ERRORS'), ConsoleUIFormatter::BADGE_STYLE_WARNING],
+                [Lang::get('widgets.summary.badge_failed', ':count FAILED', ['count' => $failed]), ConsoleUIFormatter::BADGE_STYLE_DANGER],
             ],
-            default => [['ALL FAILED', ConsoleUIFormatter::BADGE_STYLE_DANGER]],
+            default => [[Lang::get('widgets.summary.badge_all_failed', 'ALL FAILED'), ConsoleUIFormatter::BADGE_STYLE_DANGER]],
         };
 
         return ConsoleUIFormatter::badges($badges);
