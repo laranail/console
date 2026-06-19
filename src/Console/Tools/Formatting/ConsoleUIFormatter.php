@@ -343,10 +343,13 @@ class ConsoleUIFormatter implements Stringable
     ): self {
         $this->foregroundColor = $text;
         $this->styleTag = $styleTag;
-        $this->isClickable = $isClickable;
+        $this->isClickable = false;
+        $this->href = null;
 
-        if ($isClickable && $href) {
-            $this->href = $href;
+        // Route the href through the same sanitisation + scheme allow-list as
+        // setHref(), so a hostile URL can't emit an arbitrary OSC-8 hyperlink.
+        if ($isClickable && $href !== null && $href !== '') {
+            $this->setHref($href);
         }
 
         return $this;

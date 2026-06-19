@@ -119,7 +119,9 @@ final class Figlet
 
     private static function parseFlf(string $path): self
     {
-        if (! is_file($path) || ! is_readable($path)) {
+        // font() must not receive untrusted input; reject null-byte poisoning and
+        // require an existing, readable, regular .flf file (no directories/devices).
+        if (str_contains($path, "\0") || ! is_file($path) || ! is_readable($path)) {
             throw new InvalidArgumentException("Unreadable FIGlet font: {$path}");
         }
 
