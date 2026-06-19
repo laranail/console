@@ -44,9 +44,11 @@ why Unicode/colour degrade consistently and aligned output never drifts.
 
 ## Dependencies
 
-Only `illuminate/console`, `illuminate/support`, `illuminate/contracts`,
-`laravel/prompts` and `symfony/console` — no heavyweight additions, no
-dependency on the laranail core package.
+`illuminate/console`, `illuminate/support`, `illuminate/contracts`,
+`laravel/prompts`, `symfony/console` (^8), plus the experimental `symfony/tui`
+(+ `symfony/event-dispatcher`, `symfony/string`, `revolt/event-loop`) powering the
+full-screen [TUI integration](tools/tui.md) — which raises the floor to PHP 8.4.1.
+No dependency on the laranail core package.
 
 ---
 

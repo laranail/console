@@ -193,6 +193,25 @@ Terminal::make($output)
 // …later: ->showCursor()->altScreen(false)->restoreTabTitle();
 ```
 
+## Figlet
+
+The big-text renderer behind the [Banner designer](banner.md). Loads a bundled
+font by name or a standard FIGlet `.flf` file by path, and renders text to a block
+of equal-width lines. Unknown glyphs fall back to upper-case then a blank, so it
+never throws on content.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Figlet;
+
+$figlet = Figlet::font('block');     // bundled font (resources/fonts/block.php)
+$lines = $figlet->render('HELLO');   // list<string>, $figlet->height() rows
+Figlet::builtins();                  // ['block', …]
+Figlet::font('/path/to/slant.flf');  // any standard FIGlet font
+```
+
+Ships the MIT `block` font; bundles no third-party `.flf` fonts (see
+`resources/fonts/LICENSE`).
+
 ## FileSize
 
 Human-readable byte sizes — the single source of truth for byte formatting.

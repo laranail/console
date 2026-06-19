@@ -5,10 +5,30 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - 2026-06-19
+
+### Changed — BREAKING
+
+- **Minimum PHP is now `^8.4.1`** (dropped 8.3) and Symfony deps are **`^8.0`
+  only**, to natively integrate the experimental `symfony/tui`. The package sets
+  `minimum-stability: dev` + `prefer-stable: true`; consuming apps must do the same.
 
 ### Added
 
+- **Full-screen TUI** — integrates `symfony/tui` (MIT, experimental):
+  `Console\Tui\RenderableWidget` mounts any of our widgets into a
+  `Symfony\Component\Tui\Tui` app; `Console::tui()` returns a ready app. See
+  `docs/tools/tui.md`.
+- **Table completeness** — `Table` gains `align()`, `columnWidths()`/
+  `maxColumnWidth()`, `title()`/`footer()`, `fromAssoc()`, and a `Table::cell()`
+  factory for per-cell alignment/colour.
+- **`Widgets\Columns`** (`Console::columns()`) — flow a flat list into balanced,
+  width-aware columns (auto-fits the terminal).
+- **Full Prompter parity** — the `Prompter` now forwards to any `laravel/prompts`
+  helper (number, clear, autocomplete, datatable, grid, task, notify, title,
+  stream, …) and auto-tracks new ones; `laravel/prompts` bumped to `^0.3.18|^1.0`.
+- `Spinner::elapsed()` shows elapsed time in manual mode; `Tree::fromArray()`
+  builds a tree from a nested array; Menu radios support independent `group`s.
 - **Interactive menu** — `Widgets\Menu\*` (`Console::menu()` + a `Command::macro('menu')`):
   a native key-driven menu (options, checkboxes, radios, sub-menus, static items,
   free-text questions) with a `laravel/prompts` fallback for non-TTY/Windows. No
@@ -20,8 +40,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Support\Keypress` (`Console::keypress()`) — raw key/arrow/modifier reader,
   POSIX-guarded with pure mappers; and `Support\Terminal` (`Console::terminal()`) —
   bell, tab title, alt-screen, cursor/erase. Ported/expanded from `ajaxray/ansikit`.
-- `THIRD_PARTY.md` crediting ajaxray/ansikit, nunomaduro/laravel-console-menu and
-  bramus/ansi-php.
+- `THIRD_PARTY.md` crediting ajaxray/ansikit, nunomaduro/laravel-console-menu,
+  bramus/ansi-php and symfony/tui.
 - **Banner designer** — `Banner` gains `font()` (FIGlet big-text via the new
   `Support\Figlet` `.flf`/bundled-font renderer), `align()`, `color()`/`gradient()`,
   `border()` and `padding()`, with a plain-title fallback when a font is missing or

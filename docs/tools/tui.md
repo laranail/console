@@ -39,8 +39,7 @@ is pure (no event loop), which is handy in tests.
 ## When to use it
 
 - **Incremental output** (a command that prints a spinner, table, then exits):
-  use the [widgets](widgets.md) directly — no TUI needed, works on any PHP 8.3+
-  *(note: this package's floor is 8.4.1 because of the TUI dependency)*.
+  use the [widgets](widgets.md) directly — no event loop needed.
 - **Full-screen, interactive, redrawing UI** (dashboards, editors, pickers): use
   `Console::tui()` + `RenderableWidget`, plus symfony/tui's own widgets
   (`TextWidget`, `InputWidget`, `SelectListWidget`, `EditorWidget`, …).

@@ -36,6 +36,9 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `StepFlow` | `Console::steps($steps)` | `step($label)`, `current($index)`, `render()` |
 | `Summary` | — (class) | `Summary::make($stats, $title='EXECUTION SUMMARY')`, `render()` → **raw ANSI** |
 | `Header` | — (class) | `Header::make($title)`, `count($n, $label='items')`, `render()` → **raw ANSI** |
+| `Panel` | `Console::panel()` | `add(Renderable)`, `vertical()`/`horizontal()`, `dividers()`, `border()`, `sizes()`, `style()`, `render(?$output)` → see [panel.md](panel.md) |
+| `PanelBlock` | — (class) | `PanelBlock::make($content)`, `width()`, `height()`, `wrap()`, `border()`, `style()`, `render()` |
+| `Menu` | `Console::menu($title, $options)` | interactive — `addOption/addCheckbox/addRadio/addSubMenu/addQuestion`, `open()` → see [menu.md](menu.md) |
 
 ## Spinner
 
