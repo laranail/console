@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Formatting;
 
-use Illuminate\Support\Str;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Config;
 use Stringable;
@@ -134,21 +133,6 @@ class ConsoleUIFormatter implements Stringable
 
     public const string BADGE_STYLE_DARK = 'dark';
 
-    // Tree Structure Symbols
-    public const array TREE_SYMBOLS = [
-        'success' => '✓',
-        'error' => '✗',
-        'running' => '⊙',
-        'skipped' => '⊘',
-        'warning' => '⚠',
-        'info' => 'ℹ',
-        'package' => '📦',
-        'tree_mid' => '├─',
-        'tree_last' => '└─',
-        'tree_pipe' => '│',
-        'tree_space' => '  ',
-    ];
-
     // ANSI Color Codes (for terminal compatibility)
     public const array ANSI_COLORS = [
         // Foreground colors
@@ -261,8 +245,6 @@ class ConsoleUIFormatter implements Stringable
     // Terminal capability detection
     private bool $supportsColor = true;
 
-    private bool $supportsUnicode = true;
-
     // Configuration arrays
     private array $config = [
         'symbols' => [],
@@ -283,7 +265,6 @@ class ConsoleUIFormatter implements Stringable
     private function __construct()
     {
         $this->supportsColor = $this->detectColorSupport();
-        $this->supportsUnicode = $this->detectUnicodeSupport();
         $this->resetStatistics();
     }
 
@@ -483,41 +464,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Get tree symbol with fallback for non-Unicode terminals
-     */
-    public function getTreeSymbol(string $key): string
-    {
-        if (! $this->supportsUnicode) {
-            return match ($key) {
-                'success' => '+',
-                'error' => 'x',
-                'running' => 'o',
-                'skipped' => '-',
-                'warning' => '!',
-                'info' => 'i',
-                'package' => '*',
-                'tree_mid' => '|-',
-                'tree_last' => '`-',
-                'tree_pipe' => '|',
-                'tree_space' => '  ',
-                default => self::TREE_SYMBOLS[$key] ?? '',
-            };
-        }
-
-        return self::TREE_SYMBOLS[$key] ?? '';
-    }
-
-    /**
-     * Create a tree line with proper symbols
-     */
-    public function treeLine(string $text, bool $isLast = false): string
-    {
-        $treeSymbol = $isLast ? $this->getTreeSymbol('tree_last') : $this->getTreeSymbol('tree_mid');
-
-        return $treeSymbol . ' ' . $text;
-    }
-
-    /**
      * Colorize text with ANSI codes (for terminal compatibility)
      */
     public function colorize(string $text, string $color, bool $bold = false, ?string $background = null): string
@@ -580,14 +526,6 @@ class ConsoleUIFormatter implements Stringable
     private function detectColorSupport(): bool
     {
         return Capabilities::detect()->supportsColor();
-    }
-
-    /**
-     * Detect Unicode support via the shared Capabilities detector.
-     */
-    private function detectUnicodeSupport(): bool
-    {
-        return Capabilities::detect()->supportsUnicode();
     }
 
     /**
@@ -777,45 +715,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Create a progress indicator format
-     *
-     * @param string $label Label text
-     * @param string $status Status text (e.g., "RUNNING", "DONE")
-     * @param bool $isError Whether this is an error status
-     */
-    public static function progress(string $label, string $status, bool $isError = false): string
-    {
-        $statusColor = $isError ? self::RED : self::GREEN;
-        $statusStyles = $isError ? [self::BOLD, self::BLINK] : [self::BOLD];
-
-        return sprintf(
-            '%s %s',
-            $label,
-            self::create()
-                ->addMessage($status)
-                ->addTextColor($statusColor)
-                ->addTextStyles($statusStyles)
-                ->render()
-        );
-    }
-
-    /**
-     * Create a progress indicator with badge
-     *
-     * @param string $label Label text
-     * @param string $status Status text
-     * @param string $badgeStyle Badge style to use
-     */
-    public static function progressBadge(string $label, string $status, string $badgeStyle): string
-    {
-        return sprintf(
-            '%s %s',
-            $label,
-            self::badge($status, $badgeStyle)
-        );
-    }
-
-    /**
      * Create a clickable link format
      *
      * @param string $text Display text
@@ -852,22 +751,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Create a status line with label and badge
-     *
-     * @param string $label Label text
-     * @param string $badgeText Badge text
-     * @param string $badgeStyle Badge style
-     */
-    public static function statusLineWithBadge(string $label, string $badgeText, string $badgeStyle): string
-    {
-        return sprintf(
-            '%s %s',
-            str_pad($label, 30),
-            self::badge($badgeText, $badgeStyle)
-        );
-    }
-
-    /**
      * Get all available badge styles
      */
     public static function getBadgeStyles(): array
@@ -882,340 +765,5 @@ class ConsoleUIFormatter implements Stringable
             self::BADGE_STYLE_LIGHT,
             self::BADGE_STYLE_DARK,
         ];
-    }
-
-    /**
-     * Create a status line with tree structure (generic)
-     *
-     * @param string $name The item name
-     * @param string $status The status (RUNNING, DONE, FAILED, SKIPPED, etc.)
-     * @param string $duration Duration in milliseconds
-     * @param bool $isLast Whether this is the last item in the tree
-     * @param string $reason Optional reason for status
-     */
-    public static function statusLine(
-        string $name,
-        string $status,
-        string $duration = '',
-        bool $isLast = false,
-        string $reason = ''
-    ): string {
-        $formatter = self::create();
-
-        $treeSymbol = $isLast ? $formatter->getTreeSymbol('tree_last') : $formatter->getTreeSymbol('tree_mid');
-
-        $statusSymbol = match (strtoupper($status)) {
-            'RUNNING' => $formatter->getTreeSymbol('running'),
-            'DONE', 'SUCCESS', 'COMPLETED' => $formatter->getTreeSymbol('success'),
-            'FAILED', 'ERROR' => $formatter->getTreeSymbol('error'),
-            'SKIPPED' => $formatter->getTreeSymbol('skipped'),
-            'WARNING' => $formatter->getTreeSymbol('warning'),
-            default => $formatter->getTreeSymbol('info'),
-        };
-
-        $statusColor = match (strtoupper($status)) {
-            'RUNNING' => self::YELLOW,
-            'DONE', 'SUCCESS', 'COMPLETED' => self::GREEN,
-            'FAILED', 'ERROR' => self::RED,
-            'SKIPPED' => self::YELLOW,
-            'WARNING' => self::YELLOW,
-            default => self::GRAY,
-        };
-
-        $line = $treeSymbol . ' ' . $statusSymbol . ' ' . $name;
-
-        if ($duration !== '' && $duration !== '0') {
-            $line .= ' ' . $duration . 'ms';
-        }
-
-        $line .= ' ' . $formatter->colorize(strtoupper($status), $statusColor, true);
-
-        if ($reason !== '' && $reason !== '0') {
-            $line .= ' ' . $formatter->colorize("({$reason})", self::GRAY);
-        }
-
-        return $line;
-    }
-
-    /**
-     * Create a header with tree structure (generic)
-     *
-     * @param string $title The header title
-     * @param int $count Number of items
-     * @param string $itemLabel Label for the count (e.g., "items", "files")
-     * @param bool $isLast Whether this is the last header
-     */
-    public static function header(string $title, int $count, string $itemLabel = 'items', bool $isLast = false): string
-    {
-        $formatter = self::create();
-
-        $headerSymbol = $formatter->getTreeSymbol('package');
-        $titleDisplay = $formatter->colorize("{$headerSymbol} {$title}", self::CYAN, true);
-        $countDisplay = $formatter->colorize("({$count} {$itemLabel})", self::GRAY);
-
-        return $titleDisplay . ' ' . $countDisplay;
-    }
-
-    /**
-     * Create a statistics line (generic)
-     *
-     * @param string $label The label text
-     * @param int $count The count value
-     * @param string $symbol The symbol to use
-     * @param string $color The color for the count
-     */
-    public static function statisticsLine(string $label, int $count, string $symbol, string $color): string
-    {
-        $formatter = self::create();
-
-        $symbolDisplay = $formatter->colorize($formatter->getTreeSymbol($symbol), $color);
-        $countDisplay = $formatter->colorize((string) $count, $color, true);
-
-        return "  {$symbolDisplay} {$label}: {$countDisplay}";
-    }
-
-    /**
-     * Format runtime with adaptive units and optional coloring
-     *
-     * @param float $ms Milliseconds
-     * @param bool $colored Whether to apply performance-based coloring
-     */
-    public static function formatRuntime(float $ms, bool $colored = false): string
-    {
-        $formatter = self::create();
-
-        // Determine unit
-        $formatted = match (true) {
-            $ms < 1000 => number_format($ms, 2) . ' ms',
-            $ms < 60000 => number_format($ms / 1000, 2) . ' s',
-            default => number_format($ms / 60000, 2) . ' min'
-        };
-
-        // Apply color in advanced mode if requested
-        if ($colored) {
-            $color = self::getPerformanceColor($ms);
-
-            return $formatter->colorize($formatted, $color);
-        }
-
-        return $formatter->colorize($formatted, 'gray');
-    }
-
-    /**
-     * Get performance-based color for runtime
-     *
-     * @param float $ms Milliseconds
-     */
-    public static function getPerformanceColor(float $ms): string
-    {
-        return match (true) {
-            $ms < 100 => self::GREEN,
-            $ms < 500 => self::GRAY,
-            $ms < 1000 => self::YELLOW,
-            default => self::RED
-        };
-    }
-
-    /**
-     * Format class name based on verbosity
-     *
-     * @param string $className Full class name
-     * @param bool $verbose Whether to show full namespace
-     */
-    public static function formatClassName(string $className, bool $verbose = false): string
-    {
-        $formatter = self::create();
-        $shortName = self::getShortClassName($className);
-
-        // In verbose mode, show full namespace
-        if ($verbose && str_contains($className, '\\')) {
-            return sprintf('%s %s', $shortName, $formatter->colorize("({$className})", 'gray'));
-        }
-
-        return $shortName;
-    }
-
-    /**
-     * Get short class name from FQCN
-     *
-     * @param string $className Full class name
-     */
-    public static function getShortClassName(string $className): string
-    {
-        $parts = Str::of($className)->explode('\\');
-
-        return $parts->last() ?: $className;
-    }
-
-    /**
-     * Display execution summary with statistics (generic)
-     *
-     * @param array $stats Statistics array
-     * @param string $title Optional custom title
-     */
-    public static function displaySummary(array $stats, string $title = 'EXECUTION SUMMARY'): string
-    {
-        $formatter = self::create();
-        $output = [];
-
-        // Separator
-        $output[] = $formatter->colorize(Str::repeat('─', 60), self::GRAY);
-
-        // Header
-        $output[] = $formatter->colorize($title, self::BRIGHT_CYAN, true);
-        $output[] = '';
-
-        // Statistics
-        $output[] = $formatter->colorize('📊 Execution Statistics:', self::WHITE, true);
-        $output[] = self::displayStatisticsTable([
-            ['Total', (string) $stats['total'], self::BADGE_STYLE_INFO],
-            ['Successful', (string) $stats['success'], self::BADGE_STYLE_SUCCESS],
-            ['Failed', (string) $stats['failed'], $stats['failed'] > 0 ? self::BADGE_STYLE_DANGER : self::BADGE_STYLE_SECONDARY],
-        ]);
-        $output[] = '';
-
-        // Performance Metrics
-        $output[] = $formatter->colorize('⚡ Performance Metrics:', self::WHITE, true);
-        $output[] = self::displayPerformanceMetrics($stats);
-        $output[] = '';
-
-        // Error details (if any)
-        if (! empty($stats['errors'])) {
-            $output[] = $formatter->colorize('❌ Failed Items:', self::RED, true);
-            $output[] = self::displayErrorDetails($stats['errors']);
-            $output[] = '';
-        }
-
-        // Final status badges
-        $output[] = self::getExecutionStatusBadges($stats);
-
-        return implode("\n", $output);
-    }
-
-    /**
-     * Display statistics table
-     *
-     * @param array $items Array of [label, value, badgeStyle]
-     */
-    public static function displayStatisticsTable(array $items): string
-    {
-        $output = [];
-
-        foreach ($items as [$label, $value, $style]) {
-            $output[] = sprintf('   %s %s', Str::padRight($label . ':', 16), self::badge($value, $style));
-        }
-
-        return implode("\n", $output);
-    }
-
-    /**
-     * Display performance metrics
-     *
-     * @param array $stats Statistics array
-     */
-    public static function displayPerformanceMetrics(array $stats): string
-    {
-        $formatter = self::create();
-        $output = [];
-
-        // Total time
-        $totalColor = match (true) {
-            $stats['totalTime'] < 1000 => self::GREEN,
-            $stats['totalTime'] < 5000 => self::YELLOW,
-            default => self::RED
-        };
-
-        $output[] = sprintf(
-            '   %s %s',
-            Str::padRight('Total Time:', 16),
-            $formatter->colorize(self::formatRuntime($stats['totalTime'], false), $totalColor, true)
-        );
-
-        // Average time
-        $avgTime = $stats['totalTime'] / $stats['total'];
-        $output[] = sprintf(
-            '   %s %s',
-            Str::padRight('Average Time:', 16),
-            self::formatRuntime($avgTime, true)
-        );
-
-        // Fastest/Slowest (only if more than 1 item)
-        if ($stats['total'] > 1 && $stats['fastest']['class']) {
-            $output[] = sprintf(
-                '   %s %s %s',
-                Str::padRight('Fastest:', 16),
-                $formatter->colorize($stats['fastest']['class'], 'green'),
-                $formatter->colorize('(' . self::formatRuntime($stats['fastest']['time'], false) . ')', 'gray')
-            );
-
-            $output[] = sprintf(
-                '   %s %s %s',
-                Str::padRight('Slowest:', 16),
-                $formatter->colorize($stats['slowest']['class'], 'yellow'),
-                $formatter->colorize('(' . self::formatRuntime($stats['slowest']['time'], false) . ')', 'gray')
-            );
-        }
-
-        // Success rate
-        $successRate = ($stats['success'] / $stats['total']) * 100;
-        $rateColor = match (true) {
-            $successRate >= 100 => self::GREEN,
-            $successRate >= 80 => self::YELLOW,
-            default => self::RED
-        };
-
-        $output[] = sprintf(
-            '   %s %s',
-            Str::padRight('Success Rate:', 16),
-            $formatter->colorize(number_format($successRate, 1) . '%', $rateColor, true)
-        );
-
-        return implode("\n", $output);
-    }
-
-    /**
-     * Display error details
-     *
-     * @param array $errors Array of error details
-     */
-    public static function displayErrorDetails(array $errors): string
-    {
-        $formatter = self::create();
-        $output = [];
-
-        foreach ($errors as $index => $error) {
-            $output[] = sprintf('   %d. %s', $index + 1, $formatter->colorize($error['class'], 'yellow'));
-
-            $message = Str::length($error['message']) > 80
-                ? Str::substr($error['message'], 0, 77) . '...'
-                : $error['message'];
-
-            $output[] = sprintf(
-                '      %s %s',
-                self::badge(self::getShortClassName($error['type']), self::BADGE_STYLE_DARK),
-                $formatter->colorize($message, 'gray')
-            );
-        }
-
-        return implode("\n", $output);
-    }
-
-    /**
-     * Get execution status badges
-     *
-     * @param array $stats Statistics array
-     */
-    public static function getExecutionStatusBadges(array $stats): string
-    {
-        $badges = match (true) {
-            $stats['failed'] === 0 => [['✓ ALL COMPLETED', self::BADGE_STYLE_SUCCESS]],
-            $stats['success'] > 0 => [
-                ['⚠ COMPLETED WITH ERRORS', self::BADGE_STYLE_WARNING],
-                [$stats['failed'] . ' FAILED', self::BADGE_STYLE_DANGER],
-            ],
-            default => [['✗ ALL FAILED', self::BADGE_STYLE_DANGER]]
-        };
-
-        return self::badges($badges);
     }
 }

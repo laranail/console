@@ -18,11 +18,14 @@ final readonly class Symbols
         'info' => 'ℹ',
         'pending' => '○',
         'running' => '◉',
+        'skipped' => '⊘',
+        'package' => '📦',
         'bullet' => '•',
         'arrow' => '→',
         'branch' => '├─',
         'last' => '└─',
         'stem' => '│ ',
+        'pipe' => '│',
         'gap' => '  ',
     ];
 
@@ -33,11 +36,14 @@ final readonly class Symbols
         'info' => '[i]',
         'pending' => '[ ]',
         'running' => '[*]',
+        'skipped' => '[-]',
+        'package' => '*',
         'bullet' => '*',
         'arrow' => '->',
         'branch' => '|-',
         'last' => '\\-',
         'stem' => '| ',
+        'pipe' => '|',
         'gap' => '  ',
     ];
 

@@ -22,7 +22,7 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `Spinner` | `Console::spinner($msg)` | `frames(SpinnerFrames\|string)`, `run(callable)`, `start()`, `advance()`, `finish($status='success', ?$msg=null)` |
 | `ProgressBar` | `Console::progress($output, $max)` | `format(ProgressStyle\|string)`, `glyphs(string)`, `start(?$max)`, `advance($n=1)`, `setProgress($n)`, `finish()`, `raw()` |
 | `TaskProgress` | `Console::tasks($output)` | `task($name, $total=0): Task`, `draw()`, `finish(): int`, `exitCode(): int` |
-| `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()` |
+| `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()`, `eta()` |
 | `StatusLine` | `Console::status()` | `success/error/warning/info/pending($msg)`, `line($status, $msg)` → **markup string** |
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
 | `Box` | `Console::box($content)` | `title()`, `footer()`, `content()`, `padding($n)`, `width($n)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
@@ -33,6 +33,8 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `Gauge` | `Console::gauge($value, $max=100)` | `label()`, `width($barWidth)`, `showValue($bool=true)`, `render()` |
 | `Sparkline` | `Console::sparkline($values)` | `render()` (numeric-summary fallback without Unicode) |
 | `StepFlow` | `Console::steps($steps)` | `step($label)`, `current($index)`, `render()` |
+| `Summary` | — (class) | `Summary::make($stats, $title='EXECUTION SUMMARY')`, `render()` → **raw ANSI** |
+| `Header` | — (class) | `Header::make($title)`, `count($n, $label='items')`, `render()` → **raw ANSI** |
 
 ## Spinner
 
@@ -71,8 +73,29 @@ $tasks->task('Upload')->fail('network error');
 exit($tasks->finish()); // non-zero if any task failed
 ```
 
-Redraws in place on a TTY (`ConsoleSectionOutput`); on a non-TTY it emits one line
-per state change (start / warn / terminal) so CI logs stay readable.
+Each row shows the status glyph, name, count, percent, **elapsed and a live ETA**
+(`Task::eta()`, estimated from elapsed progress; `null` until there's progress,
+`0.0` once finished). Redraws in place on a TTY (`ConsoleSectionOutput`); on a
+non-TTY it emits one line per state change (start / warn / terminal) so CI logs
+stay readable.
+
+## Summary & header
+
+```php
+echo Header::make('Modules')->count(12, 'items')->render();   // 📦 Modules (12 items)
+echo Summary::make([
+    'total' => 3, 'success' => 2, 'failed' => 1,
+    'totalTime' => 1234.0,                       // milliseconds
+    'fastest' => ['class' => 'Fast', 'time' => 10.0],
+    'slowest' => ['class' => 'Slow', 'time' => 900.0],
+    'errors'  => [['class' => 'Boom', 'type' => 'RuntimeException', 'message' => '…']],
+])->render();
+```
+
+`Summary` renders an execution report (statistics, performance metrics, error
+details, status badges) from a stats array; `Header` a glyph-prefixed section
+title with an optional item count. Both return echo-safe raw ANSI. (These were
+previously static helpers on `ConsoleUIFormatter`; they now live here as widgets.)
 
 ## Status, rule, box, tree
 

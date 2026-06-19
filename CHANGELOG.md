@@ -5,6 +5,40 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `Widgets\Summary` — an execution-summary widget (statistics, performance
+  metrics, error details, status badges) rendered from a stats array.
+- `Widgets\Header` — a glyph-prefixed section header with an optional item count.
+- `Support\FileSize::format()` — human-readable byte sizes (single source of truth).
+- `Support\TimeFormat::fromMillis()` — millisecond-scale adaptive time formatting.
+- `TaskProgress` rows now show a live **ETA** (`Task::eta()`), estimated from
+  elapsed progress.
+
+### Changed
+
+- `ConsoleUIFormatter` is slimmed to single-string primitives (colour, style,
+  badge, link, `colorize`, `sanitizeText`); composite/multi-line UI is the
+  widgets' job now.
+- `CommandDisplayService` renders through the widget layer (`StatusLine`/`Table`/
+  `ProgressBar`) instead of re-implementing output.
+- `Support\Symbols` is the single tree/status glyph source (absorbed the
+  formatter's `TREE_SYMBOLS`).
+
+### Moved / removed
+
+- Removed from `ConsoleUIFormatter` (use the widgets/Support instead):
+  `statusLine()`/`statusLineWithBadge()` → `Widgets\StatusLine`; `header()` →
+  `Widgets\Header`; `displaySummary()`/`displayStatisticsTable()`/
+  `displayPerformanceMetrics()`/`displayErrorDetails()`/`getExecutionStatusBadges()`/
+  `statisticsLine()` → `Widgets\Summary`; `progress()`/`progressBadge()` →
+  `Widgets\ProgressBar`/`StatusLine`; `getTreeSymbol()`/`treeLine()`/`TREE_SYMBOLS`
+  → `Support\Symbols`; `formatRuntime()`/`getPerformanceColor()` →
+  `Support\TimeFormat`/`Widgets\Summary`; `formatClassName()`/`getShortClassName()`
+  → `class_basename()`.
+
 ## [0.1.0] - 2026-06-19
 
 Initial release — a rich console toolkit for Laravel with two decoupled

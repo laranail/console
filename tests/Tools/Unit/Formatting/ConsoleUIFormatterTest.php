@@ -23,9 +23,4 @@ final class ConsoleUIFormatterTest extends TestCase
 
         self::assertStringContainsString('hello', $out);
     }
-
-    public function test_short_class_name_helper(): void
-    {
-        self::assertSame('Baz', ConsoleUIFormatter::getShortClassName('Foo\\Bar\\Baz'));
-    }
 }

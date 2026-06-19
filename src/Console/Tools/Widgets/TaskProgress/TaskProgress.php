@@ -14,8 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A multi-task progress widget: a tree of task rows (status glyph, name, count,
- * percent, elapsed) redrawn in place on a TTY, or emitted one line per event on
- * a non-TTY (CI logs). {@see exitCode()} is non-zero if any task failed.
+ * percent, elapsed, ETA) redrawn in place on a TTY, or emitted one line per
+ * event on a non-TTY (CI logs). {@see exitCode()} is non-zero if any task failed.
  */
 final class TaskProgress
 {
@@ -133,12 +133,16 @@ final class TaskProgress
         $pct = $percent !== null ? "{$percent}%" : '';
         $elapsed = $task->elapsed() > 0 ? TimeFormat::duration($task->elapsed()) : '';
 
+        $eta = $task->eta();
+        $etaStr = ($eta !== null && $eta > 0) ? 'ETA ' . TimeFormat::duration($eta) : '';
+
         $parts = array_filter([
             $glyph,
             $name,
             DisplayWidth::pad($count, 9),
             DisplayWidth::pad($pct, 5),
             DisplayWidth::pad($elapsed, 8),
+            DisplayWidth::pad($etaStr, 11),
             $task->note,
         ], static fn (string $p): bool => $p !== '');
 
