@@ -134,13 +134,7 @@ final class ConsoleCommandObserver
         }
 
         if (is_array($f)) {
-            foreach ($f as $pattern) {
-                if ($this->matchPattern($pattern, $command)) {
-                    return true;
-                }
-            }
-
-            return false;
+            return array_any($f, fn (string $pattern): bool => $this->matchPattern($pattern, $command));
         }
 
         if (is_callable($f)) {

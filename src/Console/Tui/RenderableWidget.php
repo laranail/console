@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tui;
 
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Stringable;
 use Symfony\Component\Tui\Render\RenderContext;
 use Symfony\Component\Tui\Widget\AbstractWidget;
@@ -45,11 +46,29 @@ final class RenderableWidget extends AbstractWidget
     }
 
     /**
+     * symfony/tui requires every line to fit the available area, so clip each
+     * line to the context width (ANSI/wide-char aware) and cap the row count —
+     * otherwise the Renderer throws a RenderException on overflow.
+     *
      * @return list<string>
      */
     public function render(RenderContext $context): array
     {
-        return $this->lines;
+        $columns = $context->getColumns();
+        $rows = $context->getRows();
+
+        $lines = array_map(
+            static fn (string $line): string => DisplayWidth::of($line) > $columns
+                ? DisplayWidth::truncate($line, $columns)
+                : $line,
+            $this->lines,
+        );
+
+        if ($rows > 0 && count($lines) > $rows) {
+            $lines = array_slice($lines, 0, $rows);
+        }
+
+        return array_values($lines);
     }
 
     /**
@@ -61,6 +80,6 @@ final class RenderableWidget extends AbstractWidget
             return $content->renderLines();
         }
 
-        return explode("\n", (string) $content);
+        return preg_split('/\r\n|\r|\n/', (string) $content) ?: [''];
     }
 }

@@ -34,7 +34,7 @@ final class CommandErrorServiceTest extends TestCase
                 return true;
             }));
 
-        (new CommandErrorService('my:cmd'))
+        new CommandErrorService('my:cmd')
             ->addContext('user', 42)
             ->logError(new RuntimeException('boom'), ['operation' => 'sync']);
 

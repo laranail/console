@@ -31,7 +31,7 @@ final class ProgressBarScopingTest extends TestCase
     public function test_renders_with_eta_and_rate(): void
     {
         $out = new BufferedOutput;
-        (new ProgressBar($out, 4))->format('detailed')->start()->advance(2)->finish();
+        new ProgressBar($out, 4)->format('detailed')->start()->advance(2)->finish();
 
         self::assertNotSame('', $out->fetch());
     }

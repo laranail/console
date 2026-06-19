@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter;
 
 use Closure;
+use Deprecated;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\FormBuilder;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
@@ -31,7 +32,6 @@ use Simtabi\Laranail\Console\Prompter\Services\PromptService;
  * @method static self progress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '')
  * @method static self number(string $label, string $placeholder = '', int|string $default = '', ?int $min = null, ?int $max = null, int $step = 1, bool|string $required = false, mixed $validate = null, string $hint = '')
  * @method static self autocomplete(string $label, array|Collection|Closure $options, string $placeholder = '', string $default = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = '', ?int $matches = null)
- * @method static self pause(string $message = 'Press enter to continue...')
  * @method static self clear()
  * @method static self note(string $message, ?string $type = null)
  * @method static self info(string $message)
@@ -46,6 +46,7 @@ use Simtabi\Laranail\Console\Prompter\Services\PromptService;
  * @method static self datatable(array|Collection $columns = [], array|Collection|null $rows = null)
  * @method static self grid(array|Collection $items = [], int $columns = 3)
  * @method static self stream(iterable|Closure $stream)
+ * @method FormBuilder form()
  */
 class Prompter
 {
@@ -75,10 +76,11 @@ class Prompter
 
     /**
      * Get the shared singleton instance.
-     *
-     * @deprecated Use {@see create()} (or the `prompter()` helper / `Prompter`
-     *             facade), which return an isolated instance per call.
      */
+    #[Deprecated(message: <<<'TXT'
+    Use {@see create()} (or the `prompter()` helper / `Prompter`
+                 facade), which return an isolated instance per call.
+    TXT)]
     public static function getInstance(): self
     {
         if (! self::$instance instanceof Prompter) {

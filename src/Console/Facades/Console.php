@@ -17,6 +17,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
@@ -25,6 +26,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
+use Simtabi\Laranail\Console\Tools\Widgets\Summary;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
@@ -44,6 +46,8 @@ use Symfony\Component\Tui\Tui;
  * @method static Gauge gauge(float $value, float $max = 100.0)
  * @method static Sparkline sparkline(array $values)
  * @method static Banner banner(string $title)
+ * @method static Header header(string $title)
+ * @method static Summary summary(array $stats, string $title = 'EXECUTION SUMMARY')
  * @method static StepFlow steps(array $steps = [])
  * @method static TaskProgress tasks(?OutputInterface $output = null)
  * @method static Color color()

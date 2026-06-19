@@ -45,7 +45,7 @@ final class OutputInjectionTest extends TestCase
     public function test_channel_pins_level_and_escapes_content(): void
     {
         $out = new BufferedOutput;
-        (new ConsoleChannel(['show_data' => false], $out))->send('hello', ['level' => 'fg=red;href=http://evil']);
+        new ConsoleChannel(['show_data' => false], $out)->send('hello', ['level' => 'fg=red;href=http://evil']);
 
         $written = $out->fetch();
 
@@ -58,7 +58,7 @@ final class OutputInjectionTest extends TestCase
     public function test_channel_strips_control_chars_from_message(): void
     {
         $out = new BufferedOutput;
-        (new ConsoleChannel([], $out))->send("danger\x1b[2J", []);
+        new ConsoleChannel([], $out)->send("danger\x1b[2J", []);
 
         self::assertStringNotContainsString("\x1b", $out->fetch());
     }

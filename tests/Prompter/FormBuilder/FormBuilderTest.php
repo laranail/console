@@ -19,7 +19,7 @@ final class FormBuilderTest extends TestCase
     public function test_every_field_type_maps_to_a_real_formbuilder_method(): void
     {
         foreach (FieldType::cases() as $type) {
-            $field = (new FormFieldService($type))->label('x');
+            $field = new FormFieldService($type)->label('x');
             $method = FieldType::getValidatorMethod($field);
 
             self::assertTrue(
@@ -38,7 +38,7 @@ final class FormBuilderTest extends TestCase
         $service = new FormBuilderService(new PromptsFormBuilder);
 
         foreach (FieldType::cases() as $i => $type) {
-            $field = (new FormFieldService($type))->label('Field ' . $type->value);
+            $field = new FormFieldService($type)->label('Field ' . $type->value);
 
             if (in_array($type, [FieldType::SELECT, FieldType::RADIO], true)) {
                 $field->options(['a' => 'A', 'b' => 'B']);
@@ -54,7 +54,7 @@ final class FormBuilderTest extends TestCase
 
     public function test_choice_fields_get_options_aware_default_validators(): void
     {
-        $field = (new FormFieldService(FieldType::SELECT))->label('Pick')->options(['x' => 'X']);
+        $field = new FormFieldService(FieldType::SELECT)->label('Pick')->options(['x' => 'X']);
         $service = new FormBuilderService(new PromptsFormBuilder);
         $service->addField('pick', $field);
 

@@ -120,7 +120,7 @@ final class WidgetsTest extends TestCase
     public function test_progress_bar_renders(): void
     {
         $out = new BufferedOutput;
-        (new ProgressBar($out, 5))->start()->advance(2)->finish();
+        new ProgressBar($out, 5)->start()->advance(2)->finish();
 
         self::assertNotSame('', $out->fetch());
     }

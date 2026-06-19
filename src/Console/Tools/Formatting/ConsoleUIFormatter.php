@@ -474,7 +474,10 @@ class ConsoleUIFormatter implements Stringable
 
         $colorCode = self::ANSI_COLORS[$color] ?? '';
         $boldCode = $bold ? self::ANSI_COLORS['bold'] : '';
-        $backgroundCode = $background ? self::ANSI_COLORS[$background] : '';
+        // Background colour tokens (e.g. BG_RED = 'red') map to the '*_bg' ANSI key.
+        $backgroundCode = $background !== null && $background !== ''
+            ? (self::ANSI_COLORS[$background . '_bg'] ?? self::ANSI_COLORS[$background] ?? '')
+            : '';
         $resetCode = self::ANSI_COLORS['reset'];
         $text = self::sanitizeText($text);
 
@@ -547,7 +550,7 @@ class ConsoleUIFormatter implements Stringable
      */
     public function render(): string
     {
-        if ($this->message === '' || $this->message === '0') {
+        if ($this->message === '') {
             return '';
         }
 

@@ -102,7 +102,7 @@ final class Spinner
         $this->startedAt = microtime(true);
 
         if ($this->capabilities->isInteractive()) {
-            (new Cursor($this->output))->hide();
+            new Cursor($this->output)->hide();
         }
 
         return $this->advance();
