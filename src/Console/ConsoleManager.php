@@ -15,6 +15,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
@@ -23,6 +24,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
+use Simtabi\Laranail\Console\Tools\Widgets\Summary;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
@@ -139,6 +141,24 @@ final class ConsoleManager
     public function banner(string $title): Banner
     {
         return Banner::make($title);
+    }
+
+    /**
+     * A glyph-prefixed section header with an optional item count.
+     */
+    public function header(string $title): Header
+    {
+        return Header::make($title);
+    }
+
+    /**
+     * An execution-summary block (statistics, performance, errors, status badges).
+     *
+     * @param array<string, mixed> $stats
+     */
+    public function summary(array $stats, string $title = 'EXECUTION SUMMARY'): Summary
+    {
+        return Summary::make($stats, $title);
     }
 
     /**

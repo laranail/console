@@ -5,11 +5,29 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Summary;
 
 final class SummaryAndHeaderTest extends TestCase
 {
+    public function test_zero_counts_render_as_zero_not_blank(): void
+    {
+        $out = Summary::make(['total' => 0, 'success' => 0, 'failed' => 0, 'totalTime' => 0.0])->render();
+
+        // A "0" badge must show the digit, not an empty badge.
+        self::assertStringContainsString('0', $out);
+        self::assertStringContainsString('ALL COMPLETED', $out);
+    }
+
+    public function test_manager_exposes_summary_and_header_accessors(): void
+    {
+        $manager = new ConsoleManager;
+
+        self::assertInstanceOf(Summary::class, $manager->summary(['total' => 1, 'success' => 1, 'failed' => 0, 'totalTime' => 1.0]));
+        self::assertInstanceOf(Header::class, $manager->header('Modules'));
+    }
+
     public function test_summary_renders_statistics_and_status(): void
     {
         $out = Summary::make([

@@ -34,7 +34,7 @@ final class ConsoleChannelTest extends TestCase
     public function test_send_includes_data_when_enabled_and_present(): void
     {
         $output = new BufferedOutput;
-        (new ConsoleChannel([], $output))->send('Msg', ['foo' => 'bar']);
+        new ConsoleChannel([], $output)->send('Msg', ['foo' => 'bar']);
 
         self::assertStringContainsString('Data:', $output->fetch());
     }
@@ -42,7 +42,7 @@ final class ConsoleChannelTest extends TestCase
     public function test_data_suppressed_when_show_data_false(): void
     {
         $output = new BufferedOutput;
-        (new ConsoleChannel(['show_data' => false], $output))->send('Msg', ['foo' => 'bar']);
+        new ConsoleChannel(['show_data' => false], $output)->send('Msg', ['foo' => 'bar']);
 
         self::assertStringNotContainsString('Data:', $output->fetch());
     }

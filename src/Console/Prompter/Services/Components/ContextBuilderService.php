@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Services\Components;
 
-use Laravel\Prompts\Note;
 use Simtabi\Laranail\Console\Prompter\Enums\ContextType;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 
@@ -51,8 +50,13 @@ class ContextBuilderService
      */
     private function createContextMethod(ContextType $type): callable
     {
-        return function (string $message) use ($type): void {
-            (new Note($message, $type->value))->display();
+        // Dispatch to the matching laravel/prompts helper so each type renders
+        // correctly (warning/error/alert/info/intro/outro are distinct prompts,
+        // not a Note with a "type" string).
+        $function = '\\Laravel\\Prompts\\' . $type->value;
+
+        return static function (string $message) use ($function): void {
+            $function($message);
         };
     }
 

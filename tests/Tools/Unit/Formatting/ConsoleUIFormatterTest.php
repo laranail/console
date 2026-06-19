@@ -23,4 +23,19 @@ final class ConsoleUIFormatterTest extends TestCase
 
         self::assertStringContainsString('hello', $out);
     }
+
+    public function test_colorize_applies_a_background_colour(): void
+    {
+        $previous = getenv('FORCE_COLOR');
+        putenv('FORCE_COLOR=1');
+
+        try {
+            $out = ConsoleUIFormatter::create()->colorize('x', ConsoleUIFormatter::WHITE, false, ConsoleUIFormatter::BG_RED);
+
+            // BG_RED must resolve to the red *background* SGR, not the foreground.
+            self::assertStringContainsString("\033[41m", $out);
+        } finally {
+            $previous === false ? putenv('FORCE_COLOR') : putenv("FORCE_COLOR={$previous}");
+        }
+    }
 }

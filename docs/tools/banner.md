@@ -44,7 +44,7 @@ skews it.
 
 ## Fonts
 
-The FIGlet renderer is [`Support\Figlet`](support.md). It ships one bundled font,
+The FIGlet renderer is [`Support\Figlet`](support.md#figlet). It ships one bundled font,
 **`block`** (a uniform 5×5 block font, MIT/ours — see `resources/fonts/LICENSE`),
 and also parses standard FIGlet **`.flf`** files:
 

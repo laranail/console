@@ -11,7 +11,7 @@ final class TaskEtaTest extends TestCase
 {
     public function test_eta_is_null_without_a_total_or_progress(): void
     {
-        self::assertNull((new Task('no-total'))->eta());
+        self::assertNull(new Task('no-total')->eta());
 
         $started = new Task('started', 10);
         $started->start();

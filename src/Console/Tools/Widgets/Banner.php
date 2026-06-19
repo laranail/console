@@ -163,7 +163,7 @@ final class Banner implements Stringable
             return $box->render();
         }
 
-        $rule = (new Rule($this->capabilities))->width($contentWidth)->render();
+        $rule = new Rule($this->capabilities)->width($contentWidth)->render();
 
         return implode("\n", [$rule, ...$lines, $rule]);
     }

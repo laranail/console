@@ -78,6 +78,8 @@
     "test-dirty": "@test --dirty --compact",
     "examples": [
       "php examples/tools/widgets.php > /dev/null",
+      "php examples/tools/menu.php > /dev/null",
+      "php examples/tools/tui.php > /dev/null",
       "php examples/prompter/validators.php > /dev/null"
     ],
     "lint": [
@@ -101,7 +103,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-main": "0.1.x-dev"
+      "dev-main": "0.2.x-dev"
     },
     "laravel": {
       "providers": [

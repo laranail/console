@@ -10,7 +10,7 @@ the shared [Capabilities](support.md#capabilities).
 > reports → [`Summary`](widgets.md#summary--header); section titles →
 > [`Header`](widgets.md#summary--header); trees → [`Tree`](widgets.md); progress →
 > [`ProgressBar`](widgets.md#progress-bar); tree glyphs →
-> [`Symbols`](support.md). The formatter keeps only single-string primitives.
+> [`Symbols`](support.md#symbols). The formatter keeps only single-string primitives.
 
 ## Two output modes
 
