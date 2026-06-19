@@ -74,7 +74,7 @@ The package has three output styles — know which you're holding:
 | Style | APIs | How to print |
 |-------|------|--------------|
 | **Symfony markup** (e.g. `<fg=green>…</>`) | `Console::status()`, `ConsoleUIFormatter::success()/format()/badge()` | `$output->writeln(...)` / `$this->line(...)` — renders colour on a TTY, stripped when piped. Echoing prints literal tags. |
-| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `rule`, `gauge`, `sparkline`, `banner`, `steps`, `callout`, `Summary`, `Header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
+| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `banner`, `steps`, `callout`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
 | **Self-writing** | `spinner`, `progress`, `tasks` | They write to the output you pass them. |
 | **Interactive** | `prompter`, `menu`, `keypress`, `tui` | They read input / run a loop and return values — not render strings. |
 
@@ -113,9 +113,10 @@ The package has three output styles — know which you're holding:
 Online docs: <https://opensource.simtabi.com/console/docs/> ·
 Changelog: [CHANGELOG.md](CHANGELOG.md) · Third-party notices: [THIRD_PARTY.md](THIRD_PARTY.md).
 
-> **Requires PHP `^8.4.1`** (Laravel `^13`, Symfony 8) — the floor comes from the
-> experimental [`symfony/tui`](docs/tools/tui.md) integration; your app needs
-> `"minimum-stability": "dev"`.
+> **Requires PHP `^8.4.1`** (Laravel `^13`, Symfony 8) and installs **stably**.
+> The full-screen [`symfony/tui`](docs/tools/tui.md) integration is **optional** —
+> `composer require symfony/tui` (experimental, needs `"minimum-stability": "dev"`)
+> only if you want it.
 
 ## Local development
 

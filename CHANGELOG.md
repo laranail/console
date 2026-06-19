@@ -5,6 +5,44 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-06-19
+
+### Security
+
+- `Table` now sanitises every header/cell/group-label/tree-cell at render time
+  (was only `fromAssoc()`/`cell()`), closing terminal-control-character injection
+  from attacker-controlled rows.
+- `ConsoleUIFormatter::addTextColor()` routes its `href` through the OSC-8 scheme
+  allow-list (a hostile URL can no longer emit an arbitrary hyperlink).
+- Removed the dead, unredacted `CommandLoggerService::logError()` and other unused
+  log methods (errors are logged via the hardened `CommandErrorService`).
+- `Figlet` rejects null-byte font paths; `RenderableWidget` sanitises raw strings.
+
+### Changed
+
+- **`symfony/tui` is now OPTIONAL** (moved to `suggest` + `require-dev`). The core
+  installs **stably** — consumers no longer inherit a dev-stability requirement.
+  `composer require symfony/tui` enables `Console::tui()`; without it that method
+  throws a clear `ConsoleException`. PHP floor stays `^8.4.1`.
+- `Support\FileSize` scales at each 1024 boundary (`1024 B` → `1 KB`, `1 MiB` →
+  `1 MB`); it is now the single byte formatter (perf + display services agree).
+- Rector pinned to the `php84` set.
+
+### Added
+
+- `Widgets\KeyValue` (`Console::keyValue()`) — an aligned, sanitised definition list.
+- `Table::fromCollection()` — ingest a Laravel Collection / iterable of assoc rows.
+- `Console::summary()` / `Console::header()` accessors (+ facade `@method`).
+- `Tools\Exceptions\FontException` — Figlet failures route through the exception
+  hierarchy with `console::console.font_*` messages.
+- The four orphaned validators are wired into `FieldType` (boolean/name/string/json).
+
+### Removed
+
+- Dead code: `ConsoleUIFormatter` session/statistics block + `configure()`; the
+  `PromptService` closure map (the generic prompts forwarder covers it); dead
+  `ContextType`/`FieldType` enum helper methods.
+
 ## [0.2.1] - 2026-06-19
 
 ### Fixed

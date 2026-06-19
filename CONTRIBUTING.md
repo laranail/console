@@ -26,7 +26,7 @@ composer test
 
 ## Coding standards
 
-- PHP `^8.3` (8.3, 8.4, 8.5 supported). Don't gate on 8.4/8.5-only syntax — Rector is pinned to `php83`. CI runs on 8.5.
+- PHP `^8.4.1` (8.4.1+, incl. 8.5). Rector is pinned to the `php84` set; CI runs on 8.4 and 8.5.
 - `declare(strict_types=1);` on every PHP file.
 - `#[\Override]` on every overriding method.
 - Pint is the sole formatter (see `pint.json`).
