@@ -7,6 +7,9 @@ namespace Simtabi\Laranail\Console\Prompter;
 use Closure;
 use Deprecated;
 use Illuminate\Support\Collection;
+
+use function Laravel\Prompts\form;
+
 use Laravel\Prompts\FormBuilder;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
@@ -100,9 +103,9 @@ class Prompter
      */
     public function __call(string $method, array $arguments): self
     {
-        // has() covers both the mapped prompt types and every laravel/prompts
-        // helper (prompts, context output, number/clear/datatable/grid/task/…),
-        // so the wrapper exposes the whole prompts API and tracks new additions.
+        // has() resolves any laravel/prompts helper (prompts + context output:
+        // number/clear/datatable/grid/task/note/…), so the wrapper exposes the
+        // whole prompts API and auto-tracks new helpers upstream adds.
         if ($this->promptManager->has($method)) {
             $this->result = $this->promptManager->$method(...$arguments);
 
@@ -150,10 +153,10 @@ class Prompter
     }
 
     /**
-     * Return the form builder.
+     * Return the form builder (special-cased: returns the builder, not $this).
      */
     public function form(): FormBuilder
     {
-        return $this->promptManager->form();
+        return form();
     }
 }
