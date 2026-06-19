@@ -142,9 +142,9 @@ final class Menu
         return $this;
     }
 
-    public function addRadio(mixed $value, string $label, bool $checked = false): self
+    public function addRadio(mixed $value, string $label, bool $checked = false, string $group = 'default'): self
     {
-        $this->items[] = new RadioItem($value, ConsoleUIFormatter::sanitizeText($label), $checked);
+        $this->items[] = new RadioItem($value, ConsoleUIFormatter::sanitizeText($label), $checked, $group);
 
         return $this;
     }
@@ -359,7 +359,7 @@ final class Menu
 
         if ($item instanceof RadioItem) {
             foreach ($this->items as $other) {
-                if ($other instanceof RadioItem) {
+                if ($other instanceof RadioItem && $other->group === $item->group) {
                     $other->checked = false;
                 }
             }

@@ -19,14 +19,14 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 
 | Widget | Facade | Key fluent methods |
 |--------|--------|--------------------|
-| `Spinner` | `Console::spinner($msg)` | `frames(SpinnerFrames\|string)`, `run(callable)`, `start()`, `advance()`, `finish($status='success', ?$msg=null)` |
+| `Spinner` | `Console::spinner($msg)` | `frames(SpinnerFrames\|string)`, `elapsed($bool=true)`, `run(callable)`, `start()`, `advance()`, `finish($status='success', ?$msg=null)` |
 | `ProgressBar` | `Console::progress($output, $max)` | `format(ProgressStyle\|string)`, `glyphs(string)`, `start(?$max)`, `advance($n=1)`, `setProgress($n)`, `finish()`, `raw()` |
 | `TaskProgress` | `Console::tasks($output)` | `task($name, $total=0): Task`, `draw()`, `finish(): int`, `exitCode(): int` |
 | `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()`, `eta()` |
 | `StatusLine` | `Console::status()` | `success/error/warning/info/pending($msg)`, `line($status, $msg)` → **markup string** |
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
 | `Box` | `Console::box($content)` | `title()`, `footer()`, `content()`, `padding($n)`, `width($n)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
-| `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()` |
+| `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()`; static `Tree::fromArray($label, $nested)` |
 | `Table` | `Console::table()` | `headers()`, `rows()`, `fromAssoc($rows)`, `grouped($groups)`, `tree($rows)`, `align($map)`, `columnWidths($map)`, `maxColumnWidth($col,$w)`, `title()`, `footer()`, `style($preset)`, `render(?$output)`; static `Table::cell($v,$align,$fg,$bg)` |
 | `Columns` | `Console::columns($items)` | `columns($n=0)` (0=auto-fit), `gap($n)`, `render()` |
 | `Callout` | — (class) | `Callout::success/error/warning/info($msg)`, `title()`, `render()` |
@@ -108,6 +108,10 @@ echo Console::tree('app')->child('Console', fn ($t) => $t->child('Tools'))->chil
 ```
 
 A fixed `Box`/`Rule` `width()` is a minimum — content never overflows the frame.
+`Tree::fromArray('app', ['Console' => ['Commands'], 'config' => ['app.php']])` builds
+a tree from a nested array (array value → branch, scalar → leaf); `status()` prefixes
+a node with a glyph (`success`/`error`/`warning`/`info`/`pending`/`running`/`skipped`).
+`Console::spinner('Building')->elapsed()->start()` shows elapsed time in manual mode.
 
 ## Tables, callouts, banners
 

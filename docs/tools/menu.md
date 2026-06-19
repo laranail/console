@@ -59,7 +59,7 @@ $result = Console::menu('Main menu')
 | `addOption($value, $label)` / `addOptions($array)` | a selectable value-bearing option |
 | `addStaticItem($label)` / `addLineBreak()` | non-selectable label / spacer |
 | `addCheckbox($value, $label, $checked=false)` | multi-select toggle |
-| `addRadio($value, $label, $checked=false)` | single-select toggle |
+| `addRadio($value, $label, $checked=false, $group='default')` | single-select toggle; only siblings in the same `$group` are cleared |
 | `addQuestion($label, $placeholder='')` | free-text answer (bridges to prompts `text()`) |
 | `addSubMenu($label, fn (Menu $m) => …)` | a nested menu, opened on select |
 | `setWidth` / `setPadding` / `setForegroundColour` / `setExitButtonText` | styling |

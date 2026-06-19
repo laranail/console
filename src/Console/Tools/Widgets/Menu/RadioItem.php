@@ -13,6 +13,7 @@ final class RadioItem implements Item
         public readonly mixed $value,
         private readonly string $label,
         public bool $checked = false,
+        public readonly string $group = 'default',
     ) {}
 
     public function label(): string
