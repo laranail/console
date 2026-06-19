@@ -13,14 +13,14 @@ final class SyncCommand extends Command
 
     public function handle(): int
     {
-        $this->infoMessage('Starting…');
+        $this->services->display()->info('Starting…');
 
-        $user = $this->askText('Name?', default: 'admin');
-        if (! $this->askConfirm('Proceed?', true)) {
+        $user = $this->services->interaction()->askText('Name?', default: 'admin');
+        if (! $this->services->interaction()->askConfirm('Proceed?', true)) {
             return self::FAILURE;
         }
 
-        $this->addMetadata('synced', 42);
+        $this->services->metadata()->add('synced', 42);
 
         return self::SUCCESS;
     }
@@ -37,7 +37,7 @@ of nine focused services:
 | `CommandPerformanceService` | execution time + memory (`getMemoryUsage()`, `getPerformanceSummary()`) |
 | `CommandEventService` | dispatch native + custom `CommandEvents` |
 | `CommandSignalService` | SIGTERM/SIGINT graceful shutdown (`shouldKeepRunning()`, `stop()`) |
-| `CommandMetadataService` | per-command metadata (`addMetadata()`, `getMetadata()`) |
+| `CommandMetadataService` | per-command metadata (`add()`, `get()`, `all()`) |
 | `CommandLoggerService` | structured lifecycle logging |
 | `CommandErrorService` | `executeWithErrorHandling()` / `executeWithFallback()` |
 | `CommandConfigurationService` | cached config access (`get`, `getEnv`, `has`, `set`) |
@@ -48,10 +48,14 @@ The overridden `run()` starts timing, dispatches starting/finished events,
 runs the command inside try/catch/finally, and ends the lifecycle, so
 performance, events, and signals work without boilerplate.
 
-Reach a service directly through the manager:
-`$this->getServices()->display()` and `$this->getServices()->interaction()`.
-The most common methods are also proxied onto the base command (`askText`,
-`askConfirm`, `showProgressBar`, `infoMessage`, and so on).
+The base is intentionally thin — it owns the lifecycle and a few verbosity
+helpers (`isVerbose()`, `displayPerformanceSummary()`), and exposes everything
+else through `$this->services` (`$this->getServices()` for callers outside the
+command). Reach any service directly, e.g.
+`$this->services->display()->info(...)`,
+`$this->services->interaction()->askText(...)`,
+`$this->services->metadata()->add(...)`. There are no per-method proxies on the
+base — one obvious access path, no Middle-Man indirection.
 
 ## CommandDisplayService
 

@@ -22,6 +22,11 @@ accept an environment override.
 | `emoji.custom` | `[]` | Extra/override emoji: `name => [unicode, ascii]` or a single string. |
 | `banner.font` | `null` | Default FIGlet font name (e.g. `block`) or `.flf` path; `null` = plain title. Env: `CONSOLE_BANNER_FONT`. |
 | `banner.width` | `null` | Default banner inner width, or `null` to auto-fit. Env: `CONSOLE_BANNER_WIDTH`. |
+| `summary.divider_width` | `60` | `Console::summary()` top-rule length. |
+| `summary.label_pad` | `16` | Column width the metric labels are padded to. |
+| `summary.message_max` | `80` | Error messages longer than this are truncated (with `…`). |
+| `summary.rate_good` | `100` | Success-rate ≥ this renders green. |
+| `summary.rate_warn` | `80` | Success-rate ≥ this renders yellow (else red). |
 | `menu.foreground` | `null` | `Console::menu()` frame colour (hex/name) or `null`. Env: `CONSOLE_MENU_FG`. |
 | `menu.width` | `null` | `Console::menu()` frame width, or `null` to auto-fit. Env: `CONSOLE_MENU_WIDTH`. |
 | `links.allowed_schemes` | `['http','https','mailto']` | URL schemes permitted in terminal hyperlinks; others render as plain text. |
