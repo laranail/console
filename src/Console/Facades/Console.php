@@ -15,6 +15,7 @@ use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
@@ -38,6 +39,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @method static Box box(array|string $content = [])
  * @method static Tree tree(string $label = '')
  * @method static Table table()
+ * @method static Columns columns(array $items)
  * @method static Gauge gauge(float $value, float $max = 100.0)
  * @method static Sparkline sparkline(array $values)
  * @method static Banner banner(string $title)

@@ -13,6 +13,7 @@ use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
@@ -101,6 +102,16 @@ final class ConsoleManager
     public function table(): Table
     {
         return Table::make();
+    }
+
+    /**
+     * Flow a flat list of items into balanced columns.
+     *
+     * @param list<string> $items
+     */
+    public function columns(array $items): Columns
+    {
+        return Columns::make($items);
     }
 
     /**

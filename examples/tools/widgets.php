@@ -18,6 +18,7 @@ use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
+use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
@@ -92,6 +93,10 @@ $tasks->task('Compile', 1)->advance(1)->succeed();
 $tasks->task('Bundle', 1)->advance(1)->succeed('cached');
 $tasks->task('Upload', 1)->fail('network error');
 $tasks->finish();
+
+$out->writeln('');
+$out->writeln(Header::make('Columns')->render());
+$out->writeln(Columns::make(array_map(static fn (int $i): string => "item-{$i}", range(1, 12)))->columns(4)->render());
 
 $out->writeln('');
 $out->writeln(Header::make('Emoji')->count(count(Emoji::make()->all()), 'shortcodes')->render());

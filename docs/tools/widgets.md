@@ -27,7 +27,8 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
 | `Box` | `Console::box($content)` | `title()`, `footer()`, `content()`, `padding($n)`, `width($n)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
 | `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()` |
-| `Table` | `Console::table()` | `headers()`, `rows()`, `grouped($groups)`, `tree($rows)`, `style($preset)`, `render(?$output)` |
+| `Table` | `Console::table()` | `headers()`, `rows()`, `fromAssoc($rows)`, `grouped($groups)`, `tree($rows)`, `align($map)`, `columnWidths($map)`, `maxColumnWidth($col,$w)`, `title()`, `footer()`, `style($preset)`, `render(?$output)`; static `Table::cell($v,$align,$fg,$bg)` |
+| `Columns` | `Console::columns($items)` | `columns($n=0)` (0=auto-fit), `gap($n)`, `render()` |
 | `Callout` | — (class) | `Callout::success/error/warning/info($msg)`, `title()`, `render()` |
 | `Banner` | `Console::banner($title)` | `subtitle()`, `boxed($bool=true)`, `width($n)`, `render()` |
 | `Gauge` | `Console::gauge($value, $max=100)` | `label()`, `width($barWidth)`, `showValue($bool=true)`, `render()` |
@@ -119,6 +120,25 @@ echo Console::banner('app v1.0')->subtitle('Simtabi')->boxed()->render();
 ```
 
 Table styles: `ascii`, `light`, `double`, `compact`, `borderless`, `markdown`.
+
+```php
+// Build from associative rows, right-align a column, add titles + a styled cell.
+echo Console::table()->fromAssoc([['name' => 'ada', 'role' => 'eng']])->render();
+echo Console::table()
+    ->headers(['Item', 'Size'])
+    ->rows([['disk', Table::cell('512', align: 'right', fg: 'green')], ['ram', '8']])
+    ->align(['Size' => 'right'])->title('Report')->footer('2 rows')->render();
+```
+
+### Columns
+
+```php
+echo Console::columns(['alpha', 'beta', 'gamma', 'delta', 'epsilon'])->render(); // auto-fit
+echo Console::columns($files)->columns(3)->gap(4)->render();                      // fixed 3 cols
+```
+
+Flows a flat list into balanced columns (column-major, like `ls`/`artisan list`);
+`columns(0)` (default) auto-fits the terminal width.
 
 ## Gauges, sparklines, step flow
 
