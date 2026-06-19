@@ -29,6 +29,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Tui\Tui;
 
 /**
  * @method static ConsoleUIFormatter ui()
@@ -51,6 +52,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)
  * @method static Keypress keypress()
+ * @method static Tui tui()
  * @method static Capabilities capabilities()
  * @method static Prompter prompter()
  *

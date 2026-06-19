@@ -27,6 +27,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Tui\Tui;
 
 /**
  * Unified entry point for the laranail/console package.
@@ -206,6 +207,15 @@ final class ConsoleManager
     public function keypress(): Keypress
     {
         return Keypress::make();
+    }
+
+    /**
+     * A symfony/tui full-screen app. Mount our widgets with
+     * Console\Tui\RenderableWidget::of(...). Requires symfony/tui.
+     */
+    public function tui(): Tui
+    {
+        return new Tui;
     }
 
     /**

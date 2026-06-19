@@ -35,13 +35,17 @@
     "docs": "https://opensource.simtabi.com/console/docs/"
   },
   "require": {
-    "php": "^8.3 || ^8.4 || ^8.5",
+    "php": "^8.4.1",
     "ext-mbstring": "*",
     "illuminate/console": "^13.0",
     "illuminate/contracts": "^13.0",
     "illuminate/support": "^13.0",
     "laravel/prompts": "^0.3.18|^1.0",
-    "symfony/console": "^7.0|^8.0"
+    "revolt/event-loop": "^1.0",
+    "symfony/console": "^8.0",
+    "symfony/event-dispatcher": "^8.0",
+    "symfony/string": "^8.0",
+    "symfony/tui": "^8.2@dev"
   },
   "require-dev": {
     "mockery/mockery": "^1.6",

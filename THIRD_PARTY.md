@@ -39,6 +39,13 @@ The ANSI primitive tables (`Tools\Support\Sgr`, `Tools\Support\ControlChars`,
 codes are facts, not copyrightable) after reviewing
 [bramus/ansi-php](https://github.com/bramus/ansi-php). No code was copied.
 
+## symfony/tui — MIT, © Fabien Potencier / Symfony
+
+A hard dependency (experimental). `Console\Tui\RenderableWidget` extends
+`Symfony\Component\Tui\Widget\AbstractWidget` to mount our widgets into a
+`Symfony\Component\Tui\Tui` full-screen app; `Console::tui()` returns a ready app.
+Requires PHP ≥ 8.4.1 and is `minimum-stability: dev`.
+
 ## FIGlet fonts
 
 The bundled `resources/fonts/block.php` font is original work (© Simtabi LLC,

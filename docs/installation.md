@@ -6,9 +6,14 @@ composer require laranail/console
 
 ## Requirements
 
-- PHP `^8.3` (8.3, 8.4, 8.5 supported)
-- Laravel `^13.0`
+- PHP `^8.4.1` (8.4.1+, incl. 8.5)
+- Laravel `^13.0` (Symfony 8 components)
 - `ext-mbstring`
+
+> The PHP `8.4.1` floor comes from the bundled, **experimental**
+> [`symfony/tui`](tools/tui.md) integration (Symfony 8 + `revolt/event-loop`,
+> `minimum-stability: dev`). Your app's `composer.json` therefore needs
+> `"minimum-stability": "dev"` with `"prefer-stable": true`.
 
 ## Service provider
 
