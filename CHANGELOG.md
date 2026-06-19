@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `border()` and `padding()`, with a plain-title fallback when a font is missing or
   too wide. Ships the bundled `block` font (`resources/fonts/`), configurable via
   `config('console.banner.*')`.
+- ANSI primitives `Support\Sgr` (SGR styles + granular per-attribute resets),
+  `Support\ControlChars` (the full C0 set) and `Support\Csi` (typed CSI builder),
+  re-derived from ECMA-48.
 - `Support\Emoji` — a fluent ASCII/Unicode emoji helper (auto/unicode/ascii mode,
   `:shortcode:` interpolation, custom maps, strip), exposed as `Console::emoji()`
   and configurable via `config('console.emoji.*')`.

@@ -134,6 +134,30 @@ TimeFormat::duration(4080);  // '1h 8m'
 TimeFormat::fromMillis(812); // '812.00 ms' (milliseconds → ms / s / min)
 ```
 
+## ANSI primitives (Sgr, ControlChars, Csi)
+
+Low-level escape-sequence primitives (re-derived from ECMA-48). They return raw
+sequences — gate emission on `Capabilities` at the call site.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\{Sgr, ControlChars, Csi};
+
+Sgr::Underline->open();                  // "\e[4m"
+Sgr::sequence(Sgr::Bold, Sgr::Underline);// "\e[1;4m"
+Sgr::UnderlineOff->open();               // "\e[24m"  (turn off ONLY underline)
+Sgr::wrap('hi', Sgr::Bold);              // "\e[1mhi\e[0m"
+
+ControlChars::Bel->char();               // "\x07"  (bell); full C0 set + DEL
+ControlChars::Esc->char();               // "\e"
+
+Csi::sequence('A', 3);                   // "\e[3A"   cursor up 3
+Csi::sequence('H', 2, 5);                // "\e[2;5H" cursor to row 2 col 5
+```
+
+`Sgr` covers styles plus granular per-attribute resets and rare styles
+(framed/encircled/overlined/conceal/blink-rapid). `Terminal` builds its cursor and
+erase sequences with `Csi`/`ControlChars`.
+
 ## FileSize
 
 Human-readable byte sizes — the single source of truth for byte formatting.
