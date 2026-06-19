@@ -18,6 +18,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
@@ -43,6 +44,7 @@ use Symfony\Component\Tui\Tui;
  * @method static Tree tree(string $label = '')
  * @method static Table table()
  * @method static Columns columns(array $items)
+ * @method static KeyValue keyValue(array $pairs = [])
  * @method static Gauge gauge(float $value, float $max = 100.0)
  * @method static Sparkline sparkline(array $values)
  * @method static Banner banner(string $title)

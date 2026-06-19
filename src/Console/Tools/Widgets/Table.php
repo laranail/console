@@ -139,6 +139,17 @@ final class Table implements Stringable
     }
 
     /**
+     * Build headers + rows from a Laravel Collection (or any iterable) of
+     * associative rows — headers come from the first row's keys.
+     *
+     * @param iterable<array<string, scalar|null>> $rows
+     */
+    public function fromCollection(iterable $rows): self
+    {
+        return $this->fromAssoc(array_values(is_array($rows) ? $rows : iterator_to_array($rows)));
+    }
+
+    /**
      * Segment rows under labelled group headers within a single frame.
      *
      * @param array<string, list<list<string>>> $groups label => rows

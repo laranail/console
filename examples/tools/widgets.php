@@ -21,6 +21,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Callout;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
@@ -93,6 +94,10 @@ $tasks->task('Compile', 1)->advance(1)->succeed();
 $tasks->task('Bundle', 1)->advance(1)->succeed('cached');
 $tasks->task('Upload', 1)->fail('network error');
 $tasks->finish();
+
+$out->writeln('');
+$out->writeln(Header::make('Key / value')->render());
+$out->writeln(KeyValue::make(['Name' => 'laranail/console', 'Status' => 'ok', 'Widgets' => 21])->render());
 
 $out->writeln('');
 $out->writeln(Header::make('Columns')->render());

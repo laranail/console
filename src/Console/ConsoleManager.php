@@ -17,6 +17,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
@@ -116,6 +117,16 @@ final class ConsoleManager
     public function columns(array $items): Columns
     {
         return Columns::make($items);
+    }
+
+    /**
+     * An aligned key/value definition list.
+     *
+     * @param array<string, scalar|null> $pairs
+     */
+    public function keyValue(array $pairs = []): KeyValue
+    {
+        return KeyValue::make($pairs);
     }
 
     /**
@@ -240,7 +251,7 @@ final class ConsoleManager
     public function tui(): Tui
     {
         if (! class_exists(Tui::class)) {
-            throw ConsoleException::fromKey('tui_unavailable');
+            throw ConsoleException::fromKey('console.tui_unavailable');
         }
 
         return new Tui;
