@@ -49,6 +49,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Banner
+    |--------------------------------------------------------------------------
+    | font  : default FIGlet font for big-text banners — a bundled font name
+    |         (e.g. "block") or a path to a ".flf" file. null = plain title.
+    | width : default inner content width, or null to auto-fit the terminal.
+    */
+    'banner' => [
+        'font' => env('CONSOLE_BANNER_FONT'),
+        'width' => env('CONSOLE_BANNER_WIDTH'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Emoji
     |--------------------------------------------------------------------------
     | mode   : auto | unicode | ascii — "auto" follows Unicode capability.

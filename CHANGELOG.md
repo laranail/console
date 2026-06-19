@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Banner designer** — `Banner` gains `font()` (FIGlet big-text via the new
+  `Support\Figlet` `.flf`/bundled-font renderer), `align()`, `color()`/`gradient()`,
+  `border()` and `padding()`, with a plain-title fallback when a font is missing or
+  too wide. Ships the bundled `block` font (`resources/fonts/`), configurable via
+  `config('console.banner.*')`.
 - `Support\Emoji` — a fluent ASCII/Unicode emoji helper (auto/unicode/ascii mode,
   `:shortcode:` interpolation, custom maps, strip), exposed as `Console::emoji()`
   and configurable via `config('console.emoji.*')`.

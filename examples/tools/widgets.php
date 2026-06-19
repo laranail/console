@@ -35,6 +35,10 @@ $out = new ConsoleOutput;
 $out->writeln(Banner::make('laranail/console')->subtitle('widget demo')->width(40)->render());
 $out->writeln('');
 
+// Banner designer: FIGlet big-text with a gradient fill.
+$out->writeln(Banner::make('DEPLOY')->font('block')->gradient(['#00ffff', '#ff00ff'])->render());
+$out->writeln('');
+
 $status = StatusLine::make();
 $out->writeln($status->success('Dependencies installed'));
 $out->writeln($status->warning('Cache is stale'));

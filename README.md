@@ -96,9 +96,10 @@ The package has three output styles — know which you're holding:
 | [Architecture](docs/architecture.md) | Umbrella, sub-domains, the manager |
 | [Configuration](docs/configuration.md) | Every `config/console.php` key |
 | [Internationalization](docs/i18n.md) | Translating console strings |
-| [Output formatter](docs/tools/formatting.md) | Colours, badges, status, links, reports |
-| [Output widgets](docs/tools/widgets.md) | Spinner, progress, box, tree, table, gauge… |
-| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, BorderStyle |
+| [Output formatter](docs/tools/formatting.md) | Colour/badge/link string primitives |
+| [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary… |
+| [Banner designer](docs/tools/banner.md) | FIGlet big-text, alignment, colour/gradient, borders |
+| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, TimeFormat |
 | [Commands](docs/tools/commands.md) | The Artisan command base + services |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
