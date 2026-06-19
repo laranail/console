@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates radio fields.
  */
-class RadioFieldValidator extends AbstractValidator
+final class RadioFieldValidator extends AbstractValidator
 {
     public function __construct(protected array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

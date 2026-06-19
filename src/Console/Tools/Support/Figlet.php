@@ -186,10 +186,7 @@ final class Figlet
             $glyph,
         );
 
-        $width = 0;
-        foreach ($rows as $row) {
-            $width = max($width, DisplayWidth::of($row));
-        }
+        $width = DisplayWidth::maxWidth($rows);
 
         return array_values(array_map(static fn (string $row): string => DisplayWidth::pad($row, $width), $rows));
     }

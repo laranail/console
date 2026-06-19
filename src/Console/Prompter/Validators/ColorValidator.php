@@ -7,7 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 /**
  * Validates color fields (RGB, RGBA, HEX).
  */
-class ColorValidator extends AbstractValidator
+final class ColorValidator extends AbstractValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

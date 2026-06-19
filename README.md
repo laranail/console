@@ -109,6 +109,7 @@ The package has three output styles — know which you're holding:
 | [Notifications](docs/tools/notifications.md) | The console channel |
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
 | [Prompts & forms](docs/tools/prompter.md) | The Prompter, forms and validators |
+| [Testing](docs/tools/testing.md) | Force capabilities + script prompts in tests |
 
 Online docs: <https://opensource.simtabi.com/console/docs/> ·
 Changelog: [CHANGELOG.md](CHANGELOG.md) · Third-party notices: [THIRD_PARTY.md](THIRD_PARTY.md).

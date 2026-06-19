@@ -5,6 +5,40 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-06-19
+
+### Added
+
+- **Testing helpers** — `Testing\InteractsWithConsole` (`withConsoleCapabilities()`
+  + `withPromptInput()`) and `Support\Capabilities::fake()` / `clearFake()`, so
+  downstream suites can force a deterministic terminal profile and script prompts.
+  See `docs/tools/testing.md`.
+- **Translatable widget strings** — `Summary`, `Header`, `Menu`, `TaskProgress`
+  and `Callout` resolve their text from `console::console.widgets.*` via a new
+  `Support\Lang` helper, honouring `config('console.locale')` without touching the
+  app's global locale. English output is unchanged.
+- `config('console.summary.*')` — tune the execution-summary layout (divider
+  width, label padding, message truncation, success-rate colour thresholds).
+- `Support\DisplayWidth::maxWidth()`.
+
+### Changed
+
+- **The enhanced `Command` base is slimmed to its lifecycle.** The ~31 one-line
+  "middle-man" pass-through helpers (`addMetadata`, `askText`, `getExecutionTime`,
+  `warning`, …) are removed; reach the services directly via
+  `$this->services->{service}()->…`. No production class extended the base
+  (`AbstractPrompterCommand` extends Illuminate directly), so no capability is
+  lost. The nine services keep their full public APIs.
+- The six regex validators now share a `RegexValidator` base; the 25 leaf
+  validators are marked `final` (command services stay extensible).
+- `Box`/`Banner`/`Table`/`Rule` resolve capabilities via `Capabilities::detect()`
+  (consistent with the other widgets; lets test fakes propagate). Production
+  behaviour unchanged.
+
+### Removed
+
+- Dead code: `Symbols::usesUnicode()`, `TaskStatus::isTerminal()`, `Box::content()`.
+
 ## [0.3.0] - 2026-06-19
 
 ### Security

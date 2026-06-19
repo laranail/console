@@ -55,10 +55,7 @@ final class KeyValue implements Stringable
             return '';
         }
 
-        $width = 0;
-        foreach (array_keys($this->pairs) as $key) {
-            $width = max($width, DisplayWidth::of($key));
-        }
+        $width = DisplayWidth::maxWidth(array_keys($this->pairs));
 
         $lines = [];
         foreach ($this->pairs as $key => $value) {

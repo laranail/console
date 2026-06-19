@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates email fields.
  */
-class EmailFieldValidator extends AbstractValidator
+final class EmailFieldValidator extends AbstractValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Stringable;
 
@@ -58,7 +59,11 @@ final class Callout implements Stringable
 
     public function render(): string
     {
-        $heading = trim($this->symbols->get($this->status) . ' ' . ($this->title !== '' ? $this->title : ucfirst($this->status)));
+        $label = $this->title !== ''
+            ? $this->title
+            : Lang::get('widgets.callout.' . $this->status, ucfirst($this->status));
+
+        $heading = trim($this->symbols->get($this->status) . ' ' . $label);
 
         return Box::make($this->lines)
             ->title($heading)

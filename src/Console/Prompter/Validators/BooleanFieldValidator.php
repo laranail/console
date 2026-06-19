@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates boolean fields including various string representations.
  */
-class BooleanFieldValidator extends AbstractValidator
+final class BooleanFieldValidator extends AbstractValidator
 {
     protected array $validBooleans = [
         true,

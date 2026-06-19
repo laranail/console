@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates object fields.
  */
-class ObjectValidator extends AbstractValidator
+final class ObjectValidator extends AbstractValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

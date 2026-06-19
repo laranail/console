@@ -44,5 +44,9 @@ parameters:
         -
             identifier: argument.type
             path: src/Console/Tools/Observers/ConsoleCommandObserver.php
+        # Consumer-facing test trait — used by downstream test suites, not by src.
+        -
+            identifier: trait.unused
+            path: src/Console/Testing/InteractsWithConsole.php
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false

@@ -7,7 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 /**
  * Validates string fields with character-length constraints.
  */
-class StringFieldValidator extends AbstractValidator
+final class StringFieldValidator extends AbstractValidator
 {
     public function __construct(protected int $minLength = 0, protected int $maxLength = 255, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

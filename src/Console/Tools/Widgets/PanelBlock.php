@@ -142,12 +142,7 @@ final class PanelBlock implements Renderable, Stringable
             return max($this->fixedWidth - ($this->border ? 2 : 0), 0);
         }
 
-        $width = 0;
-        foreach ($this->contentLines() as $line) {
-            $width = max($width, DisplayWidth::of($line));
-        }
-
-        return $width;
+        return DisplayWidth::maxWidth($this->contentLines());
     }
 
     private function contentHeight(): int

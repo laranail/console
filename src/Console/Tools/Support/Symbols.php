@@ -70,9 +70,4 @@ final readonly class Symbols
 
         return $set[$name] ?? '';
     }
-
-    public function usesUnicode(): bool
-    {
-        return $this->unicode;
-    }
 }

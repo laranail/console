@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Widgets\TaskProgress;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
@@ -100,11 +101,14 @@ final class TaskProgress
         $total = count($this->tasks);
         $glyph = $this->capabilities->supportsUnicode();
 
-        $summary = sprintf(
-            '%s %d/%d tasks succeeded',
-            $failed === 0 ? ($glyph ? '✓' : '[OK]') : ($glyph ? '✗' : '[X]'),
-            $total - $failed,
-            $total,
+        $marker = $failed === 0
+            ? TaskStatus::Success->glyph($glyph)
+            : TaskStatus::Failed->glyph($glyph);
+
+        $summary = $marker . ' ' . Lang::get(
+            'widgets.task_progress.succeeded',
+            ':done/:total tasks succeeded',
+            ['done' => $total - $failed, 'total' => $total],
         );
 
         $this->output->writeln($summary);
@@ -134,7 +138,7 @@ final class TaskProgress
         $elapsed = $task->elapsed() > 0 ? TimeFormat::duration($task->elapsed()) : '';
 
         $eta = $task->eta();
-        $etaStr = ($eta !== null && $eta > 0) ? 'ETA ' . TimeFormat::duration($eta) : '';
+        $etaStr = ($eta !== null && $eta > 0) ? Lang::get('widgets.task_progress.eta', 'ETA ') . TimeFormat::duration($eta) : '';
 
         $parts = array_filter([
             $glyph,

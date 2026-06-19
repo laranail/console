@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates select fields.
  */
-class SelectFieldValidator extends AbstractValidator
+final class SelectFieldValidator extends AbstractValidator
 {
     public function __construct(protected array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

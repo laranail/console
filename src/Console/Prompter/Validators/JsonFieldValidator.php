@@ -7,7 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 /**
  * Validates JSON fields.
  */
-class JsonFieldValidator extends AbstractValidator
+final class JsonFieldValidator extends AbstractValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

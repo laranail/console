@@ -25,13 +25,43 @@ final class Capabilities
     private ?int $width = null;
 
     /**
+     * A forced capability profile for tests (see {@see fake()}). When set,
+     * detect() returns it so every widget resolves against the same profile.
+     */
+    private static ?self $fake = null;
+
+    /**
      * @param resource|null $stream Output stream to probe (defaults to STDOUT).
      */
     public function __construct(private $stream = null) {}
 
     public static function detect(): self
     {
-        return new self;
+        return self::$fake ?? new self;
+    }
+
+    /**
+     * Force a deterministic capability profile for tests. A null argument leaves
+     * that dimension to normal detection. Returns the fake so it can be asserted;
+     * call {@see clearFake()} (or use the InteractsWithConsole trait) to restore.
+     */
+    public static function fake(?bool $colors = null, ?bool $unicode = null, ?int $width = null, ?bool $interactive = null): self
+    {
+        $fake = new self;
+        $fake->colors = $colors;
+        $fake->unicode = $unicode;
+        $fake->width = $width;
+        $fake->tty = $interactive;
+
+        return self::$fake = $fake;
+    }
+
+    /**
+     * Clear any forced capability profile set via {@see fake()}.
+     */
+    public static function clearFake(): void
+    {
+        self::$fake = null;
     }
 
     public function isInteractive(): bool

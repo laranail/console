@@ -44,8 +44,11 @@ final class Banner implements Stringable
 
     private int $padding = 1;
 
-    public function __construct(private string $title, private readonly Capabilities $capabilities = new Capabilities)
+    private readonly Capabilities $capabilities;
+
+    public function __construct(private string $title, ?Capabilities $capabilities = null)
     {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->title = ConsoleUIFormatter::sanitizeText($title);
 
         $configFont = Config::get('banner.font');
@@ -142,10 +145,10 @@ final class Banner implements Stringable
 
         // Width is the inner content width: the requested width, but at least as
         // wide as the rendered title block (so big-text is never clipped).
-        $contentWidth = $this->width ?? min($this->capabilities->width(), 60);
-        foreach ($titleLines as $line) {
-            $contentWidth = max($contentWidth, DisplayWidth::of($line));
-        }
+        $contentWidth = max(
+            $this->width ?? min($this->capabilities->width(), 60),
+            DisplayWidth::maxWidth($titleLines),
+        );
 
         $lines = array_map(fn (string $l): string => $this->style($l, $contentWidth), $titleLines);
 
@@ -186,10 +189,7 @@ final class Banner implements Stringable
             return [$this->title];
         }
 
-        $maxWidth = 0;
-        foreach ($rendered as $line) {
-            $maxWidth = max($maxWidth, DisplayWidth::of($line));
-        }
+        $maxWidth = DisplayWidth::maxWidth($rendered);
 
         // Too wide for the terminal → fall back to the plain title.
         return $maxWidth > $this->capabilities->width() ? [$this->title] : $rendered;

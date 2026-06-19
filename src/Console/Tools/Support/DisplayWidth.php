@@ -25,6 +25,22 @@ final class DisplayWidth
     }
 
     /**
+     * The greatest visible width across the given lines (0 for an empty list).
+     *
+     * @param iterable<string> $lines
+     */
+    public static function maxWidth(iterable $lines): int
+    {
+        $max = 0;
+
+        foreach ($lines as $line) {
+            $max = max($max, self::of($line));
+        }
+
+        return $max;
+    }
+
+    /**
      * Pad a string on the right to a target visible width.
      */
     public static function pad(string $text, int $width, string $pad = ' '): string

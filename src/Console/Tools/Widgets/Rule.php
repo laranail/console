@@ -23,8 +23,11 @@ final class Rule implements Stringable
 
     private string $align = 'left';
 
-    public function __construct(private readonly Capabilities $capabilities = new Capabilities)
+    private readonly Capabilities $capabilities;
+
+    public function __construct(?Capabilities $capabilities = null)
     {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Light : BorderStyle::Ascii;
     }
 

@@ -30,11 +30,14 @@ final class Box implements Stringable
 
     private ?int $width = null;
 
+    private readonly Capabilities $capabilities;
+
     /**
      * @param list<string> $lines
      */
-    public function __construct(private array $lines = [], private readonly Capabilities $capabilities = new Capabilities)
+    public function __construct(private readonly array $lines = [], ?Capabilities $capabilities = null)
     {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Rounded : BorderStyle::Ascii;
     }
 
@@ -44,16 +47,6 @@ final class Box implements Stringable
     public static function make(array|string $lines = []): self
     {
         return new self(is_array($lines) ? $lines : explode("\n", $lines));
-    }
-
-    /**
-     * @param list<string>|string $lines
-     */
-    public function content(array|string $lines): self
-    {
-        $this->lines = is_array($lines) ? $lines : explode("\n", $lines);
-
-        return $this;
     }
 
     public function title(string $title): self
@@ -117,10 +110,7 @@ final class Box implements Stringable
             $lines = [''];
         }
 
-        $bodyWidth = 0;
-        foreach ($lines as $line) {
-            $bodyWidth = max($bodyWidth, DisplayWidth::of($line));
-        }
+        $bodyWidth = DisplayWidth::maxWidth($lines);
 
         // A fixed width() is a *minimum*: grow the interior to fit the content so
         // a long line never overflows the frame (DisplayWidth::pad only grows).

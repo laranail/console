@@ -15,6 +15,7 @@ use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -41,7 +42,7 @@ final class Menu
 
     private int $padding = 1;
 
-    private string $exitText = 'Exit';
+    private ?string $exitText = null;
 
     private readonly Capabilities $capabilities;
 
@@ -216,7 +217,7 @@ final class Menu
         }
 
         $lines[] = '';
-        $lines[] = '  [' . $this->exitText . ']';
+        $lines[] = '  [' . ($this->exitText ?? Lang::get('widgets.menu.exit', 'Exit')) . ']';
 
         $box = Box::make($lines)->title($this->title)->padding($this->padding);
 
@@ -292,7 +293,7 @@ final class Menu
             $options[(string) $index] = $this->items[$index]->label();
         }
 
-        $choice = select($this->title !== '' ? $this->title : 'Select', $options);
+        $choice = select($this->title !== '' ? $this->title : Lang::get('widgets.menu.select', 'Select'), $options);
 
         return $this->resolve($this->items[(int) $choice]);
     }
@@ -316,7 +317,7 @@ final class Menu
         }
 
         /** @var list<int|string> $chosen */
-        $chosen = multiselect($this->title !== '' ? $this->title : 'Select', $options, $defaults);
+        $chosen = multiselect($this->title !== '' ? $this->title : Lang::get('widgets.menu.select', 'Select'), $options, $defaults);
 
         $values = [];
         foreach ($chosen as $index) {

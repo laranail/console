@@ -9,7 +9,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates checkbox fields.
  */
-class CheckboxFieldValidator extends AbstractValidator
+final class CheckboxFieldValidator extends AbstractValidator
 {
     public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {

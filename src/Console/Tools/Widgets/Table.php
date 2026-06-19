@@ -67,7 +67,12 @@ final class Table implements Stringable
 
     private string $style = 'light';
 
-    public function __construct(private readonly Capabilities $capabilities = new Capabilities) {}
+    private readonly Capabilities $capabilities;
+
+    public function __construct(?Capabilities $capabilities = null)
+    {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
 
     public static function make(): self
     {
