@@ -11,7 +11,8 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
- * A successful command that records metadata during handle().
+ * A successful command that records metadata during handle(), reaching the
+ * services directly (the slim base exposes everything via $this->services).
  */
 final class LifecycleSuccessCommand extends Command
 {
@@ -21,7 +22,7 @@ final class LifecycleSuccessCommand extends Command
 
     public function handle(): int
     {
-        $this->addMetadata('handled', true);
+        $this->services->metadata()->add('handled', true);
 
         return self::SUCCESS;
     }
@@ -46,44 +47,48 @@ final class CommandTest extends TestCase
         self::assertSame('laranail-test:success', $services->getCommandName());
     }
 
-    public function test_metadata_helpers_round_trip(): void
+    public function test_metadata_round_trips_via_the_service(): void
     {
-        $command = $this->makeCommand();
-        $command->addMetadata('a', 1)->addMetadata('b', 2);
+        $meta = $this->makeCommand()->getServices()->metadata();
+        $meta->add('a', 1);
+        $meta->add('b', 2);
 
-        self::assertSame(1, $command->getMetadata('a'));
-        self::assertSame('default', $command->getMetadata('missing', 'default'));
-        self::assertSame(['a' => 1, 'b' => 2], $command->getAllMetadata());
+        self::assertSame(1, $meta->get('a'));
+        self::assertSame('default', $meta->get('missing', 'default'));
+        self::assertSame(['a' => 1, 'b' => 2], $meta->all());
     }
 
     public function test_signals_can_be_stopped_and_resumed(): void
     {
-        $command = $this->makeCommand();
+        $signals = $this->makeCommand()->getServices()->signals();
 
-        self::assertTrue($command->shouldKeepRunning());
+        self::assertTrue($signals->shouldKeepRunning());
 
-        $command->stop();
-        self::assertFalse($command->shouldKeepRunning());
+        $signals->stop();
+        self::assertFalse($signals->shouldKeepRunning());
     }
 
-    public function test_performance_accessors_delegate_to_service(): void
+    public function test_performance_service_reports_baseline(): void
     {
-        $command = $this->makeCommand();
+        $perf = $this->makeCommand()->getServices()->performance();
 
         // Before any timing the formatted time is the zero baseline.
-        self::assertSame(0.0, $command->getExecutionTime());
-        self::assertSame('0ms', $command->getFormattedExecutionTime());
+        self::assertSame(0.0, $perf->getExecutionTime());
+        self::assertSame('0ms', $perf->getFormattedExecutionTime());
 
-        $summary = $command->getPerformanceSummary();
+        $summary = $perf->getPerformanceSummary('laranail-test:success', []);
         self::assertSame('laranail-test:success', $summary['command']);
     }
 
-    public function test_event_toggles_are_fluent(): void
+    public function test_event_toggles_take_effect(): void
     {
-        $command = $this->makeCommand();
+        $events = $this->makeCommand()->getServices()->events();
 
-        self::assertSame($command, $command->useNativeEvents(false));
-        self::assertSame($command, $command->useCustomEvents(false));
+        $events->useNativeEvents(false);
+        $events->useCustomEvents(false);
+
+        self::assertFalse($events->isNativeEventsEnabled());
+        self::assertFalse($events->isCustomEventsEnabled());
     }
 
     public function test_configure_services_is_fluent(): void
@@ -105,7 +110,7 @@ final class CommandTest extends TestCase
         $exit = $command->run(new ArrayInput([]), new BufferedOutput);
 
         self::assertSame(LifecycleSuccessCommand::SUCCESS, $exit);
-        self::assertTrue($command->getMetadata('handled'));
+        self::assertTrue($command->getServices()->metadata()->get('handled'));
     }
 
     public function test_handle_works_in_isolation(): void
@@ -114,6 +119,6 @@ final class CommandTest extends TestCase
         $command = $this->makeCommand();
 
         self::assertSame(Command::SUCCESS, $command->handle());
-        self::assertTrue($command->getMetadata('handled'));
+        self::assertTrue($command->getServices()->metadata()->get('handled'));
     }
 }

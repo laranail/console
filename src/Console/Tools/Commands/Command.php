@@ -7,28 +7,32 @@ namespace Simtabi\Laranail\Console\Tools\Commands;
 use Illuminate\Console\Command as BaseCommand;
 use Override;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
 /**
- * Enhanced Artisan command base that delegates performance, events, signals,
- * metadata, logging, errors, configuration, interaction and display to discrete
- * services via a service-based architecture.
+ * Enhanced Artisan command base. Wraps {@see BaseCommand::run()} with a managed
+ * lifecycle — performance timing, event dispatch, signal handling, structured
+ * logging and exception capture — coordinated by a {@see CommandServiceManager}.
+ *
+ * This base is intentionally thin: it owns the lifecycle and a few verbosity
+ * helpers, and exposes everything else through `$this->services` (its nine
+ * discrete services), e.g. `$this->services->metadata()->add(...)`,
+ * `$this->services->interaction()->askText(...)`,
+ * `$this->services->performance()->getExecutionTime()`. Extend it when you want
+ * the full lifecycle; for a lightweight prompter command use
+ * `Prompter\Commands\AbstractPrompterCommand` instead.
  *
  * @see https://laravel.com/docs/artisan
  */
 abstract class Command extends BaseCommand
 {
     /**
-     * Command service manager
+     * Command service manager — the access point for every command service.
      */
     protected CommandServiceManager $services;
 
-    /**
-     * Class constructor
-     */
     public function __construct()
     {
         parent::__construct();
@@ -138,12 +142,10 @@ abstract class Command extends BaseCommand
         }
     }
 
-    // ========================================
-    // Service Access Methods
-    // ========================================
-
     /**
-     * Get the service manager instance
+     * Get the service manager — the access point for every command service
+     * (performance, events, signals, metadata, logger, error, config,
+     * interaction, display).
      */
     public function getServices(): CommandServiceManager
     {
@@ -151,7 +153,8 @@ abstract class Command extends BaseCommand
     }
 
     /**
-     * Configure service settings
+     * Configure service settings (native_events / custom_events / signals /
+     * non_interactive).
      */
     public function configureServices(array $config): self
     {
@@ -160,51 +163,16 @@ abstract class Command extends BaseCommand
         return $this;
     }
 
-    // ========================================
-    // Performance Methods (Delegate to Services)
-    // ========================================
-
     /**
-     * Get command execution time in seconds
-     */
-    public function getExecutionTime(): float
-    {
-        return $this->services->performance()->getExecutionTime();
-    }
-
-    /**
-     * Get formatted execution time
-     */
-    public function getFormattedExecutionTime(): string
-    {
-        return $this->services->performance()->getFormattedExecutionTime();
-    }
-
-    /**
-     * Get memory usage information
-     */
-    public function getMemoryUsage(): array
-    {
-        return $this->services->performance()->getMemoryUsage();
-    }
-
-    /**
-     * Get command performance summary
-     */
-    public function getPerformanceSummary(): array
-    {
-        return $this->services->performance()->getPerformanceSummary(
-            $this->getCommandName(),
-            $this->services->metadata()->all()
-        );
-    }
-
-    /**
-     * Display performance summary
+     * Display a performance summary for the current command via the display
+     * service.
      */
     protected function displayPerformanceSummary(): void
     {
-        $summary = $this->getPerformanceSummary();
+        $summary = $this->services->performance()->getPerformanceSummary(
+            $this->getCommandName(),
+            $this->services->metadata()->all()
+        );
 
         $this->info('Command Performance Summary:');
         $this->line("  Command: {$summary['command']}");
@@ -215,236 +183,6 @@ abstract class Command extends BaseCommand
             $this->line('  Metadata: ' . json_encode($summary['metadata']));
         }
     }
-
-    // ========================================
-    // Metadata Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Add metadata to the command
-     */
-    public function addMetadata(string $key, mixed $value): self
-    {
-        $this->services->metadata()->add($key, $value);
-
-        return $this;
-    }
-
-    /**
-     * Get metadata value
-     */
-    public function getMetadata(string $key, mixed $default = null): mixed
-    {
-        return $this->services->metadata()->get($key, $default);
-    }
-
-    /**
-     * Get all metadata
-     */
-    public function getAllMetadata(): array
-    {
-        return $this->services->metadata()->all();
-    }
-
-    // ========================================
-    // Signal Handling Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Check if command should continue running
-     */
-    public function shouldKeepRunning(): bool
-    {
-        return $this->services->signals()->shouldKeepRunning();
-    }
-
-    /**
-     * Stop the command gracefully
-     */
-    public function stop(): void
-    {
-        $this->services->signals()->stop();
-    }
-
-    // ========================================
-    // Event Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Enable or disable Laravel native events
-     */
-    public function useNativeEvents(bool $enabled = true): self
-    {
-        $this->services->events()->useNativeEvents($enabled);
-
-        return $this;
-    }
-
-    /**
-     * Enable or disable custom events
-     */
-    public function useCustomEvents(bool $enabled = true): self
-    {
-        $this->services->events()->useCustomEvents($enabled);
-
-        return $this;
-    }
-
-    // ========================================
-    // Configuration Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Get environment value via config
-     */
-    protected function getEnvValue(string $key, mixed $default = null): mixed
-    {
-        return $this->services->config()->getEnv($key, $default);
-    }
-
-    // ========================================
-    // Error Handling Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Log an error with context
-     */
-    protected function logError(Throwable $e, array $context = []): void
-    {
-        $this->services->error()->logError($e, $context);
-    }
-
-    /**
-     * Execute a callback with error handling
-     */
-    protected function executeWithErrorHandling(callable $callback, string $operation = 'operation'): mixed
-    {
-        return $this->services->error()->executeWithErrorHandling($callback, $operation);
-    }
-
-    /**
-     * Execute a callback with error handling and return default on failure
-     */
-    protected function executeWithFallback(callable $callback, mixed $fallback = null, string $operation = 'operation'): mixed
-    {
-        return $this->services->error()->executeWithFallback($callback, $fallback, $operation);
-    }
-
-    // ========================================
-    // Display Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Display a warning message
-     */
-    protected function warning(string $message): void
-    {
-        $this->services->display()->warning($message);
-    }
-
-    /**
-     * Display an error message
-     */
-    protected function errorMessage(string $message): void
-    {
-        $this->services->display()->error($message);
-    }
-
-    /**
-     * Display an info message
-     */
-    protected function infoMessage(string $message): void
-    {
-        $this->services->display()->info($message);
-    }
-
-    /**
-     * Show a progress bar for long operations
-     */
-    protected function showProgressBar(int $total, string $title = 'Processing'): ProgressBar
-    {
-        return $this->services->display()->showProgressBar($total, $title);
-    }
-
-    // ========================================
-    // Interaction Methods (Delegate to Services)
-    // ========================================
-
-    /**
-     * Show a spinner for operations with unknown duration
-     */
-    protected function showSpinner(string $message, callable $callback): mixed
-    {
-        return $this->services->interaction()->showSpinner($message, $callback);
-    }
-
-    /**
-     * Ask for text input with Laravel Prompts
-     */
-    protected function askText(string $label, string $placeholder = '', string $default = '', bool $required = false): string
-    {
-        return $this->services->interaction()->askText($label, $placeholder, $default, $required);
-    }
-
-    /**
-     * Ask for password input with Laravel Prompts
-     */
-    protected function askPassword(string $label, string $placeholder = ''): string
-    {
-        return $this->services->interaction()->askPassword($label, $placeholder);
-    }
-
-    /**
-     * Ask for confirmation with Laravel Prompts
-     */
-    protected function askConfirm(string $label, bool $default = false): bool
-    {
-        return $this->services->interaction()->askConfirm($label, $default);
-    }
-
-    /**
-     * Ask for selection with Laravel Prompts
-     */
-    protected function askSelect(string $label, array $options, int $default = 0): string
-    {
-        return $this->services->interaction()->askSelect($label, $options, $default);
-    }
-
-    /**
-     * Ask for multiple selections with Laravel Prompts
-     */
-    protected function askMultiSelect(string $label, array $options, array $default = []): array
-    {
-        return $this->services->interaction()->askMultiSelect($label, $options, $default);
-    }
-
-    /**
-     * Confirm an action with the user
-     */
-    protected function confirmAction(string $question, bool $default = false): bool
-    {
-        return $this->services->interaction()->confirmAction($question, $default);
-    }
-
-    /**
-     * Ask for user input with validation
-     */
-    protected function askWithValidation(string $question, ?callable $validator = null, mixed $default = null): mixed
-    {
-        return $this->services->interaction()->askWithValidation($question, $validator, $default);
-    }
-
-    /**
-     * Show a loading message with spinner
-     */
-    protected function showLoading(string $message, callable $callback): mixed
-    {
-        return $this->services->interaction()->showLoading($message, $callback);
-    }
-
-    // ========================================
-    // Utility Methods
-    // ========================================
 
     /**
      * Get command name for logging purposes
