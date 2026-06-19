@@ -44,8 +44,11 @@ final class Banner implements Stringable
 
     private int $padding = 1;
 
-    public function __construct(private string $title, private readonly Capabilities $capabilities = new Capabilities)
+    private readonly Capabilities $capabilities;
+
+    public function __construct(private string $title, ?Capabilities $capabilities = null)
     {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->title = ConsoleUIFormatter::sanitizeText($title);
 
         $configFont = Config::get('banner.font');

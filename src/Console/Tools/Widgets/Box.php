@@ -30,11 +30,14 @@ final class Box implements Stringable
 
     private ?int $width = null;
 
+    private readonly Capabilities $capabilities;
+
     /**
      * @param list<string> $lines
      */
-    public function __construct(private array $lines = [], private readonly Capabilities $capabilities = new Capabilities)
+    public function __construct(private array $lines = [], ?Capabilities $capabilities = null)
     {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Rounded : BorderStyle::Ascii;
     }
 
