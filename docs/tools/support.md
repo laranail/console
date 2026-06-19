@@ -158,6 +158,41 @@ Csi::sequence('H', 2, 5);                // "\e[2;5H" cursor to row 2 col 5
 (framed/encircled/overlined/conceal/blink-rapid). `Terminal` builds its cursor and
 erase sequences with `Csi`/`ControlChars`.
 
+## Keypress
+
+Raw key / arrow / modifier reader (`Console::keypress()`). The blocking reads need
+a POSIX TTY (`stty`) and are guarded by `isSupported()` — they degrade to `''`/`null`
+on Windows or a non-TTY rather than shelling out. The mappers are pure.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Keypress;
+
+if (Keypress::isSupported()) {
+    $key = Console::keypress()->listen();          // blocks; e.g. Keypress::KEY_UP
+    $key = Console::keypress()->listenNonBlocking(100); // or null on timeout
+}
+
+Keypress::translateKey("\033[A"); // 'UP'
+Keypress::getKeyName(Keypress::KEY_UP); // 'UP ARROW'
+Keypress::detectAltKey("\033a");  // 'ALT+A'
+```
+
+## Terminal
+
+Low-level terminal control (`Console::terminal($output)`), built on `Csi`/
+`ControlChars`, written raw through an output.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Terminal;
+
+Terminal::make($output)
+    ->altScreen()->hideCursor()
+    ->tabTitle('Deploying…')
+    ->moveCursor(1, 1)->clear()
+    ->bell();
+// …later: ->showCursor()->altScreen(false)->restoreTabTitle();
+```
+
 ## FileSize
 
 Human-readable byte sizes — the single source of truth for byte formatting.

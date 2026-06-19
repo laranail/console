@@ -20,6 +20,8 @@ use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -96,6 +98,16 @@ $out->writeln(Header::make('Emoji')->count(count(Emoji::make()->all()), 'shortco
 $emoji = Emoji::make();
 $out->writeln($emoji->render('Deploy :rocket:  build :check:  perf :zap:  cleanup :broom:'));
 $out->writeln($emoji->ascii()->render('ASCII mode: :rocket: :check: :zap: :broom:'));
+
+$out->writeln('');
+$out->writeln(Header::make('Panel')->render());
+$out->writeln(
+    Panel::make()->horizontal()->dividers()->border()
+        ->add(PanelBlock::make("CPU\n42%"))
+        ->add(PanelBlock::make("MEM\n7.1G"))
+        ->add(PanelBlock::make("NET\n1.2M"))
+        ->render()
+);
 
 // The demo always exits 0 so it can serve as a CI smoke check; in real use you
 // would `exit($tasks->finish())` to propagate a non-zero code on failure.

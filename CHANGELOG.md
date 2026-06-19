@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Panel layout** — `Widgets\Panel` + `Widgets\PanelBlock` (`Tools\Contracts\Renderable`):
+  a multi-column / nestable layout engine, ported and hardened from
+  `ajaxray/ansikit` (MIT). `Console::panel()`.
+- `Support\Keypress` (`Console::keypress()`) — raw key/arrow/modifier reader,
+  POSIX-guarded with pure mappers; and `Support\Terminal` (`Console::terminal()`) —
+  bell, tab title, alt-screen, cursor/erase. Ported/expanded from `ajaxray/ansikit`.
+- `THIRD_PARTY.md` crediting ajaxray/ansikit, nunomaduro/laravel-console-menu and
+  bramus/ansi-php.
 - **Banner designer** — `Banner` gains `font()` (FIGlet big-text via the new
   `Support\Figlet` `.flf`/bundled-font renderer), `align()`, `color()`/`gradient()`,
   `border()` and `padding()`, with a plain-title fallback when a font is missing or

@@ -11,9 +11,12 @@ use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -41,6 +44,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @method static TaskProgress tasks(?OutputInterface $output = null)
  * @method static Color color()
  * @method static Emoji emoji()
+ * @method static Panel panel()
+ * @method static Terminal terminal(?OutputInterface $output = null)
+ * @method static Keypress keypress()
  * @method static Capabilities capabilities()
  * @method static Prompter prompter()
  *

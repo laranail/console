@@ -9,9 +9,12 @@ use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -157,6 +160,30 @@ final class ConsoleManager
     public function emoji(): Emoji
     {
         return Emoji::make();
+    }
+
+    /**
+     * A multi-block layout (vertical/horizontal, nestable).
+     */
+    public function panel(): Panel
+    {
+        return Panel::make();
+    }
+
+    /**
+     * Low-level terminal control (bell, tab title, alt-screen, cursor/erase).
+     */
+    public function terminal(?OutputInterface $output = null): Terminal
+    {
+        return Terminal::make($output);
+    }
+
+    /**
+     * Raw key/arrow reader (POSIX TTY; degrades gracefully elsewhere).
+     */
+    public function keypress(): Keypress
+    {
+        return Keypress::make();
     }
 
     /**

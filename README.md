@@ -99,7 +99,8 @@ The package has three output styles — know which you're holding:
 | [Output formatter](docs/tools/formatting.md) | Colour/badge/link string primitives |
 | [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary… |
 | [Banner designer](docs/tools/banner.md) | FIGlet big-text, alignment, colour/gradient, borders |
-| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, TimeFormat |
+| [Panel layout](docs/tools/panel.md) | Multi-column / nestable layout (Panel + PanelBlock) |
+| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, Keypress, Terminal, ANSI primitives |
 | [Commands](docs/tools/commands.md) | The Artisan command base + services |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
