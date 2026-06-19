@@ -40,12 +40,11 @@ final class CommandDisplayServiceTest extends TestCase
 
     public function test_format_bytes_scales_units(): void
     {
-        // The loop divides only while bytes are strictly greater than 1024,
-        // so exactly 1024 stays in bytes.
+        // Scales at each 1024 boundary (1024 B -> "1 KB").
         self::assertSame('512 B', $this->display->formatBytes(512));
-        self::assertSame('1024 B', $this->display->formatBytes(1024));
+        self::assertSame('1 KB', $this->display->formatBytes(1024));
         self::assertSame('1.5 KB', $this->display->formatBytes(1536));
-        self::assertSame('1024 KB', $this->display->formatBytes(1024 * 1024));
+        self::assertSame('1 MB', $this->display->formatBytes(1024 * 1024));
         self::assertSame('1.5 MB', $this->display->formatBytes((int) (1.5 * 1024 * 1024)));
     }
 

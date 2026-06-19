@@ -27,8 +27,9 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
 | `Box` | `Console::box($content)` | `title()`, `footer()`, `content()`, `padding($n)`, `width($n)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
 | `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()`; static `Tree::fromArray($label, $nested)` |
-| `Table` | `Console::table()` | `headers()`, `rows()`, `fromAssoc($rows)`, `grouped($groups)`, `tree($rows)`, `align($map)`, `columnWidths($map)`, `maxColumnWidth($col,$w)`, `title()`, `footer()`, `style($preset)`, `render(?$output)`; static `Table::cell($v,$align,$fg,$bg)` |
+| `Table` | `Console::table()` | `headers()`, `rows()`, `fromAssoc($rows)`, `fromCollection($iterable)`, `grouped($groups)`, `tree($rows)`, `align($map)`, `columnWidths($map)`, `maxColumnWidth($col,$w)`, `title()`, `footer()`, `style($preset)`, `render(?$output)`; static `Table::cell($v,$align,$fg,$bg)` |
 | `Columns` | `Console::columns($items)` | `columns($n)` (omit / never call = auto-fit), `gap($n)`, `render()` |
+| `KeyValue` | `Console::keyValue($pairs)` | `add($key, $value)`, `separator($s)`, `render()` — aligned `key : value` |
 | `Callout` | — (class) | `Callout::success/error/warning/info($msg)`, `title()`, `render()` |
 | `Banner` | `Console::banner($title)` | `subtitle()`, `boxed($bool=true)`, `width($n)`, `render()` |
 | `Gauge` | `Console::gauge($value, $max=100)` | `label()`, `width($barWidth)`, `showValue($bool=true)`, `render()` |
@@ -146,6 +147,15 @@ echo Console::columns($files)->columns(3)->gap(4)->render();                    
 
 Flows a flat list into balanced columns (column-major, like `ls`/`artisan list`);
 `columns(0)` (default) auto-fits the terminal width.
+
+### Key/value
+
+```php
+echo Console::keyValue(['Name' => 'ada', 'Role' => 'engineer'])->render();
+echo Console::keyValue()->add('Status', 'ok')->add('Count', 0)->separator('=')->render();
+```
+
+An aligned definition list (`key : value`); keys pad to the widest key.
 
 ## Gauges, sparklines, step flow
 

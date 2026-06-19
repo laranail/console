@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console;
 
+use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
@@ -16,6 +17,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
@@ -115,6 +117,16 @@ final class ConsoleManager
     public function columns(array $items): Columns
     {
         return Columns::make($items);
+    }
+
+    /**
+     * An aligned key/value definition list.
+     *
+     * @param array<string, scalar|null> $pairs
+     */
+    public function keyValue(array $pairs = []): KeyValue
+    {
+        return KeyValue::make($pairs);
     }
 
     /**
@@ -231,10 +243,17 @@ final class ConsoleManager
 
     /**
      * A symfony/tui full-screen app. Mount our widgets with
-     * Console\Tui\RenderableWidget::of(...). Requires symfony/tui.
+     * Console\Tui\RenderableWidget::of(...). Requires the optional symfony/tui
+     * package (PHP >= 8.4.1) — install it with `composer require symfony/tui`.
+     *
+     * @throws ConsoleException when symfony/tui is not installed
      */
     public function tui(): Tui
     {
+        if (! class_exists(Tui::class)) {
+            throw ConsoleException::fromKey('console.tui_unavailable');
+        }
+
         return new Tui;
     }
 

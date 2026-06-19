@@ -21,6 +21,6 @@ body:
     attributes:
       label: Versions
       description: Package, PHP and Laravel versions.
-      placeholder: 'console 0.1.0, PHP 8.3, Laravel 13'
+      placeholder: 'console 0.3.0, PHP 8.4, Laravel 13'
     validations:
       required: true

@@ -10,10 +10,13 @@ use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormFieldService;
 use Simtabi\Laranail\Console\Prompter\Validators\AlphanumericValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\AlphaValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\ArrayValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\BooleanFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\CheckboxFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\ColorValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\DateFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\EmailFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\JsonFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\NameFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\NullOrEmptyValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\NumberFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\ObjectValidator;
@@ -22,6 +25,7 @@ use Simtabi\Laranail\Console\Prompter\Validators\PathFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\PhoneNumberValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\RadioFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\SelectFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\StringFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\TextAreaFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\TextFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\TimeFieldValidator;
@@ -57,57 +61,10 @@ enum FieldType: string
     case ALPHA = 'alpha';
     case ALPHANUMERIC = 'alphanumeric';
     case UUID_OR_INTEGER_OR_SLUG = 'uuid_or_integer_or_slug';
-
-    /**
-     * Get all enum values as array keys with custom labels.
-     */
-    public static function keysWithLabels(): array
-    {
-        return [
-            self::TEXT->value => 'Text',
-            self::NUMBER->value => 'Number',
-            self::EMAIL->value => 'Email',
-            self::PASSWORD->value => 'Password',
-            self::TEXTAREA->value => 'Textarea',
-            self::DATE->value => 'Date',
-            self::TIME->value => 'Time',
-            self::SELECT->value => 'Select',
-            self::CHECKBOX->value => 'Checkbox',
-            self::RADIO->value => 'Radio',
-            self::PATH->value => 'Path',
-            self::USERNAME->value => 'Username',
-            self::PHONE->value => 'Phone',
-            self::COLOR->value => 'Color',
-            self::NULL_OR_EMPTY->value => 'Null or Empty',
-            self::ARRAY->value => 'Array',
-            self::OBJECT->value => 'Object',
-            self::UUID->value => 'UUID',
-            self::ALPHA->value => 'Alpha',
-            self::ALPHANUMERIC->value => 'Alphanumeric',
-            self::UUID_OR_INTEGER_OR_SLUG->value => 'UUID or Integer or Slug',
-        ];
-    }
-
-    /**
-     * Get all enum values as array keys.
-     */
-    public static function keys(): array
-    {
-        $keys = [];
-        foreach (self::cases() as $case) {
-            $keys[$case->value] = $case->name;
-        }
-
-        return $keys;
-    }
-
-    /**
-     * Get the label for a specific enum value.
-     */
-    public function label(): string
-    {
-        return self::keysWithLabels()[$this->value] ?? $this->name;
-    }
+    case BOOLEAN = 'boolean';
+    case NAME = 'name';
+    case STRING = 'string';
+    case JSON = 'json';
 
     /**
      * Get the default validator for a given field type.
@@ -140,6 +97,10 @@ enum FieldType: string
             self::ALPHA => new AlphaValidator,
             self::ALPHANUMERIC => new AlphanumericValidator,
             self::UUID_OR_INTEGER_OR_SLUG => new UuidOrIntegerOrSlugValidator,
+            self::BOOLEAN => new BooleanFieldValidator,
+            self::NAME => new NameFieldValidator,
+            self::STRING => new StringFieldValidator,
+            self::JSON => new JsonFieldValidator,
             default => throw PrompterException::triggerErrorMessage('unsupported_input_type', ['type' => $type->value]),
         };
     }
@@ -173,6 +134,10 @@ enum FieldType: string
             self::ALPHA->value => 'text',
             self::ALPHANUMERIC->value => 'text',
             self::UUID_OR_INTEGER_OR_SLUG->value => 'text',
+            self::BOOLEAN->value => 'confirm',
+            self::NAME->value => 'text',
+            self::STRING->value => 'text',
+            self::JSON->value => 'textarea',
         ];
 
         if (! isset($methods[$formField->type->value])) {

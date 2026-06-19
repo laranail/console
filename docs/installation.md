@@ -10,10 +10,10 @@ composer require laranail/console
 - Laravel `^13.0` (Symfony 8 components)
 - `ext-mbstring`
 
-> The PHP `8.4.1` floor comes from the bundled, **experimental**
-> [`symfony/tui`](tools/tui.md) integration (Symfony 8 + `revolt/event-loop`,
-> `minimum-stability: dev`). Your app's `composer.json` therefore needs
-> `"minimum-stability": "dev"` with `"prefer-stable": true`.
+> The package installs **stably** — no dev-stability dependency. The optional,
+> **experimental** [`symfony/tui`](tools/tui.md) integration is *not* required;
+> install it (`composer require symfony/tui`, PHP ≥ 8.4.1, `minimum-stability: dev`)
+> only if you want the full-screen TUI. Everything else works without it.
 
 ## Service provider
 

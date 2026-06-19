@@ -245,27 +245,12 @@ class ConsoleUIFormatter implements Stringable
     // Terminal capability detection
     private bool $supportsColor = true;
 
-    // Configuration arrays
-    private array $config = [
-        'symbols' => [],
-        'colors' => [],
-        'padding' => [],
-        'display' => [],
-        'displayWidths' => [],
-    ];
-
-    // Session management
-    private array $statistics = [];
-
-    private float $startTime = 0.0;
-
     /**
      * Private constructor to enforce factory method usage
      */
     private function __construct()
     {
         $this->supportsColor = $this->detectColorSupport();
-        $this->resetStatistics();
     }
 
     /**
@@ -343,10 +328,13 @@ class ConsoleUIFormatter implements Stringable
     ): self {
         $this->foregroundColor = $text;
         $this->styleTag = $styleTag;
-        $this->isClickable = $isClickable;
+        $this->isClickable = false;
+        $this->href = null;
 
-        if ($isClickable && $href) {
-            $this->href = $href;
+        // Route the href through the same sanitisation + scheme allow-list as
+        // setHref(), so a hostile URL can't emit an arbitrary OSC-8 hyperlink.
+        if ($isClickable && $href !== null && $href !== '') {
+            $this->setHref($href);
         }
 
         return $this;
@@ -454,16 +442,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Configure the formatter with custom settings
-     */
-    public function configure(array $config): self
-    {
-        $this->config = array_merge($this->config, $config);
-
-        return $this;
-    }
-
-    /**
      * Colorize text with ANSI codes (for terminal compatibility)
      */
     public function colorize(string $text, string $color, bool $bold = false, ?string $background = null): string
@@ -485,43 +463,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Start a new session for statistics tracking
-     */
-    public function startSession(): self
-    {
-        $this->startTime = microtime(true);
-        $this->resetStatistics();
-
-        return $this;
-    }
-
-    /**
-     * Update statistics
-     */
-    public function updateStatistics(string $type, int $count = 1): self
-    {
-        $this->statistics[$type] = ($this->statistics[$type] ?? 0) + $count;
-
-        return $this;
-    }
-
-    /**
-     * Get current statistics
-     */
-    public function getStatistics(): array
-    {
-        return $this->statistics;
-    }
-
-    /**
-     * Get session duration
-     */
-    public function getSessionDuration(): float
-    {
-        return microtime(true) - $this->startTime;
-    }
-
-    /**
      * Detect colour support via the shared Capabilities detector, so the whole
      * package degrades by one consistent set of rules (NO_COLOR/FORCE_COLOR/
      * TERM/TTY).
@@ -529,20 +470,6 @@ class ConsoleUIFormatter implements Stringable
     private function detectColorSupport(): bool
     {
         return Capabilities::detect()->supportsColor();
-    }
-
-    /**
-     * Reset statistics
-     */
-    public function resetStatistics(): self
-    {
-        $this->statistics = [
-            'successful' => 0,
-            'failed' => 0,
-            'skipped' => 0,
-        ];
-
-        return $this;
     }
 
     /**

@@ -7,9 +7,8 @@ namespace Simtabi\Laranail\Console\Tools\Support;
 /**
  * Human-readable byte sizes (B / KB / MB / GB / TB).
  *
- * The single source of truth for byte formatting across the toolkit; the loop
- * scales only while the value is strictly greater than 1024, so exactly 1024
- * stays in the lower unit.
+ * The single source of truth for byte formatting across the toolkit. Scales at
+ * each 1024 boundary (1024 B → "1 KB", 1 MiB → "1 MB").
  */
 final class FileSize
 {
@@ -20,7 +19,7 @@ final class FileSize
         $value = (float) $bytes;
         $i = 0;
 
-        for (; $value > 1024 && $i < count(self::UNITS) - 1; $i++) {
+        for (; $value >= 1024 && $i < count(self::UNITS) - 1; $i++) {
             $value /= 1024;
         }
 

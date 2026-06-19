@@ -5,10 +5,19 @@ The package integrates [`symfony/tui`](https://github.com/symfony/tui) — Symfo
 keybindings, CSS-like stylesheet, event-loop renderer) — so you can build
 interactive, full-screen apps and **mount our output widgets inside them**.
 
-> **Requirements:** symfony/tui needs **PHP ≥ 8.4.1**, Symfony 8 components and
-> `revolt/event-loop`, and is shipped at `minimum-stability: dev`. It is a hard
-> dependency of this package, so the package itself requires PHP ≥ 8.4.1. The
-> component is **experimental** — its API may change between releases.
+> **Optional dependency.** `symfony/tui` is *not* required by the package — install
+> it to enable this feature:
+>
+> ```bash
+> composer require symfony/tui
+> ```
+>
+> It needs **PHP ≥ 8.4.1** (already this package's floor), Symfony 8 and
+> `revolt/event-loop`, and ships at `minimum-stability: dev`, so your app's
+> `composer.json` needs `"minimum-stability": "dev"` + `"prefer-stable": true`.
+> The component is **experimental** — its API may change. Without it,
+> `Console::tui()` throws a clear `ConsoleException`; the rest of the toolkit is
+> unaffected and installs stably.
 
 ## Mounting our widgets
 

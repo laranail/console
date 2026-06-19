@@ -6,7 +6,6 @@ namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
-use Throwable;
 
 /**
  * Command Logger Service
@@ -95,69 +94,12 @@ class CommandLoggerService
     }
 
     /**
-     * Log command error
-     */
-    public function logError(Throwable $exception, array $additionalContext = []): void
-    {
-        Log::error('Command execution failed', array_merge($this->getContext(), [
-            'exception' => $exception::class,
-            'message' => $exception->getMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'trace' => $exception->getTraceAsString(),
-        ], $additionalContext));
-    }
-
-    /**
-     * Log command warning
-     */
-    public function logWarning(string $message, array $additionalContext = []): void
-    {
-        Log::warning($message, array_merge($this->getContext(), $additionalContext));
-    }
-
-    /**
-     * Log command info
-     */
-    public function logInfo(string $message, array $additionalContext = []): void
-    {
-        Log::info($message, array_merge($this->getContext(), $additionalContext));
-    }
-
-    /**
-     * Log command debug
-     */
-    public function logDebug(string $message, array $additionalContext = []): void
-    {
-        Log::debug($message, array_merge($this->getContext(), $additionalContext));
-    }
-
-    /**
-     * Log performance metrics
-     */
-    public function logPerformance(array $performanceData, array $additionalContext = []): void
-    {
-        Log::info('Command performance metrics', array_merge($this->getContext(), $performanceData, $additionalContext));
-    }
-
-    /**
      * Log signal received
      */
     public function logSignal(int $signal, array $additionalContext = []): void
     {
         Log::info('Command received termination signal', array_merge($this->getContext(), [
             'signal' => $signal,
-        ], $additionalContext));
-    }
-
-    /**
-     * Log custom event
-     */
-    public function logEvent(string $eventName, array $eventData = [], array $additionalContext = []): void
-    {
-        Log::info("Command event: {$eventName}", array_merge($this->getContext(), [
-            'event' => $eventName,
-            'event_data' => $eventData,
         ], $additionalContext));
     }
 

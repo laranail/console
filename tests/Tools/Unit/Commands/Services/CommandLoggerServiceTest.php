@@ -6,7 +6,6 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
 use Illuminate\Support\Facades\Log;
 use Mockery;
-use RuntimeException;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandLoggerService;
 use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 
@@ -63,17 +62,6 @@ final class CommandLoggerServiceTest extends TestCase
         new CommandLoggerService('cmd')->logStart();
     }
 
-    public function test_log_error_includes_exception_metadata(): void
-    {
-        Log::shouldReceive('error')
-            ->once()
-            ->with('Command execution failed', Mockery::on(
-                fn (array $d): bool => $d['exception'] === RuntimeException::class && $d['message'] === 'kaput'
-            ));
-
-        new CommandLoggerService('cmd')->logError(new RuntimeException('kaput'));
-    }
-
     public function test_log_signal_includes_signal_number(): void
     {
         Log::shouldReceive('info')
@@ -83,16 +71,5 @@ final class CommandLoggerServiceTest extends TestCase
             ));
 
         new CommandLoggerService('cmd')->logSignal(15);
-    }
-
-    public function test_log_event_prefixes_event_name(): void
-    {
-        Log::shouldReceive('info')
-            ->once()
-            ->with('Command event: deployed', Mockery::on(
-                fn (array $d): bool => $d['event'] === 'deployed' && $d['event_data'] === ['v' => 1]
-            ));
-
-        new CommandLoggerService('cmd')->logEvent('deployed', ['v' => 1]);
     }
 }

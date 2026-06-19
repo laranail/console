@@ -232,8 +232,9 @@ Human-readable byte sizes — the single source of truth for byte formatting.
 use Simtabi\Laranail\Console\Tools\Support\FileSize;
 
 FileSize::format(512);        // '512 B'
+FileSize::format(1024);       // '1 KB'
 FileSize::format(1536);       // '1.5 KB'
-FileSize::format(1048576);    // '1024 KB' (scales only while > 1024)
+FileSize::format(1048576);    // '1 MB'
 ```
 
 [← Docs index](../../README.md#documentation)

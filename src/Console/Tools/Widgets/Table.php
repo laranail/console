@@ -139,6 +139,17 @@ final class Table implements Stringable
     }
 
     /**
+     * Build headers + rows from a Laravel Collection (or any iterable) of
+     * associative rows — headers come from the first row's keys.
+     *
+     * @param iterable<array<string, scalar|null>> $rows
+     */
+    public function fromCollection(iterable $rows): self
+    {
+        return $this->fromAssoc(array_values(is_array($rows) ? $rows : iterator_to_array($rows)));
+    }
+
+    /**
      * Segment rows under labelled group headers within a single frame.
      *
      * @param array<string, list<list<string>>> $groups label => rows
@@ -225,13 +236,15 @@ final class Table implements Stringable
         $table->setStyle(self::STYLES[$style]);
 
         if ($this->headers !== []) {
-            $table->setHeaders($this->headers);
+            $table->setHeaders(array_map(ConsoleUIFormatter::sanitizeText(...), $this->headers));
         }
 
         // Apply column tweaks AFTER setStyle (the preset replaces the active style).
         $this->applyColumns($table);
 
-        $table->setRows($this->buildRows());
+        // Strip terminal control characters from every cell at render time
+        // (TableCell instances are already sanitised in cell()).
+        $table->setRows(array_map($this->sanitizeRow(...), $this->buildRows()));
         $table->render();
 
         $rendered = $buffer->fetch();
@@ -278,6 +291,27 @@ final class Table implements Stringable
     }
 
     /**
+     * Strip terminal control characters from a row's string cells (TableCell
+     * instances and separators pass through untouched).
+     *
+     * @param list<string|TableCell>|TableCell[]|TableSeparator $row
+     * @return list<string|TableCell>|TableCell[]|TableSeparator
+     */
+    private function sanitizeRow(array|TableSeparator $row): array|TableSeparator
+    {
+        if ($row instanceof TableSeparator) {
+            return $row;
+        }
+
+        return array_map(
+            static fn (string|TableCell $cell): string|TableCell => $cell instanceof TableCell
+                ? $cell
+                : ConsoleUIFormatter::sanitizeText($cell),
+            $row,
+        );
+    }
+
+    /**
      * @return list<list<string|TableCell>|TableCell[]|TableSeparator>
      */
     private function buildRows(): array
@@ -311,7 +345,7 @@ final class Table implements Stringable
                 $built[] = new TableSeparator;
             }
 
-            $built[] = [new TableCell((string) $label, ['colspan' => $columns])];
+            $built[] = [new TableCell(ConsoleUIFormatter::sanitizeText((string) $label), ['colspan' => $columns])];
 
             foreach ($rows as $row) {
                 $built[] = $row;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use InvalidArgumentException;
+use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
 
 /**
  * FIGlet-style big-text renderer.
@@ -108,7 +108,7 @@ final class Figlet
         $path = self::fontsDir() . '/' . basename($name) . '.php';
 
         if (! is_file($path)) {
-            throw new InvalidArgumentException("Unknown bundled font: {$name}");
+            throw FontException::unknown($name);
         }
 
         /** @var array{height:int, chars:array<string, list<string>>, gap?:int} $data */
@@ -119,15 +119,17 @@ final class Figlet
 
     private static function parseFlf(string $path): self
     {
-        if (! is_file($path) || ! is_readable($path)) {
-            throw new InvalidArgumentException("Unreadable FIGlet font: {$path}");
+        // font() must not receive untrusted input; reject null-byte poisoning and
+        // require an existing, readable, regular .flf file (no directories/devices).
+        if (str_contains($path, "\0") || ! is_file($path) || ! is_readable($path)) {
+            throw FontException::unreadable($path);
         }
 
         $lines = preg_split('/\r\n|\r|\n/', (string) file_get_contents($path)) ?: [];
         $header = (string) ($lines[0] ?? '');
 
         if (! str_starts_with($header, 'flf2a')) {
-            throw new InvalidArgumentException("Not a FIGlet font: {$path}");
+            throw FontException::notAFigletFont($path);
         }
 
         $parts = preg_split('/\s+/', $header) ?: [];

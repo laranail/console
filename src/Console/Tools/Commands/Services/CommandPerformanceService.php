@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
 use Illuminate\Support\Carbon;
+use Simtabi\Laranail\Console\Tools\Support\FileSize;
 
 /**
  * Command Performance Service
@@ -88,18 +89,11 @@ class CommandPerformanceService
     }
 
     /**
-     * Format bytes to human readable format
+     * Format bytes to human readable format.
      */
     public function formatBytes(int $bytes): string
     {
-        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
-        $bytes = max($bytes, 0);
-        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-        $pow = min($pow, count($units) - 1);
-
-        $bytes /= (1 << (10 * $pow));
-
-        return round($bytes, 2) . ' ' . $units[$pow];
+        return FileSize::format(max($bytes, 0));
     }
 
     /**

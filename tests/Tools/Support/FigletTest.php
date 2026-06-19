@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Figlet;
 
@@ -31,7 +31,7 @@ final class FigletTest extends TestCase
 
     public function test_unknown_font_throws(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(FontException::class);
         Figlet::font('does-not-exist');
     }
 

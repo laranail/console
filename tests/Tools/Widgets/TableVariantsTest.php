@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Symfony\Component\Console\Helper\TableCell;
@@ -19,6 +20,20 @@ final class TableVariantsTest extends TestCase
 
         self::assertStringContainsString('name', $out);
         self::assertStringContainsString('role', $out);
+        self::assertStringContainsString('ada', $out);
+        self::assertStringContainsString('ops', $out);
+    }
+
+    public function test_from_collection_ingests_an_iterable(): void
+    {
+        $rows = new ArrayIterator([
+            ['name' => 'ada', 'role' => 'eng'],
+            ['name' => 'bay', 'role' => 'ops'],
+        ]);
+
+        $out = Table::make()->fromCollection($rows)->render();
+
+        self::assertStringContainsString('name', $out);
         self::assertStringContainsString('ada', $out);
         self::assertStringContainsString('ops', $out);
     }

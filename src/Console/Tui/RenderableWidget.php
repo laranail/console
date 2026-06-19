@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tui;
 
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Stringable;
 use Symfony\Component\Tui\Render\RenderContext;
@@ -80,6 +81,8 @@ final class RenderableWidget extends AbstractWidget
             return $content->renderLines();
         }
 
-        return preg_split('/\r\n|\r|\n/', (string) $content) ?: [''];
+        $lines = preg_split('/\r\n|\r|\n/', (string) $content) ?: [''];
+
+        return array_map(ConsoleUIFormatter::sanitizeText(...), $lines);
     }
 }

@@ -41,11 +41,7 @@
     "illuminate/contracts": "^13.0",
     "illuminate/support": "^13.0",
     "laravel/prompts": "^0.3.18|^1.0",
-    "revolt/event-loop": "^1.0",
-    "symfony/console": "^8.0",
-    "symfony/event-dispatcher": "^8.0",
-    "symfony/string": "^8.0",
-    "symfony/tui": "^8.2@dev"
+    "symfony/console": "^8.0"
   },
   "require-dev": {
     "mockery/mockery": "^1.6",
@@ -56,7 +52,11 @@
     "larastan/larastan": "^3.0",
     "laravel/pint": "^1.18",
     "rector/rector": "^2.0",
-    "roave/security-advisories": "dev-latest"
+    "roave/security-advisories": "dev-latest",
+    "symfony/tui": "^8.2@dev"
+  },
+  "suggest": {
+    "symfony/tui": "(experimental, PHP >= 8.4.1) Enables the full-screen TUI integration — Console::tui() + Console\\Tui\\RenderableWidget."
   },
   "autoload": {
     "psr-4": {

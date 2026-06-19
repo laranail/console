@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\Facades\App;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 
@@ -33,7 +34,7 @@ class CommandServiceManager
 
     protected CommandInteractionService $interaction;
 
-    protected CommandDisplayService $display;
+    protected ?CommandDisplayService $display = null;
 
     public function __construct(protected string $commandName = '', ?OutputInterface $output = null)
     {
@@ -151,7 +152,9 @@ class CommandServiceManager
      */
     public function display(): CommandDisplayService
     {
-        return $this->display;
+        // Lazy default so callers that never set an output don't hit an
+        // uninitialised typed property.
+        return $this->display ??= new CommandDisplayService(new ConsoleOutput);
     }
 
     /**

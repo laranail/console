@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use InvalidArgumentException;
+use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
@@ -182,7 +182,7 @@ final class Banner implements Stringable
 
         try {
             $rendered = Figlet::font($this->font)->render($this->title);
-        } catch (InvalidArgumentException) {
+        } catch (FontException) {
             return [$this->title];
         }
 
