@@ -1,0 +1,120 @@
+{
+  "name": "laranail/console",
+  "description": "A Rich-class console toolkit for Laravel — fluent output formatter, spinners, progress bars, boxes, trees and tables, plus a fluent prompts/forms layer with validators.",
+  "keywords": [
+    "laravel",
+    "console",
+    "artisan",
+    "terminal",
+    "tui",
+    "formatter",
+    "spinner",
+    "progress",
+    "prompts",
+    "forms",
+    "laranail"
+  ],
+  "homepage": "https://opensource.simtabi.com/console/",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Simtabi LLC",
+      "email": "opensource@simtabi.com",
+      "homepage": "https://opensource.simtabi.com",
+      "role": "Organization"
+    },
+    {
+      "name": "Imani Manyara",
+      "email": "imani@simtabi.com",
+      "role": "Maintainer"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/laranail/console/issues",
+    "source": "https://github.com/laranail/console",
+    "docs": "https://opensource.simtabi.com/console/docs/"
+  },
+  "require": {
+    "php": "^8.3 || ^8.4 || ^8.5",
+    "ext-mbstring": "*",
+    "illuminate/console": "^13.0",
+    "illuminate/contracts": "^13.0",
+    "illuminate/support": "^13.0",
+    "laravel/prompts": "^0.3|^1.0",
+    "symfony/console": "^7.0|^8.0"
+  },
+  "require-dev": {
+    "mockery/mockery": "^1.6",
+    "orchestra/testbench": "^11.0",
+    "pestphp/pest": "^3.0",
+    "phpunit/phpunit": "^11.0",
+    "phpstan/phpstan": "^2.0",
+    "larastan/larastan": "^3.0",
+    "laravel/pint": "^1.18",
+    "rector/rector": "^2.0",
+    "roave/security-advisories": "dev-latest"
+  },
+  "autoload": {
+    "psr-4": {
+      "Simtabi\\Laranail\\Console\\": "src/Console/"
+    },
+    "files": [
+      "helpers/helpers.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Simtabi\\Laranail\\Console\\Tools\\Tests\\": "tests/Tools/",
+      "Simtabi\\Laranail\\Console\\Prompter\\Tests\\": "tests/Prompter/"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/pest --colors=always",
+    "test-coverage": "@test --coverage",
+    "test-dirty": "@test --dirty --compact",
+    "examples": [
+      "php examples/tools/widgets.php > /dev/null",
+      "php examples/prompter/validators.php > /dev/null"
+    ],
+    "lint": [
+      "@pint",
+      "@phpstan",
+      "@rector"
+    ],
+    "pint": "vendor/bin/pint --test",
+    "pint-fix": "vendor/bin/pint",
+    "phpstan": "vendor/bin/phpstan analyse --no-progress",
+    "rector": "vendor/bin/rector process --dry-run",
+    "rector-fix": "vendor/bin/rector process",
+    "audit": [
+      "@composer-audit"
+    ],
+    "composer-audit": "@composer audit"
+  },
+  "replace": {
+    "laranail/console-tools": "*",
+    "laranail/prompter": "*"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "0.1.x-dev"
+    },
+    "laravel": {
+      "providers": [
+        "Simtabi\\Laranail\\Console\\Providers\\ConsoleServiceProvider"
+      ],
+      "aliases": {
+        "Console": "Simtabi\\Laranail\\Console\\Facades\\Console",
+        "Prompter": "Simtabi\\Laranail\\Console\\Prompter\\Facades\\PrompterFacade"
+      }
+    }
+  },
+  "config": {
+    "sort-packages": true,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}

@@ -1,0 +1,26 @@
+name: Bug report
+description: Report a defect in laranail/console
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug, including the expected vs actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimal code or commands that reproduce the issue.
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Package, PHP and Laravel versions.
+      placeholder: 'console 0.1.0, PHP 8.3, Laravel 13'
+    validations:
+      required: true

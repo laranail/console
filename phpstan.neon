@@ -1,0 +1,48 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+    excludePaths:
+        - vendor
+    ignoreErrors:
+        # Generic array value types in docblocks are not enforced across the
+        # (largely inherited) console layer; not a correctness concern.
+        -
+            identifier: missingType.iterableValue
+        # @method docblock hints over laravel/prompts mirror its own loosely
+        # typed Collection/Progress generics; IDE hints, not a correctness concern.
+        -
+            identifier: missingType.generics
+        # PromptService is a thin pass-through to laravel/prompts; its generic
+        # template friction (spin/table/progress) is inherent to that API.
+        -
+            identifier: argument.type
+            path: src/Console/Prompter/Services/PromptService.php
+        -
+            identifier: argument.templateType
+            path: src/Console/Prompter/Services/PromptService.php
+        -
+            identifier: return.unusedType
+            path: src/Console/Prompter/Services/PromptService.php
+        # Exhaustive enum match keeps a defensive default arm for forward-compat.
+        -
+            identifier: match.alwaysTrue
+            path: src/Console/Prompter/Enums/FieldType.php
+        # Terminal capability detection legitimately reads process env vars
+        # (NO_COLOR/TERM/FORCE_COLOR); these are not Laravel config keys.
+        -
+            identifier: larastan.noEnvCallsOutsideOfConfig
+            path: src/Console/Tools/Support/Capabilities.php
+        # Performance metrics index by a computed numeric key; harmless.
+        -
+            identifier: offsetAccess.invalidOffset
+            path: src/Console/Tools/Commands/Services/CommandPerformanceService.php
+        # Command observer matches against names that may arrive as mixed.
+        -
+            identifier: argument.type
+            path: src/Console/Tools/Observers/ConsoleCommandObserver.php
+    reportUnmatchedIgnoredErrors: false
+    treatPhpDocTypesAsCertain: false
