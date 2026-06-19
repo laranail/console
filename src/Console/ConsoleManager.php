@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console;
 
+use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
@@ -231,10 +232,17 @@ final class ConsoleManager
 
     /**
      * A symfony/tui full-screen app. Mount our widgets with
-     * Console\Tui\RenderableWidget::of(...). Requires symfony/tui.
+     * Console\Tui\RenderableWidget::of(...). Requires the optional symfony/tui
+     * package (PHP >= 8.4.1) — install it with `composer require symfony/tui`.
+     *
+     * @throws ConsoleException when symfony/tui is not installed
      */
     public function tui(): Tui
     {
+        if (! class_exists(Tui::class)) {
+            throw ConsoleException::fromKey('tui_unavailable');
+        }
+
         return new Tui;
     }
 

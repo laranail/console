@@ -11,5 +11,11 @@ return [
     // Errors
     'render_failed' => 'The :widget widget could not render: :reason',
     'invalid_color' => "':value' is not a valid hex colour or known colour name.",
+    'tui_unavailable' => 'The TUI integration requires symfony/tui (PHP >= 8.4.1). Install it with: composer require symfony/tui',
+
+    // Fonts (Figlet)
+    'font_unknown' => "Unknown bundled font ':name'.",
+    'font_unreadable' => "Unreadable FIGlet font ':path'.",
+    'font_invalid' => "':path' is not a FIGlet font (missing flf2a header).",
 
 ];
