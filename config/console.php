@@ -76,6 +76,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Interactive menu
+    |--------------------------------------------------------------------------
+    | Defaults for Console::menu(). foreground is a hex/colour name (or null),
+    | width is the frame width (or null to auto-fit).
+    */
+    'menu' => [
+        'foreground' => env('CONSOLE_MENU_FG'),
+        'width' => env('CONSOLE_MENU_WIDTH'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Hyperlinks
     |--------------------------------------------------------------------------
     | Only these URL schemes are allowed in OSC-8 terminal hyperlinks. Anything

@@ -14,6 +14,7 @@ use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
@@ -168,6 +169,16 @@ final class ConsoleManager
     public function panel(): Panel
     {
         return Panel::make();
+    }
+
+    /**
+     * A native interactive menu (key-driven on a TTY, prompts fallback otherwise).
+     *
+     * @param array<int|string, string>|list<string> $options
+     */
+    public function menu(string $title = '', array $options = []): Menu
+    {
+        return Menu::make($title, $options);
     }
 
     /**

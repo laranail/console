@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Interactive menu** — `Widgets\Menu\*` (`Console::menu()` + a `Command::macro('menu')`):
+  a native key-driven menu (options, checkboxes, radios, sub-menus, static items,
+  free-text questions) with a `laravel/prompts` fallback for non-TTY/Windows. No
+  `php-school/cli-menu` dependency. Configurable via `config('console.menu.*')`.
+  Mirrors the nunomaduro/laravel-console-menu API (MIT).
 - **Panel layout** — `Widgets\Panel` + `Widgets\PanelBlock` (`Tools\Contracts\Renderable`):
   a multi-column / nestable layout engine, ported and hardened from
   `ajaxray/ansikit` (MIT). `Console::panel()`.

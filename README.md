@@ -100,6 +100,7 @@ The package has three output styles — know which you're holding:
 | [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary… |
 | [Banner designer](docs/tools/banner.md) | FIGlet big-text, alignment, colour/gradient, borders |
 | [Panel layout](docs/tools/panel.md) | Multi-column / nestable layout (Panel + PanelBlock) |
+| [Interactive menu](docs/tools/menu.md) | Key-driven menu with a prompts fallback |
 | [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, Keypress, Terminal, ANSI primitives |
 | [Commands](docs/tools/commands.md) | The Artisan command base + services |
 | [Runners](docs/tools/runners.md) | Conditional console execution |

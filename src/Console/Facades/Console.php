@@ -16,6 +16,7 @@ use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
@@ -45,6 +46,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @method static Color color()
  * @method static Emoji emoji()
  * @method static Panel panel()
+ * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)
  * @method static Keypress keypress()
  * @method static Capabilities capabilities()
