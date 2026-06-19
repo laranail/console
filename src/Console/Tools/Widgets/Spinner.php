@@ -10,6 +10,7 @@ use Simtabi\Laranail\Console\Tools\Enums\SpinnerFrames;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,6 +35,10 @@ final class Spinner
     private int $index = 0;
 
     private bool $active = false;
+
+    private bool $showElapsed = false;
+
+    private ?float $startedAt = null;
 
     private readonly OutputInterface $output;
 
@@ -69,6 +74,16 @@ final class Spinner
     }
 
     /**
+     * Show elapsed time in the manual-mode frame line (run() is unaffected).
+     */
+    public function elapsed(bool $show = true): self
+    {
+        $this->showElapsed = $show;
+
+        return $this;
+    }
+
+    /**
      * Animate the spinner while $callback runs; return the callback's result.
      *
      * Note: run() delegates animation to Laravel Prompts, which uses its own
@@ -84,6 +99,7 @@ final class Spinner
     {
         $this->active = true;
         $this->index = 0;
+        $this->startedAt = microtime(true);
 
         if ($this->capabilities->isInteractive()) {
             (new Cursor($this->output))->hide();
@@ -98,15 +114,34 @@ final class Spinner
             return $this;
         }
 
-        $set = $this->frames->frames($this->capabilities->supportsUnicode());
-        $frame = $set[$this->index % count($set)];
         $this->index++;
 
         if ($this->capabilities->isInteractive()) {
-            $this->output->write("\r" . $frame . ' ' . $this->message);
+            $this->output->write("\r" . $this->frameLine());
         }
 
         return $this;
+    }
+
+    /**
+     * The current frame line (frame + message + optional elapsed), as written by
+     * advance(). Useful for testing/peeking without a TTY.
+     */
+    public function frameLine(): string
+    {
+        $set = $this->frames->frames($this->capabilities->supportsUnicode());
+        $frame = $set[$this->index % count($set)];
+
+        return $frame . ' ' . $this->message . $this->elapsedSuffix();
+    }
+
+    private function elapsedSuffix(): string
+    {
+        if (! $this->showElapsed || $this->startedAt === null) {
+            return '';
+        }
+
+        return ' ' . TimeFormat::duration(max(microtime(true) - $this->startedAt, 0.0));
     }
 
     /**

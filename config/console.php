@@ -49,6 +49,45 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Banner
+    |--------------------------------------------------------------------------
+    | font  : default FIGlet font for big-text banners — a bundled font name
+    |         (e.g. "block") or a path to a ".flf" file. null = plain title.
+    | width : default inner content width, or null to auto-fit the terminal.
+    */
+    'banner' => [
+        'font' => env('CONSOLE_BANNER_FONT'),
+        'width' => env('CONSOLE_BANNER_WIDTH'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Emoji
+    |--------------------------------------------------------------------------
+    | mode   : auto | unicode | ascii — "auto" follows Unicode capability.
+    | custom : extra/override emoji, keyed by name. Each value is
+    |          [unicode, ascii] or a single string used for both, e.g.
+    |          'deploy' => ['🚀', '>>'].
+    */
+    'emoji' => [
+        'mode' => env('CONSOLE_EMOJI_MODE', 'auto'),
+        'custom' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Interactive menu
+    |--------------------------------------------------------------------------
+    | Defaults for Console::menu(). foreground is a hex/colour name (or null),
+    | width is the frame width (or null to auto-fit).
+    */
+    'menu' => [
+        'foreground' => env('CONSOLE_MENU_FG'),
+        'width' => env('CONSOLE_MENU_WIDTH'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Hyperlinks
     |--------------------------------------------------------------------------
     | Only these URL schemes are allowed in OSC-8 terminal hyperlinks. Anything

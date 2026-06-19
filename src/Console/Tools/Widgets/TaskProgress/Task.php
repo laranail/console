@@ -93,4 +93,24 @@ final class Task
 
         return (int) round(min(1.0, $this->current / $this->total) * 100);
     }
+
+    /**
+     * Estimated time remaining (seconds), or null when it can't be computed
+     * (no total, no progress yet, or not started). Returns 0.0 once finished.
+     */
+    public function eta(): ?float
+    {
+        if ($this->total <= 0 || $this->current <= 0 || $this->startedAt === null) {
+            return null;
+        }
+
+        if ($this->finishedAt !== null) {
+            return 0.0;
+        }
+
+        $elapsed = $this->elapsed();
+        $estimatedTotal = $elapsed / $this->current * $this->total;
+
+        return max($estimatedTotal - $elapsed, 0.0);
+    }
 }

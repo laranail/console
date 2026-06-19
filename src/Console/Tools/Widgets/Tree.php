@@ -36,6 +36,41 @@ final class Tree implements Stringable
     }
 
     /**
+     * Build a tree from a nested array: an array value becomes a branch labelled
+     * by its key; a scalar value becomes a leaf (labelled `value` for list keys,
+     * or `key: value` for string keys).
+     *
+     * @param array<int|string, mixed> $nested
+     */
+    public static function fromArray(string $label, array $nested): self
+    {
+        $tree = new self($label);
+        $tree->appendArray($nested);
+
+        return $tree;
+    }
+
+    /**
+     * @param array<int|string, mixed> $nested
+     */
+    private function appendArray(array $nested): void
+    {
+        foreach ($nested as $key => $value) {
+            if (is_array($value)) {
+                /** @var array<int|string, mixed> $value */
+                $this->child((string) $key, function (self $node) use ($value): void {
+                    $node->appendArray($value);
+                });
+
+                continue;
+            }
+
+            $leaf = is_int($key) ? (string) $value : $key . ': ' . $value;
+            $this->child($leaf);
+        }
+    }
+
+    /**
      * Add a child node. The optional callback receives the new child for nesting.
      */
     public function child(string $label, ?callable $build = null): self

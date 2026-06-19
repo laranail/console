@@ -10,9 +10,12 @@ Console
 ├── Providers\ConsoleServiceProvider   # config + lang + registers child providers
 ├── Exceptions\ConsoleException        # base, fromKey() with safe fallback
 ├── Tools\                   # OUTPUT
-│   ├── Formatting\          # ConsoleUIFormatter
-│   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress…
-│   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color
+│   ├── Formatting\          # ConsoleUIFormatter (colour/badge/link primitives)
+│   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress,
+│   │                        #   Summary, Header, Banner, Panel/PanelBlock, Menu\…
+│   ├── Contracts\           # Renderable (panel composition)
+│   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color,
+│   │                        #   Emoji, Figlet, Keypress, Terminal, Sgr/ControlChars/Csi
 │   ├── Commands\            # Command (enhanced base) + Services\ (nine services)
 │   ├── Runners\             # BaseRunner + ConsoleRunner
 │   ├── Observers\, Events\  # command lifecycle hooks + CommandEvents
@@ -41,9 +44,11 @@ why Unicode/colour degrade consistently and aligned output never drifts.
 
 ## Dependencies
 
-Only `illuminate/console`, `illuminate/support`, `illuminate/contracts`,
-`laravel/prompts` and `symfony/console` — no heavyweight additions, no
-dependency on the laranail core package.
+`illuminate/console`, `illuminate/support`, `illuminate/contracts`,
+`laravel/prompts`, `symfony/console` (^8), plus the experimental `symfony/tui`
+(+ `symfony/event-dispatcher`, `symfony/string`, `revolt/event-loop`) powering the
+full-screen [TUI integration](tools/tui.md) — which raises the floor to PHP 8.4.1.
+No dependency on the laranail core package.
 
 ---
 

@@ -19,20 +19,26 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 
 | Widget | Facade | Key fluent methods |
 |--------|--------|--------------------|
-| `Spinner` | `Console::spinner($msg)` | `frames(SpinnerFrames\|string)`, `run(callable)`, `start()`, `advance()`, `finish($status='success', ?$msg=null)` |
+| `Spinner` | `Console::spinner($msg)` | `frames(SpinnerFrames\|string)`, `elapsed($bool=true)`, `run(callable)`, `start()`, `advance()`, `finish($status='success', ?$msg=null)` |
 | `ProgressBar` | `Console::progress($output, $max)` | `format(ProgressStyle\|string)`, `glyphs(string)`, `start(?$max)`, `advance($n=1)`, `setProgress($n)`, `finish()`, `raw()` |
 | `TaskProgress` | `Console::tasks($output)` | `task($name, $total=0): Task`, `draw()`, `finish(): int`, `exitCode(): int` |
-| `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()` |
+| `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()`, `eta()` |
 | `StatusLine` | `Console::status()` | `success/error/warning/info/pending($msg)`, `line($status, $msg)` → **markup string** |
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
 | `Box` | `Console::box($content)` | `title()`, `footer()`, `content()`, `padding($n)`, `width($n)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
-| `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()` |
-| `Table` | `Console::table()` | `headers()`, `rows()`, `grouped($groups)`, `tree($rows)`, `style($preset)`, `render(?$output)` |
+| `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()`; static `Tree::fromArray($label, $nested)` |
+| `Table` | `Console::table()` | `headers()`, `rows()`, `fromAssoc($rows)`, `grouped($groups)`, `tree($rows)`, `align($map)`, `columnWidths($map)`, `maxColumnWidth($col,$w)`, `title()`, `footer()`, `style($preset)`, `render(?$output)`; static `Table::cell($v,$align,$fg,$bg)` |
+| `Columns` | `Console::columns($items)` | `columns($n=0)` (0=auto-fit), `gap($n)`, `render()` |
 | `Callout` | — (class) | `Callout::success/error/warning/info($msg)`, `title()`, `render()` |
 | `Banner` | `Console::banner($title)` | `subtitle()`, `boxed($bool=true)`, `width($n)`, `render()` |
 | `Gauge` | `Console::gauge($value, $max=100)` | `label()`, `width($barWidth)`, `showValue($bool=true)`, `render()` |
 | `Sparkline` | `Console::sparkline($values)` | `render()` (numeric-summary fallback without Unicode) |
 | `StepFlow` | `Console::steps($steps)` | `step($label)`, `current($index)`, `render()` |
+| `Summary` | — (class) | `Summary::make($stats, $title='EXECUTION SUMMARY')`, `render()` → **raw ANSI** |
+| `Header` | — (class) | `Header::make($title)`, `count($n, $label='items')`, `render()` → **raw ANSI** |
+| `Panel` | `Console::panel()` | `add(Renderable)`, `vertical()`/`horizontal()`, `dividers()`, `border()`, `sizes()`, `style()`, `render(?$output)` → see [panel.md](panel.md) |
+| `PanelBlock` | — (class) | `PanelBlock::make($content)`, `width()`, `height()`, `wrap()`, `border()`, `style()`, `render()` |
+| `Menu` | `Console::menu($title, $options)` | interactive — `addOption/addCheckbox/addRadio/addSubMenu/addQuestion`, `open()` → see [menu.md](menu.md) |
 
 ## Spinner
 
@@ -71,8 +77,29 @@ $tasks->task('Upload')->fail('network error');
 exit($tasks->finish()); // non-zero if any task failed
 ```
 
-Redraws in place on a TTY (`ConsoleSectionOutput`); on a non-TTY it emits one line
-per state change (start / warn / terminal) so CI logs stay readable.
+Each row shows the status glyph, name, count, percent, **elapsed and a live ETA**
+(`Task::eta()`, estimated from elapsed progress; `null` until there's progress,
+`0.0` once finished). Redraws in place on a TTY (`ConsoleSectionOutput`); on a
+non-TTY it emits one line per state change (start / warn / terminal) so CI logs
+stay readable.
+
+## Summary & header
+
+```php
+echo Header::make('Modules')->count(12, 'items')->render();   // 📦 Modules (12 items)
+echo Summary::make([
+    'total' => 3, 'success' => 2, 'failed' => 1,
+    'totalTime' => 1234.0,                       // milliseconds
+    'fastest' => ['class' => 'Fast', 'time' => 10.0],
+    'slowest' => ['class' => 'Slow', 'time' => 900.0],
+    'errors'  => [['class' => 'Boom', 'type' => 'RuntimeException', 'message' => '…']],
+])->render();
+```
+
+`Summary` renders an execution report (statistics, performance metrics, error
+details, status badges) from a stats array; `Header` a glyph-prefixed section
+title with an optional item count. Both return echo-safe raw ANSI. (These were
+previously static helpers on `ConsoleUIFormatter`; they now live here as widgets.)
 
 ## Status, rule, box, tree
 
@@ -84,6 +111,10 @@ echo Console::tree('app')->child('Console', fn ($t) => $t->child('Tools'))->chil
 ```
 
 A fixed `Box`/`Rule` `width()` is a minimum — content never overflows the frame.
+`Tree::fromArray('app', ['Console' => ['Commands'], 'config' => ['app.php']])` builds
+a tree from a nested array (array value → branch, scalar → leaf); `status()` prefixes
+a node with a glyph (`success`/`error`/`warning`/`info`/`pending`/`running`/`skipped`).
+`Console::spinner('Building')->elapsed()->start()` shows elapsed time in manual mode.
 
 ## Tables, callouts, banners
 
@@ -96,6 +127,25 @@ echo Console::banner('app v1.0')->subtitle('Simtabi')->boxed()->render();
 ```
 
 Table styles: `ascii`, `light`, `double`, `compact`, `borderless`, `markdown`.
+
+```php
+// Build from associative rows, right-align a column, add titles + a styled cell.
+echo Console::table()->fromAssoc([['name' => 'ada', 'role' => 'eng']])->render();
+echo Console::table()
+    ->headers(['Item', 'Size'])
+    ->rows([['disk', Table::cell('512', align: 'right', fg: 'green')], ['ram', '8']])
+    ->align(['Size' => 'right'])->title('Report')->footer('2 rows')->render();
+```
+
+### Columns
+
+```php
+echo Console::columns(['alpha', 'beta', 'gamma', 'delta', 'epsilon'])->render(); // auto-fit
+echo Console::columns($files)->columns(3)->gap(4)->render();                      // fixed 3 cols
+```
+
+Flows a flat list into balanced columns (column-major, like `ls`/`artisan list`);
+`columns(0)` (default) auto-fits the terminal width.
 
 ## Gauges, sparklines, step flow
 

@@ -18,18 +18,25 @@ Each call returns the `Prompter` (fluent); the entered value is read with
 `Prompter` from the container each return a **fresh instance**, so one chain's
 `getResult()` never clobbers another's.
 
-All `laravel/prompts` types are available — `text`, `textarea`, `password`,
-`select`, `multiselect`, `confirm`, `suggest`, `search`, `multisearch`, `pause`,
-`spin`, `progress`, `table`, `form`.
+**Every `laravel/prompts` helper is available** — the wrapper forwards any unknown
+method to the matching `Laravel\Prompts\{name}()` function, so it auto-tracks the
+full prompts API (current and future) without per-method maintenance:
+
+`text`, `textarea`, `password`, `number`, `confirm`, `select`, `multiselect`,
+`suggest`, `search`, `multisearch`, `autocomplete`, `pause`, `clear`, `spin`,
+`progress`, `task`, `table`, `datatable`, `grid`, `stream`, `form`, and the
+context helpers `note`, `info`, `warning`, `error`, `alert`, `intro`, `outro`,
+`title`, `notify`. An unknown method throws `PrompterException`. Requires
+`laravel/prompts` `^0.3.18 || ^1.0`.
 
 ### Context output
 
-The seven context helpers are reachable directly on the prompter or via
-`->context()`:
+The context helpers are reachable directly on the prompter or via `->context()`:
 
 ```php
-prompter()->note('Saved.');           // also: error, warning, alert, info, intro, outro
+prompter()->note('Saved.');           // also: error, warning, alert, info, intro, outro, title
 prompter()->context()->warning('Heads up');
+prompter()->number('Port', default: 8080)->getResult();   // newer prompts helpers too
 ```
 
 ## Forms

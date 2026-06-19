@@ -13,7 +13,7 @@ A Rich-class console toolkit for Laravel. One package, two namespaces:
 - **`Console\Prompter`** — terminal **input**: a fluent wrapper over
   `laravel/prompts` with a form builder and 25 validators.
 
-Targets PHP `^8.3` (8.3–8.5) on Laravel `^13`.
+Targets PHP `^8.4.1` (8.4.1–8.5) on Laravel `^13` (Symfony 8).
 
 ## Install
 
@@ -74,8 +74,9 @@ The package has three output styles — know which you're holding:
 | Style | APIs | How to print |
 |-------|------|--------------|
 | **Symfony markup** (e.g. `<fg=green>…</>`) | `Console::status()`, `ConsoleUIFormatter::success()/format()/badge()` | `$output->writeln(...)` / `$this->line(...)` — renders colour on a TTY, stripped when piped. Echoing prints literal tags. |
-| **Finished strings** | `box`, `tree`, `table`, `rule`, `gauge`, `sparkline`, `banner`, `steps`, `callout`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
+| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `rule`, `gauge`, `sparkline`, `banner`, `steps`, `callout`, `Summary`, `Header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
 | **Self-writing** | `spinner`, `progress`, `tasks` | They write to the output you pass them. |
+| **Interactive** | `prompter`, `menu`, `keypress`, `tui` | They read input / run a loop and return values — not render strings. |
 
 ## Security & portability
 
@@ -96,16 +97,25 @@ The package has three output styles — know which you're holding:
 | [Architecture](docs/architecture.md) | Umbrella, sub-domains, the manager |
 | [Configuration](docs/configuration.md) | Every `config/console.php` key |
 | [Internationalization](docs/i18n.md) | Translating console strings |
-| [Output formatter](docs/tools/formatting.md) | Colours, badges, status, links, reports |
-| [Output widgets](docs/tools/widgets.md) | Spinner, progress, box, tree, table, gauge… |
-| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, BorderStyle |
+| [Output formatter](docs/tools/formatting.md) | Colour/badge/link string primitives |
+| [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary… |
+| [Banner designer](docs/tools/banner.md) | FIGlet big-text, alignment, colour/gradient, borders |
+| [Panel layout](docs/tools/panel.md) | Multi-column / nestable layout (Panel + PanelBlock) |
+| [Interactive menu](docs/tools/menu.md) | Key-driven menu with a prompts fallback |
+| [Full-screen TUI](docs/tools/tui.md) | symfony/tui integration — mount our widgets in a TUI app |
+| [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, Keypress, Terminal, ANSI primitives |
 | [Commands](docs/tools/commands.md) | The Artisan command base + services |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
 | [Prompts & forms](docs/tools/prompter.md) | The Prompter, forms and validators |
 
-Changelog: [CHANGELOG.md](CHANGELOG.md).
+Online docs: <https://opensource.simtabi.com/console/docs/> ·
+Changelog: [CHANGELOG.md](CHANGELOG.md) · Third-party notices: [THIRD_PARTY.md](THIRD_PARTY.md).
+
+> **Requires PHP `^8.4.1`** (Laravel `^13`, Symfony 8) — the floor comes from the
+> experimental [`symfony/tui`](docs/tools/tui.md) integration; your app needs
+> `"minimum-stability": "dev"`.
 
 ## Local development
 
@@ -128,6 +138,7 @@ composer audit                # composer audit (security advisories)
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development guidelines and PR expectations.
 - [SECURITY.md](SECURITY.md) — how to report a vulnerability (opensource@simtabi.com).
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — community expectations.
+- [THIRD_PARTY.md](THIRD_PARTY.md) — credits for AnsiKit, laravel-console-menu, ansi-php, symfony/tui and bundled fonts.
 
 ## License
 

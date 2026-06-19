@@ -14,10 +14,15 @@ declare(strict_types=1);
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
+use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -31,6 +36,10 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 $out = new ConsoleOutput;
 
 $out->writeln(Banner::make('laranail/console')->subtitle('widget demo')->width(40)->render());
+$out->writeln('');
+
+// Banner designer: FIGlet big-text with a gradient fill.
+$out->writeln(Banner::make('DEPLOY')->font('block')->gradient(['#00ffff', '#ff00ff'])->render());
 $out->writeln('');
 
 $status = StatusLine::make();
@@ -84,6 +93,26 @@ $tasks->task('Compile', 1)->advance(1)->succeed();
 $tasks->task('Bundle', 1)->advance(1)->succeed('cached');
 $tasks->task('Upload', 1)->fail('network error');
 $tasks->finish();
+
+$out->writeln('');
+$out->writeln(Header::make('Columns')->render());
+$out->writeln(Columns::make(array_map(static fn (int $i): string => "item-{$i}", range(1, 12)))->columns(4)->render());
+
+$out->writeln('');
+$out->writeln(Header::make('Emoji')->count(count(Emoji::make()->all()), 'shortcodes')->render());
+$emoji = Emoji::make();
+$out->writeln($emoji->render('Deploy :rocket:  build :check:  perf :zap:  cleanup :broom:'));
+$out->writeln($emoji->ascii()->render('ASCII mode: :rocket: :check: :zap: :broom:'));
+
+$out->writeln('');
+$out->writeln(Header::make('Panel')->render());
+$out->writeln(
+    Panel::make()->horizontal()->dividers()->border()
+        ->add(PanelBlock::make("CPU\n42%"))
+        ->add(PanelBlock::make("MEM\n7.1G"))
+        ->add(PanelBlock::make("NET\n1.2M"))
+        ->render()
+);
 
 // The demo always exits 0 so it can serve as a CI smoke check; in real use you
 // would `exit($tasks->finish())` to propagate a non-zero code on failure.

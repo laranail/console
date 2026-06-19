@@ -4,16 +4,18 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Providers;
 
+use Illuminate\Console\Command;
 use Illuminate\Support\ServiceProvider;
 use Override;
+use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 
 /**
  * Child provider for the Tools sub-domain.
  *
  * Tools classes are either static (ConsoleUIFormatter), instantiated directly
  * (widgets, the command base + services), or extended (Command) — none require
- * container bindings today. The class is the wiring point for any future Tools
- * bindings.
+ * container bindings today. It also registers the `menu()` command macro for
+ * drop-in parity with nunomaduro/laravel-console-menu.
  */
 final class ToolsServiceProvider extends ServiceProvider
 {
@@ -21,5 +23,12 @@ final class ToolsServiceProvider extends ServiceProvider
     public function register(): void
     {
         //
+    }
+
+    public function boot(): void
+    {
+        if (! Command::hasMacro('menu')) {
+            Command::macro('menu', fn (string $title = '', array $options = []): Menu => Menu::make($title, $options));
+        }
     }
 }

@@ -42,4 +42,23 @@ final class TimeFormat
 
         return "{$hours}h {$minutes}m";
     }
+
+    /**
+     * Millisecond-scale formatting with adaptive units:
+     *   < 1s   -> "812.40 ms"
+     *   < 1m   -> "3.45 s"
+     *   >= 1m  -> "1.20 min"
+     */
+    public static function fromMillis(float $ms): string
+    {
+        if ($ms < 0) {
+            $ms = 0.0;
+        }
+
+        return match (true) {
+            $ms < 1000 => number_format($ms, 2) . ' ms',
+            $ms < 60000 => number_format($ms / 1000, 2) . ' s',
+            default => number_format($ms / 60000, 2) . ' min',
+        };
+    }
 }

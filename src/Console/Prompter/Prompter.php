@@ -7,7 +7,6 @@ namespace Simtabi\Laranail\Console\Prompter;
 use Closure;
 use Illuminate\Support\Collection;
 use Laravel\Prompts\FormBuilder;
-use Simtabi\Laranail\Console\Prompter\Enums\ContextType;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
 use Simtabi\Laranail\Console\Prompter\Services\PromptService;
@@ -30,6 +29,23 @@ use Simtabi\Laranail\Console\Prompter\Services\PromptService;
  * @method static self spin(Closure $callback, string $message = '')
  * @method static self table(array|Collection $headers = [], array|Collection|null $rows = null)
  * @method static self progress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '')
+ * @method static self number(string $label, string $placeholder = '', int|string $default = '', ?int $min = null, ?int $max = null, int $step = 1, bool|string $required = false, mixed $validate = null, string $hint = '')
+ * @method static self autocomplete(string $label, array|Collection|Closure $options, string $placeholder = '', string $default = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = '', ?int $matches = null)
+ * @method static self pause(string $message = 'Press enter to continue...')
+ * @method static self clear()
+ * @method static self note(string $message, ?string $type = null)
+ * @method static self info(string $message)
+ * @method static self warning(string $message)
+ * @method static self error(string $message)
+ * @method static self alert(string $message)
+ * @method static self intro(string $message)
+ * @method static self outro(string $message)
+ * @method static self title(string $message)
+ * @method static self notify(string $title, string $message)
+ * @method static self task(string $label, ?Closure $callback = null, string $hint = '')
+ * @method static self datatable(array|Collection $columns = [], array|Collection|null $rows = null)
+ * @method static self grid(array|Collection $items = [], int $columns = 3)
+ * @method static self stream(iterable|Closure $stream)
  */
 class Prompter
 {
@@ -82,17 +98,11 @@ class Prompter
      */
     public function __call(string $method, array $arguments): self
     {
-        // Prompt types live in PromptService's closure map (dispatched via its
-        // own __call), so method_exists() can't see them — ask has() instead.
+        // has() covers both the mapped prompt types and every laravel/prompts
+        // helper (prompts, context output, number/clear/datatable/grid/task/…),
+        // so the wrapper exposes the whole prompts API and tracks new additions.
         if ($this->promptManager->has($method)) {
             $this->result = $this->promptManager->$method(...$arguments);
-
-            return $this;
-        }
-
-        // Context output methods (note/info/warning/error/alert/intro/outro).
-        if (ContextType::tryFrom($method) instanceof ContextType) {
-            $this->result = $this->context()->{$method}(...$arguments);
 
             return $this;
         }
