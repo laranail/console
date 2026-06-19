@@ -49,6 +49,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Emoji
+    |--------------------------------------------------------------------------
+    | mode   : auto | unicode | ascii — "auto" follows Unicode capability.
+    | custom : extra/override emoji, keyed by name. Each value is
+    |          [unicode, ascii] or a single string used for both, e.g.
+    |          'deploy' => ['🚀', '>>'].
+    */
+    'emoji' => [
+        'mode' => env('CONSOLE_EMOJI_MODE', 'auto'),
+        'custom' => [],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Hyperlinks
     |--------------------------------------------------------------------------
     | Only these URL schemes are allowed in OSC-8 terminal hyperlinks. Anything

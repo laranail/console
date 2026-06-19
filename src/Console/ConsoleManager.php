@@ -8,6 +8,7 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
@@ -148,6 +149,14 @@ final class ConsoleManager
     public function color(): Color
     {
         return Color::make();
+    }
+
+    /**
+     * Emoji helper — Unicode or ASCII, configurable per call (auto/unicode/ascii).
+     */
+    public function emoji(): Emoji
+    {
+        return Emoji::make();
     }
 
     /**

@@ -66,7 +66,28 @@ DisplayWidth::of("\033[31mhello\033[0m"); // 5
 DisplayWidth::pad('hi', 5);               // 'hi   '
 DisplayWidth::padLeft('hi', 5);           // '   hi'
 DisplayWidth::center('hi', 6);            // '  hi  '
+DisplayWidth::truncate('hello world', 5); // 'hello' (by display width, wide-char aware)
 ```
+
+## Emoji
+
+Serves Unicode emoji or an ASCII fallback, decided by mode (`auto` follows
+`Capabilities::supportsUnicode()`). Configurable globally via
+`config('console.emoji.mode')` / `config('console.emoji.custom')`, and per call.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
+
+Console::emoji()->get('rocket');                    // 🚀  (or '->' in ascii mode)
+Console::emoji()->ascii()->get('rocket');           // '->'
+Console::emoji()->render('Build :check: in :zap:'); // 'Build ✅ in ⚡'
+Console::emoji()->with(['deploy' => ['🚀', '>>']])->get('deploy');
+Console::emoji()->strip('Done :tada:');             // 'Done'  (for plain logs)
+```
+
+`get($name, $default)` returns `$default` (or `''`) for unknown names; `render()`
+leaves unknown `:shortcodes:` untouched; `with()` adds/overrides
+(`[unicode, ascii]` or a single string); `has()`/`all()` introspect the set.
 
 ## Symbols
 
@@ -107,9 +128,22 @@ Three-tier duration formatting used by progress bars and task rows.
 ```php
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 
-TimeFormat::duration(45.2);  // '45.2s'
+TimeFormat::duration(45.2);  // '45.2s'   (seconds)
 TimeFormat::duration(138);   // '2m 18s'
 TimeFormat::duration(4080);  // '1h 8m'
+TimeFormat::fromMillis(812); // '812.00 ms' (milliseconds → ms / s / min)
+```
+
+## FileSize
+
+Human-readable byte sizes — the single source of truth for byte formatting.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\FileSize;
+
+FileSize::format(512);        // '512 B'
+FileSize::format(1536);       // '1.5 KB'
+FileSize::format(1048576);    // '1024 KB' (scales only while > 1024)
 ```
 
 [← Docs index](../../README.md#documentation)

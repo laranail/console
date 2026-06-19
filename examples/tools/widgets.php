@@ -14,10 +14,12 @@ declare(strict_types=1);
 require __DIR__ . '/../../vendor/autoload.php';
 
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -84,6 +86,12 @@ $tasks->task('Compile', 1)->advance(1)->succeed();
 $tasks->task('Bundle', 1)->advance(1)->succeed('cached');
 $tasks->task('Upload', 1)->fail('network error');
 $tasks->finish();
+
+$out->writeln('');
+$out->writeln(Header::make('Emoji')->count(count(Emoji::make()->all()), 'shortcodes')->render());
+$emoji = Emoji::make();
+$out->writeln($emoji->render('Deploy :rocket:  build :check:  perf :zap:  cleanup :broom:'));
+$out->writeln($emoji->ascii()->render('ASCII mode: :rocket: :check: :zap: :broom:'));
 
 // The demo always exits 0 so it can serve as a CI smoke check; in real use you
 // would `exit($tasks->finish())` to propagate a non-zero code on failure.

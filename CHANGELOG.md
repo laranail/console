@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- `Support\Emoji` — a fluent ASCII/Unicode emoji helper (auto/unicode/ascii mode,
+  `:shortcode:` interpolation, custom maps, strip), exposed as `Console::emoji()`
+  and configurable via `config('console.emoji.*')`.
 - `Widgets\Summary` — an execution-summary widget (statistics, performance
   metrics, error details, status badges) rendered from a stats array.
 - `Widgets\Header` — a glyph-prefixed section header with an optional item count.
