@@ -212,6 +212,18 @@ Figlet::font('/path/to/slant.flf');  // any standard FIGlet font
 Ships the MIT `block` font; bundles no third-party `.flf` fonts (see
 `resources/fonts/LICENSE`).
 
+## Config
+
+A tiny defensive accessor for the package config that works even outside a booted
+Laravel app (returns the default when the container isn't available). Used
+internally by `Capabilities`, `Banner`, `Menu`, etc.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Config;
+
+Config::get('output.unicode', 'auto');   // reads config('console.output.unicode')
+```
+
 ## FileSize
 
 Human-readable byte sizes — the single source of truth for byte formatting.

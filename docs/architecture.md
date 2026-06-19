@@ -23,7 +23,7 @@ Console
 └── Prompter\                # INPUT
     ├── Prompter, Services\  # fluent wrapper + PromptService + FormBuilder
     ├── Validators\          # 25+ validators (+ AbstractValidator, LaravelRule)
-    ├── Enums\, Facades\, Helpers\, Support\
+    ├── Commands\, Contracts\, Enums\, Facades\, Helpers\, Providers\
     └── Exceptions\          # PrompterException (extends ConsoleException)
 ```
 
