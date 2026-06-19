@@ -5,6 +5,32 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-06-19
+
+### Fixed
+
+- **TUI bridge** — `Console\Tui\RenderableWidget::render()` now clips lines to the
+  `RenderContext` width (display-width aware) and caps rows, so mounting a wide
+  widget no longer triggers symfony/tui's `RenderException`.
+- **`ConsoleUIFormatter::colorize()`** — background tokens (`BG_*`) now resolve to
+  the `*_bg` ANSI codes instead of foreground colours.
+- **Prompter `context()` helpers** — `warning`/`error`/`alert`/`info`/`intro`/`outro`
+  dispatch the correct `laravel/prompts` helper instead of rendering a plain note.
+- `ConsoleUIFormatter::render()` no longer discards a literal `"0"` (zero-count
+  `Summary` badges render `0`).
+
+### Added
+
+- `Console::summary()` and `Console::header()` accessors (+ facade `@method`) for
+  the `Summary`/`Header` widgets.
+
+### Changed
+
+- Rector pinned to the `php84` set (matching the 8.4.1 floor); dropped the stale
+  8.4→8.3 downgrade rule and applied the 8.4 modernizations.
+- `composer.json` `branch-alias` → `0.2.x-dev`; `menu.php`/`tui.php` added to the
+  examples smoke; docs cross-link + signature fixes.
+
 ## [0.2.0] - 2026-06-19
 
 ### Changed — BREAKING
