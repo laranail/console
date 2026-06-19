@@ -121,16 +121,25 @@ class PromptService
             return $this->methods[$method](...$arguments);
         }
 
+        // Forward anything else straight to the matching laravel/prompts helper
+        // (number, clear, autocomplete, datatable, grid, task, notify, title,
+        // stream, note, info, …), so the wrapper auto-tracks the full prompts API.
+        $function = 'Laravel\\Prompts\\' . $method;
+
+        if (function_exists($function)) {
+            return $function(...$arguments);
+        }
+
         throw PrompterException::triggerErrorMessage('method_does_not_exist', ['method' => $method, 'class' => static::class]);
     }
 
     /**
-     * Whether a prompt type is dispatchable (the methods live in a closure map,
-     * so method_exists() does not see them).
+     * Whether a method is dispatchable: either a mapped prompt type or any
+     * laravel/prompts helper function of the same name.
      */
     public function has(string $method): bool
     {
-        return isset($this->methods[$method]);
+        return isset($this->methods[$method]) || function_exists('Laravel\\Prompts\\' . $method);
     }
 
     /**

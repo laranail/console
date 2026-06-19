@@ -34,6 +34,15 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
  * @method static Prompter outro(string $message)
  * @method static Prompter table(array|Collection $headers = [], array|Collection|null $rows = null)
  * @method static Prompter progress(string $label, iterable|int $steps, ?Closure $callback = null, string $hint = '')
+ * @method static Prompter number(string $label, string $placeholder = '', int|string $default = '', ?int $min = null, ?int $max = null, int $step = 1, bool|string $required = false, mixed $validate = null, string $hint = '')
+ * @method static Prompter autocomplete(string $label, array|Collection|Closure $options, string $placeholder = '', string $default = '', int $scroll = 5, bool|string $required = false, mixed $validate = null, string $hint = '', ?int $matches = null)
+ * @method static Prompter clear()
+ * @method static Prompter title(string $message)
+ * @method static Prompter notify(string $title, string $message)
+ * @method static Prompter task(string $label, ?Closure $callback = null, string $hint = '')
+ * @method static Prompter datatable(array|Collection $columns = [], array|Collection|null $rows = null)
+ * @method static Prompter grid(array|Collection $items = [], int $columns = 3)
+ * @method static Prompter stream(iterable|Closure $stream)
  *
  * @see Prompter
  */
