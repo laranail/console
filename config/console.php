@@ -84,6 +84,11 @@ return [
     'banner' => [
         'font' => env('CONSOLE_BANNER_FONT'),
         'width' => env('CONSOLE_BANNER_WIDTH'),
+
+        // Custom named themes for Banner::theme('name'); each is a subset of
+        // [font, color, gradient (list), border (ascii|light|heavy|rounded|double),
+        // align, padding]. Built-in names: success, error, warning, info, plain.
+        'themes' => [],
     ],
 
     /*

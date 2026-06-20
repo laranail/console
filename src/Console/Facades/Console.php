@@ -28,6 +28,7 @@ use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
 use Simtabi\Laranail\Console\Tools\Typography\Quote;
 use Simtabi\Laranail\Console\Tools\Typography\Text;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
+use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
@@ -61,6 +62,7 @@ use Symfony\Component\Tui\Tui;
  * @method static KeyValue keyValue(array $pairs = [])
  * @method static Gauge gauge(float $value, float $max = 100.0)
  * @method static Sparkline sparkline(array $values)
+ * @method static BarChart barChart(array $data = [])
  * @method static Banner banner(string $title)
  * @method static Header header(string $title)
  * @method static Summary summary(array $stats, string $title = 'EXECUTION SUMMARY')
