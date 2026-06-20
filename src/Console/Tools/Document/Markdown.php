@@ -6,18 +6,23 @@ namespace Simtabi\Laranail\Console\Tools\Document;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Stringable;
 
 /**
  * Render a documented Markdown subset to the terminal via the {@see Document}
  * composer + the design-system theme. Supported (block-level): ATX headings
  * (#–######), paragraphs, unordered/ordered/task lists, blockquotes, fenced code
- * blocks, horizontal rules. Inline emphasis (`**bold**`, `*italic*`, `` `code` ``)
- * and links `[label](url)` are normalised to plain text (inline ANSI styling is a
- * future addition); `:emoji:` shortcodes are resolved by the paragraph layer.
+ * blocks (with php/json/bash/yaml/js highlighting), horizontal rules. Inline
+ * emphasis (`**bold**`, `*italic*`, `` `code` ``) and links `[label](url)` render
+ * with real ANSI styling in paragraphs, list items and blockquotes (via
+ * {@see InlineMarkup}); headings use the plain normalisation. `:emoji:` shortcodes
+ * are resolved throughout.
  */
 final readonly class Markdown implements Stringable
 {
@@ -82,6 +87,23 @@ final readonly class Markdown implements Stringable
                 continue;
             }
 
+            // GFM table: a header row, a `---|---` separator, then data rows.
+            if (str_contains($trimmed, '|') && $i + 1 < $count && $this->isTableSeparator(trim($lines[$i + 1]))) {
+                $headers = $this->splitTableRow($trimmed);
+                $columns = count($headers);
+                $i += 2;
+                $rows = [];
+                while ($i < $count && trim($lines[$i]) !== '' && str_contains($lines[$i], '|')) {
+                    $cells = array_slice(array_pad($this->splitTableRow(trim($lines[$i])), $columns, ''), 0, $columns);
+                    $rows[] = $cells;
+                    $i++;
+                }
+                $i--;
+                $doc->add(new Table($this->capabilities)->headers($headers)->rows($rows));
+
+                continue;
+            }
+
             // Blockquote (consecutive `>` lines).
             if (str_starts_with($trimmed, '>')) {
                 $quote = [];
@@ -90,7 +112,9 @@ final readonly class Markdown implements Stringable
                     $i++;
                 }
                 $i--;
-                $doc->blockQuote($this->inline(implode(' ', $quote)));
+                $doc->add(
+                    new BlockQuote($this->inlineStyled(implode(' ', $quote)), $this->capabilities, $this->theme)->rich(),
+                );
 
                 continue;
             }
@@ -99,11 +123,11 @@ final readonly class Markdown implements Stringable
             if (preg_match('/^[-*]\s+\[[ xX]\]\s+/', $trimmed) === 1) {
                 $tasks = [];
                 while ($i < $count && preg_match('/^[-*]\s+\[([ xX])\]\s+(.*)$/', trim($lines[$i]), $m) === 1) {
-                    $tasks[$this->inline($m[2])] = strtolower($m[1]) === 'x';
+                    $tasks[$this->inlineStyled($m[2])] = strtolower($m[1]) === 'x';
                     $i++;
                 }
                 $i--;
-                $doc->taskList($tasks);
+                $doc->add(new ListBlock([], $this->capabilities, $this->theme)->tasks($tasks)->rich());
 
                 continue;
             }
@@ -112,11 +136,11 @@ final readonly class Markdown implements Stringable
             if (preg_match('/^\d+\.\s+/', $trimmed) === 1) {
                 $items = [];
                 while ($i < $count && preg_match('/^\d+\.\s+(.*)$/', trim($lines[$i]), $m) === 1) {
-                    $items[] = $this->inline($m[1]);
+                    $items[] = $this->inlineStyled($m[1]);
                     $i++;
                 }
                 $i--;
-                $doc->orderedList($items);
+                $doc->add(new ListBlock($items, $this->capabilities, $this->theme)->ordered()->rich());
 
                 continue;
             }
@@ -126,11 +150,11 @@ final readonly class Markdown implements Stringable
                 $items = [];
                 while ($i < $count && preg_match('/^[-*]\s+(.*)$/', trim($lines[$i]), $m) === 1
                     && preg_match('/^[-*]\s+\[[ xX]\]/', trim($lines[$i])) !== 1) {
-                    $items[] = $this->inline($m[1]);
+                    $items[] = $this->inlineStyled($m[1]);
                     $i++;
                 }
                 $i--;
-                $doc->bulletList($items);
+                $doc->add(new ListBlock($items, $this->capabilities, $this->theme)->rich());
 
                 continue;
             }
@@ -142,10 +166,9 @@ final readonly class Markdown implements Stringable
                 $i++;
             }
             $i--;
-            // Paragraphs get full inline styling (bold/italic/code/link); headings,
-            // lists and quotes use the plain normalisation above.
-            $styled = InlineMarkup::make($this->capabilities, $this->theme)->render(implode(' ', $para));
-            $doc->add(Paragraph::rich($styled, $this->capabilities, $this->theme));
+            // Paragraphs, lists and quotes get full inline styling (bold/italic/
+            // code/link); headings use the plain normalisation.
+            $doc->add(Paragraph::rich($this->inlineStyled(implode(' ', $para)), $this->capabilities, $this->theme));
         }
 
         return $doc;
@@ -167,7 +190,37 @@ final readonly class Markdown implements Stringable
     }
 
     /**
-     * Normalise inline markdown to plain text (v1: emphasis stripped, links → "label (url)").
+     * A GFM table separator row, e.g. `| --- | :--: | ---: |`.
+     */
+    private function isTableSeparator(string $line): bool
+    {
+        return preg_match('/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?$/', $line) === 1;
+    }
+
+    /**
+     * Split a `| a | b |` table row into trimmed, plain-text cells.
+     *
+     * @return list<string>
+     */
+    private function splitTableRow(string $line): array
+    {
+        $line = (string) preg_replace('/^\||\|$/', '', trim($line));
+
+        return array_values(array_map(fn (string $cell): string => $this->inline(trim($cell)), explode('|', $line)));
+    }
+
+    /**
+     * Render inline markdown to a themed, styled string (bold/italic/code/link +
+     * emoji). Used for paragraphs, list items and blockquotes.
+     */
+    private function inlineStyled(string $text): string
+    {
+        return InlineMarkup::make($this->capabilities, $this->theme)->render($text);
+    }
+
+    /**
+     * Normalise inline markdown to plain text (emphasis stripped, links → "label (url)").
+     * Used for contexts that are already styled by their own role (headings).
      */
     private function inline(string $text): string
     {

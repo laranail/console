@@ -25,6 +25,21 @@ final readonly class SyntaxHighlighter
         'trait', 'try', 'use', 'var', 'while', 'yield', 'true', 'false', 'null',
     ];
 
+    private const array BASH_KEYWORDS = [
+        'if', 'then', 'else', 'elif', 'fi', 'for', 'while', 'until', 'do', 'done',
+        'case', 'esac', 'in', 'select', 'function', 'return', 'break', 'continue',
+        'export', 'local', 'readonly', 'declare', 'echo', 'printf', 'cd', 'exit',
+        'set', 'unset', 'source', 'eval', 'exec', 'trap', 'shift',
+    ];
+
+    private const array JS_KEYWORDS = [
+        'const', 'let', 'var', 'function', 'return', 'if', 'else', 'for', 'while',
+        'do', 'switch', 'case', 'break', 'continue', 'class', 'extends', 'new',
+        'this', 'super', 'import', 'export', 'from', 'default', 'async', 'await',
+        'yield', 'typeof', 'instanceof', 'in', 'of', 'delete', 'void', 'try',
+        'catch', 'finally', 'throw', 'null', 'true', 'false', 'undefined',
+    ];
+
     private Capabilities $capabilities;
 
     private Theme $theme;
@@ -42,7 +57,7 @@ final readonly class SyntaxHighlighter
 
     public function supports(string $language): bool
     {
-        return in_array(strtolower($language), ['php', 'json'], true);
+        return in_array($this->normalize($language), ['php', 'json', 'bash', 'yaml', 'js'], true);
     }
 
     /**
@@ -51,10 +66,26 @@ final readonly class SyntaxHighlighter
      */
     public function highlightLine(string $line, string $language): string
     {
-        return match (strtolower($language)) {
+        return match ($this->normalize($language)) {
             'php' => $this->highlightPhp($line),
             'json' => $this->highlightJson($line),
+            'bash' => $this->highlightBash($line),
+            'yaml' => $this->highlightYaml($line),
+            'js' => $this->highlightJs($line),
             default => $line,
+        };
+    }
+
+    /**
+     * Normalise common language aliases to a canonical key.
+     */
+    private function normalize(string $language): string
+    {
+        return match (strtolower(trim($language))) {
+            'sh', 'shell', 'zsh' => 'bash',
+            'yml' => 'yaml',
+            'javascript', 'node', 'mjs' => 'js',
+            default => strtolower(trim($language)),
         };
     }
 
@@ -89,6 +120,60 @@ final readonly class SyntaxHighlighter
             ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
             ($m['bool'] ?? '') !== '' => $this->style('primary')->apply($m['bool']),
             ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            default => $m[0],
+        }, $line);
+    }
+
+    private function highlightBash(string $line): string
+    {
+        $keywords = implode('|', self::BASH_KEYWORDS);
+        $pattern = '/(?P<comment>(?<![\w$])#.*$)'
+            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
+            . '|(?P<var>\$\{?\w+\}?)'
+            . '|(?P<num>\b\d+\b)'
+            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['var'] ?? '') !== '' => $this->style('info')->apply($m['var']),
+            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
+            default => $m[0],
+        }, $line);
+    }
+
+    private function highlightYaml(string $line): string
+    {
+        $pattern = '/(?P<comment>(?<!\S)#.*$)'
+            . '|(?P<key>^\s*[\w.-]+(?=\s*:))'
+            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
+            . '|(?P<bool>\b(?:true|false|null|yes|no|on|off)\b)'
+            . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['key'] ?? '') !== '' => $this->style('accent')->apply($m['key']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['bool'] ?? '') !== '' => $this->style('primary')->apply($m['bool']),
+            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            default => $m[0],
+        }, $line);
+    }
+
+    private function highlightJs(string $line): string
+    {
+        $keywords = implode('|', self::JS_KEYWORDS);
+        $pattern = '/(?P<comment>\/\/.*$|\/\*.*?\*\/)'
+            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'|`(?:\\\\.|[^`\\\\])*`)'
+            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
             default => $m[0],
         }, $line);
     }

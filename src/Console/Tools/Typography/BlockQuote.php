@@ -23,6 +23,8 @@ final class BlockQuote implements Renderable, Stringable
 
     private bool $responsive = true;
 
+    private bool $rich = false;
+
     private readonly Capabilities $capabilities;
 
     private readonly Theme $theme;
@@ -53,21 +55,30 @@ final class BlockQuote implements Renderable, Stringable
     }
 
     /**
+     * Treat the body as already-styled (ANSI from InlineMarkup) — wrapped without
+     * re-sanitising, so inline emphasis renders inside the quote.
+     */
+    public function rich(bool $rich = true): self
+    {
+        $this->rich = $rich;
+
+        return $this;
+    }
+
+    /**
      * @return list<string>
      */
     public function renderLines(): array
     {
         $bar = $this->theme->style('quote')->apply($this->capabilities->supportsUnicode() ? '│ ' : '| ');
-        $barWidth = $this->capabilities->supportsUnicode() ? 2 : 2;
+        $barWidth = 2;
 
         $cap = ResponsiveWidth::cap($this->width, $this->responsive, $this->capabilities) ?? Paragraph::DEFAULT_WIDTH;
         $bodyWidth = max($cap - $barWidth, 1);
 
-        $body = Paragraph::make($this->text)
-            ->width($bodyWidth)
-            ->responsive(false)
-            ->style($this->theme->style('quote'))
-            ->renderLines();
+        $body = $this->rich
+            ? Paragraph::rich($this->text, $this->capabilities, $this->theme)->width($bodyWidth)->responsive(false)->renderLines()
+            : Paragraph::make($this->text)->width($bodyWidth)->responsive(false)->style($this->theme->style('quote'))->renderLines();
 
         return array_map(static fn (string $line): string => $bar . $line, $body);
     }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Typography;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
@@ -16,12 +17,38 @@ final class SyntaxHighlightTest extends TestCase
         Capabilities::clearFake();
     }
 
-    public function test_supports_php_and_json_only(): void
+    public function test_supports_known_languages_and_aliases(): void
     {
         $h = SyntaxHighlighter::make();
-        self::assertTrue($h->supports('php'));
-        self::assertTrue($h->supports('JSON'));
+        foreach (['php', 'JSON', 'bash', 'sh', 'shell', 'yaml', 'yml', 'js', 'javascript', 'node'] as $lang) {
+            self::assertTrue($h->supports($lang), "should support {$lang}");
+        }
         self::assertFalse($h->supports('rust'));
+    }
+
+    /**
+     * @return list<array{0:string, 1:string, 2:string}>
+     */
+    public static function languageCases(): array
+    {
+        return [
+            'bash' => ['bash', 'if [ -n "$x" ]; then echo hi; fi # note', 'echo'],
+            'bash alias sh' => ['sh', 'export FOO=1', 'export'],
+            'yaml' => ['yaml', 'name: value # comment', 'name'],
+            'js' => ['js', 'const x = `tpl`; // c', 'const'],
+            'js alias' => ['javascript', 'function f() { return 1 }', 'function'],
+        ];
+    }
+
+    #[DataProvider('languageCases')]
+    public function test_new_languages_are_coloured(string $lang, string $code, string $needle): void
+    {
+        Capabilities::fake(colors: true, unicode: true, interactive: false);
+
+        $out = SyntaxHighlighter::make()->highlightLine($code, $lang);
+
+        self::assertStringContainsString("\033[", $out, "{$lang} should emit ANSI");
+        self::assertStringContainsString($needle, $out);
     }
 
     public function test_php_tokens_are_coloured(): void
