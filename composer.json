@@ -78,6 +78,9 @@
     "test-dirty": "@test --dirty --compact",
     "examples": [
       "php examples/tools/widgets.php > /dev/null",
+      "php examples/tools/design_system.php > /dev/null",
+      "php examples/tools/colors.php > /dev/null",
+      "php examples/tools/interactive.php > /dev/null",
       "php examples/tools/menu.php > /dev/null",
       "php examples/tools/tui.php > /dev/null",
       "php examples/prompter/validators.php > /dev/null"
