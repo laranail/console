@@ -5,6 +5,45 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2026-06-20
+
+Adds a chart family, refactors the bundled font into classes, and removes the
+third-party attribution after a clean-room pass.
+
+### Added
+
+- **Charts** — `ColumnChart` (vertical block-eighths bars), `LineChart` (braille,
+  multi-series, y-axis), `ScatterPlot` (braille points), `Heatmap` (intensity blend
+  with a shade-ramp fallback + optional labels) and `Histogram` (Sturges binning),
+  built on a new `Support\BrailleCanvas` primitive. Facade methods `columnChart()`,
+  `lineChart()`, `scatterPlot()`, `heatmap()`, `histogram()`. All responsive, themed
+  and graceful-degrading; new `docs/tools/charts.md` + `examples/tools/charts.php`.
+- `docs/release.md` documenting the tag-driven release flow.
+
+### Changed
+
+- The bundled `block` FIGlet font moved from `resources/fonts/block.php` to reusable
+  `Support\Fonts` classes (`FontDefinition`, `BlockFont`, `BuiltinFonts` registry);
+  `resources/fonts/` removed. The public font API is unchanged
+  (`Figlet::font('block')`, `builtins()`, `Banner->font('block')`).
+- The multi-column/keypress/terminal utilities (`Panel`, `PanelBlock`, `Renderable`,
+  `Keypress`, `Terminal`) are independent implementations built on the package's own
+  ECMA-48-derived primitives; `THIRD_PARTY.md` removed (no derivative third-party
+  code remains).
+- Code highlighting now also covers **bash, yaml and js** (documented).
+
+### Fixed
+
+- Markdown tables: cells split on unescaped pipes only (`\|` is a literal pipe), and
+  a table directly after a paragraph (no blank line) is no longer swallowed as prose.
+- `Paragraph` rich/preformatted wrapping carries the active colour across continuation
+  lines, so a long styled span keeps its colour (still reset-terminated, no bleed).
+- `BarChart`/`ColumnChart`: numeric labels (coerced to int array keys) no longer
+  trigger a `DisplayWidth::of()` type error.
+- Documentation accuracy: validator count (26), removed a non-existent
+  `Console::callout()`, `symfony/tui` framed as optional, `composer test --no-coverage`,
+  `CONSOLE_SYMBOLS` env, real `Summary`/`Header` signatures.
+
 ## [0.7.0] - 2026-06-20
 
 Rounds out the Markdown renderer — the last of the deferred design-system items.
