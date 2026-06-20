@@ -98,8 +98,13 @@ The package has three output styles — know which you're holding:
 | [Architecture](docs/architecture.md) | Umbrella, sub-domains, the manager |
 | [Configuration](docs/configuration.md) | Every `config/console.php` key |
 | [Internationalization](docs/i18n.md) | Translating console strings |
+| [Theming](docs/tools/theming.md) | Semantic palette + per-element styles (design tokens) |
+| [Colours & styles](docs/tools/colors.md) | Color parsing/downgrade/gradient + the fluent Style |
+| [Typography](docs/tools/typography.md) | Headings, paragraphs, lists, links, quotes, code, Text |
+| [Responsive output](docs/responsive.md) | How widgets adapt to the terminal width |
+| [Interactive & live](docs/tools/interactive.md) | Live engine, animated bar, badges/pills, buttons |
 | [Output formatter](docs/tools/formatting.md) | Colour/badge/link string primitives |
-| [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary… |
+| [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary, bar chart… |
 | [Banner designer](docs/tools/banner.md) | FIGlet big-text, alignment, colour/gradient, borders |
 | [Panel layout](docs/tools/panel.md) | Multi-column / nestable layout (Panel + PanelBlock) |
 | [Interactive menu](docs/tools/menu.md) | Key-driven menu with a prompts fallback |
