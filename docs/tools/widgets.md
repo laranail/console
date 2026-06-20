@@ -25,7 +25,7 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()`, `eta()` |
 | `StatusLine` | `Console::status()` | `success/error/warning/info/pending($msg)`, `line($status, $msg)` → **markup string** |
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
-| `Box` | `Console::box($content)` | `title()`, `footer()`, `content()`, `padding($n)`, `width($n)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
+| `Box` | `Console::box($content)` | `title()`, `footer()`, `padding($n)`, `width($n)`, `responsive($bool)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
 | `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()`; static `Tree::fromArray($label, $nested)` |
 | `Table` | `Console::table()` | `headers()`, `rows()`, `fromAssoc($rows)`, `fromCollection($iterable)`, `grouped($groups)`, `tree($rows)`, `align($map)`, `columnWidths($map)`, `maxColumnWidth($col,$w)`, `title()`, `footer()`, `style($preset)`, `render(?$output)`; static `Table::cell($v,$align,$fg,$bg)` |
 | `Columns` | `Console::columns($items)` | `columns($n)` (omit / never call = auto-fit), `gap($n)`, `render()` |

@@ -1,7 +1,7 @@
 # Prompts, forms & validators
 
 `Console\Prompter` is a fluent layer over `laravel/prompts` with a form builder and
-a library of 25 validators.
+a library of 26 validators.
 
 ## Prompting
 
@@ -71,7 +71,7 @@ gets an options-aware default validator unless you set your own.
 `FieldType` cases: `TEXT`, `NUMBER`, `EMAIL`, `PASSWORD`, `TEXTAREA`, `DATE`,
 `TIME`, `SELECT`, `CHECKBOX`, `RADIO`, `PATH`, `USERNAME`, `PHONE`, `COLOR`,
 `NULL_OR_EMPTY`, `ARRAY`, `OBJECT`, `UUID`, `ALPHA`, `ALPHANUMERIC`,
-`UUID_OR_INTEGER_OR_SLUG`.
+`UUID_OR_INTEGER_OR_SLUG`, `BOOLEAN`, `NAME`, `STRING`, `JSON`.
 
 ## Validators
 
@@ -108,6 +108,11 @@ messages default to `console::validators.*` (see [i18n](../i18n.md)).
 | `ObjectValidator` | — | object |
 | `JsonFieldValidator` | — | valid JSON string |
 | `NullOrEmptyValidator` | — | null or `''` |
+| `LaravelRule` | `array\|string $rules` (first) | anything passing the Laravel validation rules |
+
+The regex-pattern validators (`Alpha`, `Alphanumeric`, `Name`, `Username`,
+`PhoneNumber`, `UUID`) share an abstract `RegexValidator` base — extend it to add
+your own single-pattern validator.
 
 The choice validators take `$options` **first**:
 
