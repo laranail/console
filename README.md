@@ -132,6 +132,15 @@ Changelog: [CHANGELOG.md](CHANGELOG.md).
 > `composer require symfony/tui` (experimental, needs `"minimum-stability": "dev"`)
 > only if you want it.
 
+## Stability
+
+`laranail/console` is **1.0** and follows [SemVer](https://semver.org). The public
+API — the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
+classes — is stable; breaking changes only land in a major. Classes marked
+`@internal`, and the experimental full-screen TUI (`Console::tui()` /
+[`symfony/tui`](docs/tools/tui.md)), are **not** covered by the BC guarantee. See
+[Versioning & stability](docs/release.md#versioning--stability).
+
 ## Local development
 
 ```bash
