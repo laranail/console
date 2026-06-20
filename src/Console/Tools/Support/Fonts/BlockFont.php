@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-/*
- * "block" — a uniform 5x5 solid-block big-text font for the Banner designer.
- *
- * Authored for laranail/console (MIT, © Simtabi LLC) — not derived from any
- * third-party FIGlet font. Every glyph is exactly 5 columns wide and 5 rows
- * tall, so layout is trivial. Uppercase only; the renderer upper-cases input.
- *
- * The Figlet renderer also parses real FIGlet `.flf` fonts (see Support\Figlet),
- * so you can drop a `.flf` next to this file and reference it by name/path.
- */
+namespace Simtabi\Laranail\Console\Tools\Support\Fonts;
 
-return [
-    'height' => 5,
-    'chars' => [
+/**
+ * "block" — a uniform 5×5 solid-block big-text font for the Banner designer.
+ *
+ * Original work for laranail/console (MIT, © Simtabi LLC). Every glyph is exactly
+ * 5 columns wide and 5 rows tall, so layout is trivial; uppercase only (the
+ * renderer upper-cases input). The Figlet renderer also parses standard FIGlet
+ * `.flf` fonts referenced by path.
+ */
+final class BlockFont
+{
+    /** @var array<int|string, list<string>> */
+    private const array CHARS = [
         ' ' => ['     ', '     ', '     ', '     ', '     '],
         'A' => ['█████', '█   █', '█████', '█   █', '█   █'],
         'B' => ['████ ', '█   █', '████ ', '█   █', '████ '],
@@ -72,5 +72,10 @@ return [
         ')' => [' ██  ', '   █ ', '   █ ', '   █ ', ' ██  '],
         '[' => [' ███ ', ' █   ', ' █   ', ' █   ', ' ███ '],
         ']' => [' ███ ', '   █ ', '   █ ', '   █ ', ' ███ '],
-    ],
-];
+    ];
+
+    public static function definition(): FontDefinition
+    {
+        return new FontDefinition(height: 5, chars: self::CHARS, gap: 1);
+    }
+}

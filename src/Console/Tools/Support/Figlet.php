@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Support;
 
 use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
+use Simtabi\Laranail\Console\Tools\Support\Fonts\BuiltinFonts;
+use Simtabi\Laranail\Console\Tools\Support\Fonts\FontDefinition;
 
 /**
  * FIGlet-style big-text renderer.
  *
- * Loads either a bundled font by name (`resources/fonts/<name>.php`) or a
+ * Loads either a bundled font by name (from the {@see BuiltinFonts} registry) or a
  * standard FIGlet `.flf` file by path, and renders a string into an array of
  * equal-width lines (one block of `height()` rows). Unknown glyphs fall back to
  * their upper-case form, then to a blank block, so rendering never throws on
@@ -21,7 +23,7 @@ final class Figlet
     private static array $cache = [];
 
     /**
-     * @param array<string, list<string>> $chars char => rows (equal width per char)
+     * @param array<int|string, list<string>> $chars char => rows (equal width per char)
      */
     private function __construct(
         private readonly int $height,
@@ -43,13 +45,7 @@ final class Figlet
      */
     public static function builtins(): array
     {
-        $names = [];
-
-        foreach (glob(self::fontsDir() . '/*.php') ?: [] as $path) {
-            $names[] = basename($path, '.php');
-        }
-
-        return $names;
+        return BuiltinFonts::names();
     }
 
     public function height(): int
@@ -105,16 +101,13 @@ final class Figlet
 
     private static function loadBuiltin(string $name): self
     {
-        $path = self::fontsDir() . '/' . basename($name) . '.php';
+        $def = BuiltinFonts::get($name);
 
-        if (! is_file($path)) {
+        if (! $def instanceof FontDefinition) {
             throw FontException::unknown($name);
         }
 
-        /** @var array{height:int, chars:array<string, list<string>>, gap?:int} $data */
-        $data = require $path;
-
-        return new self($data['height'], $data['chars'], $data['gap'] ?? 1);
+        return new self($def->height, $def->chars, $def->gap);
     }
 
     private static function parseFlf(string $path): self
@@ -189,10 +182,5 @@ final class Figlet
         $width = DisplayWidth::maxWidth($rows);
 
         return array_values(array_map(static fn (string $row): string => DisplayWidth::pad($row, $width), $rows));
-    }
-
-    private static function fontsDir(): string
-    {
-        return __DIR__ . '/../../../../resources/fonts';
     }
 }
