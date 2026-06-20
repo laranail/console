@@ -13,6 +13,8 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
  *
  * Package-wide concerns (config, translations, publishing) live in the root
  * ConsoleServiceProvider; this provider only registers Prompter bindings.
+ *
+ * @internal Auto-discovered framework wiring; not part of the public API.
  */
 final class PrompterServiceProvider extends ServiceProvider
 {

@@ -116,6 +116,8 @@ use Symfony\Component\Tui\Tui;
  * @method static Prompter prompter()
  *
  * @see ConsoleManager
+ *
+ * @api This facade is the package's stable public entry point (SemVer-covered).
  */
 final class Console extends Facade
 {
