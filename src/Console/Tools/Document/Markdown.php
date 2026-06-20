@@ -60,7 +60,10 @@ final readonly class Markdown implements Stringable
                     $i++;
                 }
                 $block = new CodeBlock(implode("\n", $code), $this->capabilities, $this->theme);
-                $doc->add($caption !== '' ? $block->caption($caption) : $block);
+                if ($caption !== '') {
+                    $block = $block->caption($caption)->language($caption);
+                }
+                $doc->add($block);
 
                 continue;
             }
