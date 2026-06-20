@@ -30,6 +30,14 @@ final class Callout implements Stringable
         $this->symbols = Symbols::for($this->capabilities);
     }
 
+    /**
+     * @param list<string>|string $content
+     */
+    public static function make(string $status, array|string $content): self
+    {
+        return new self($status, is_array($content) ? array_values($content) : explode("\n", $content));
+    }
+
     public static function success(string $message): self
     {
         return new self('success', explode("\n", $message));

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter;
 
 use Closure;
-use Deprecated;
 use Illuminate\Support\Collection;
 
 use function Laravel\Prompts\form;
@@ -57,8 +56,6 @@ class Prompter
 
     protected mixed $result = null;
 
-    private static ?self $instance = null;
-
     /**
      * Prompter constructor.
      */
@@ -68,29 +65,13 @@ class Prompter
     }
 
     /**
-     * Create a fresh Prompter. Preferred over getInstance(): each fluent chain
-     * gets its own $result, so sequential/concurrent (e.g. Octane) callers never
-     * clobber one another's last value.
+     * Create a fresh Prompter: each fluent chain gets its own $result, so
+     * sequential/concurrent (e.g. Octane) callers never clobber one another's
+     * last value.
      */
     public static function create(): self
     {
         return new self;
-    }
-
-    /**
-     * Get the shared singleton instance.
-     */
-    #[Deprecated(message: <<<'TXT'
-    Use {@see create()} (or the `prompter()` helper / `Prompter`
-                 facade), which return an isolated instance per call.
-    TXT)]
-    public static function getInstance(): self
-    {
-        if (! self::$instance instanceof Prompter) {
-            self::$instance = new self;
-        }
-
-        return self::$instance;
     }
 
     /**
