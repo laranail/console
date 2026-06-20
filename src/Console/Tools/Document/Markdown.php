@@ -88,7 +88,7 @@ final readonly class Markdown implements Stringable
             }
 
             // GFM table: a header row, a `---|---` separator, then data rows.
-            if (str_contains($trimmed, '|') && $i + 1 < $count && $this->isTableSeparator(trim($lines[$i + 1]))) {
+            if ($this->isTableAt($lines, $i)) {
                 $headers = $this->splitTableRow($trimmed);
                 $columns = count($headers);
                 $i += 2;
@@ -161,7 +161,7 @@ final readonly class Markdown implements Stringable
 
             // Paragraph (consecutive non-blank, non-special lines).
             $para = [];
-            while ($i < $count && trim($lines[$i]) !== '' && ! $this->isBlockStart(trim($lines[$i]))) {
+            while ($i < $count && trim($lines[$i]) !== '' && ! $this->isBlockStart(trim($lines[$i])) && ! $this->isTableAt($lines, $i)) {
                 $para[] = trim($lines[$i]);
                 $i++;
             }
@@ -190,6 +190,19 @@ final readonly class Markdown implements Stringable
     }
 
     /**
+     * Does a GFM table begin at line $i? (a pipe row followed by a `---|---`
+     * separator). Used both to render tables and to stop a paragraph swallowing one.
+     *
+     * @param list<string> $lines
+     */
+    private function isTableAt(array $lines, int $i): bool
+    {
+        return str_contains($lines[$i] ?? '', '|')
+            && isset($lines[$i + 1])
+            && $this->isTableSeparator(trim($lines[$i + 1]));
+    }
+
+    /**
      * A GFM table separator row, e.g. `| --- | :--: | ---: |`.
      */
     private function isTableSeparator(string $line): bool
@@ -205,8 +218,13 @@ final readonly class Markdown implements Stringable
     private function splitTableRow(string $line): array
     {
         $line = (string) preg_replace('/^\||\|$/', '', trim($line));
+        // Split on unescaped pipes only, then unescape `\|` to a literal pipe.
+        $cells = preg_split('/(?<!\\\\)\|/', $line) ?: [];
 
-        return array_values(array_map(fn (string $cell): string => $this->inline(trim($cell)), explode('|', $line)));
+        return array_values(array_map(
+            fn (string $cell): string => $this->inline(trim(str_replace('\\|', '|', $cell))),
+            $cells,
+        ));
     }
 
     /**
