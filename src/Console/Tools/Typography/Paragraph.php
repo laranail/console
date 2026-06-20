@@ -41,16 +41,29 @@ final class Paragraph implements Renderable, Stringable
 
     private readonly string $text;
 
-    public function __construct(string $text, ?Capabilities $capabilities = null, ?Theme $theme = null)
+    public function __construct(string $text, ?Capabilities $capabilities = null, ?Theme $theme = null, private readonly bool $preformatted = false)
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->theme = $theme ?? Theme::resolve();
-        $this->text = Emoji::make($this->capabilities)->render(ConsoleUIFormatter::sanitizeText($text));
+        // Pre-styled text (rich) is wrapped as-is; plain text is sanitised and has
+        // :emoji: shortcodes resolved.
+        $this->text = $this->preformatted
+            ? $text
+            : Emoji::make($this->capabilities)->render(ConsoleUIFormatter::sanitizeText($text));
     }
 
     public static function make(string $text): self
     {
         return new self($text);
+    }
+
+    /**
+     * Wrap text that already carries ANSI styling (e.g. from InlineMarkup) — it is
+     * not sanitised; wrapping stays width-correct (DisplayWidth ignores escapes).
+     */
+    public static function rich(string $styled, ?Capabilities $capabilities = null, ?Theme $theme = null): self
+    {
+        return new self($styled, $capabilities, $theme, true);
     }
 
     public function width(int $width): self
@@ -105,7 +118,11 @@ final class Paragraph implements Renderable, Stringable
                     default => $line,
                 };
 
-            $out[] = $style->apply($aligned);
+            // Pre-styled lines keep their own ANSI; close them so colour never
+            // bleeds across a wrap. Plain lines get the paragraph/theme style.
+            $out[] = $this->preformatted
+                ? $this->closeAnsi($aligned)
+                : $style->apply($aligned);
         }
 
         return $out === [] ? [''] : $out;
@@ -173,6 +190,18 @@ final class Paragraph implements Renderable, Stringable
         }
 
         return $chunks;
+    }
+
+    /**
+     * Ensure a styled line is reset-terminated (no colour bleed across wraps).
+     */
+    private function closeAnsi(string $line): string
+    {
+        if (! str_contains($line, "\033[") || str_ends_with(rtrim($line), "\033[0m")) {
+            return $line;
+        }
+
+        return $line . "\033[0m";
     }
 
     private function justify(string $line, int $width, bool $isLast): string
