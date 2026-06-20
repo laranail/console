@@ -27,6 +27,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Responsive layout
+    |--------------------------------------------------------------------------
+    | When true, widgets clamp their output to the detected terminal width so
+    | content never overflows a narrow terminal. An explicit ->width() always
+    | wins, and a widget's ->responsive(false) opts out per call.
+    */
+    'responsive' => env('CONSOLE_RESPONSIVE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Theme (design tokens)
+    |--------------------------------------------------------------------------
+    | The semantic colour palette the design system (typography, banners,
+    | badges, Text/Style) shares. Override any role to re-skin the whole UI;
+    | accepts any colour spec (hex, rgb(), hsl(), named, @256).
+    */
+    'theme' => [
+        'palette' => [
+            // 'primary' => '#7c3aed', 'accent' => '#06b6d4', 'success' => '#16a34a',
+            // 'warning' => '#d97706', 'danger' => '#dc2626', 'info' => '#2563eb',
+            // 'muted' => '#64748b',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Spinner defaults
     |--------------------------------------------------------------------------
     | frames: braille | dots | line | breath
@@ -58,6 +84,11 @@ return [
     'banner' => [
         'font' => env('CONSOLE_BANNER_FONT'),
         'width' => env('CONSOLE_BANNER_WIDTH'),
+
+        // Custom named themes for Banner::theme('name'); each is a subset of
+        // [font, color, gradient (list), border (ascii|light|heavy|rounded|double),
+        // align, padding]. Built-in names: success, error, warning, info, plain.
+        'themes' => [],
     ],
 
     /*

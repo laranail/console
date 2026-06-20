@@ -5,6 +5,53 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-06-20
+
+A CLI **design system**: theme + typography + document composer + an interactive/
+live layer, all responsive and degradation-safe.
+
+### Added
+
+- **Design tokens** — `Theme\Theme` (a stylesheet: semantic `Palette` + per-element
+  styles) + `config('console.theme.palette')`; `Console::theme()`. Re-skin the whole
+  UI from one palette.
+- **`Support\Style`** — an immutable, chainable text style (fg/bg + bold/dim/italic/
+  underline/strikethrough/inverse/blink) with graceful colour downgrade.
+- **Typography** (`Tools\Typography`) — `Heading` (1–6), `Paragraph` (wrap/center/
+  right/justify), `ListBlock` (unordered/ordered/task/definition), `Link`, `Quote`,
+  `BlockQuote`, `Code`, `CodeBlock`, and a fluent inline `Text` builder.
+- **Document** (`Tools\Document`) — `Document` fluent page composer + `Markdown`
+  subset renderer (`Console::document()`, `Console::markdown()`).
+- **Interactive & live layer** — `Support\Live` (native redraw engine, TTY-guarded),
+  `AnimatedBar`, `Badge`, `Pill`, `Button`, `ButtonGroup` (interactive choice via
+  laravel/prompts), and a `Contracts\Interactive` marker.
+- **`BarChart`** widget; **banner themes** (`Banner::theme()/success()/error()/…` +
+  `config('console.banner.themes.*')`).
+- **Primitives** — `Color` gains `rgb()/hsl()/named/@256` parsing, `bg()`,
+  `sequence()`, `blend()`, `adaptive()`; `Support\Os` (platform/WSL/CI detection),
+  `Support\Align`, `Support\ResponsiveWidth`, `Support\Hyperlink`; `Console::style()/
+  symbol()/os()/text()/paragraph()/heading()/list()/link()/quote()/blockQuote()/
+  code()/codeBlock()/badge()/pill()/button()/buttonGroup()/live()/animatedBar()/
+  barChart()`.
+- `config('console.responsive')`.
+
+### Changed
+
+- **Width-responsiveness is on by default**: `Box` (and `Callout`/`Banner`) and
+  `Table` clamp to the terminal so content never overflows; an explicit `->width()`
+  wins, `->responsive(false)` opts out, `config('console.responsive')` toggles
+  globally. The new design-system layer is responsive throughout. Wide-terminal
+  output for existing widgets is unchanged.
+- `Color` colour-profile downgrade (truecolor → 256 → 16 → strip) was already
+  present; extended with the new parsers + background sequences (BC: `fg()`/
+  `gradient()` unchanged). `ConsoleUIFormatter` link security now delegates to
+  `Support\Hyperlink` (no behaviour change).
+
+### Removed
+
+- `Prompter::getInstance()` (deprecated; use `Prompter::create()` / the `prompter()`
+  helper / the `Prompter` facade).
+
 ## [0.4.0] - 2026-06-19
 
 ### Added

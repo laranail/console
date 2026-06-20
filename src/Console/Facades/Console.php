@@ -7,20 +7,41 @@ namespace Simtabi\Laranail\Console\Facades;
 use Illuminate\Support\Facades\Facade;
 use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Tools\Document\Document;
+use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Live;
+use Simtabi\Laranail\Console\Tools\Support\Os;
+use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
+use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Button;
+use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -47,6 +68,7 @@ use Symfony\Component\Tui\Tui;
  * @method static KeyValue keyValue(array $pairs = [])
  * @method static Gauge gauge(float $value, float $max = 100.0)
  * @method static Sparkline sparkline(array $values)
+ * @method static BarChart barChart(array $data = [])
  * @method static Banner banner(string $title)
  * @method static Header header(string $title)
  * @method static Summary summary(array $stats, string $title = 'EXECUTION SUMMARY')
@@ -54,6 +76,27 @@ use Symfony\Component\Tui\Tui;
  * @method static TaskProgress tasks(?OutputInterface $output = null)
  * @method static Color color()
  * @method static Emoji emoji()
+ * @method static Style style()
+ * @method static string symbol(string $name)
+ * @method static Os os()
+ * @method static Theme theme()
+ * @method static Text text(string $text = '')
+ * @method static Paragraph paragraph(string $text)
+ * @method static Heading heading(string $text, int $level = 1)
+ * @method static ListBlock list(array $items = [])
+ * @method static Link link(string $label, string $url)
+ * @method static Quote quote(string $text)
+ * @method static BlockQuote blockQuote(string $text)
+ * @method static Code code(string $text)
+ * @method static CodeBlock codeBlock(string $code)
+ * @method static Document document()
+ * @method static Markdown markdown(string $markdown)
+ * @method static Live live(?OutputInterface $output = null)
+ * @method static AnimatedBar animatedBar()
+ * @method static Badge badge(string $label, string $role = 'primary')
+ * @method static Pill pill(string $label, string $role = 'primary')
+ * @method static Button button(string $label, string $role = 'primary')
+ * @method static ButtonGroup buttonGroup(array $options = [])
  * @method static Panel panel()
  * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)

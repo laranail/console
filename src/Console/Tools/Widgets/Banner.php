@@ -63,6 +63,56 @@ final class Banner implements Stringable
         return new self($title);
     }
 
+    public static function success(string $title): self
+    {
+        return self::make($title)->theme('success');
+    }
+
+    public static function error(string $title): self
+    {
+        return self::make($title)->theme('error');
+    }
+
+    public static function warning(string $title): self
+    {
+        return self::make($title)->theme('warning');
+    }
+
+    public static function info(string $title): self
+    {
+        return self::make($title)->theme('info');
+    }
+
+    /**
+     * Apply a named or custom banner theme (font/colour/border/align/padding).
+     * Sets defaults; explicit setters called afterwards still override.
+     */
+    public function theme(string|BannerTheme $theme): self
+    {
+        $t = BannerTheme::make($theme);
+
+        if ($t->font !== null) {
+            $this->font($t->font);
+        }
+        if ($t->color !== null) {
+            $this->color($t->color);
+        }
+        if ($t->gradient !== null) {
+            $this->gradient($t->gradient);
+        }
+        if ($t->border instanceof BorderStyle) {
+            $this->border($t->border);
+        }
+        if ($t->align !== null) {
+            $this->align($t->align);
+        }
+        if ($t->padding !== null) {
+            $this->padding($t->padding);
+        }
+
+        return $this;
+    }
+
     public function subtitle(string $subtitle): self
     {
         $this->subtitle = ConsoleUIFormatter::sanitizeText($subtitle);

@@ -6,6 +6,8 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Stringable;
 use Symfony\Component\Console\Helper\Table as SymfonyTable;
 use Symfony\Component\Console\Helper\TableCell;
@@ -66,6 +68,8 @@ final class Table implements Stringable
     private string $mode = 'plain';
 
     private string $style = 'light';
+
+    private bool $responsive = true;
 
     private readonly Capabilities $capabilities;
 
@@ -232,6 +236,18 @@ final class Table implements Stringable
         return $this;
     }
 
+    /**
+     * Clamp the table to the terminal width (default on): cells wrap/shrink so the
+     * table never overflows — columns are never dropped. Explicit
+     * maxColumnWidth()s and an absence of responsiveness opt out.
+     */
+    public function responsive(bool $responsive = true): self
+    {
+        $this->responsive = $responsive;
+
+        return $this;
+    }
+
     public function render(?OutputInterface $output = null): string
     {
         $buffer = new BufferedOutput;
@@ -246,6 +262,7 @@ final class Table implements Stringable
 
         // Apply column tweaks AFTER setStyle (the preset replaces the active style).
         $this->applyColumns($table);
+        $this->applyResponsiveColumns($table);
 
         // Strip terminal control characters from every cell at render time
         // (TableCell instances are already sanitised in cell()).
@@ -257,6 +274,51 @@ final class Table implements Stringable
         $output?->write($rendered);
 
         return $rendered;
+    }
+
+    /**
+     * Cap column widths so a too-wide plain table wraps to fit the terminal.
+     * No-op when the table already fits (so normal output is unchanged) or when
+     * explicit maxColumnWidth()s are set / responsiveness is off.
+     */
+    private function applyResponsiveColumns(SymfonyTable $table): void
+    {
+        if (! $this->responsive || $this->mode !== 'plain' || $this->maxColumnWidths !== [] || ! ResponsiveWidth::enabled()) {
+            return;
+        }
+
+        $widths = [];
+        foreach ($this->headers as $i => $header) {
+            $widths[$i] = DisplayWidth::of($header);
+        }
+        foreach ($this->rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+            foreach ($row as $i => $cell) {
+                if (is_string($cell)) {
+                    $widths[$i] = max($widths[$i] ?? 0, DisplayWidth::of($cell));
+                }
+            }
+        }
+
+        $cols = count($widths);
+        if ($cols === 0) {
+            return;
+        }
+
+        $overhead = ($cols + 1) + ($cols * 2); // separators + per-cell padding
+        $terminal = $this->capabilities->width();
+
+        // Only intervene when the natural table would overflow.
+        if (array_sum($widths) + $overhead <= $terminal) {
+            return;
+        }
+
+        $perCol = max((int) floor(($terminal - $overhead) / $cols), 4);
+        foreach (array_keys($widths) as $i) {
+            $table->setColumnMaxWidth($i, $perCol);
+        }
     }
 
     private function applyColumns(SymfonyTable $table): void

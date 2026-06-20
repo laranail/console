@@ -6,20 +6,42 @@ namespace Simtabi\Laranail\Console;
 
 use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Tools\Document\Document;
+use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Live;
+use Simtabi\Laranail\Console\Tools\Support\Os;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
+use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Button;
+use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -148,6 +170,16 @@ final class ConsoleManager
     }
 
     /**
+     * A labelled horizontal bar chart (responsive, themed).
+     *
+     * @param array<string, int|float> $data label => value
+     */
+    public function barChart(array $data = []): BarChart
+    {
+        return BarChart::make($data);
+    }
+
+    /**
      * A centred start-of-run banner/masthead.
      */
     public function banner(string $title): Banner
@@ -205,6 +237,178 @@ final class ConsoleManager
     public function emoji(): Emoji
     {
         return Emoji::make();
+    }
+
+    /**
+     * A chainable text style (fg/bg + bold/italic/underline…), capability-aware.
+     */
+    public function style(): Style
+    {
+        return Style::make();
+    }
+
+    /**
+     * Resolve a named glyph (ascii/unicode per terminal), e.g. `symbol('arrow')`.
+     */
+    public function symbol(string $name): string
+    {
+        return Symbols::for(Capabilities::detect())->get($name);
+    }
+
+    /**
+     * Operating-system + runtime-environment detection.
+     */
+    public function os(): Os
+    {
+        return Os::make();
+    }
+
+    /**
+     * The active design-system theme (semantic palette + element styles).
+     */
+    public function theme(): Theme
+    {
+        return Theme::resolve();
+    }
+
+    /**
+     * A fluent inline text builder (colour/style + emoji + symbols + theme roles).
+     */
+    public function text(string $text = ''): Text
+    {
+        return Text::make($text);
+    }
+
+    /**
+     * A word-wrapped, themeable, responsive prose block.
+     */
+    public function paragraph(string $text): Paragraph
+    {
+        return Paragraph::make($text);
+    }
+
+    /**
+     * A themed heading (levels 1–6).
+     */
+    public function heading(string $text, int $level = 1): Heading
+    {
+        return Heading::make($text, $level);
+    }
+
+    /**
+     * A themed list (unordered / ordered / task / definition).
+     *
+     * @param list<string> $items
+     */
+    public function list(array $items = []): ListBlock
+    {
+        return ListBlock::make($items);
+    }
+
+    /**
+     * A themed OSC-8 hyperlink with a plain-text fallback.
+     */
+    public function link(string $label, string $url): Link
+    {
+        return Link::make($label, $url);
+    }
+
+    /**
+     * A short inline quotation.
+     */
+    public function quote(string $text): Quote
+    {
+        return Quote::make($text);
+    }
+
+    /**
+     * A block quote (themed left bar + wrapped body).
+     */
+    public function blockQuote(string $text): BlockQuote
+    {
+        return BlockQuote::make($text);
+    }
+
+    /**
+     * Inline code.
+     */
+    public function code(string $text): Code
+    {
+        return Code::make($text);
+    }
+
+    /**
+     * A fenced code block (optional caption).
+     */
+    public function codeBlock(string $code): CodeBlock
+    {
+        return CodeBlock::make($code);
+    }
+
+    /**
+     * A fluent document composer (typography + widgets into one themed page).
+     */
+    public function document(): Document
+    {
+        return Document::make();
+    }
+
+    /**
+     * Render a Markdown subset to the terminal via the design-system theme.
+     */
+    public function markdown(string $markdown): Markdown
+    {
+        return Markdown::make($markdown);
+    }
+
+    /**
+     * A live-render engine (animate any renderable in place; TTY-guarded).
+     */
+    public function live(?OutputInterface $output = null): Live
+    {
+        return Live::make($output);
+    }
+
+    /**
+     * A live loading/progress bar (determinate fraction or indeterminate tick).
+     */
+    public function animatedBar(): AnimatedBar
+    {
+        return AnimatedBar::make();
+    }
+
+    /**
+     * A themed inline badge coloured by a semantic role.
+     */
+    public function badge(string $label, string $role = 'primary'): Badge
+    {
+        return Badge::make($label, $role);
+    }
+
+    /**
+     * A themed rounded badge (pill).
+     */
+    public function pill(string $label, string $role = 'primary'): Pill
+    {
+        return Pill::make($label, $role);
+    }
+
+    /**
+     * A visual button affordance (use buttonGroup() for an interactive choice).
+     */
+    public function button(string $label, string $role = 'primary'): Button
+    {
+        return Button::make($label, $role);
+    }
+
+    /**
+     * An interactive single-choice control rendered as buttons.
+     *
+     * @param array<int|string, string>|list<string> $options
+     */
+    public function buttonGroup(array $options = []): ButtonGroup
+    {
+        return ButtonGroup::make($options);
     }
 
     /**

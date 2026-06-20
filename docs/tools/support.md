@@ -19,7 +19,7 @@ $caps->supportsColor();       // bool
 $caps->supportsTrueColor();   // bool — 24-bit
 $caps->supports256Color();    // bool — xterm-256
 $caps->supportsUnicode();     // bool
-$caps->width(80);             // int  — columns (config → COLUMNS → Terminal → default)
+$caps->width();               // int  — columns (config → COLUMNS → Terminal → default)
 $caps->symbolMode();          // 'fancy' | 'ascii'
 ```
 
