@@ -13,6 +13,7 @@ use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Live;
 use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
@@ -27,15 +28,20 @@ use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
 use Simtabi\Laranail\Console\Tools\Typography\Quote;
 use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Button;
+use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -353,6 +359,56 @@ final class ConsoleManager
     public function markdown(string $markdown): Markdown
     {
         return Markdown::make($markdown);
+    }
+
+    /**
+     * A live-render engine (animate any renderable in place; TTY-guarded).
+     */
+    public function live(?OutputInterface $output = null): Live
+    {
+        return Live::make($output);
+    }
+
+    /**
+     * A live loading/progress bar (determinate fraction or indeterminate tick).
+     */
+    public function animatedBar(): AnimatedBar
+    {
+        return AnimatedBar::make();
+    }
+
+    /**
+     * A themed inline badge coloured by a semantic role.
+     */
+    public function badge(string $label, string $role = 'primary'): Badge
+    {
+        return Badge::make($label, $role);
+    }
+
+    /**
+     * A themed rounded badge (pill).
+     */
+    public function pill(string $label, string $role = 'primary'): Pill
+    {
+        return Pill::make($label, $role);
+    }
+
+    /**
+     * A visual button affordance (use buttonGroup() for an interactive choice).
+     */
+    public function button(string $label, string $role = 'primary'): Button
+    {
+        return Button::make($label, $role);
+    }
+
+    /**
+     * An interactive single-choice control rendered as buttons.
+     *
+     * @param array<int|string, string>|list<string> $options
+     */
+    public function buttonGroup(array $options = []): ButtonGroup
+    {
+        return ButtonGroup::make($options);
     }
 
     /**

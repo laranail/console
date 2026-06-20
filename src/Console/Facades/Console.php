@@ -14,6 +14,7 @@ use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Live;
 use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
@@ -27,15 +28,20 @@ use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
 use Simtabi\Laranail\Console\Tools\Typography\Quote;
 use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Button;
+use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
@@ -85,6 +91,12 @@ use Symfony\Component\Tui\Tui;
  * @method static CodeBlock codeBlock(string $code)
  * @method static Document document()
  * @method static Markdown markdown(string $markdown)
+ * @method static Live live(?OutputInterface $output = null)
+ * @method static AnimatedBar animatedBar()
+ * @method static Badge badge(string $label, string $role = 'primary')
+ * @method static Pill pill(string $label, string $role = 'primary')
+ * @method static Button button(string $label, string $role = 'primary')
+ * @method static ButtonGroup buttonGroup(array $options = [])
  * @method static Panel panel()
  * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)
