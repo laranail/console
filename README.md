@@ -115,7 +115,7 @@ The package has three output styles — know which you're holding:
 | [Interactive menu](docs/tools/menu.md) | Key-driven menu with a prompts fallback |
 | [Full-screen TUI](docs/tools/tui.md) | symfony/tui integration — mount our widgets in a TUI app |
 | [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, Keypress, Terminal, ANSI primitives |
-| [Commands](docs/tools/commands.md) | The Artisan command base + services |
+| [Commands](docs/tools/commands.md) | The Artisan command base + services (or the `InteractsWithConsoleServices` trait) |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
