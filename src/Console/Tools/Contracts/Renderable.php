@@ -7,8 +7,6 @@ namespace Simtabi\Laranail\Console\Tools\Contracts;
 /**
  * Something that renders to a rectangular block of lines, so it can be composed
  * inside a Panel (or nested in another panel).
- *
- * Adapted from ajaxray/ansikit (MIT, © Anis Uddin Ahmad) — see THIRD_PARTY.md.
  */
 interface Renderable
 {

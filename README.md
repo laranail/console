@@ -122,7 +122,7 @@ The package has three output styles — know which you're holding:
 | [Testing](docs/tools/testing.md) | Force capabilities + script prompts in tests |
 
 Online docs: <https://opensource.simtabi.com/console/docs/> ·
-Changelog: [CHANGELOG.md](CHANGELOG.md) · Third-party notices: [THIRD_PARTY.md](THIRD_PARTY.md).
+Changelog: [CHANGELOG.md](CHANGELOG.md).
 
 > **Requires PHP `^8.4.1`** (Laravel `^13`, Symfony 8) and installs **stably**.
 > The full-screen [`symfony/tui`](docs/tools/tui.md) integration is **optional** —
@@ -150,7 +150,6 @@ composer audit                # composer audit (security advisories)
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development guidelines and PR expectations.
 - [SECURITY.md](SECURITY.md) — how to report a vulnerability (opensource@simtabi.com).
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — community expectations.
-- [THIRD_PARTY.md](THIRD_PARTY.md) — credits for AnsiKit, laravel-console-menu, ansi-php, symfony/tui and bundled fonts.
 
 ## License
 

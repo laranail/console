@@ -7,10 +7,9 @@ Where raw input isn't available — a non-TTY pipe, or Windows — it **transpar
 falls back to [laravel/prompts](prompter.md)**, so it always works and needs no
 `ext-posix`.
 
-It mirrors the ergonomic API of
-[nunomaduro/laravel-console-menu](https://github.com/nunomaduro/laravel-console-menu)
-(MIT) but is an independent implementation built on our own Keypress reader — see
-[THIRD_PARTY.md](../../THIRD_PARTY.md).
+It offers a familiar, ergonomic `->menu($title, $options)->open()` API built on our
+own [`Keypress`](support.md) reader, with `addOption()` / `addQuestion()` and a
+`Command::macro('menu')` helper.
 
 ## In a command
 

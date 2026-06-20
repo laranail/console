@@ -13,11 +13,9 @@ use Stringable;
 
 /**
  * A single content block for a {@see Panel} (or standalone): text with optional
- * fixed width/height, word-wrap and a border.
- *
- * Hardened port of ajaxray/ansikit's PanelBlock (MIT, © Anis Uddin Ahmad) — uses
- * DisplayWidth (multibyte/ANSI-aware) instead of substr, BorderStyle glyphs with
- * an ASCII fallback, and renders to a string. See THIRD_PARTY.md.
+ * fixed width/height, word-wrap and a border. Word-wrap and truncation are
+ * display-width aware via {@see DisplayWidth} (multibyte/ANSI-safe), borders use
+ * {@see BorderStyle} glyphs with an ASCII fallback; renders to a string.
  */
 final class PanelBlock implements Renderable, Stringable
 {

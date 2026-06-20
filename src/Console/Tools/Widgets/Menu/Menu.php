@@ -28,8 +28,8 @@ use Symfony\Component\Console\Output\OutputInterface;
  * isn't available (non-TTY, Windows) it transparently falls back to
  * laravel/prompts — so it always works and needs no ext-posix.
  *
- * Mirrors the ergonomic API of nunomaduro/laravel-console-menu (MIT) but is an
- * independent implementation — see THIRD_PARTY.md.
+ * A fluent `->menu($title, $options)->open()` builder with `addOption()` /
+ * `addQuestion()` and a `Command::macro('menu')` helper.
  */
 final class Menu
 {
