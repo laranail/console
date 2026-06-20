@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Stringable;
 
@@ -22,13 +24,18 @@ use Stringable;
  */
 final readonly class Summary implements Stringable
 {
+    private Capabilities $capabilities;
+
     /**
      * @param array<string, mixed> $stats
      */
     public function __construct(
         private array $stats,
         private ?string $title = null,
-    ) {}
+        ?Capabilities $capabilities = null,
+    ) {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
 
     /**
      * @param array<string, mixed> $stats
@@ -46,7 +53,11 @@ final readonly class Summary implements Stringable
 
         $title = $this->title ?? Lang::get('widgets.summary.title', 'EXECUTION SUMMARY');
 
-        $output[] = $fmt->colorize(str_repeat('─', (int) Config::get('summary.divider_width', 60)), ConsoleUIFormatter::GRAY);
+        $dividerWidth = (int) Config::get('summary.divider_width', 60);
+        if (ResponsiveWidth::enabled()) {
+            $dividerWidth = min($dividerWidth, $this->capabilities->width());
+        }
+        $output[] = $fmt->colorize(str_repeat('─', max($dividerWidth, 1)), ConsoleUIFormatter::GRAY);
         $output[] = $fmt->colorize($title, ConsoleUIFormatter::BRIGHT_CYAN, true);
         $output[] = '';
 

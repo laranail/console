@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Stringable;
 
 /**
  * A definition list: aligned `key : value` pairs. Keys are padded to the widest
- * key (display-width aware); all input is sanitised. Returns an echo-safe string.
+ * key (display-width aware); all input is sanitised. Responsive: rows are clipped
+ * to the terminal width so a long value never overflows. Returns an echo-safe string.
  */
 final class KeyValue implements Stringable
 {
@@ -19,12 +22,17 @@ final class KeyValue implements Stringable
 
     private string $separator = ':';
 
+    private bool $responsive = true;
+
+    private readonly Capabilities $capabilities;
+
     /**
      * @param array<string, scalar|null> $pairs
      */
-    public function __construct(array $pairs = [])
+    public function __construct(array $pairs = [], ?Capabilities $capabilities = null)
     {
         $this->pairs = $this->normalize($pairs);
+        $this->capabilities = $capabilities ?? Capabilities::detect();
     }
 
     /**
@@ -49,6 +57,13 @@ final class KeyValue implements Stringable
         return $this;
     }
 
+    public function responsive(bool $responsive = true): self
+    {
+        $this->responsive = $responsive;
+
+        return $this;
+    }
+
     public function render(): string
     {
         if ($this->pairs === []) {
@@ -56,10 +71,12 @@ final class KeyValue implements Stringable
         }
 
         $width = DisplayWidth::maxWidth(array_keys($this->pairs));
+        $cap = ResponsiveWidth::cap(null, $this->responsive, $this->capabilities);
 
         $lines = [];
         foreach ($this->pairs as $key => $value) {
-            $lines[] = DisplayWidth::pad($key, $width) . ' ' . $this->separator . ' ' . $value;
+            $line = DisplayWidth::pad($key, $width) . ' ' . $this->separator . ' ' . $value;
+            $lines[] = $cap === null ? $line : DisplayWidth::truncate($line, $cap);
         }
 
         return implode("\n", $lines);

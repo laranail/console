@@ -8,7 +8,10 @@ use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
+use Simtabi\Laranail\Console\Tools\Widgets\Summary;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 
 final class ResponsivenessTest extends TestCase
 {
@@ -42,6 +45,38 @@ final class ResponsivenessTest extends TestCase
 
         $out = Box::make([str_repeat('x', 50)])->responsive(false)->render();
         self::assertGreaterThan(20, DisplayWidth::of(explode("\n", $out)[0]));
+    }
+
+    public function test_keyvalue_clamps_long_values(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 20);
+
+        $out = KeyValue::make(['url' => str_repeat('x', 80)])->render();
+        foreach (explode("\n", $out) as $line) {
+            self::assertLessThanOrEqual(20, DisplayWidth::of($line));
+        }
+    }
+
+    public function test_tree_clamps_deep_rows(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 16);
+
+        $out = Tree::make('root')->child(str_repeat('deep ', 20))->render();
+        foreach (explode("\n", $out) as $line) {
+            self::assertLessThanOrEqual(16, DisplayWidth::of($line));
+        }
+    }
+
+    public function test_summary_divider_clamps_to_terminal(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 40);
+
+        $out = Summary::make(['total' => 1, 'success' => 1])->render();
+        // The divider (default 60) is clamped to the 40-col terminal; no line over 40.
+        foreach (explode("\n", $out) as $line) {
+            self::assertLessThanOrEqual(40, DisplayWidth::of(rtrim($line)));
+        }
+        self::assertStringContainsString(str_repeat('─', 40), $out);
     }
 
     public function test_table_wraps_to_fit_when_overflowing(): void
