@@ -5,6 +5,21 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.2] - 2026-06-20
+
+Maintenance: upgrade the dev test stack and keep CI green under it.
+
+### Changed
+
+- Dev dependencies upgraded to latest: **Pest 3 → 4** and **PHPUnit 11 → 12**
+  (PHPUnit 13 is held back by Pest 4's `^12` constraint). Runtime requirements are
+  unchanged (Laravel `^13`, Symfony `^8`) — consumers are unaffected.
+- `AllValidatorsTest` uses the `#[DataProvider]` attribute instead of the
+  `@dataProvider` doc-comment (removed in PHPUnit 12).
+- The default `composer test` runs with `--no-coverage` (coverage is opt-in via
+  `composer test-coverage`), so the strict `failOnWarning` suite no longer fails on
+  the "no coverage driver" notice under Pest 4 / PHPUnit 12.
+
 ## [0.6.1] - 2026-06-20
 
 Pre-open-source QA: one bug fix plus documentation-accuracy and hygiene polish.

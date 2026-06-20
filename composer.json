@@ -46,8 +46,8 @@
   "require-dev": {
     "mockery/mockery": "^1.6",
     "orchestra/testbench": "^11.0",
-    "pestphp/pest": "^3.0",
-    "phpunit/phpunit": "^11.0",
+    "pestphp/pest": "^4.0",
+    "phpunit/phpunit": "^12.0",
     "phpstan/phpstan": "^2.0",
     "larastan/larastan": "^3.0",
     "laravel/pint": "^1.18",
@@ -73,8 +73,8 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/pest --colors=always",
-    "test-coverage": "@test --coverage",
+    "test": "vendor/bin/pest --no-coverage --colors=always",
+    "test-coverage": "vendor/bin/pest --coverage --colors=always",
     "test-dirty": "@test --dirty --compact",
     "examples": [
       "php examples/tools/widgets.php > /dev/null",
