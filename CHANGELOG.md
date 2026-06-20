@@ -5,6 +5,22 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-06-20
+
+Post-1.0 documentation accuracy + a small robustness fix. No API changes.
+
+### Fixed
+
+- `Commands\Concerns\InteractsWithConsoleServices::displayPerformanceSummary()` now
+  boots the service manager first, so it is safe to call before `run()` in a
+  trait-only command (matches the other public entry points).
+- Docs: `support.md` no longer references the removed `resources/fonts/` path (the
+  `block` font is `Support\Fonts\BlockFont`); `widgets.md` shows `Gauge::width($width)`
+  (renamed in 1.0.0); added `BrailleCanvas` and `Hyperlink` sections to `support.md`
+  (both linked from charts/typography docs); `architecture.md` now lists the
+  `Support\Fonts` namespace, `BrailleCanvas`, the `InteractsWithConsoleServices` trait,
+  and the `@api`/`@internal` public-surface model.
+
 ## [1.0.0] - 2026-06-20
 
 First stable release. **No breaking changes from 0.8.0** — the public API is

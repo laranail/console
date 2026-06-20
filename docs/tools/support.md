@@ -203,14 +203,51 @@ never throws on content.
 ```php
 use Simtabi\Laranail\Console\Tools\Support\Figlet;
 
-$figlet = Figlet::font('block');     // bundled font (resources/fonts/block.php)
+$figlet = Figlet::font('block');     // built-in font (Support\Fonts\BlockFont)
 $lines = $figlet->render('HELLO');   // list<string>, $figlet->height() rows
 Figlet::builtins();                  // ['block', …]
 Figlet::font('/path/to/slant.flf');  // any standard FIGlet font
 ```
 
-Ships the MIT `block` font; bundles no third-party `.flf` fonts (see
-`resources/fonts/LICENSE`).
+Ships the MIT `block` font as `Support\Fonts\BlockFont` (clean-room, ours),
+registered in `Support\Fonts\BuiltinFonts`; bundles no third-party `.flf` fonts.
+Add a built-in by adding a `*Font` class (returning a `Fonts\FontDefinition`) plus
+one registry entry.
+
+## BrailleCanvas
+
+A virtual pixel grid: each terminal cell packs a **2×4 block of braille dots**
+(`U+2800`-based), giving sub-character resolution for line and scatter charts. An
+optional per-cell *pen* id lets callers colour cells (one colour per cell — a single
+glyph can't mix colours per dot). Without Unicode it degrades to a coarse
+one-char-per-cell ASCII plot.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
+
+$canvas = new BrailleCanvas(width: 30, height: 8);  // cells (→ 60×32 pixels)
+$canvas->set($x, $y);                                // light one pixel
+$canvas->line($x0, $y0, $x1, $y1);                   // Bresenham line
+$lines = $canvas->render();                          // list<string>
+```
+
+Used by [`LineChart` and `ScatterPlot`](charts.md); `pixelWidth()` / `pixelHeight()`
+report the dot grid size.
+
+## Hyperlink
+
+Builds OSC-8 terminal hyperlinks with a scheme allow-list, degrading to
+`label (url)` where hyperlinks or colour aren't supported. Used by the
+[`Link`](typography.md) typography component and Markdown links.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
+
+Hyperlink::render('Docs', 'https://opensource.simtabi.com/console/docs/');
+Hyperlink::isAllowed($url);     // bool — scheme allow-list (http/https/mailto/…)
+Hyperlink::safe($url);          // the URL if allowed, otherwise null
+Hyperlink::schemes();           // the allowed scheme list
+```
 
 ## Config
 

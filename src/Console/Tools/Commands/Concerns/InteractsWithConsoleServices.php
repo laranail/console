@@ -178,6 +178,8 @@ trait InteractsWithConsoleServices
      */
     protected function displayPerformanceSummary(): void
     {
+        $this->bootConsoleSupport();
+
         $summary = $this->services->performance()->getPerformanceSummary(
             $this->getCommandName(),
             $this->services->metadata()->all()

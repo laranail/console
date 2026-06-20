@@ -32,7 +32,7 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `KeyValue` | `Console::keyValue($pairs)` | `add($key, $value)`, `separator($s)`, `render()` — aligned `key : value` |
 | `Callout` | — (class) | `Callout::success/error/warning/info($msg)`, `title()`, `render()` |
 | `Banner` | `Console::banner($title)` | `subtitle()`, `boxed($bool=true)`, `width($n)`, `render()` |
-| `Gauge` | `Console::gauge($value, $max=100)` | `label()`, `width($barWidth)`, `showValue($bool=true)`, `render()` |
+| `Gauge` | `Console::gauge($value, $max=100)` | `label()`, `width($width)`, `showValue($bool=true)`, `render()` |
 | `Sparkline` | `Console::sparkline($values)` | `render()` (numeric-summary fallback without Unicode) |
 | `StepFlow` | `Console::steps($steps)` | `step($label)`, `current($index)`, `render()` |
 | `Summary` | — (class) | `Summary::make($stats, ?string $title = null)` (defaults to a localised title), `render()` → **raw ANSI** |
