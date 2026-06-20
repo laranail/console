@@ -91,6 +91,30 @@ final class ResponsivenessTest extends TestCase
         self::assertStringEndsWith("\033[0m", $out);      // closed (no bleed)
     }
 
+    public function test_truncate_ansi_keeps_osc8_hyperlinks_well_formed(): void
+    {
+        $link = "\e]8;;https://example.com\e\\label\e]8;;\e\\"; // 5 visible chars
+
+        $out = DisplayWidth::truncateAnsi($link, 3);
+
+        self::assertSame(3, DisplayWidth::of($out));            // 'lab'
+        self::assertStringContainsString("\e]8;;https://example.com\e\\", $out); // opener kept
+        self::assertStringEndsWith("\e]8;;\e\\", $out);         // hyperlink closed
+        self::assertStringContainsString('lab', $out);
+    }
+
+    public function test_panel_with_link_stays_well_formed_when_clamped(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 14, interactive: true);
+
+        $panel = Panel::make()->horizontal()
+            ->add(PanelBlock::make("\e]8;;https://example.com\e\\a long clickable label\e]8;;\e\\"));
+
+        $out = implode("\n", $panel->renderLines());
+        // no bare OSC-8 introducer left open (every opener is balanced by a close)
+        self::assertSame(substr_count($out, "\e]8;;https://"), substr_count($out, "\e]8;;\e\\"));
+    }
+
     public function test_summary_content_clamps_to_narrow_terminal(): void
     {
         Capabilities::fake(colors: true, unicode: true, width: 18);
