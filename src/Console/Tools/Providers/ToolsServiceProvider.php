@@ -15,6 +15,8 @@ use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
  * Tools classes are either static (ConsoleUIFormatter), instantiated directly
  * (widgets, the command base + services), or extended (Command) — none require
  * container bindings today. It also registers the `menu()` command macro.
+ *
+ * @internal Auto-discovered framework wiring; not part of the public API.
  */
 final class ToolsServiceProvider extends ServiceProvider
 {

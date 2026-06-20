@@ -11,6 +11,8 @@ namespace Simtabi\Laranail\Console\Tools\Support;
  * is enabled (config `console.responsive`, default true, AND the widget opts in),
  * the cap is the detected terminal width; otherwise there is no cap (legacy
  * behaviour — content is not clamped).
+ *
+ * @internal Internal helper behind every widget's `responsive()`/`width()`.
  */
 final class ResponsiveWidth
 {

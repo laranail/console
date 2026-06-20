@@ -4,9 +4,9 @@
 
 | Version | Status         |
 |---------|----------------|
-| 0.x     | Active support |
+| 1.x     | Active support |
 
-Security fixes are released on the latest `0.x` tag.
+Security fixes are released on the latest `1.x` tag.
 
 ## Reporting a vulnerability
 

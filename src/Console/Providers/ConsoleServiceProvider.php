@@ -16,6 +16,8 @@ use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
  * Owns package-wide wiring — configuration, translations, the ConsoleManager
  * binding — and registers the per-sub-domain child providers. New sub-domains
  * are added by registering their child provider here.
+ *
+ * @internal Auto-discovered framework wiring; not part of the public API.
  */
 final class ConsoleServiceProvider extends ServiceProvider
 {

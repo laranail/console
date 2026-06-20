@@ -12,6 +12,8 @@ use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
  *
  * This class manages context-related methods.
  *
+ * @internal Used by the Prompter engine; reach it via `Console::prompter()`.
+ *
  * @method void note(string $message)
  * @method void error(string $message)
  * @method void warning(string $message)

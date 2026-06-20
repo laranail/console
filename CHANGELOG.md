@@ -5,6 +5,35 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-06-20
+
+First stable release. **No breaking changes from 0.8.0** — the public API is
+unchanged; this release promotes the package to SemVer-stable and defines the
+supported surface. 0.8.x code runs unchanged.
+
+### Added
+
+- **`Commands\Concerns\InteractsWithConsoleServices`** trait — the full command
+  support (`$this->services`, the managed run() lifecycle, signals, structured
+  exceptions and verbosity helpers) usable on **any** `Illuminate\Console\Command`,
+  even one extending a different base. The `Command` base now composes this trait.
+- A **Versioning & stability** policy ([docs/release.md](docs/release.md)): SemVer
+  covers the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
+  classes; `@internal` classes and the experimental `symfony/tui` integration
+  (`Console\Tui\*`, `Console::tui()`) are excluded.
+
+### Changed
+
+- **Public-API surface defined:** `@internal` on implementation-only classes
+  (service providers, `RendersBlock`, `ResponsiveWidth`, Prompter `ContextBuilderService`
+  + `Helpers`); `@api` on the `Console`/`Prompter` facades and the `Renderable` /
+  `Interactive` contracts.
+- `Console::summary()` title is now i18n-aware via the facade (`?string $title = null`
+  instead of a forced literal) — the localised default is unchanged.
+- `Gauge::width()` parameter renamed `$barWidth` → `$width` for consistency with the
+  widget family (param names are part of the BC contract under named arguments).
+- `composer.json` `branch-alias` → `1.x-dev`; `SECURITY.md` supported versions → `1.x`.
+
 ## [0.8.0] - 2026-06-20
 
 Adds a chart family, refactors the bundled font into classes, and removes the

@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Helpers;
 
+/**
+ * Internal input-sanitisation helpers for the Prompter.
+ *
+ * @internal Not part of the public API.
+ */
 class Helpers
 {
     /**

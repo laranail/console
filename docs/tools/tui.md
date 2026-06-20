@@ -19,6 +19,12 @@ interactive, full-screen apps and **mount our output widgets inside them**.
 > `Console::tui()` throws a clear `ConsoleException`; the rest of the toolkit is
 > unaffected and installs stably.
 
+> **Not covered by the 1.0 BC guarantee.** Because this integration rides the
+> upstream `symfony/tui` `@dev` package, `Console\Tui\*` and `Console::tui()` are
+> **excluded from SemVer** — they may change or break with the upstream at any time
+> (see [Versioning & stability](../release.md#versioning--stability)). The rest of
+> the package is stable.
+
 ## Mounting our widgets
 
 `Console\Tui\RenderableWidget::of()` adapts any of our widgets — a

@@ -115,7 +115,7 @@ The package has three output styles — know which you're holding:
 | [Interactive menu](docs/tools/menu.md) | Key-driven menu with a prompts fallback |
 | [Full-screen TUI](docs/tools/tui.md) | symfony/tui integration — mount our widgets in a TUI app |
 | [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, Keypress, Terminal, ANSI primitives |
-| [Commands](docs/tools/commands.md) | The Artisan command base + services |
+| [Commands](docs/tools/commands.md) | The Artisan command base + services (or the `InteractsWithConsoleServices` trait) |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
@@ -131,6 +131,15 @@ Changelog: [CHANGELOG.md](CHANGELOG.md).
 > [`symfony/tui`](docs/tools/tui.md) integration is **optional**:
 > `composer require symfony/tui` (experimental, needs `"minimum-stability": "dev"`)
 > only if you want it.
+
+## Stability
+
+`laranail/console` is **1.0** and follows [SemVer](https://semver.org). The public
+API — the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
+classes — is stable; breaking changes only land in a major. Classes marked
+`@internal`, and the experimental full-screen TUI (`Console::tui()` /
+[`symfony/tui`](docs/tools/tui.md)), are **not** covered by the BC guarantee. See
+[Versioning & stability](docs/release.md#versioning--stability).
 
 ## Local development
 

@@ -14,6 +14,8 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
  *
  * This class provides a fluent interface for chaining prompt method calls.
  *
+ * @api Stable public entry point for the Prompter (SemVer-covered).
+ *
  * @method static Prompter text(string $label, string $placeholder = '', string $default = '', bool|string $required = false, mixed $validate = null, string $hint = '')
  * @method static Prompter textarea(string $label, string $placeholder = '', string $default = '', bool|string $required = false, ?Closure $validate = null, string $hint = '', int $rows = 5)
  * @method static Prompter password(string $label, string $placeholder = '', bool|string $required = false, mixed $validate = null, string $hint = '')

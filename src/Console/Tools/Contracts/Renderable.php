@@ -7,6 +7,8 @@ namespace Simtabi\Laranail\Console\Tools\Contracts;
 /**
  * Something that renders to a rectangular block of lines, so it can be composed
  * inside a Panel (or nested in another panel).
+ *
+ * @api Stable contract (SemVer-covered).
  */
 interface Renderable
 {

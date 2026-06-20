@@ -81,7 +81,7 @@ use Symfony\Component\Tui\Tui;
  * @method static Histogram histogram(array $values = [])
  * @method static Banner banner(string $title)
  * @method static Header header(string $title)
- * @method static Summary summary(array $stats, string $title = 'EXECUTION SUMMARY')
+ * @method static Summary summary(array $stats, ?string $title = null)
  * @method static StepFlow steps(array $steps = [])
  * @method static TaskProgress tasks(?OutputInterface $output = null)
  * @method static Color color()
@@ -116,6 +116,8 @@ use Symfony\Component\Tui\Tui;
  * @method static Prompter prompter()
  *
  * @see ConsoleManager
+ *
+ * @api This facade is the package's stable public entry point (SemVer-covered).
  */
 final class Console extends Facade
 {

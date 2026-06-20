@@ -57,6 +57,41 @@ command). Reach any service directly, e.g.
 `$this->services->metadata()->add(...)`. There are no per-method proxies on the
 base — one obvious access path, no Middle-Man indirection.
 
+## Use the trait (when you can't extend the base)
+
+The base is just `extends Illuminate\Console\Command` + the
+`Tools\Commands\Concerns\InteractsWithConsoleServices` trait. If your command must
+extend a different base (a vendor command, Laravel's `GeneratorCommand`, …), `use`
+the trait directly to get the **same** full support — `$this->services`, the managed
+lifecycle, signals, structured exceptions and the verbosity helpers:
+
+```php
+use Illuminate\Console\GeneratorCommand;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
+
+final class MakeWidgetCommand extends GeneratorCommand
+{
+    use InteractsWithConsoleServices;
+
+    protected $signature = 'make:widget {name}';
+
+    public function handle(): int
+    {
+        $this->services->display()->info('Generating…');
+
+        return self::SUCCESS;
+    }
+}
+```
+
+Implement `handle()` as usual — the trait owns `run()`. `$this->services` is booted
+lazily before `run()`; if you need it inside your own constructor, call
+`$this->bootConsoleSupport()` after `parent::__construct()`.
+
+For widgets/prompts in **any** class (no command, no inheritance at all), the
+[`Console`](../../README.md) facade works everywhere: `Console::box(...)`,
+`Console::table()`, `Console::prompter()->text(...)`.
+
 ## CommandDisplayService
 
 `$this->getServices()->display()` formats output: emoji status messages,

@@ -34,6 +34,25 @@ composer test
 - PHPStan level 8 (see `phpstan.neon`); `composer lint` must be clean.
 - Rector dry-run must be clean (see `rector.php`).
 
+## Public-API conventions (locked at 1.0)
+
+Since 1.0 the public API follows SemVer (see [docs/release.md](docs/release.md#versioning--stability)).
+Keep new components consistent with the family so the surface stays uniform:
+
+- **Fluent setters return `self`** (the established convention). The one exception
+  is `Pill`, which `extends Badge` and so returns `static` — keep subclass-friendly
+  inheritance chains returning `static`, standalone widgets returning `self`.
+- Every widget/typography component exposes a static **`make()`** factory.
+- **Setter parameter names are part of the BC contract** (PHP named arguments).
+  Use `$width` / `$height` for size setters. The chart widgets deliberately use
+  `height(int $rows)` (the value is a row count) — keep that consistent across all
+  charts; don't reintroduce other size-param names elsewhere.
+- Pure block components implement **`Renderable`** (`renderLines()`, get
+  `render()`/`__toString()` via the internal `RendersBlock` trait); side-effecting
+  ones implement **`Interactive`** and must degrade to a single static render when
+  the terminal isn't interactive.
+- Mark implementation-only classes **`@internal`**; they're excluded from BC.
+
 ## Artisan command naming
 
 Commands across the laranail family follow one shape:
