@@ -5,6 +5,27 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.1] - 2026-06-20
+
+Pre-open-source QA: one bug fix plus documentation-accuracy and hygiene polish.
+
+### Fixed
+
+- `Support\DisplayWidth::truncateAnsi()` corrupted OSC-8 hyperlinks — it only
+  recognised SGR sequences, so a clipped link (e.g. a `Link` inside a narrow
+  `Panel`/`Summary`) was cut mid-introducer, dropping the label/URL and leaving a
+  dangling hyperlink. OSC-8 sequences are now zero-width passthrough and any open
+  link/style is closed on truncation.
+- Documentation accuracy: removed a non-existent `Box::content()` (added the real
+  `responsive()`), fixed a broken `responsive.md` back-link, completed the
+  `FieldType` case list and the validator count/table (incl. `LaravelRule`), and
+  corrected the service-count and a class reference.
+
+### Changed
+
+- `composer.json` `branch-alias` `0.2.x-dev` → `0.x-dev`; Dependabot timezone
+  `UTC` → `America/New_York`.
+
 ## [0.6.0] - 2026-06-20
 
 Clears the items deferred from v0.5.
