@@ -11,6 +11,7 @@ use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Stringable;
 
 /**
@@ -82,6 +83,23 @@ final readonly class Markdown implements Stringable
             // Heading.
             if (preg_match('/^(#{1,6})\s+(.*)$/', $trimmed, $m) === 1) {
                 $doc->heading($this->inline($m[2]), strlen($m[1]));
+
+                continue;
+            }
+
+            // GFM table: a header row, a `---|---` separator, then data rows.
+            if (str_contains($trimmed, '|') && $i + 1 < $count && $this->isTableSeparator(trim($lines[$i + 1]))) {
+                $headers = $this->splitTableRow($trimmed);
+                $columns = count($headers);
+                $i += 2;
+                $rows = [];
+                while ($i < $count && trim($lines[$i]) !== '' && str_contains($lines[$i], '|')) {
+                    $cells = array_slice(array_pad($this->splitTableRow(trim($lines[$i])), $columns, ''), 0, $columns);
+                    $rows[] = $cells;
+                    $i++;
+                }
+                $i--;
+                $doc->add(new Table($this->capabilities)->headers($headers)->rows($rows));
 
                 continue;
             }
@@ -169,6 +187,26 @@ final readonly class Markdown implements Stringable
     private function isBlockStart(string $line): bool
     {
         return preg_match('/^(#{1,6}\s|>|[-*]\s|\d+\.\s|```|-{3,}$|\*{3,}$|_{3,}$)/', $line) === 1;
+    }
+
+    /**
+     * A GFM table separator row, e.g. `| --- | :--: | ---: |`.
+     */
+    private function isTableSeparator(string $line): bool
+    {
+        return preg_match('/^\|?\s*:?-+:?\s*(\|\s*:?-+:?\s*)*\|?$/', $line) === 1;
+    }
+
+    /**
+     * Split a `| a | b |` table row into trimmed, plain-text cells.
+     *
+     * @return list<string>
+     */
+    private function splitTableRow(string $line): array
+    {
+        $line = (string) preg_replace('/^\||\|$/', '', trim($line));
+
+        return array_values(array_map(fn (string $cell): string => $this->inline(trim($cell)), explode('|', $line)));
     }
 
     /**
