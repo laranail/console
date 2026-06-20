@@ -22,7 +22,7 @@ Console
 │   └── Notifications\       # ConsoleChannel (+ contract)
 └── Prompter\                # INPUT
     ├── Prompter, Services\  # fluent wrapper + PromptService + FormBuilder
-    ├── Validators\          # 25+ validators (+ AbstractValidator, LaravelRule)
+    ├── Validators\          # 26 validators (incl. LaravelRule) + AbstractValidator/RegexValidator bases
     ├── Commands\, Contracts\, Enums\, Facades\, Helpers\, Providers\
     └── Exceptions\          # PrompterException (extends ConsoleException)
 ```
@@ -44,11 +44,13 @@ why Unicode/colour degrade consistently and aligned output never drifts.
 
 ## Dependencies
 
-`illuminate/console`, `illuminate/support`, `illuminate/contracts`,
-`laravel/prompts`, `symfony/console` (^8), plus the experimental `symfony/tui`
-(+ `symfony/event-dispatcher`, `symfony/string`, `revolt/event-loop`) powering the
-full-screen [TUI integration](tools/tui.md) — which raises the floor to PHP 8.4.1.
-No dependency on the laranail core package.
+Runtime: `illuminate/console`, `illuminate/support`, `illuminate/contracts`,
+`laravel/prompts`, `symfony/console` (^8). The PHP `^8.4.1` floor comes from
+`composer.json` `require.php` directly.
+
+`symfony/tui` (+ `symfony/event-dispatcher`, `symfony/string`, `revolt/event-loop`)
+is **optional** — `require-dev` + `suggest`, experimental — and only needed for the
+full-screen [TUI integration](tools/tui.md). No dependency on the laranail core package.
 
 ---
 

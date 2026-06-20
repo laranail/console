@@ -10,10 +10,11 @@ composer require laranail/console
 - Laravel `^13.0` (Symfony 8 components)
 - `ext-mbstring`
 
-> The package installs **stably** — no dev-stability dependency. The optional,
-> **experimental** [`symfony/tui`](tools/tui.md) integration is *not* required;
-> install it (`composer require symfony/tui`, PHP ≥ 8.4.1, `minimum-stability: dev`)
-> only if you want the full-screen TUI. Everything else works without it.
+> The core installs from **stable releases** — you do **not** need to change your
+> app's `minimum-stability`. Only the optional, **experimental**
+> [`symfony/tui`](tools/tui.md) integration does: install it (`composer require
+> symfony/tui`, PHP ≥ 8.4.1, `minimum-stability: dev`) if you want the full-screen
+> TUI. Everything else works without it.
 
 ## Service provider
 

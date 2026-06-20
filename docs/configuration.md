@@ -13,7 +13,7 @@ accept an environment override.
 |-----|---------|-------|
 | `output.unicode` | `auto` | `auto` \| `true` \| `false`. Use Unicode glyphs or ASCII fallbacks. Env: `CONSOLE_UNICODE`. |
 | `output.colors` | `auto` | `auto` \| `always` \| `never`. `auto` honours `NO_COLOR`/`FORCE_COLOR`/TTY. Env: `CONSOLE_COLORS`. |
-| `output.symbols` | `auto` | `auto` \| `fancy` \| `ascii`. Status/tree/box glyph set. |
+| `output.symbols` | `auto` | `auto` \| `fancy` \| `ascii`. Status/tree/box glyph set. Env: `CONSOLE_SYMBOLS`. |
 | `output.width` | `null` | Fixed column width, or `null` to auto-detect. Env: `CONSOLE_WIDTH`. |
 | `spinner.frames` | `braille` | `braille` \| `dots` \| `line` \| `breath`. Env: `CONSOLE_SPINNER_FRAMES`. |
 | `progress.format` | `detailed` | `minimal` \| `classic` \| `detailed`. Env: `CONSOLE_PROGRESS_FORMAT`. |

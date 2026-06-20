@@ -10,9 +10,10 @@ use Simtabi\Laranail\Console\Tools\Theme\Theme;
 
 /**
  * A deliberately small, regex-based syntax highlighter for fenced code blocks.
- * Supports `php` and `json` (comments, strings, numbers, keywords/variables);
- * any other language renders plain. Per-line (no cross-line string/comment state)
- * — good enough for docs, not a full lexer. Colours come from the theme.
+ * Supports `php`, `json`, `bash`, `yaml` and `js` (plus aliases: `sh`/`shell`/`zsh`,
+ * `yml`, `javascript`/`node`/`mjs`) — comments, strings, numbers, keywords/keys/
+ * variables; any other language renders plain. Per-line (no cross-line string or
+ * comment state) — good enough for docs, not a full lexer. Colours come from the theme.
  */
 final readonly class SyntaxHighlighter
 {
