@@ -35,15 +35,20 @@ use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Button;
 use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
+use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
+use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
+use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
@@ -177,6 +182,56 @@ final class ConsoleManager
     public function barChart(array $data = []): BarChart
     {
         return BarChart::make($data);
+    }
+
+    /**
+     * A labelled vertical bar (column) chart.
+     *
+     * @param array<string, int|float> $data label => value
+     */
+    public function columnChart(array $data = []): ColumnChart
+    {
+        return ColumnChart::make($data);
+    }
+
+    /**
+     * A braille line chart of one or more numeric series.
+     *
+     * @param array<string, list<int|float>>|list<int|float> $series
+     */
+    public function lineChart(array $series = []): LineChart
+    {
+        return LineChart::make($series);
+    }
+
+    /**
+     * A braille scatter plot of (x, y) points.
+     *
+     * @param list<array{0: int|float, 1: int|float}> $points
+     */
+    public function scatterPlot(array $points = []): ScatterPlot
+    {
+        return ScatterPlot::make($points);
+    }
+
+    /**
+     * A colour-intensity heatmap of a 2D matrix.
+     *
+     * @param list<list<int|float>> $matrix
+     */
+    public function heatmap(array $matrix = []): Heatmap
+    {
+        return Heatmap::make($matrix);
+    }
+
+    /**
+     * A frequency histogram of raw values (binned).
+     *
+     * @param list<int|float> $values
+     */
+    public function histogram(array $values = []): Histogram
+    {
+        return Histogram::make($values);
     }
 
     /**

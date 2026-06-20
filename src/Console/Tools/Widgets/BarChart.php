@@ -22,7 +22,7 @@ final class BarChart implements Renderable, Stringable
 {
     use RendersBlock;
 
-    /** @var array<string, float> */
+    /** @var array<array-key, float> */
     private array $data = [];
 
     private ?int $width = null;
@@ -97,7 +97,9 @@ final class BarChart implements Renderable, Stringable
         $fill = $unicode ? '█' : '#';
         $track = $unicode ? '░' : '-';
 
-        $labelWidth = min(DisplayWidth::maxWidth(array_keys($this->data)), max((int) floor($total / 3), 1));
+        // Numeric-string labels (e.g. "1") become int array keys — stringify for width/render.
+        $labels = array_map(strval(...), array_keys($this->data));
+        $labelWidth = min(DisplayWidth::maxWidth($labels), max((int) floor($total / 3), 1));
         $max = max(1.0, max($this->data));
         $valueWidth = $this->showValues ? DisplayWidth::maxWidth(array_map($this->formatValue(...), $this->data)) + 1 : 0;
         $barArea = max($total - $labelWidth - $valueWidth - 1, 1);
@@ -106,7 +108,8 @@ final class BarChart implements Renderable, Stringable
         $trackStyle = $this->theme->style('muted');
 
         $lines = [];
-        foreach ($this->data as $label => $value) {
+        foreach (array_values($this->data) as $i => $value) {
+            $label = $labels[$i];
             $filled = (int) round($value / $max * $barArea);
             $filled = max(0, min($barArea, $filled));
 

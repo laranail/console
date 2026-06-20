@@ -35,15 +35,20 @@ use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Button;
 use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
+use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
+use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
+use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
@@ -69,6 +74,11 @@ use Symfony\Component\Tui\Tui;
  * @method static Gauge gauge(float $value, float $max = 100.0)
  * @method static Sparkline sparkline(array $values)
  * @method static BarChart barChart(array $data = [])
+ * @method static ColumnChart columnChart(array $data = [])
+ * @method static LineChart lineChart(array $series = [])
+ * @method static ScatterPlot scatterPlot(array $points = [])
+ * @method static Heatmap heatmap(array $matrix = [])
+ * @method static Histogram histogram(array $values = [])
  * @method static Banner banner(string $title)
  * @method static Header header(string $title)
  * @method static Summary summary(array $stats, string $title = 'EXECUTION SUMMARY')
