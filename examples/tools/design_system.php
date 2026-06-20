@@ -15,11 +15,11 @@ require __DIR__ . '/../../vendor/autoload.php';
 
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Document\Markdown;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
 use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Pill;
-use Simtabi\Laranail\Console\Tools\Typography\Text;
 
 echo Banner::success('DESIGN SYSTEM')->render(), "\n\n";
 
@@ -36,10 +36,10 @@ echo Document::make()
     ->render(), "\n\n";
 
 echo Text::make('Inline: ')->text('success ')->success()->render()
-    , Badge::success('OK')->render(), ' '
-    , Badge::warning('WARN')->render(), ' '
-    , Badge::danger('FAIL')->render(), ' '
-    , Pill::make('beta', 'info')->render(), "\n\n";
+, Badge::success('OK')->render(), ' '
+, Badge::warning('WARN')->render(), ' '
+, Badge::danger('FAIL')->render(), ' '
+, Pill::make('beta', 'info')->render(), "\n\n";
 
 echo BarChart::make(['api' => 1240, 'web' => 860, 'cli' => 320, 'cron' => 90])->render(), "\n\n";
 

@@ -35,6 +35,9 @@ accept an environment override.
 | `logging.channel` | `null` | Log channel name, or `null` for the default. Env: `CONSOLE_LOG_CHANNEL`. |
 | `interaction.non_interactive_required_throws` | `true` | Throw (rather than returning empty) when a required value is requested in a non-interactive session. Env: `CONSOLE_REQUIRE_INTERACTIVE`. |
 | `locale` | `null` | Translation locale for console strings; `null` follows the app locale. Env: `CONSOLE_LOCALE`. |
+| `responsive` | `true` | Clamp widgets to the terminal width so content never overflows; `->width()` wins, `->responsive(false)` opts out per call. Env: `CONSOLE_RESPONSIVE`. |
+| `theme.palette` | `[]` | Override the design-system semantic palette (roles: `primary`, `accent`, `success`, `warning`, `danger`, `info`, `muted`); accepts any colour spec (hex/rgb()/hsl()/named/@256). Restyles typography, banners, badges, Text/Style. |
+| `banner.themes` | `[]` | Custom named banner presets for `Banner::theme('name')` — each a subset of `[font, color, gradient, border, align, padding]`. Built-ins: `success`, `error`, `warning`, `info`, `plain`. |
 
 `auto` values are resolved at runtime by
 `Simtabi\Laranail\Console\Tools\Support\Capabilities`, which inspects the

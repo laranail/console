@@ -94,6 +94,7 @@ The package has three output styles — know which you're holding:
 | Page | What it covers |
 |------|----------------|
 | [Installation](docs/installation.md) | Requirements, install, publishing |
+| [Design system](docs/design-system.md) | Theme, typography, documents, responsiveness — the big picture |
 | [Architecture](docs/architecture.md) | Umbrella, sub-domains, the manager |
 | [Configuration](docs/configuration.md) | Every `config/console.php` key |
 | [Internationalization](docs/i18n.md) | Translating console strings |
