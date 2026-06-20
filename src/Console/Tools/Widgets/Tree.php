@@ -6,12 +6,15 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Stringable;
 
 /**
  * Renders a nested tree with `├─ │ └─` connectors (ASCII fallbacks without
- * Unicode), each node optionally prefixed with a status glyph.
+ * Unicode), each node optionally prefixed with a status glyph. Responsive: deep
+ * rows are clipped to the terminal width so they never wrap/overflow.
  */
 final class Tree implements Stringable
 {
@@ -22,12 +25,17 @@ final class Tree implements Stringable
 
     private ?string $status = null;
 
+    private bool $responsive = true;
+
     private readonly Symbols $symbols;
+
+    private readonly Capabilities $capabilities;
 
     public function __construct(string $label = '', ?Capabilities $capabilities = null)
     {
         $this->label = ConsoleUIFormatter::sanitizeText($label);
-        $this->symbols = Symbols::for($capabilities ?? Capabilities::detect());
+        $this->capabilities = $capabilities ?? Capabilities::detect();
+        $this->symbols = Symbols::for($this->capabilities);
     }
 
     public static function make(string $label = ''): self
@@ -96,9 +104,26 @@ final class Tree implements Stringable
         return $this;
     }
 
+    public function responsive(bool $responsive = true): self
+    {
+        $this->responsive = $responsive;
+
+        return $this;
+    }
+
     public function render(): string
     {
-        return rtrim($this->label() . "\n" . $this->renderChildren(''));
+        $out = rtrim($this->label() . "\n" . $this->renderChildren(''));
+        $cap = ResponsiveWidth::cap(null, $this->responsive, $this->capabilities);
+
+        if ($cap === null) {
+            return $out;
+        }
+
+        return implode("\n", array_map(
+            static fn (string $line): string => DisplayWidth::truncate($line, $cap),
+            explode("\n", $out),
+        ));
     }
 
     private function renderChildren(string $prefix): string
