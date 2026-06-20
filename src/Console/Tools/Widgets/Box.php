@@ -8,6 +8,7 @@ use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Stringable;
 
 /**
@@ -29,6 +30,8 @@ final class Box implements Stringable
     private int $padding = 1;
 
     private ?int $width = null;
+
+    private bool $responsive = true;
 
     private readonly Capabilities $capabilities;
 
@@ -84,6 +87,17 @@ final class Box implements Stringable
         return $this;
     }
 
+    /**
+     * Clamp the box to the terminal width (default on). Long lines are truncated
+     * so the frame never overflows a narrow terminal.
+     */
+    public function responsive(bool $responsive = true): self
+    {
+        $this->responsive = $responsive;
+
+        return $this;
+    }
+
     public function rounded(): self
     {
         return $this->style(BorderStyle::Rounded);
@@ -123,14 +137,22 @@ final class Box implements Stringable
                 $inner = max($inner, DisplayWidth::of($label) + 3);
             }
         }
+
+        // Responsive: never let the frame exceed the terminal width (an explicit
+        // width() still wins). Only clamps when content would otherwise overflow.
+        if ($this->width === null && ResponsiveWidth::enabled() && $this->responsive) {
+            $inner = min($inner, max($this->capabilities->width() - 2, 1));
+        }
+
         $pad = str_repeat(' ', $this->padding);
+        $interior = max($inner - ($this->padding * 2), 1);
 
         $top = $this->rule($g['tl'], $g['tr'], $g['h'], $inner, $this->title);
         $bottom = $this->rule($g['bl'], $g['br'], $g['h'], $inner, $this->footer);
 
         $body = [];
         foreach ($lines as $line) {
-            $body[] = $g['v'] . $pad . DisplayWidth::pad($line, $inner - ($this->padding * 2)) . $pad . $g['v'];
+            $body[] = $g['v'] . $pad . DisplayWidth::pad(DisplayWidth::truncate($line, $interior), $interior) . $pad . $g['v'];
         }
 
         return implode("\n", [$top, ...$body, $bottom]);
