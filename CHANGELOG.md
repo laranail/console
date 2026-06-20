@@ -5,6 +5,30 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.6.0] - 2026-06-20
+
+Clears the items deferred from v0.5.
+
+### Added
+
+- **Inline Markdown styling** — `Document\InlineMarkup` renders `**bold**`,
+  `*italic*`, `` `code` `` and `[label](url)` (+ `:emoji:`) to themed ANSI;
+  `Paragraph::rich()` wraps already-styled text (ANSI-aware, per-line reset).
+  Markdown paragraphs now render with real emphasis (degrade to plain without colour).
+- **Basic code highlighting** — `CodeBlock::language()` + `Typography\SyntaxHighlighter`
+  for **php** and **json** (others render plain); Markdown fenced blocks use their
+  info-string.
+- **`DisplayWidth::truncateAnsi()`** — width-truncate while preserving and closing
+  ANSI styling.
+- New examples (markdown, typography, theming, barchart, emoji, symbols) and doc
+  pages (markdown, barchart, emoji, symbols).
+
+### Changed
+
+- Responsiveness now also covers `Summary` content lines (clamped via
+  `truncateAnsi`) and `Panel` horizontal layouts (block widths shrink to fit the
+  terminal; `->responsive(false)` opts out).
+
 ## [0.5.1] - 2026-06-20
 
 ### Changed
