@@ -25,9 +25,10 @@ final class DisplayWidth
     }
 
     /**
-     * Truncate to a visible width while preserving ANSI SGR sequences (they don't
-     * count toward the width) and closing any style left open, so a clipped styled
-     * string never bleeds colour. No-op when the text already fits.
+     * Truncate to a visible width while preserving ANSI SGR colour and OSC-8
+     * hyperlink sequences (neither counts toward the width) and closing anything
+     * left open — so a clipped styled string never bleeds colour or leaves a
+     * dangling hyperlink. No-op when the text already fits.
      */
     public static function truncateAnsi(string $text, int $max): string
     {
@@ -39,19 +40,29 @@ final class DisplayWidth
             return $text;
         }
 
-        $parts = preg_split('/(\e\[[0-9;]*m)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [];
+        // Capture SGR (\e[…m) and OSC-8 hyperlink (\e]8;;…\e\) sequences as
+        // zero-width passthrough tokens; everything else is visible text.
+        $parts = preg_split('/(\e\[[0-9;]*m|\e\]8;;[^\e]*\e\\\\)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [];
         $out = '';
         $width = 0;
-        $open = false;
+        $sgrOpen = false;
+        $linkOpen = false;
 
         foreach ($parts as $part) {
             if ($part === '') {
                 continue;
             }
 
+            if (str_starts_with($part, "\e]8;;")) {
+                $out .= $part;
+                $linkOpen = $part !== "\e]8;;\e\\"; // the empty-URL form is the close
+
+                continue;
+            }
+
             if (preg_match('/^\e\[[0-9;]*m$/', $part) === 1) {
                 $out .= $part;
-                $open = $part !== "\e[0m";
+                $sgrOpen = $part !== "\e[0m";
 
                 continue;
             }
@@ -60,7 +71,7 @@ final class DisplayWidth
                 $charWidth = self::of($char);
 
                 if ($width + $charWidth > $max) {
-                    return $open ? $out . "\e[0m" : $out;
+                    return $out . self::close($linkOpen, $sgrOpen);
                 }
 
                 $out .= $char;
@@ -68,7 +79,15 @@ final class DisplayWidth
             }
         }
 
-        return $open ? $out . "\e[0m" : $out;
+        return $out . self::close($linkOpen, $sgrOpen);
+    }
+
+    /**
+     * Close any open OSC-8 hyperlink + SGR style left by a truncation.
+     */
+    private static function close(bool $linkOpen, bool $sgrOpen): string
+    {
+        return ($linkOpen ? "\e]8;;\e\\" : '') . ($sgrOpen ? "\e[0m" : '');
     }
 
     /**

@@ -7,7 +7,7 @@ updates:
       interval: weekly
       day: monday
       time: '06:00'
-      timezone: UTC
+      timezone: America/New_York
     groups:
       composer-minor-and-patch:
         update-types: [minor, patch]
@@ -21,7 +21,7 @@ updates:
       interval: weekly
       day: monday
       time: '06:00'
-      timezone: UTC
+      timezone: America/New_York
     groups:
       actions-minor-and-patch:
         update-types: [minor, patch]

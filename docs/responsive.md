@@ -47,4 +47,4 @@ $this->withConsoleCapabilities(width: 40, unicode: false);
 
 See [Testing](tools/testing.md).
 
-[← Docs index](README.md#documentation)
+[← Docs index](../README.md#documentation)

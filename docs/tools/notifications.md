@@ -1,8 +1,9 @@
 # Console notification channel
 
 `Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel` is a
-self-contained console output channel (implements the local
-`Notifications\Contracts\ConsoleChannelInterface`). It writes timestamped,
+self-contained console output channel (implements
+`Simtabi\Laranail\Console\Tools\Notifications\Contracts\ConsoleChannelInterface`).
+It writes timestamped,
 optionally data-annotated messages to a Symfony console output, or `echo`s
 when no output is supplied.
 

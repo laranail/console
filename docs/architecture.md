@@ -16,7 +16,7 @@ Console
 │   ├── Contracts\           # Renderable (panel composition)
 │   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color,
 │   │                        #   Emoji, Figlet, Keypress, Terminal, Sgr/ControlChars/Csi
-│   ├── Commands\            # Command (enhanced base) + Services\ (nine services)
+│   ├── Commands\            # Command (enhanced base) + Services\ (nine services + manager)
 │   ├── Runners\             # BaseRunner + ConsoleRunner
 │   ├── Observers\, Events\  # command lifecycle hooks + CommandEvents
 │   └── Notifications\       # ConsoleChannel (+ contract)

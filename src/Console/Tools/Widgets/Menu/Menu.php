@@ -387,7 +387,7 @@ final class Menu
 
     private function hasToggleItems(): bool
     {
-        return array_any($this->items, fn ($item): bool => $item instanceof CheckboxItem || $item instanceof RadioItem);
+        return array_any($this->items, fn (Item $item): bool => $item instanceof CheckboxItem || $item instanceof RadioItem);
     }
 
     /**
