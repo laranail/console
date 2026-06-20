@@ -5,6 +5,23 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2026-06-20
+
+Rounds out the Markdown renderer — the last of the deferred design-system items.
+
+### Added
+
+- **Inline styling in list items, task lists & blockquotes** — `**bold**`,
+  `*italic*`, `` `code` `` and `[links](url)` now render with real ANSI styling
+  inside list items and quotes too (previously paragraphs only), via the new
+  `ListBlock::rich()` / `BlockQuote::rich()` modes. Degrades to plain without colour.
+- **Markdown tables** — GFM pipe tables (header + `---|---` separator + rows) render
+  through the responsive `Table` widget (columns shrink to fit, never dropped;
+  leading/trailing pipes optional; ragged rows padded to the header column count).
+- **More code highlighting** — `SyntaxHighlighter` now covers **bash, yaml and js**
+  in addition to php/json, with alias normalisation (`sh`/`shell`/`zsh` → bash,
+  `yml` → yaml, `javascript`/`node`/`mjs` → js). Unknown languages still render plain.
+
 ## [0.6.2] - 2026-06-20
 
 Maintenance: upgrade the dev test stack and keep CI green under it.
