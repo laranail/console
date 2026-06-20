@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Tests\Validators;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
 use Simtabi\Laranail\Console\Prompter\Validators as V;
 use stdClass;
@@ -44,9 +45,7 @@ final class AllValidatorsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider validators
-     */
+    #[DataProvider('validators')]
     public function test_validator_accepts_valid_and_rejects_invalid(V\AbstractValidator $validator, mixed $valid, mixed $invalid): void
     {
         self::assertNull($validator->validate($valid), 'should accept the valid value');
@@ -55,9 +54,8 @@ final class AllValidatorsTest extends TestCase
 
     /**
      * Every validator is total: non-string input returns an error, never throws.
-     *
-     * @dataProvider validators
      */
+    #[DataProvider('validators')]
     public function test_validator_is_total_on_non_string_input(V\AbstractValidator $validator, mixed $valid, mixed $invalid): void
     {
         foreach ([[], null, 1.5, new stdClass] as $weird) {

@@ -53,7 +53,7 @@ jobs:
           fi
 
       - name: Run Pest
-        run: vendor/bin/pest --colors=always
+        run: composer test
 
       - name: Smoke-test examples
         run: composer examples
