@@ -36,6 +36,8 @@ final class ListBlock implements Renderable, Stringable
 
     private bool $responsive = true;
 
+    private bool $rich = false;
+
     private readonly Capabilities $capabilities;
 
     private readonly Theme $theme;
@@ -109,6 +111,18 @@ final class ListBlock implements Renderable, Stringable
     }
 
     /**
+     * Treat item text as already-styled (ANSI from InlineMarkup): items are wrapped
+     * without re-sanitising. Used by the Markdown renderer so inline emphasis
+     * renders inside list items.
+     */
+    public function rich(bool $rich = true): self
+    {
+        $this->rich = $rich;
+
+        return $this;
+    }
+
+    /**
      * @return list<string>
      */
     public function renderLines(): array
@@ -132,9 +146,11 @@ final class ListBlock implements Renderable, Stringable
         foreach (array_values($rows) as $i => $label) {
             [$plainMarker, $marker] = $this->marker($i, (string) $label);
             $indent = DisplayWidth::of($plainMarker);
-            $text = ConsoleUIFormatter::sanitizeText((string) $label);
+            $bodyWidth = max($cap - $indent, 1);
 
-            $wrapped = Paragraph::make($text)->width(max($cap - $indent, 1))->responsive(false)->renderLines();
+            $wrapped = $this->rich
+                ? Paragraph::rich((string) $label, $this->capabilities, $this->theme)->width($bodyWidth)->responsive(false)->renderLines()
+                : Paragraph::make(ConsoleUIFormatter::sanitizeText((string) $label))->width($bodyWidth)->responsive(false)->renderLines();
 
             foreach ($wrapped as $j => $line) {
                 $out[] = ($j === 0 ? $marker : str_repeat(' ', $indent)) . $line;
