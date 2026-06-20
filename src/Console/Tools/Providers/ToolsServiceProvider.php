@@ -14,8 +14,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
  *
  * Tools classes are either static (ConsoleUIFormatter), instantiated directly
  * (widgets, the command base + services), or extended (Command) — none require
- * container bindings today. It also registers the `menu()` command macro for
- * drop-in parity with nunomaduro/laravel-console-menu.
+ * container bindings today. It also registers the `menu()` command macro.
  */
 final class ToolsServiceProvider extends ServiceProvider
 {

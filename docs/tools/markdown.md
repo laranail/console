@@ -17,10 +17,11 @@ echo Console::markdown($readme)->render();
 - **Lists** — unordered (`-`/`*`), ordered (`1.`), task (`- [x]` / `- [ ]`)
 - **Blockquotes** (`>`), **horizontal rules** (`---`)
 - **Tables** — GFM pipe tables (header + `---|---` separator + rows) render via the
-  [Table widget](barchart.md) (responsive; columns shrink to fit, never dropped).
-  Leading/trailing pipes are optional; ragged rows pad to the header column count.
+  [Table widget](widgets.md) (responsive; columns shrink to fit, never dropped).
+  Leading/trailing pipes are optional, `\|` is a literal pipe, ragged rows pad to
+  the header column count, and a table may follow a paragraph with no blank line.
 - **Fenced code** ```` ```lang ```` — with basic highlighting for **php, json,
-  bash, yaml and js** (aliases: `sh`/`shell`/`zsh`, `yml`, `javascript`/`node`);
+  bash, yaml and js** (aliases: `sh`/`shell`/`zsh`, `yml`, `javascript`/`node`/`mjs`);
   other languages render plain.
 
 Everything is responsive (wraps/clips to the terminal width).

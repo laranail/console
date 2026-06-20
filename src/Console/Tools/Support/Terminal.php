@@ -10,11 +10,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Low-level terminal control: bell, tab title, alternate-screen buffer, and
- * cursor/erase movement. Sequences are built from {@see Csi} / {@see ControlChars}
- * and written through an {@see OutputInterface} (raw, so markup is never parsed).
- *
- * Expands ajaxray/ansikit's Util helpers (MIT, © Anis Uddin Ahmad) — see
- * THIRD_PARTY.md.
+ * cursor/erase movement. Sequences are built from our own {@see Csi} /
+ * {@see ControlChars} primitives (re-derived from ECMA-48) and written through an
+ * {@see OutputInterface} (raw, so markup is never parsed).
  */
 final readonly class Terminal
 {

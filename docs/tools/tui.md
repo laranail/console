@@ -54,6 +54,6 @@ is pure (no event loop), which is handy in tests.
   (`TextWidget`, `InputWidget`, `SelectListWidget`, `EditorWidget`, …).
 
 See the runnable demo in `examples/tools/tui.php` (interactive; not part of the CI
-smoke set). Attribution: [THIRD_PARTY.md](../../THIRD_PARTY.md).
+smoke set).
 
 [← Docs index](../../README.md#documentation)

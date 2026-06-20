@@ -15,9 +15,10 @@ the shared [Capabilities](support.md#capabilities).
 ## Two output modes
 
 - **Markup** — `success()`, `error()`, `warning()`, `info()`, `format()`,
-  `badge()`, `badges()`, `link()`, `hex()`, `render()` return Symfony Console
-  markup (`<fg=green>…</>`). Write them **through an output** so colour renders
-  (echoing prints literal tags):
+  `badge()`, `badges()`, `link()`, `hex()` return Symfony Console markup
+  (`<fg=green>…</>`). Write them **through an output** so colour renders
+  (echoing prints literal tags). (`render()` is an *instance* method on a
+  configured formatter, not one of these static helpers.)
 
   ```php
   use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;

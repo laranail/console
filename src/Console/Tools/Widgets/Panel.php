@@ -15,11 +15,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * A multi-block layout: stacks {@see Renderable} blocks vertically or arranges
  * them side-by-side, with optional border and dividers. Panels are themselves
- * Renderable, so they nest.
- *
- * Hardened port of ajaxray/ansikit's Panel (MIT, © Anis Uddin Ahmad) — uses
- * DisplayWidth (multibyte/ANSI-aware), BorderStyle glyphs with an ASCII
- * fallback, and renders to a string. See THIRD_PARTY.md.
+ * Renderable, so they nest. Widths and truncation route through {@see DisplayWidth}
+ * (multibyte/ANSI-aware) and borders through {@see BorderStyle} with an ASCII
+ * fallback; capability-gated, renders to a string.
  */
 final class Panel implements Renderable, Stringable
 {

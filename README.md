@@ -9,9 +9,10 @@ A Rich-class console toolkit for Laravel. One package, two namespaces:
 
 - **`Console\Tools`** — terminal **output**: a fluent formatter, spinners,
   flavoured progress bars, boxes, trees, tables, banners, gauges, sparklines,
-  a multi-task progress widget, plus an enhanced Artisan command base.
+  charts (bar/column/line/scatter/heatmap/histogram), a typography + Markdown
+  layer, a multi-task progress widget, plus an enhanced Artisan command base.
 - **`Console\Prompter`** — terminal **input**: a fluent wrapper over
-  `laravel/prompts` with a form builder and 25 validators.
+  `laravel/prompts` with a form builder and 26 validators.
 
 Targets PHP `^8.4.1` (8.4.1–8.5) on Laravel `^13` (Symfony 8).
 
@@ -74,7 +75,7 @@ The package has three output styles — know which you're holding:
 | Style | APIs | How to print |
 |-------|------|--------------|
 | **Symfony markup** (e.g. `<fg=green>…</>`) | `Console::status()`, `ConsoleUIFormatter::success()/format()/badge()` | `$output->writeln(...)` / `$this->line(...)` — renders colour on a TTY, stripped when piped. Echoing prints literal tags. |
-| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `banner`, `steps`, `callout`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
+| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `barChart`, `columnChart`, `lineChart`, `banner`, `steps`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
 | **Self-writing** | `spinner`, `progress`, `tasks` | They write to the output you pass them. |
 | **Interactive** | `prompter`, `menu`, `keypress`, `tui` | They read input / run a loop and return values — not render strings. |
 
@@ -102,7 +103,7 @@ The package has three output styles — know which you're holding:
 | [Colours & styles](docs/tools/colors.md) | Color parsing/downgrade/gradient + the fluent Style |
 | [Typography](docs/tools/typography.md) | Headings, paragraphs, lists, links, quotes, code, Text |
 | [Markdown](docs/tools/markdown.md) | Render a Markdown subset to the terminal |
-| [Bar chart](docs/tools/barchart.md) | Labelled responsive horizontal bars |
+| [Charts](docs/tools/charts.md) | Bar, column, line, scatter, heatmap, histogram |
 | [Emoji](docs/tools/emoji.md) | `:shortcode:` rendering + ASCII fallback |
 | [Symbols](docs/tools/symbols.md) | Capability-aware glyphs |
 | [Responsive output](docs/responsive.md) | How widgets adapt to the terminal width |
@@ -119,13 +120,15 @@ The package has three output styles — know which you're holding:
 | [Notifications](docs/tools/notifications.md) | The console channel |
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
 | [Prompts & forms](docs/tools/prompter.md) | The Prompter, forms and validators |
+| [Release process](docs/release.md) | How a version is cut and published |
 | [Testing](docs/tools/testing.md) | Force capabilities + script prompts in tests |
 
 Online docs: <https://opensource.simtabi.com/console/docs/> ·
-Changelog: [CHANGELOG.md](CHANGELOG.md) · Third-party notices: [THIRD_PARTY.md](THIRD_PARTY.md).
+Changelog: [CHANGELOG.md](CHANGELOG.md).
 
-> **Requires PHP `^8.4.1`** (Laravel `^13`, Symfony 8) and installs **stably**.
-> The full-screen [`symfony/tui`](docs/tools/tui.md) integration is **optional** —
+> **Requires PHP `^8.4.1`** (Laravel `^13`, Symfony 8). The core installs from
+> **stable releases** — no `minimum-stability` change needed. The full-screen
+> [`symfony/tui`](docs/tools/tui.md) integration is **optional**:
 > `composer require symfony/tui` (experimental, needs `"minimum-stability": "dev"`)
 > only if you want it.
 
@@ -133,7 +136,7 @@ Changelog: [CHANGELOG.md](CHANGELOG.md) · Third-party notices: [THIRD_PARTY.md]
 
 ```bash
 composer install
-composer test                 # vendor/bin/pest
+composer test                 # vendor/bin/pest --no-coverage (composer test-coverage for coverage)
 composer lint                 # pint + phpstan + rector --dry-run
 composer audit                # composer audit (security advisories)
 ```
@@ -150,7 +153,6 @@ composer audit                # composer audit (security advisories)
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development guidelines and PR expectations.
 - [SECURITY.md](SECURITY.md) — how to report a vulnerability (opensource@simtabi.com).
 - [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) — community expectations.
-- [THIRD_PARTY.md](THIRD_PARTY.md) — credits for AnsiKit, laravel-console-menu, ansi-php, symfony/tui and bundled fonts.
 
 ## License
 

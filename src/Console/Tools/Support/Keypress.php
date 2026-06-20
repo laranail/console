@@ -7,9 +7,9 @@ namespace Simtabi\Laranail\Console\Tools\Support;
 /**
  * Raw single-key / arrow / modifier reader.
  *
- * Hardened port of ajaxray/ansikit's Keypress (MIT, © Anis Uddin Ahmad) — see
- * THIRD_PARTY.md. The blocking reads require a POSIX terminal (`stty`); they are
- * guarded by {@see isSupported()} and degrade to '' / null on Windows or a
+ * The escape-sequence → key-name mappings are the ECMA-48 / xterm conventions
+ * (`\e[A` = up, etc.); the blocking reads require a POSIX terminal (`stty`) and
+ * are guarded by {@see isSupported()}, degrading to '' / null on Windows or a
  * non-TTY rather than shelling out blindly. The `translateKey()` / `getKeyName()`
  * mappers are pure and always available.
  */

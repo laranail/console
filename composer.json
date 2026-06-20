@@ -84,6 +84,7 @@
       "php examples/tools/markdown.php > /dev/null",
       "php examples/tools/theming.php > /dev/null",
       "php examples/tools/barchart.php > /dev/null",
+      "php examples/tools/charts.php > /dev/null",
       "php examples/tools/emoji.php > /dev/null",
       "php examples/tools/symbols.php > /dev/null",
       "php examples/tools/interactive.php > /dev/null",

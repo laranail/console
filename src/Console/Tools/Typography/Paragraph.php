@@ -108,8 +108,15 @@ final class Paragraph implements Renderable, Stringable
 
         $out = [];
         $last = count($wrapped) - 1;
+        $carry = '';
 
         foreach ($wrapped as $i => $line) {
+            // Pre-styled (rich) text: re-open any colour still active at the end of
+            // the previous line, so a styled span keeps its colour across a wrap.
+            if ($this->preformatted && $carry !== '') {
+                $line = $carry . $line;
+            }
+
             $aligned = $this->align === 'justify'
                 ? $this->justify($line, $width, $i === $last)
                 : match ($this->align) {
@@ -120,9 +127,12 @@ final class Paragraph implements Renderable, Stringable
 
             // Pre-styled lines keep their own ANSI; close them so colour never
             // bleeds across a wrap. Plain lines get the paragraph/theme style.
-            $out[] = $this->preformatted
-                ? $this->closeAnsi($aligned)
-                : $style->apply($aligned);
+            if ($this->preformatted) {
+                $carry = $this->activeSgr($line);
+                $out[] = $this->closeAnsi($aligned);
+            } else {
+                $out[] = $style->apply($aligned);
+            }
         }
 
         return $out === [] ? [''] : $out;
@@ -190,6 +200,27 @@ final class Paragraph implements Renderable, Stringable
         }
 
         return $chunks;
+    }
+
+    /**
+     * The SGR sequences still "open" at the end of a line — the concatenation of
+     * colour/attribute opens since the last reset (`\e[0m`). Used to re-open style
+     * on the next wrapped line so a long styled span keeps its colour.
+     */
+    private function activeSgr(string $line): string
+    {
+        if (! str_contains($line, "\033[")) {
+            return '';
+        }
+
+        preg_match_all('/\033\[[0-9;]*m/', $line, $matches);
+
+        $open = '';
+        foreach ($matches[0] as $seq) {
+            $open = ($seq === "\033[0m" || $seq === "\033[m") ? '' : $open . $seq;
+        }
+
+        return $open;
     }
 
     /**

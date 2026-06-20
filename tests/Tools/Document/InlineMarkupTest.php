@@ -69,4 +69,23 @@ final class InlineMarkupTest extends TestCase
             }
         }
     }
+
+    public function test_rich_paragraph_carries_style_across_a_wrap(): void
+    {
+        Capabilities::fake(colors: true, unicode: true, width: 12, interactive: false);
+
+        // a bold span long enough to wrap across two lines
+        $styled = InlineMarkup::make()->render('**alpha bravo charlie delta echo**');
+        $lines = Paragraph::rich($styled)->width(12)->renderLines();
+
+        self::assertGreaterThan(1, count($lines));
+        // every line that has visible text re-opens the bold (SGR 1) and resets
+        foreach ($lines as $line) {
+            if (trim(preg_replace('/\033\[[0-9;]*m/', '', $line) ?? '') === '') {
+                continue;
+            }
+            self::assertStringContainsString("\033[1m", $line, 'bold carried onto: ' . $line);
+            self::assertStringEndsWith("\033[0m", $line);
+        }
+    }
 }

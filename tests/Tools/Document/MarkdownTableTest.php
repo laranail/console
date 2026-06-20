@@ -72,4 +72,26 @@ final class MarkdownTableTest extends TestCase
         $out = Markdown::make("use a | b pipe in prose\nand more prose")->render();
         self::assertStringNotContainsString('│', $out);
     }
+
+    public function test_escaped_pipe_stays_in_one_cell(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 80, interactive: false);
+
+        $out = Markdown::make("| A | B |\n|---|---|\n| a\\|b | c |")->render();
+
+        self::assertStringContainsString('a|b', $out); // literal pipe preserved, one cell
+    }
+
+    public function test_table_directly_after_a_paragraph_is_not_swallowed(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 80, interactive: false);
+
+        // no blank line between the prose and the table
+        $md = "Some intro prose.\n| Name | Role |\n| --- | --- |\n| Ada | Eng |";
+        $out = Markdown::make($md)->render();
+
+        self::assertStringContainsString('│', $out);      // a table was rendered
+        self::assertStringContainsString('Ada', $out);
+        self::assertStringContainsString('intro prose', $out);
+    }
 }

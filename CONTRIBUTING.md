@@ -17,9 +17,10 @@ composer test
 2. Write tests first when adding/changing behaviour. We aim for ≥80% line coverage on new code.
 3. Run the full local check before opening a PR:
    ```bash
-   composer lint     # pint + phpstan + rector --dry-run
-   composer test     # vendor/bin/pest
-   composer audit    # composer audit (security)
+   composer lint          # pint + phpstan + rector --dry-run
+   composer test          # vendor/bin/pest --no-coverage
+   composer test-coverage # add a coverage report (needs Xdebug/PCOV)
+   composer audit         # composer audit (security)
    ```
 4. Use [Conventional Commits](https://www.conventionalcommits.org/) — the release workflow regenerates `CHANGELOG.md` from them.
 5. Open the PR against `main`. CI must pass before merge.

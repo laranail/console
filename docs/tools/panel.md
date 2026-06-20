@@ -5,10 +5,9 @@
 single-widget toolkit usually lacks. Both implement `Tools\Contracts\Renderable`,
 so panels nest inside panels.
 
-Hardened port of [ajaxray/ansikit](https://github.com/ajaxray/ansikit) (MIT) — see
-[THIRD_PARTY.md](../../THIRD_PARTY.md). Widths are display-width aware (multibyte/
-ANSI safe), borders use [`BorderStyle`](support.md#borderstyle) with an ASCII
-fallback.
+Widths are display-width aware (multibyte/ANSI safe), borders use
+[`BorderStyle`](support.md#borderstyle) with an ASCII fallback, and side-by-side
+layouts shrink to fit the terminal.
 
 ## PanelBlock
 

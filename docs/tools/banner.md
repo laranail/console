@@ -44,9 +44,9 @@ skews it.
 
 ## Fonts
 
-The FIGlet renderer is [`Support\Figlet`](support.md#figlet). It ships one bundled font,
-**`block`** (a uniform 5×5 block font, MIT/ours — see `resources/fonts/LICENSE`),
-and also parses standard FIGlet **`.flf`** files:
+The FIGlet renderer is [`Support\Figlet`](support.md#figlet). It ships one built-in font,
+**`block`** — a uniform 5×5 block font (`Support\Fonts\BlockFont`, MIT/ours) registered in
+`Support\Fonts\BuiltinFonts` — and also parses standard FIGlet **`.flf`** files by path:
 
 ```php
 echo Banner::make('HELLO')->font('block')->render();          // bundled
