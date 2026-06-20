@@ -27,6 +27,32 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Responsive layout
+    |--------------------------------------------------------------------------
+    | When true, widgets clamp their output to the detected terminal width so
+    | content never overflows a narrow terminal. An explicit ->width() always
+    | wins, and a widget's ->responsive(false) opts out per call.
+    */
+    'responsive' => env('CONSOLE_RESPONSIVE', true),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Theme (design tokens)
+    |--------------------------------------------------------------------------
+    | The semantic colour palette the design system (typography, banners,
+    | badges, Text/Style) shares. Override any role to re-skin the whole UI;
+    | accepts any colour spec (hex, rgb(), hsl(), named, @256).
+    */
+    'theme' => [
+        'palette' => [
+            // 'primary' => '#7c3aed', 'accent' => '#06b6d4', 'success' => '#16a34a',
+            // 'warning' => '#d97706', 'danger' => '#dc2626', 'info' => '#2563eb',
+            // 'muted' => '#64748b',
+        ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Spinner defaults
     |--------------------------------------------------------------------------
     | frames: braille | dots | line | breath

@@ -15,6 +15,16 @@ use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
@@ -232,6 +242,88 @@ final class ConsoleManager
     public function os(): Os
     {
         return Os::make();
+    }
+
+    /**
+     * The active design-system theme (semantic palette + element styles).
+     */
+    public function theme(): Theme
+    {
+        return Theme::resolve();
+    }
+
+    /**
+     * A fluent inline text builder (colour/style + emoji + symbols + theme roles).
+     */
+    public function text(string $text = ''): Text
+    {
+        return Text::make($text);
+    }
+
+    /**
+     * A word-wrapped, themeable, responsive prose block.
+     */
+    public function paragraph(string $text): Paragraph
+    {
+        return Paragraph::make($text);
+    }
+
+    /**
+     * A themed heading (levels 1–6).
+     */
+    public function heading(string $text, int $level = 1): Heading
+    {
+        return Heading::make($text, $level);
+    }
+
+    /**
+     * A themed list (unordered / ordered / task / definition).
+     *
+     * @param list<string> $items
+     */
+    public function list(array $items = []): ListBlock
+    {
+        return ListBlock::make($items);
+    }
+
+    /**
+     * A themed OSC-8 hyperlink with a plain-text fallback.
+     */
+    public function link(string $label, string $url): Link
+    {
+        return Link::make($label, $url);
+    }
+
+    /**
+     * A short inline quotation.
+     */
+    public function quote(string $text): Quote
+    {
+        return Quote::make($text);
+    }
+
+    /**
+     * A block quote (themed left bar + wrapped body).
+     */
+    public function blockQuote(string $text): BlockQuote
+    {
+        return BlockQuote::make($text);
+    }
+
+    /**
+     * Inline code.
+     */
+    public function code(string $text): Code
+    {
+        return Code::make($text);
+    }
+
+    /**
+     * A fenced code block (optional caption).
+     */
+    public function codeBlock(string $code): CodeBlock
+    {
+        return CodeBlock::make($code);
     }
 
     /**

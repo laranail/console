@@ -15,6 +15,16 @@ use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
@@ -59,6 +69,16 @@ use Symfony\Component\Tui\Tui;
  * @method static Style style()
  * @method static string symbol(string $name)
  * @method static Os os()
+ * @method static Theme theme()
+ * @method static Text text(string $text = '')
+ * @method static Paragraph paragraph(string $text)
+ * @method static Heading heading(string $text, int $level = 1)
+ * @method static ListBlock list(array $items = [])
+ * @method static Link link(string $label, string $url)
+ * @method static Quote quote(string $text)
+ * @method static BlockQuote blockQuote(string $text)
+ * @method static Code code(string $text)
+ * @method static CodeBlock codeBlock(string $code)
  * @method static Panel panel()
  * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)
