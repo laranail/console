@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
@@ -83,7 +84,18 @@ final readonly class Summary implements Stringable
 
         $output[] = $this->statusBadges();
 
-        return implode("\n", $output);
+        $result = implode("\n", $output);
+
+        // Responsive: clip every line (incl. coloured badges) to the terminal width.
+        if (ResponsiveWidth::enabled()) {
+            $width = $this->capabilities->width();
+            $result = implode("\n", array_map(
+                static fn (string $line): string => DisplayWidth::truncateAnsi($line, $width),
+                explode("\n", $result),
+            ));
+        }
+
+        return $result;
     }
 
     /**

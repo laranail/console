@@ -25,6 +25,53 @@ final class DisplayWidth
     }
 
     /**
+     * Truncate to a visible width while preserving ANSI SGR sequences (they don't
+     * count toward the width) and closing any style left open, so a clipped styled
+     * string never bleeds colour. No-op when the text already fits.
+     */
+    public static function truncateAnsi(string $text, int $max): string
+    {
+        if ($max <= 0) {
+            return '';
+        }
+
+        if (self::of($text) <= $max) {
+            return $text;
+        }
+
+        $parts = preg_split('/(\e\[[0-9;]*m)/', $text, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [];
+        $out = '';
+        $width = 0;
+        $open = false;
+
+        foreach ($parts as $part) {
+            if ($part === '') {
+                continue;
+            }
+
+            if (preg_match('/^\e\[[0-9;]*m$/', $part) === 1) {
+                $out .= $part;
+                $open = $part !== "\e[0m";
+
+                continue;
+            }
+
+            foreach (mb_str_split($part) as $char) {
+                $charWidth = self::of($char);
+
+                if ($width + $charWidth > $max) {
+                    return $open ? $out . "\e[0m" : $out;
+                }
+
+                $out .= $char;
+                $width += $charWidth;
+            }
+        }
+
+        return $open ? $out . "\e[0m" : $out;
+    }
+
+    /**
      * The greatest visible width across the given lines (0 for an empty list).
      *
      * @param iterable<string> $lines
