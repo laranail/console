@@ -38,9 +38,9 @@ final class Gauge implements Stringable
         return $this;
     }
 
-    public function width(int $barWidth): self
+    public function width(int $width): self
     {
-        $this->barWidth = max($barWidth, 1);
+        $this->barWidth = max($width, 1);
 
         return $this;
     }

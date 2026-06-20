@@ -255,7 +255,7 @@ final class ConsoleManager
      *
      * @param array<string, mixed> $stats
      */
-    public function summary(array $stats, string $title = 'EXECUTION SUMMARY'): Summary
+    public function summary(array $stats, ?string $title = null): Summary
     {
         return Summary::make($stats, $title);
     }
