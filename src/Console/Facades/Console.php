@@ -12,6 +12,8 @@ use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Os;
+use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
@@ -54,6 +56,9 @@ use Symfony\Component\Tui\Tui;
  * @method static TaskProgress tasks(?OutputInterface $output = null)
  * @method static Color color()
  * @method static Emoji emoji()
+ * @method static Style style()
+ * @method static string symbol(string $name)
+ * @method static Os os()
  * @method static Panel panel()
  * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)

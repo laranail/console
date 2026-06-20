@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Formatting;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
 use Stringable;
 
 /**
@@ -291,28 +291,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * @return list<string>
-     */
-    private function allowedLinkSchemes(): array
-    {
-        /** @var list<string> $schemes */
-        $schemes = (array) Config::get('links.allowed_schemes', ['http', 'https', 'mailto']);
-
-        return $schemes;
-    }
-
-    /**
-     * Whether a URL is safe to emit as an OSC-8 hyperlink: free of control
-     * characters and using an allow-listed scheme.
-     */
-    private function isAllowedUrl(string $url): bool
-    {
-        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
-
-        return $scheme !== '' && in_array($scheme, $this->allowedLinkSchemes(), true);
-    }
-
-    /**
      * Add text/foreground color with optional predefined style tag or clickable link
      *
      * @param string $text Color name or hex code (e.g., '#ff0000')
@@ -397,18 +375,13 @@ class ConsoleUIFormatter implements Stringable
      */
     public function setHref(string $url): self
     {
-        // Strip control characters and the OSC-8 separator, then require an
-        // allow-listed scheme. A rejected URL degrades to plain, non-clickable
-        // text rather than emitting an attacker-controlled hyperlink.
-        $url = str_replace(';', '', self::sanitizeText($url));
+        // Delegate the allow-list + sanitisation to Support\Hyperlink (the single
+        // source of truth). A rejected URL degrades to plain, non-clickable text
+        // rather than emitting an attacker-controlled hyperlink.
+        $safe = Hyperlink::safe($url);
 
-        if ($this->isAllowedUrl($url)) {
-            $this->href = $url;
-            $this->isClickable = true;
-        } else {
-            $this->href = null;
-            $this->isClickable = false;
-        }
+        $this->href = $safe;
+        $this->isClickable = $safe !== null;
 
         return $this;
     }

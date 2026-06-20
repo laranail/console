@@ -11,6 +11,9 @@ use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Os;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
@@ -205,6 +208,30 @@ final class ConsoleManager
     public function emoji(): Emoji
     {
         return Emoji::make();
+    }
+
+    /**
+     * A chainable text style (fg/bg + bold/italic/underline…), capability-aware.
+     */
+    public function style(): Style
+    {
+        return Style::make();
+    }
+
+    /**
+     * Resolve a named glyph (ascii/unicode per terminal), e.g. `symbol('arrow')`.
+     */
+    public function symbol(string $name): string
+    {
+        return Symbols::for(Capabilities::detect())->get($name);
+    }
+
+    /**
+     * Operating-system + runtime-environment detection.
+     */
+    public function os(): Os
+    {
+        return Os::make();
     }
 
     /**
