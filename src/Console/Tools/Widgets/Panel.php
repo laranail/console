@@ -8,6 +8,7 @@ use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Stringable;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -33,6 +34,8 @@ final class Panel implements Renderable, Stringable
     private bool $border = false;
 
     private bool $dividers = false;
+
+    private bool $responsive = true;
 
     private BorderStyle $style = BorderStyle::Light;
 
@@ -89,6 +92,17 @@ final class Panel implements Renderable, Stringable
     public function dividers(bool $dividers = true): self
     {
         $this->dividers = $dividers;
+
+        return $this;
+    }
+
+    /**
+     * Clamp a horizontal layout to the terminal width (default on): block widths
+     * shrink proportionally so the row never overflows. `sizes()` opts out.
+     */
+    public function responsive(bool $responsive = true): self
+    {
+        $this->responsive = $responsive;
 
         return $this;
     }
@@ -167,6 +181,31 @@ final class Panel implements Renderable, Stringable
     }
 
     /**
+     * Shrink block widths proportionally so a horizontal row fits the terminal.
+     *
+     * @param array<int, int> $widths
+     * @return array<int, int>
+     */
+    private function fitWidths(array $widths): array
+    {
+        $count = count($widths);
+        $overhead = ($this->border ? 2 : 0) + ($this->dividers ? max($count - 1, 0) : 0);
+        $available = ResponsiveWidth::terminal($this->capabilities) - $overhead;
+        $total = array_sum($widths);
+
+        if ($total <= $available || $available < $count) {
+            return $widths;
+        }
+
+        $scaled = [];
+        foreach ($widths as $index => $width) {
+            $scaled[$index] = max((int) floor($width / $total * $available), 1);
+        }
+
+        return $scaled;
+    }
+
+    /**
      * @return list<string>
      */
     private function renderHorizontal(): array
@@ -176,6 +215,12 @@ final class Panel implements Renderable, Stringable
         foreach ($this->blocks as $index => $block) {
             $widths[$index] = ($this->sizes[$index] ?? 0) > 0 ? $this->sizes[$index] : $block->totalWidth();
             $height = max($height, $block->totalHeight());
+        }
+
+        // Responsive: if no explicit sizes and the row would overflow, shrink block
+        // widths proportionally so the whole panel fits the terminal.
+        if ($this->sizes === [] && $this->responsive && ResponsiveWidth::enabled()) {
+            $widths = $this->fitWidths($widths);
         }
 
         // Each block's lines, padded down to the common height.
@@ -200,7 +245,7 @@ final class Panel implements Renderable, Stringable
             foreach (array_keys($this->blocks) as $index) {
                 $seg = $blockLines[$index][$row] ?? str_repeat(' ', $widths[$index]);
                 $seg = DisplayWidth::of($seg) > $widths[$index]
-                    ? DisplayWidth::truncate($seg, $widths[$index])
+                    ? DisplayWidth::pad(DisplayWidth::truncateAnsi($seg, $widths[$index]), $widths[$index])
                     : DisplayWidth::pad($seg, $widths[$index]);
                 $segments[] = $seg;
             }

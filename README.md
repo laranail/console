@@ -101,6 +101,10 @@ The package has three output styles — know which you're holding:
 | [Theming](docs/tools/theming.md) | Semantic palette + per-element styles (design tokens) |
 | [Colours & styles](docs/tools/colors.md) | Color parsing/downgrade/gradient + the fluent Style |
 | [Typography](docs/tools/typography.md) | Headings, paragraphs, lists, links, quotes, code, Text |
+| [Markdown](docs/tools/markdown.md) | Render a Markdown subset to the terminal |
+| [Bar chart](docs/tools/barchart.md) | Labelled responsive horizontal bars |
+| [Emoji](docs/tools/emoji.md) | `:shortcode:` rendering + ASCII fallback |
+| [Symbols](docs/tools/symbols.md) | Capability-aware glyphs |
 | [Responsive output](docs/responsive.md) | How widgets adapt to the terminal width |
 | [Interactive & live](docs/tools/interactive.md) | Live engine, animated bar, badges/pills, buttons |
 | [Output formatter](docs/tools/formatting.md) | Colour/badge/link string primitives |

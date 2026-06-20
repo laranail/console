@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Tools\Document;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Stringable;
 
@@ -59,7 +60,10 @@ final readonly class Markdown implements Stringable
                     $i++;
                 }
                 $block = new CodeBlock(implode("\n", $code), $this->capabilities, $this->theme);
-                $doc->add($caption !== '' ? $block->caption($caption) : $block);
+                if ($caption !== '') {
+                    $block = $block->caption($caption)->language($caption);
+                }
+                $doc->add($block);
 
                 continue;
             }
@@ -138,7 +142,10 @@ final readonly class Markdown implements Stringable
                 $i++;
             }
             $i--;
-            $doc->paragraph($this->inline(implode(' ', $para)));
+            // Paragraphs get full inline styling (bold/italic/code/link); headings,
+            // lists and quotes use the plain normalisation above.
+            $styled = InlineMarkup::make($this->capabilities, $this->theme)->render(implode(' ', $para));
+            $doc->add(Paragraph::rich($styled, $this->capabilities, $this->theme));
         }
 
         return $doc;

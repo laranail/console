@@ -25,6 +25,8 @@ final class CodeBlock implements Renderable, Stringable
 
     private ?string $caption = null;
 
+    private ?string $language = null;
+
     private ?int $width = null;
 
     private bool $responsive = true;
@@ -58,6 +60,16 @@ final class CodeBlock implements Renderable, Stringable
         return $this;
     }
 
+    /**
+     * Set the language for basic syntax highlighting (php/json; others render plain).
+     */
+    public function language(string $language): self
+    {
+        $this->language = ConsoleUIFormatter::sanitizeText($language);
+
+        return $this;
+    }
+
     public function width(int $width): self
     {
         $this->width = max($width, 1);
@@ -82,6 +94,9 @@ final class CodeBlock implements Renderable, Stringable
         $codeStyle = $this->theme->style('code');
         $gutterStyle = $this->theme->style('muted');
 
+        $highlighter = SyntaxHighlighter::make($this->capabilities, $this->theme);
+        $highlight = $this->language !== null && $highlighter->supports($this->language);
+
         $out = [];
 
         if ($this->caption !== null && $this->caption !== '') {
@@ -93,7 +108,11 @@ final class CodeBlock implements Renderable, Stringable
                 $line = DisplayWidth::truncate($line, max($cap - 2, 1));
             }
 
-            $out[] = $gutterStyle->apply($gutter) . $codeStyle->apply($line);
+            $rendered = $highlight
+                ? $highlighter->highlightLine($line, (string) $this->language)
+                : $codeStyle->apply($line);
+
+            $out[] = $gutterStyle->apply($gutter) . $rendered;
         }
 
         return $out;
