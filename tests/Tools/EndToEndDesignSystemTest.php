@@ -66,12 +66,14 @@ final class EndToEndDesignSystemTest extends TestCase
     {
         Capabilities::fake(colors: true, unicode: true, width: 60);
 
-        $theme = Theme::make(['primary' => '#ff0000']);
-        $h1 = new Document(null, $theme)->h1('Hi')->render();
+        $plain = new Document(null, Theme::make())->h1('Hi')->render();
+        $themed = new Document(null, Theme::make(['primary' => '#ff0000']))->h1('Hi')->render();
 
-        // h1 uses the custom primary colour → a foreground colour sequence is
-        // emitted (depth depends on the terminal: truecolor 38;2 or 256 38;5).
-        self::assertStringContainsString("\033[38;", $h1);
-        self::assertStringContainsString('Hi', $h1);
+        // The custom theme applies an ANSI colour sequence (depth — truecolor/256/16
+        // — depends on the terminal, so assert only that styling is applied and that
+        // a different palette yields different bytes).
+        self::assertStringContainsString("\033[", $themed);
+        self::assertStringContainsString('Hi', $themed);
+        self::assertNotSame($plain, $themed);
     }
 }
