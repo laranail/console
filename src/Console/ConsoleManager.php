@@ -6,6 +6,8 @@ namespace Simtabi\Laranail\Console;
 
 use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Tools\Document\Document;
+use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
@@ -324,6 +326,22 @@ final class ConsoleManager
     public function codeBlock(string $code): CodeBlock
     {
         return CodeBlock::make($code);
+    }
+
+    /**
+     * A fluent document composer (typography + widgets into one themed page).
+     */
+    public function document(): Document
+    {
+        return Document::make();
+    }
+
+    /**
+     * Render a Markdown subset to the terminal via the design-system theme.
+     */
+    public function markdown(string $markdown): Markdown
+    {
+        return Markdown::make($markdown);
     }
 
     /**

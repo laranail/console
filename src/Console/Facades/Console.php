@@ -7,6 +7,8 @@ namespace Simtabi\Laranail\Console\Facades;
 use Illuminate\Support\Facades\Facade;
 use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Tools\Document\Document;
+use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
@@ -79,6 +81,8 @@ use Symfony\Component\Tui\Tui;
  * @method static BlockQuote blockQuote(string $text)
  * @method static Code code(string $text)
  * @method static CodeBlock codeBlock(string $code)
+ * @method static Document document()
+ * @method static Markdown markdown(string $markdown)
  * @method static Panel panel()
  * @method static Menu menu(string $title = '', array $options = [])
  * @method static Terminal terminal(?OutputInterface $output = null)
