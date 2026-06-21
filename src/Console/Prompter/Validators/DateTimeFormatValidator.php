@@ -19,7 +19,7 @@ abstract class DateTimeFormatValidator extends AbstractValidator
     public function validate(mixed $value): ?string
     {
         if (! is_string($value) || $value === '') {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         foreach ($this->formats as $format) {
@@ -31,6 +31,6 @@ abstract class DateTimeFormatValidator extends AbstractValidator
             }
         }
 
-        return $this->errorMessage;
+        return $this->resolvedMessage();
     }
 }

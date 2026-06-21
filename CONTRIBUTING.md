@@ -35,7 +35,7 @@ composer test
 - PHPStan level 8 (see `phpstan.neon`); `composer lint` must be clean.
 - Rector dry-run must be clean (see `rector.php`).
 
-## Public-API conventions (locked at 1.0)
+## Public-API conventions (locked at 1.0; first breaking revision in 2.0)
 
 Since 1.0 the public API follows SemVer (see [docs/release.md](docs/release.md#versioning--stability)).
 Keep new components consistent with the family so the surface stays uniform:

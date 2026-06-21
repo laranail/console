@@ -11,18 +11,13 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 abstract class RegexValidator extends AbstractValidator
 {
-    public function __construct(
-        private readonly string $pattern,
-        ?string $errorMessage = null,
-        string $defaultMessageKey = '',
-        array $replace = [],
-        ?string $locale = null,
-    ) {
-        parent::__construct($errorMessage, $defaultMessageKey, $replace, $locale);
+    public function __construct(private readonly string $pattern, string $messageKey = '')
+    {
+        parent::__construct($messageKey);
     }
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && preg_match($this->pattern, $value) === 1 ? null : $this->errorMessage;
+        return is_string($value) && preg_match($this->pattern, $value) === 1 ? null : $this->resolvedMessage();
     }
 }

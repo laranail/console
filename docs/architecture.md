@@ -24,6 +24,7 @@ Console
 └── Prompter\                # INPUT
     ├── Prompter, Services\  # fluent wrapper + PromptService + FormBuilder
     ├── Validators\          # 26 validators (incl. LaravelRule) + AbstractValidator/RegexValidator/DateTimeFormatValidator/ChoiceFieldValidator bases
+    │                        #   (2.0: domain-only constructors; message/replace/locale set fluently)
     ├── Commands\, Contracts\, Enums\, Facades\, Helpers\, Providers\
     └── Exceptions\          # PrompterException (extends ConsoleException)
 ```

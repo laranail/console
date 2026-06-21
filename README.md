@@ -121,6 +121,7 @@ The package has three output styles — know which you're holding:
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
 | [Prompts & forms](docs/tools/prompter.md) | The Prompter, forms and validators |
 | [Release process](docs/release.md) | How a version is cut and published |
+| [Upgrading](UPGRADING.md) | Breaking-change migration notes (1.x → 2.0) |
 | [Testing](docs/tools/testing.md) | Force capabilities + script prompts in tests |
 
 Online docs: <https://opensource.simtabi.com/console/docs/> ·
@@ -134,7 +135,7 @@ Changelog: [CHANGELOG.md](CHANGELOG.md).
 
 ## Stability
 
-`laranail/console` is **1.x stable** and follows [SemVer](https://semver.org). The public
+`laranail/console` is **2.x stable** and follows [SemVer](https://semver.org). The public
 API — the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
 classes — is stable; breaking changes only land in a major. Classes marked
 `@internal`, and the experimental full-screen TUI (`Console::tui()` /
