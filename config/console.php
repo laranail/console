@@ -37,6 +37,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Validate config at boot
+    |--------------------------------------------------------------------------
+    |
+    | When true, the console.* config is validated on every Artisan run (console
+    | only — web requests are never affected) and a clear error is thrown on a bad
+    | value. Off by default; you can also run `php artisan laranail::console.check`
+    | or call Console::validateConfig() on demand.
+    |
+    */
+
+    'validate_config' => env('CONSOLE_VALIDATE_CONFIG', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Theme (design tokens)
     |--------------------------------------------------------------------------
     | The semantic colour palette the design system (typography, banners,

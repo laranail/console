@@ -92,6 +92,7 @@ use Symfony\Component\Tui\Tui;
  * @method static string symbol(string $name)
  * @method static Os os()
  * @method static Theme theme()
+ * @method static array validateConfig()
  * @method static Text text(string $text = '')
  * @method static Paragraph paragraph(string $text)
  * @method static Heading heading(string $text, int $level = 1)

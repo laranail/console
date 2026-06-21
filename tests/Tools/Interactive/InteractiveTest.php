@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Interactive;
 
 use Laravel\Prompts\Key;
 use Laravel\Prompts\Prompt;
+use Mockery;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
@@ -21,6 +22,12 @@ final class InteractiveTest extends TestCase
     protected function tearDown(): void
     {
         Capabilities::clearFake();
+        // Prompt::fake() installs a static Mockery Terminal mock + forces interactive
+        // mode; reset both so nothing leaks into later tests (this is a plain
+        // PHPUnit TestCase, so Mockery isn't closed for us).
+        Prompt::interactive(false);
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_live_non_tty_writes_once_without_cursor_sequences(): void
@@ -59,6 +66,11 @@ final class InteractiveTest extends TestCase
     public function test_button_group_returns_scripted_choice(): void
     {
         Capabilities::fake(interactive: true);
+        // A prior test that ran an Artisan command leaves Laravel\Prompts' console
+        // fallback enabled, and fallbackWhen() is sticky (only OR-sets true), so reset
+        // the static directly — otherwise select() uses the framework fallback instead
+        // of the faked terminal.
+        (new \ReflectionProperty(Prompt::class, 'shouldFallback'))->setValue(null, false);
         Prompt::fake([Key::DOWN, Key::ENTER]); // move to second option, select
 
         $choice = ButtonGroup::make(['save' => 'Save', 'discard' => 'Discard'])->prompt('Action');

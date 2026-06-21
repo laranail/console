@@ -45,4 +45,24 @@ accept an environment override.
 terminal (TTY, `COLORTERM`, `TERM`, `WT_SESSION`, locale) and the standard
 `NO_COLOR` / `FORCE_COLOR` environment variables.
 
+## Validation
+
+Catch a bad `console.*` value (an invalid palette colour, an unknown `theme.preset`,
+a wrong `output.symbols`/`emoji.mode`, …) instead of silently degrading:
+
+```php
+$errors = Console::validateConfig();   // list<string>; empty = valid
+```
+
+```bash
+php artisan laranail::console.check     # exits non-zero on a bad value
+```
+
+| Key | Default | Notes |
+|-----|---------|-------|
+| `validate_config` | `false` | When `true`, the config is validated on **every Artisan run** (console only — never web requests) and a clear error is thrown on a bad value. Env: `CONSOLE_VALIDATE_CONFIG`. |
+
+Validation is conservative: it only flags clearly-invalid known keys and ignores
+unknown/extra keys.
+
 [← Docs index](../README.md#documentation)
