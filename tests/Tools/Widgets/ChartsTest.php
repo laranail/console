@@ -14,6 +14,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 
 final class ChartsTest extends TestCase
 {
@@ -126,5 +127,39 @@ final class ChartsTest extends TestCase
     public function test_histogram_empty_is_safe(): void
     {
         self::assertSame([''], Histogram::make([])->renderLines());
+    }
+
+    public function test_stacked_bar_renders_segments_and_legend(): void
+    {
+        Capabilities::fake(colors: true, unicode: true, width: 40);
+
+        $lines = StackedBar::make(['done' => 8, 'wip' => 2])->width(40)->renderLines();
+
+        self::assertSame(3, count($lines));               // bar + 2 legend rows
+        self::assertStringContainsString("\033[", $lines[0]); // coloured bar
+        self::assertLessThanOrEqual(40, DisplayWidth::of($lines[0]));
+        self::assertStringContainsString('done', $lines[1]);
+        self::assertStringContainsString('80%', $lines[1]);   // 8/10
+    }
+
+    public function test_stacked_bar_no_colour_uses_distinct_glyphs(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 30);
+
+        $bar = StackedBar::make(['a' => 1, 'b' => 1])->width(30)->renderLines()[0];
+
+        self::assertStringNotContainsString("\033[", $bar);
+        // two segments → two distinct glyphs present
+        self::assertStringContainsString('█', $bar);
+        self::assertStringContainsString('▓', $bar);
+    }
+
+    public function test_stacked_bar_legend_can_be_hidden_and_empty_is_safe(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 20);
+
+        self::assertCount(1, StackedBar::make(['a' => 1])->showLegend(false)->renderLines());
+        self::assertSame([''], StackedBar::make([])->renderLines());
+        self::assertSame([''], StackedBar::make(['a' => 0])->renderLines()); // zero total
     }
 }

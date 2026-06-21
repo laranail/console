@@ -13,6 +13,7 @@ output without colour.
 | `ScatterPlot` | `Console::scatterPlot([[x, y], …])` | correlation / point clouds |
 | `Heatmap` | `Console::heatmap($matrix)` | 2D intensity / activity maps |
 | `Histogram` | `Console::histogram($values)` | value distributions (binned) |
+| `StackedBar` | `Console::stackedBar([label => value])` | composition / proportions (pie alternative) |
 
 See also the inline [`Sparkline`](widgets.md) and [`Gauge`](widgets.md) for compact,
 single-line readouts.
@@ -79,5 +80,18 @@ echo Console::histogram([1, 2, 2, 3, 3, 3, 4, 5])->bins(5)->height(6)->render();
 Bins raw values into a frequency distribution and renders it as a column chart. The
 bin count defaults to Sturges' rule (`⌈log2 n⌉ + 1`); override with `bins($n)`.
 Setters: `bins()`, `height()`, `width()`, `responsive()`.
+
+## Stacked / proportion bar
+
+```php
+echo Console::stackedBar(['done' => 8, 'in progress' => 3, 'todo' => 5])->render();
+```
+
+A single horizontal bar split into segments sized by each value's share of the
+total, each in a distinct theme colour, followed by a legend (`swatch label
+value (pct%)`). The terminal-friendly alternative to a pie chart. Setters:
+`add($label, $value)`, `width($n)`, `responsive($bool)`, `showLegend($bool)`.
+Without colour, segments use a distinct glyph cycle (`█▓▒░` / `#=*+`) so they
+stay readable.
 
 [← Docs index](../../README.md#documentation)
