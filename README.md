@@ -157,6 +157,12 @@ composer audit                # composer audit (security advisories)
 - [`laranail/package-scaffolder`](https://github.com/laranail/package-scaffolder) — generator that scaffolds new packages.
 - [`laranail/laranail`](https://github.com/laranail/laranail) — Simtabi's Laravel utility toolbox.
 
+## Roadmap & community
+
+- [ROADMAP.md](ROADMAP.md) — direction at a glance (community-driven, no dates).
+- [Discussions](https://github.com/laranail/console/discussions) — ideas, questions, proposals.
+- [Issues](https://github.com/laranail/console/issues) — bug reports.
+
 ## Contributing & security
 
 - [CONTRIBUTING.md](CONTRIBUTING.md) — development guidelines and PR expectations.
