@@ -11,6 +11,7 @@ use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Live;
@@ -335,6 +336,17 @@ final class ConsoleManager
     public function theme(): Theme
     {
         return Theme::resolve();
+    }
+
+    /**
+     * Validate the `console.*` config; returns a list of human-readable errors
+     * (empty = valid). See also the `laranail::console.check` command.
+     *
+     * @return list<string>
+     */
+    public function validateConfig(): array
+    {
+        return ConfigValidator::validate();
     }
 
     /**

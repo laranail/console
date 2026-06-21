@@ -154,9 +154,34 @@ Methods: `askText()`, `askPassword()`, `askConfirm()`, `askSelect()`,
 
 ## Namespaced command names
 
-To use the `laranail::<package-slug>.<command>` separator, extend the
-package-tools base command or use its `SupportsNamespacedNames` trait — see
-the [package-tools command-naming docs](https://opensource.simtabi.com/package-tools/docs/).
+This package ships its own `Tools\Commands\Concerns\SupportsNamespacedNames` trait
+so commands can use the `laranail::<package-slug>.<command>` separator (Symfony's
+validator otherwise rejects the empty `::` segment). `use` it on a command and set a
+`::` name in the `$signature`:
+
+```php
+use Simtabi\Laranail\Console\Tools\Commands\Command;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+
+final class SyncCommand extends Command
+{
+    use SupportsNamespacedNames;
+
+    protected $signature = 'laranail::your-package.sync';
+}
+```
+
+## `laranail::console.check`
+
+Validates the `console.*` config and reports any problems, exiting non-zero on a bad
+value (so it can gate CI/deploys):
+
+```bash
+php artisan laranail::console.check
+```
+
+It's the command form of `Console::validateConfig()` — see
+[Configuration › Validation](../configuration.md).
 
 ---
 
