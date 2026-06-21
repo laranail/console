@@ -1,6 +1,6 @@
 # Interactive menu
 
-`Menu` (`Simtabi\Laranail\Console\Tools\Widgets\Menu`, `Console::menu()`) is a
+`Menu` (`Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu`, `Console::menu()`) is a
 native interactive menu. On a TTY with raw key input it renders a navigable frame
 (↑/↓ to move, space to toggle checkboxes/radios, enter to choose, q/esc to exit).
 Where raw input isn't available — a non-TTY pipe, or Windows — it **transparently

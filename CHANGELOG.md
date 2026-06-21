@@ -5,6 +5,24 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-06-21
+
+Post-release audit fixes. No API changes.
+
+### Fixed
+
+- **Hardening:** `ConsoleUIFormatter::render()` now escapes a clickable link's URL
+  (`OutputFormatter::escape`) so a URL containing `<…>` can't inject Symfony
+  formatter tags. (The OSC-8 link path was never affected.)
+- `Commands\Concerns\SupportsNamespacedNames` is now marked `@api` (it was a
+  documented public extension point missing the marker).
+- Docs: fixed a non-runnable `docs/tools/theming.md` example (`Console::document()`
+  takes no args → `new Document(null, $theme)`), a wrong named argument in
+  `docs/tools/prompter.md` (`errorMessage:` → `explicitMessage:`), an incomplete
+  `Menu` FQCN, the README chart list (now lists `stacked`) and stability line (1.x),
+  the `SyntaxHighlighter` class docblock (all 10 languages), and the `PrompterFacade`
+  `@method` hints (`note()` `$type`, `form()`, `context()`).
+
 ## [1.2.1] - 2026-06-21
 
 ### Fixed
@@ -49,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docs: README "finished strings" row lists `stackedBar`; `colors.md` gradient
   example uses 6-digit hex (3-digit shorthand isn't parsed).
 
-## [1.1.0] - 2026-06-20
+## [1.1.0] - 2026-06-21
 
 ### Added
 

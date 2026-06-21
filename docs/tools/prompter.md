@@ -132,7 +132,7 @@ use Simtabi\Laranail\Console\Prompter\Validators\LaravelRule;
 prompter()->text('Email', validate: new LaravelRule(['required', 'email']));
 // optional custom messages / override:
 new LaravelRule(['email'], ['email' => 'Bad address']);
-new LaravelRule(['email'], errorMessage: 'Invalid');
+new LaravelRule(['email'], explicitMessage: 'Invalid');
 ```
 
 [← Docs index](../../README.md#documentation)
