@@ -62,9 +62,9 @@ Commands across the laranail family follow one shape:
 laranail::<package-slug>.<command>
 ```
 
-Extend `Simtabi\Laranail\PackageTools\Commands\Command` (or `use` the
-`Commands\Concerns\SupportsNamespacedNames` trait) on a command to bypass
-Symfony's `::` rejection in `Command::validateName()`.
+Extend `Simtabi\Laranail\Console\Tools\Commands\Command` (or `use` the
+`Console\Tools\Commands\Concerns\SupportsNamespacedNames` trait) on a command to
+bypass Symfony's `::` rejection in `Command::validateName()`.
 
 ## Code of conduct
 
