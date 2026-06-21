@@ -9,6 +9,7 @@ use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
@@ -187,6 +188,6 @@ final class LineChart implements Renderable, Stringable
 
     private function formatNumber(float $value): string
     {
-        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
+        return NumberFormat::trim($value);
     }
 }

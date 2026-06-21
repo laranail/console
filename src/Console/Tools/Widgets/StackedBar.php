@@ -8,6 +8,7 @@ use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Stringable;
@@ -159,6 +160,6 @@ final class StackedBar implements Renderable, Stringable
 
     private function formatValue(float $value): string
     {
-        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
+        return NumberFormat::trim($value);
     }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Stringable;
 
 /**
@@ -66,7 +67,7 @@ final readonly class Sparkline implements Stringable
 
     private function trim(int|float $n): string
     {
-        return rtrim(rtrim(number_format((float) $n, 2, '.', ''), '0'), '.');
+        return NumberFormat::trim((float) $n);
     }
 
     public function __toString(): string
