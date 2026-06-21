@@ -5,6 +5,19 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-06-21
+
+### Fixed
+
+- `Typography\SyntaxHighlighter` now skips highlighting for lines over 4000 chars,
+  bounding regex cost so a pathological very-long `html`/`css` line can't backtrack
+  quadratically (a 50k-char line: ~50s → ~3ms). Normal code is unaffected
+  (`CodeBlock` already clips to the terminal width).
+- `Widgets\StackedBar` clamps negative values to `0` — a proportion can't be
+  negative, so the legend no longer shows nonsensical percentages.
+- Docs: README "finished strings" row lists `stackedBar`; `colors.md` gradient
+  example uses 6-digit hex (3-digit shorthand isn't parsed).
+
 ## [1.1.0] - 2026-06-20
 
 ### Added
