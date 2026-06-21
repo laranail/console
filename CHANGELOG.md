@@ -5,6 +5,31 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-06-21
+
+### Fixed
+
+- **Length validators now count characters, not bytes.** `TextFieldValidator` (≤ 255)
+  and `PasswordFieldValidator` (≥ 8) used `strlen` (byte count); they now use
+  `mb_strlen`, matching their "characters" message text, `StringFieldValidator`, and
+  Laravel's string rules. **Behaviour change for multibyte input** — e.g. a 3-emoji
+  password now correctly fails the 8-character minimum, and a 200-character accented
+  string passes the 255 limit.
+
+### Added
+
+- `CommandServiceManager` config-key constants (`NATIVE_EVENTS`, `CUSTOM_EVENTS`,
+  `SIGNALS`, `NON_INTERACTIVE`) — the single source of truth for the
+  `configureServices()` contract (also removes a cross-file duplicate of the
+  `non_interactive` literal).
+
+### Changed
+
+- Internal `ChoiceFieldValidator` base shared by `RadioFieldValidator` /
+  `SelectFieldValidator` (both remain distinct public classes; constructors unchanged).
+- Documented the validator constructor convention (domain args first, then the
+  `errorMessage`/`replace`/`locale` tail; named-arg ergonomics).
+
 ## [1.3.0] - 2026-06-21
 
 Maintainability release from a code-quality audit. No behaviour changes — chart and
