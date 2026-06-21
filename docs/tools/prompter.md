@@ -80,17 +80,19 @@ otherwise the error message). All are **total** — non-string input returns the
 error rather than throwing. Messages default to `console::validators.*` (see
 [i18n](../i18n.md)). Length checks count **characters** (`mb_strlen`), not bytes.
 
-**Constructor convention.** Any validator-specific arguments come first, followed by
-the common tail `(?string $errorMessage = null, array $replace = [], ?string $locale = null)`.
-So a simple validator is just `new TextFieldValidator('Bad input')`, while one with
-options leads with them: `new StringFieldValidator(0, 64, 'Too long')`. Use **named
-arguments** to skip the domain args and set only the tail — uniform across every
-validator regardless of its leading parameters:
+**Constructor convention (2.0).** Constructors take **only validator-specific
+arguments**. The failure message, translation replacements and locale are configured
+**fluently** via `->errorMessage()`, `->replace()` and `->locale()` — uniform across
+every validator — and resolve lazily at validate-time:
 
 ```php
-new StringFieldValidator(errorMessage: 'Too long', locale: 'fr');
-new RadioFieldValidator(['a', 'b'], errorMessage: 'Pick one');
+new TextFieldValidator()->errorMessage('Bad input');
+new StringFieldValidator(0, 64)->errorMessage('Too long')->locale('fr');
+new RadioFieldValidator(['a', 'b'])->errorMessage('Pick one');
 ```
+
+> Upgrading from 1.x (where the message was a constructor argument)? See
+> [UPGRADING.md](../../UPGRADING.md).
 
 | Validator | Notable constructor args | Accepts |
 |-----------|--------------------------|---------|
@@ -113,24 +115,24 @@ new RadioFieldValidator(['a', 'b'], errorMessage: 'Pick one');
 | `AlphanumericValidator` | — | `[A-Za-z0-9]+` |
 | `BooleanFieldValidator` | — | bool / yes/no / 1/0 |
 | `CheckboxFieldValidator` | — | bool |
-| `SelectFieldValidator` | `array $options` (first) | a value in `$options` |
-| `RadioFieldValidator` | `array $options` (first) | a value in `$options` |
+| `SelectFieldValidator` | `array $options` | a value in `$options` |
+| `RadioFieldValidator` | `array $options` | a value in `$options` |
 | `ArrayValidator` | — | array |
 | `ObjectValidator` | — | object |
 | `JsonFieldValidator` | — | valid JSON string |
 | `NullOrEmptyValidator` | — | null or `''` |
-| `LaravelRule` | `array\|string $rules` (first) | anything passing the Laravel validation rules |
+| `LaravelRule` | `array\|string $rules, array $messages = []` | anything passing the Laravel validation rules |
 
 The regex-pattern validators (`Alpha`, `Alphanumeric`, `Name`, `Username`,
 `PhoneNumber`, `UUID`) share an abstract `RegexValidator` base — extend it to add
 your own single-pattern validator.
 
-The choice validators take `$options` **first**:
+The choice validators take `$options` (required), then configure the message fluently:
 
 ```php
 use Simtabi\Laranail\Console\Prompter\Validators\SelectFieldValidator;
 
-new SelectFieldValidator(['mysql', 'pgsql'], 'Pick a supported driver');
+new SelectFieldValidator(['mysql', 'pgsql'])->errorMessage('Pick a supported driver');
 ```
 
 ### Laravel rule bridge
@@ -141,9 +143,9 @@ Reuse Illuminate validation rules in a prompt:
 use Simtabi\Laranail\Console\Prompter\Validators\LaravelRule;
 
 prompter()->text('Email', validate: new LaravelRule(['required', 'email']));
-// optional custom messages / override:
+// optional per-rule messages, or a single fluent override:
 new LaravelRule(['email'], ['email' => 'Bad address']);
-new LaravelRule(['email'], explicitMessage: 'Invalid');
+new LaravelRule(['email'])->errorMessage('Invalid');
 ```
 
 [← Docs index](../../README.md#documentation)
