@@ -5,6 +5,23 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-06-21
+
+### Added
+
+- **Theme presets** — five built-in palettes (`dracula`, `nord`, `solarized`,
+  `monochrome`, `github`) via `Theme::preset('nord')` / `Palette::preset()` and a
+  `console.theme.preset` config key (the `theme.palette` block overrides it
+  role-by-role). `CONSOLE_THEME_PRESET` env.
+- **Config validation** — `Console::validateConfig()` checks `console.*` (palette
+  colours via `Color::parseStrict`, `theme.preset`, `output.symbols`/`emoji.mode`
+  enums, `responsive`, `banner.font`) and the **`laranail::console.check`** Artisan
+  command (new `Commands\Concerns\SupportsNamespacedNames` trait enables the `::`
+  name). Opt-in fail-fast at boot via `console.validate_config` (console only,
+  off by default).
+- **Roadmap + Discussions** — `ROADMAP.md` and GitHub Discussions for the 1.x
+  package (proposals → Discussions, bugs → Issues).
+
 ## [1.1.1] - 2026-06-21
 
 ### Fixed
