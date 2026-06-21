@@ -121,4 +121,19 @@ final class CommandTest extends TestCase
         self::assertSame(Command::SUCCESS, $command->handle());
         self::assertTrue($command->getServices()->metadata()->get('handled'));
     }
+
+    /**
+     * Regression: constructing a command outside a running Application — as the
+     * container does during resolution / static analysis — must not fatal.
+     * Signal handling is wired at run() time, not the constructor, so a null
+     * application here is fine. Previously this fatalled on ext-pcntl platforms
+     * with "Call to a member function getSignalRegistry() on null".
+     */
+    public function test_constructing_without_an_application_does_not_fatal(): void
+    {
+        $command = new LifecycleSuccessCommand;
+
+        self::assertNull($command->getApplication());
+        self::assertInstanceOf(CommandServiceManager::class, $command->getServices());
+    }
 }

@@ -5,6 +5,20 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-06-21
+
+### Fixed
+
+- **Signal handling no longer fatals when a command is constructed outside a
+  running Application.** The base `Command` / `InteractsWithConsoleServices`
+  wired SIGTERM/SIGINT traps in the constructor (via `bootConsoleSupport()`),
+  but Laravel's `trap()` dereferences `$this->getApplication()->getSignalRegistry()`,
+  which is null until the command is attached to an Application — so on
+  ext-pcntl platforms, merely constructing a command (e.g. container resolution
+  during static analysis) threw `Call to a member function getSignalRegistry()
+  on null`. Signal handling now wires at `run()` time, with a null-application
+  guard and idempotency; `bootConsoleSupport()` only initialises `$this->services`.
+
 ## [1.2.0] - 2026-06-21
 
 ### Added

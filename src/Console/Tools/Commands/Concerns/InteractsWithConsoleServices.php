@@ -33,8 +33,16 @@ trait InteractsWithConsoleServices
     protected CommandServiceManager $services;
 
     /**
-     * Initialise the service manager + signal handling. Idempotent, so it is safe
-     * to call from a constructor and again from {@see run()}.
+     * Whether signal traps have been registered. Signal handling is wired at
+     * {@see run()} time — when the command is attached to an Application — not
+     * at construction, where its signal registry does not yet exist.
+     */
+    private bool $signalHandlingRegistered = false;
+
+    /**
+     * Initialise the service manager. Idempotent, so it is safe to call from a
+     * constructor and again from {@see run()}. Signal handling is wired
+     * separately in {@see run()} (see {@see setupSignalHandling()}).
      */
     protected function bootConsoleSupport(): void
     {
@@ -43,7 +51,6 @@ trait InteractsWithConsoleServices
         }
 
         $this->services = new CommandServiceManager($this->getCommandName());
-        $this->setupSignalHandling();
     }
 
     /**
@@ -53,6 +60,10 @@ trait InteractsWithConsoleServices
     public function run(InputInterface $input, OutputInterface $output): int
     {
         $this->bootConsoleSupport();
+
+        // Wire signal handling now that the command is attached to an
+        // Application — its signal registry is unavailable at construction.
+        $this->setupSignalHandling();
 
         // Set output for display service
         $this->services->setOutput($output);
@@ -104,16 +115,32 @@ trait InteractsWithConsoleServices
     }
 
     /**
-     * Set up signal handling for graceful shutdown
+     * Set up signal handling for graceful shutdown. Called at {@see run()} time
+     * (not construction), so the command is attached to its Application and the
+     * signal registry is available. Idempotent.
      */
     protected function setupSignalHandling(): void
     {
+        if ($this->signalHandlingRegistered) {
+            return;
+        }
+
         // Signal handling requires ext-pcntl; the SIGTERM/SIGINT constants are
         // only defined when it is loaded (e.g. not on Windows). Bail out early
-        // so constructing a command never fatals on platforms without it.
+        // so platforms without it never fatal.
         if (! extension_loaded('pcntl')) {
             return;
         }
+
+        // Laravel's trap() resolves the application's signal registry through
+        // $this->getApplication(), which is null until the command is attached
+        // to an Application. Guard so constructing a command outside one — e.g.
+        // container resolution during static analysis — never fatals.
+        if ($this->getApplication() === null) {
+            return;
+        }
+
+        $this->signalHandlingRegistered = true;
 
         // Handle SIGTERM and SIGINT for graceful shutdown.
         $this->trap([SIGTERM, SIGINT], function (int $signal): void {
