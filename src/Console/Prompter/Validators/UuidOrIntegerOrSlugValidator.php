@@ -32,13 +32,20 @@ final class UuidOrIntegerOrSlugValidator extends AbstractValidator
      */
     private function isUuid(mixed $value): bool
     {
-        return match ($this->uuidVersion) {
-            'uuid1' => is_string($value) && Str::isUuid($value) && preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-1[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value),
-            'uuid3' => is_string($value) && Str::isUuid($value) && preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-3[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value),
-            'uuid4' => is_string($value) && Str::isUuid($value) && preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value),
-            'uuid5' => is_string($value) && Str::isUuid($value) && preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-5[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value),
-            default => is_string($value) && Str::isUuid($value),
+        if (! is_string($value) || ! Str::isUuid($value)) {
+            return false;
+        }
+
+        $version = match ($this->uuidVersion) {
+            'uuid1' => '1',
+            'uuid3' => '3',
+            'uuid4' => '4',
+            'uuid5' => '5',
+            default => null,   // any UUID version
         };
+
+        return $version === null
+            || (bool) preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-' . $version . '[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value);
     }
 
     /**

@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Log;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\ManagesCommandContext;
 
 /**
  * Command Logger Service
@@ -15,10 +16,7 @@ use Illuminate\Support\Facades\Log;
  */
 class CommandLoggerService
 {
-    /**
-     * Additional context data
-     */
-    protected array $context = [];
+    use ManagesCommandContext;
 
     public function __construct(
         /**
@@ -33,26 +31,6 @@ class CommandLoggerService
     public function setCommandName(string $commandName): self
     {
         $this->commandName = $commandName;
-
-        return $this;
-    }
-
-    /**
-     * Add context data
-     */
-    public function addContext(string $key, mixed $value): self
-    {
-        $this->context[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Add multiple context entries
-     */
-    public function addContextMany(array $context): self
-    {
-        $this->context = array_merge($this->context, $context);
 
         return $this;
     }
@@ -101,16 +79,6 @@ class CommandLoggerService
         Log::info('Command received termination signal', array_merge($this->getContext(), [
             'signal' => $signal,
         ], $additionalContext));
-    }
-
-    /**
-     * Clear context
-     */
-    public function clearContext(): self
-    {
-        $this->context = [];
-
-        return $this;
     }
 
     /**
