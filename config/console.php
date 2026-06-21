@@ -44,6 +44,10 @@ return [
     | accepts any colour spec (hex, rgb(), hsl(), named, @256).
     */
     'theme' => [
+        // A built-in preset palette (dracula, nord, solarized, monochrome, github),
+        // or null for the default. `palette` below overrides individual roles on top.
+        'preset' => env('CONSOLE_THEME_PRESET'),
+
         'palette' => [
             // 'primary' => '#7c3aed', 'accent' => '#06b6d4', 'success' => '#16a34a',
             // 'warning' => '#d97706', 'danger' => '#dc2626', 'info' => '#2563eb',

@@ -24,6 +24,31 @@ Set them in config (any [colour spec](colors.md)):
 `$theme->color('primary')` reads a role, `$theme->style('h1')` returns the
 [`Style`](colors.md) for an element.
 
+## Presets
+
+Five built-in palettes ship ready to use: **`dracula`, `nord`, `solarized`,
+`monochrome`, `github`**. Select one in config (the `palette` block still overrides
+individual roles on top), or build a theme from one directly:
+
+```php
+// config/console.php — preset as the base, palette overrides on top
+'theme' => [
+    'preset'  => 'nord',                 // or env('CONSOLE_THEME_PRESET')
+    'palette' => ['primary' => '#ec4899'],
+],
+```
+
+```php
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+
+$theme = Theme::preset('dracula');       // throws on an unknown preset name
+echo Console::document(null, $theme)->h1('Hi')->render();
+```
+
+An unknown preset in **config** falls back to the default palette (and is reported
+by [config validation](../configuration.md)); `Theme::preset()` called directly
+throws `InvalidArgumentException`.
+
 ## Element styles
 
 Each element derives a sensible style from the palette: `h1`–`h6`, `paragraph`,
