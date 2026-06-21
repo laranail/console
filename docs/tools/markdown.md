@@ -21,8 +21,9 @@ echo Console::markdown($readme)->render();
   Leading/trailing pipes are optional, `\|` is a literal pipe, ragged rows pad to
   the header column count, and a table may follow a paragraph with no blank line.
 - **Fenced code** ```` ```lang ```` — with basic highlighting for **php, json,
-  bash, yaml and js** (aliases: `sh`/`shell`/`zsh`, `yml`, `javascript`/`node`/`mjs`);
-  other languages render plain.
+  bash, yaml, js, python, sql, html, css and diff** (aliases: `sh`/`shell`/`zsh`,
+  `yml`, `javascript`/`node`/`mjs`, `py`, `xml`/`htm`, `patch`); other languages
+  render plain.
 
 Everything is responsive (wraps/clips to the terminal width).
 

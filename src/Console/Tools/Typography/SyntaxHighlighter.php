@@ -41,6 +41,22 @@ final readonly class SyntaxHighlighter
         'catch', 'finally', 'throw', 'null', 'true', 'false', 'undefined',
     ];
 
+    private const array PYTHON_KEYWORDS = [
+        'def', 'class', 'if', 'elif', 'else', 'for', 'while', 'return', 'import',
+        'from', 'as', 'with', 'try', 'except', 'finally', 'raise', 'lambda', 'pass',
+        'break', 'continue', 'yield', 'global', 'nonlocal', 'async', 'await', 'and',
+        'or', 'not', 'in', 'is', 'None', 'True', 'False', 'self', 'del', 'assert',
+    ];
+
+    private const array SQL_KEYWORDS = [
+        'select', 'from', 'where', 'insert', 'into', 'values', 'update', 'set',
+        'delete', 'create', 'alter', 'drop', 'table', 'index', 'view', 'join',
+        'left', 'right', 'inner', 'outer', 'full', 'on', 'group', 'by', 'order',
+        'having', 'limit', 'offset', 'distinct', 'as', 'and', 'or', 'not', 'null',
+        'is', 'in', 'like', 'between', 'union', 'all', 'asc', 'desc', 'count',
+        'sum', 'avg', 'min', 'max', 'primary', 'key', 'foreign', 'references',
+    ];
+
     private Capabilities $capabilities;
 
     private Theme $theme;
@@ -58,7 +74,11 @@ final readonly class SyntaxHighlighter
 
     public function supports(string $language): bool
     {
-        return in_array($this->normalize($language), ['php', 'json', 'bash', 'yaml', 'js'], true);
+        return in_array(
+            $this->normalize($language),
+            ['php', 'json', 'bash', 'yaml', 'js', 'python', 'sql', 'html', 'css', 'diff'],
+            true,
+        );
     }
 
     /**
@@ -73,6 +93,11 @@ final readonly class SyntaxHighlighter
             'bash' => $this->highlightBash($line),
             'yaml' => $this->highlightYaml($line),
             'js' => $this->highlightJs($line),
+            'python' => $this->highlightPython($line),
+            'sql' => $this->highlightSql($line),
+            'html' => $this->highlightHtml($line),
+            'css' => $this->highlightCss($line),
+            'diff' => $this->highlightDiff($line),
             default => $line,
         };
     }
@@ -86,6 +111,9 @@ final readonly class SyntaxHighlighter
             'sh', 'shell', 'zsh' => 'bash',
             'yml' => 'yaml',
             'javascript', 'node', 'mjs' => 'js',
+            'py' => 'python',
+            'xml', 'htm' => 'html',
+            'patch' => 'diff',
             default => strtolower(trim($language)),
         };
     }
@@ -177,6 +205,96 @@ final readonly class SyntaxHighlighter
             ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
             default => $m[0],
         }, $line);
+    }
+
+    private function highlightPython(string $line): string
+    {
+        $keywords = implode('|', self::PYTHON_KEYWORDS);
+        $pattern = '/(?P<comment>#.*$)'
+            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
+            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
+            default => $m[0],
+        }, $line);
+    }
+
+    private function highlightSql(string $line): string
+    {
+        $keywords = implode('|', self::SQL_KEYWORDS);
+        $pattern = '/(?P<comment>--.*$|\/\*.*?\*\/)'
+            . '|(?P<string>\'(?:\'\'|[^\'])*\')'
+            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+            . '|(?P<kw>\b(?:' . $keywords . ')\b)/i';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
+            default => $m[0],
+        }, $line);
+    }
+
+    private function highlightHtml(string $line): string
+    {
+        $pattern = '/(?P<comment><!--.*?-->)'
+            . '|(?P<tag><\/?[a-zA-Z][\w-]*)'
+            . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
+            . '|(?P<attr>[a-zA-Z-]+(?==))/';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['tag'] ?? '') !== '' => $this->style('primary')->apply($m['tag']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['attr'] ?? '') !== '' => $this->style('accent')->apply($m['attr']),
+            default => $m[0],
+        }, $line);
+    }
+
+    private function highlightCss(string $line): string
+    {
+        $pattern = '/(?P<comment>\/\*.*?\*\/)'
+            . '|(?P<atrule>@[\w-]+)'
+            . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
+            . '|(?P<hex>#[0-9a-fA-F]{3,8}\b)'
+            . '|(?P<prop>[a-zA-Z-]+(?=\s*:))'
+            . '|(?P<num>\b\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms)?\b)/';
+
+        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
+            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
+            ($m['atrule'] ?? '') !== '' => $this->style('primary')->apply($m['atrule']),
+            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
+            ($m['hex'] ?? '') !== '' => $this->style('accent')->apply($m['hex']),
+            ($m['prop'] ?? '') !== '' => $this->style('accent')->apply($m['prop']),
+            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
+            default => $m[0],
+        }, $line);
+    }
+
+    /**
+     * Unified-diff highlighting — colour the whole line by its leading marker.
+     */
+    private function highlightDiff(string $line): string
+    {
+        if (str_starts_with($line, '+') && ! str_starts_with($line, '+++')) {
+            return $this->style('success')->apply($line);
+        }
+
+        if (str_starts_with($line, '-') && ! str_starts_with($line, '---')) {
+            return $this->style('danger')->apply($line);
+        }
+
+        if (str_starts_with($line, '@@') || str_starts_with($line, '+++') || str_starts_with($line, '---')) {
+            return $this->style('info')->apply($line);
+        }
+
+        return $line;
     }
 
     private function style(string $role): Style
