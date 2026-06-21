@@ -5,6 +5,21 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2026-06-21
+
+First major release. See [UPGRADING.md](UPGRADING.md).
+
+### Changed
+
+- **BREAKING — validator constructors take only domain arguments.** The failure
+  message, translation replacements and locale moved from trailing constructor
+  arguments to chainable methods — `->errorMessage()`, `->replace()`, `->locale()` —
+  uniform across every validator, resolved lazily at validation time. This removes the
+  inconsistent message-argument position between validators. Domain arguments (e.g.
+  `StringFieldValidator(int $minLength, int $maxLength)`, `RadioFieldValidator(array $options)`)
+  are unchanged. `LaravelRule` drops its `explicitMessage`/`locale` constructor params in
+  favour of the inherited fluent methods. Migration: [UPGRADING.md](UPGRADING.md).
+
 ## [1.4.1] - 2026-06-21
 
 ### Fixed
