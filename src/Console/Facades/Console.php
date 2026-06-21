@@ -51,6 +51,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Widgets\Summary;
@@ -79,6 +80,7 @@ use Symfony\Component\Tui\Tui;
  * @method static ScatterPlot scatterPlot(array $points = [])
  * @method static Heatmap heatmap(array $matrix = [])
  * @method static Histogram histogram(array $values = [])
+ * @method static StackedBar stackedBar(array $data = [])
  * @method static Banner banner(string $title)
  * @method static Header header(string $title)
  * @method static Summary summary(array $stats, ?string $title = null)

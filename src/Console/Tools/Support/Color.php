@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
+use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
+
 /**
  * Colour parsing + emission with graceful degradation.
  *
@@ -44,6 +46,17 @@ final readonly class Color
     public static function isValidHex(string $hex): bool
     {
         return preg_match('/^#?[0-9a-fA-F]{6}$/', $hex) === 1;
+    }
+
+    /**
+     * Like {@see parse()} but throws on an unparseable colour instead of returning
+     * null — use it to validate user/config colour input up front.
+     *
+     * @throws InvalidColorException
+     */
+    public static function parseStrict(string $color): string
+    {
+        return self::parse($color) ?? throw InvalidColorException::forValue($color);
     }
 
     /**

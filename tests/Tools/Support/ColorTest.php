@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 
 final class ColorTest extends TestCase
@@ -54,6 +55,20 @@ final class ColorTest extends TestCase
         $this->forceTruecolor();
 
         self::assertSame('hi', Color::make()->fg('hi', 'nothex'));
+    }
+
+    public function test_parse_strict_returns_hex_for_valid_input(): void
+    {
+        self::assertSame('#ffffff', Color::parseStrict('#FFFFFF'));
+        self::assertSame('#ff0000', Color::parseStrict('red'));
+        self::assertSame('#abcdef', Color::parseStrict('abcdef'));
+    }
+
+    public function test_parse_strict_throws_on_invalid_input(): void
+    {
+        $this->expectException(InvalidColorException::class);
+
+        Color::parseStrict('definitely-not-a-colour');
     }
 
     public function test_gradient_colours_each_character_and_resets_once(): void

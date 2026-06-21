@@ -21,6 +21,7 @@ composer test
    composer test          # vendor/bin/pest --no-coverage
    composer test-coverage # add a coverage report (needs Xdebug/PCOV)
    composer audit         # composer audit (security)
+   composer bench         # phpbench micro-benchmarks (local only — noisy in CI)
    ```
 4. Use [Conventional Commits](https://www.conventionalcommits.org/) — the release workflow regenerates `CHANGELOG.md` from them.
 5. Open the PR against `main`. CI must pass before merge.

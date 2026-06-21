@@ -17,11 +17,18 @@ use Symfony\Component\Console\Helper\Helper;
 final class DisplayWidth
 {
     /**
+     * Reused, stateless formatter for decoration stripping — `of()` runs for every
+     * cell/pad/wrap, so building a fresh OutputFormatter per call was a real hot-path
+     * cost (see benchmarks/DisplayWidthBench).
+     */
+    private static ?OutputFormatter $formatter = null;
+
+    /**
      * Visible column width of a string (decoration stripped).
      */
     public static function of(string $text): int
     {
-        return Helper::width(Helper::removeDecoration(new OutputFormatter, $text));
+        return Helper::width(Helper::removeDecoration(self::$formatter ??= new OutputFormatter, $text));
     }
 
     /**

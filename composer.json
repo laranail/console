@@ -44,13 +44,14 @@
     "symfony/console": "^8.0"
   },
   "require-dev": {
+    "larastan/larastan": "^3.0",
+    "laravel/pint": "^1.18",
     "mockery/mockery": "^1.6",
     "orchestra/testbench": "^11.0",
     "pestphp/pest": "^4.0",
-    "phpunit/phpunit": "^12.0",
+    "phpbench/phpbench": "^1.4",
     "phpstan/phpstan": "^2.0",
-    "larastan/larastan": "^3.0",
-    "laravel/pint": "^1.18",
+    "phpunit/phpunit": "^12.0",
     "rector/rector": "^2.0",
     "roave/security-advisories": "dev-latest",
     "symfony/tui": "^8.2@dev"
@@ -69,11 +70,13 @@
   "autoload-dev": {
     "psr-4": {
       "Simtabi\\Laranail\\Console\\Tools\\Tests\\": "tests/Tools/",
-      "Simtabi\\Laranail\\Console\\Prompter\\Tests\\": "tests/Prompter/"
+      "Simtabi\\Laranail\\Console\\Prompter\\Tests\\": "tests/Prompter/",
+      "Simtabi\\Laranail\\Console\\Benchmarks\\": "benchmarks/"
     }
   },
   "scripts": {
     "test": "vendor/bin/pest --no-coverage --colors=always",
+    "bench": "vendor/bin/phpbench run --report=aggregate",
     "test-coverage": "vendor/bin/pest --coverage --colors=always",
     "test-dirty": "@test --dirty --compact",
     "examples": [
@@ -129,6 +132,9 @@
     "sort-packages": true,
     "allow-plugins": {
       "pestphp/pest-plugin": true
+    },
+    "audit": {
+      "abandoned": "report"
     }
   },
   "minimum-stability": "dev",

@@ -20,7 +20,11 @@ final class SyntaxHighlightTest extends TestCase
     public function test_supports_known_languages_and_aliases(): void
     {
         $h = SyntaxHighlighter::make();
-        foreach (['php', 'JSON', 'bash', 'sh', 'shell', 'yaml', 'yml', 'js', 'javascript', 'node'] as $lang) {
+        $langs = [
+            'php', 'JSON', 'bash', 'sh', 'shell', 'yaml', 'yml', 'js', 'javascript', 'node',
+            'python', 'py', 'sql', 'html', 'xml', 'htm', 'css', 'diff', 'patch',
+        ];
+        foreach ($langs as $lang) {
             self::assertTrue($h->supports($lang), "should support {$lang}");
         }
         self::assertFalse($h->supports('rust'));
@@ -37,6 +41,14 @@ final class SyntaxHighlightTest extends TestCase
             'yaml' => ['yaml', 'name: value # comment', 'name'],
             'js' => ['js', 'const x = `tpl`; // c', 'const'],
             'js alias' => ['javascript', 'function f() { return 1 }', 'function'],
+            'python' => ['python', 'def go(self):  # run', 'def'],
+            'python alias py' => ['py', 'import os', 'import'],
+            'sql' => ['sql', 'SELECT * FROM users WHERE id = 1 -- c', 'SELECT'],
+            'html' => ['html', '<a href="/x">link</a>', 'href'],
+            'html alias xml' => ['xml', '<root attr="v"/>', 'attr'],
+            'css' => ['css', '.btn { color: #fff; margin: 4px } /* c */', 'color'],
+            'diff' => ['diff', '+added line', 'added'],
+            'diff alias patch' => ['patch', '-removed line', 'removed'],
         ];
     }
 

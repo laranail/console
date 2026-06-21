@@ -5,6 +5,26 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-06-20
+
+### Added
+
+- **`Color::parseStrict()`** — validates a colour and throws `InvalidColorException`
+  on bad input (use it for user/config colour input). `parse()` stays lenient
+  (null on failure). Wires the previously-unused exception.
+- **`StackedBar`** proportion chart + **`Console::stackedBar()`** — one horizontal
+  bar split into proportional theme-coloured segments with a legend; the
+  terminal-friendly pie alternative (degrades to a distinct glyph cycle without colour).
+- **Syntax highlighting** for **python, sql, html, css and diff** (aliases
+  `py`, `xml`/`htm`, `patch`) — 10 languages total.
+- A **phpbench** benchmark suite (`composer bench`) covering the hot paths.
+
+### Changed
+
+- **Performance:** `Support\DisplayWidth::of()` caches its `OutputFormatter` instead
+  of constructing one per call — ~3× faster on the hottest path (every cell/pad/wrap),
+  with no behaviour change.
+
 ## [1.0.1] - 2026-06-20
 
 Post-1.0 documentation accuracy + a small robustness fix. No API changes.

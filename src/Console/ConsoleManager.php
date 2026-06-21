@@ -51,6 +51,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Widgets\Summary;
@@ -232,6 +233,16 @@ final class ConsoleManager
     public function histogram(array $values = []): Histogram
     {
         return Histogram::make($values);
+    }
+
+    /**
+     * A single proportion (stacked) bar with a legend.
+     *
+     * @param array<string, int|float> $data label => value
+     */
+    public function stackedBar(array $data = []): StackedBar
+    {
+        return StackedBar::make($data);
     }
 
     /**
