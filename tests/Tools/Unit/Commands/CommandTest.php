@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands;
 
 use Simtabi\Laranail\Console\Tools\Commands\Command;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
 use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -28,6 +29,27 @@ final class LifecycleSuccessCommand extends Command
     }
 }
 
+/**
+ * Mirrors a real consumer (e.g. laranail/toolkit's make:crud): a namespaced
+ * `::` name plus a bare convenience alias declared via $commandAliases.
+ */
+final class AliasedCommand extends Command
+{
+    use SupportsNamespacedNames;
+
+    protected $signature = 'laranail::console.aliased';
+
+    protected $description = 'Aliased convenience test command';
+
+    /** @var list<string> */
+    protected array $commandAliases = ['aliased', 'al:ias'];
+
+    public function handle(): int
+    {
+        return self::SUCCESS;
+    }
+}
+
 final class CommandTest extends TestCase
 {
     private function makeCommand(): LifecycleSuccessCommand
@@ -45,6 +67,19 @@ final class CommandTest extends TestCase
 
         self::assertInstanceOf(CommandServiceManager::class, $services);
         self::assertSame('laranail-test:success', $services->getCommandName());
+    }
+
+    public function test_command_aliases_are_applied_after_construction(): void
+    {
+        $command = new AliasedCommand;
+
+        self::assertSame('laranail::console.aliased', $command->getName());
+        self::assertSame(['aliased', 'al:ias'], $command->getAliases());
+    }
+
+    public function test_base_command_without_aliases_has_none(): void
+    {
+        self::assertSame([], $this->makeCommand()->getAliases());
     }
 
     public function test_metadata_round_trips_via_the_service(): void
