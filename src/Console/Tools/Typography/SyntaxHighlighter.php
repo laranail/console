@@ -15,6 +15,10 @@ use Simtabi\Laranail\Console\Tools\Theme\Theme;
  * `xml`/`htm`, `patch`) — comments, strings, numbers, keywords/keys/variables; any
  * other language renders plain. Per-line (no cross-line string or comment state) —
  * good enough for docs, not a full lexer. Colours come from the theme.
+ *
+ * Each token language is a {@see tokenSpec() spec}: one regex of named groups plus an
+ * ordered `group => theme-role` map; {@see applyTokens()} drives them all. Add a
+ * language by adding a spec (and `diff`, which is whole-line, in {@see highlightDiff()}).
  */
 final readonly class SyntaxHighlighter
 {
@@ -58,6 +62,14 @@ final readonly class SyntaxHighlighter
         'sum', 'avg', 'min', 'max', 'primary', 'key', 'foreign', 'references',
     ];
 
+    /**
+     * Maximum line length to tokenize — beyond this a line is returned unhighlighted.
+     * Real code lines are far shorter; this bounds the regex cost so a pathological
+     * very-long single line (e.g. an unterminated comment/string) can't cause
+     * quadratic backtracking. CodeBlock already clips to the terminal width.
+     */
+    private const int MAX_LINE = 4000;
+
     private Capabilities $capabilities;
 
     private Theme $theme;
@@ -75,20 +87,10 @@ final readonly class SyntaxHighlighter
 
     public function supports(string $language): bool
     {
-        return in_array(
-            $this->normalize($language),
-            ['php', 'json', 'bash', 'yaml', 'js', 'python', 'sql', 'html', 'css', 'diff'],
-            true,
-        );
-    }
+        $language = $this->normalize($language);
 
-    /**
-     * Maximum line length to tokenize — beyond this a line is returned unhighlighted.
-     * Real code lines are far shorter; this bounds the regex cost so a pathological
-     * very-long single line (e.g. an unterminated comment/string) can't cause
-     * quadratic backtracking. CodeBlock already clips to the terminal width.
-     */
-    private const int MAX_LINE = 4000;
+        return $language === 'diff' || $this->tokenSpec($language) !== null;
+    }
 
     /**
      * Highlight one line. Assumes plain input (no existing ANSI); returns a styled
@@ -101,19 +103,15 @@ final readonly class SyntaxHighlighter
             return $line;
         }
 
-        return match ($this->normalize($language)) {
-            'php' => $this->highlightPhp($line),
-            'json' => $this->highlightJson($line),
-            'bash' => $this->highlightBash($line),
-            'yaml' => $this->highlightYaml($line),
-            'js' => $this->highlightJs($line),
-            'python' => $this->highlightPython($line),
-            'sql' => $this->highlightSql($line),
-            'html' => $this->highlightHtml($line),
-            'css' => $this->highlightCss($line),
-            'diff' => $this->highlightDiff($line),
-            default => $line,
-        };
+        $language = $this->normalize($language);
+
+        if ($language === 'diff') {
+            return $this->highlightDiff($line);
+        }
+
+        $spec = $this->tokenSpec($language);
+
+        return $spec === null ? $line : $this->applyTokens($line, $spec['pattern'], $spec['roles']);
     }
 
     /**
@@ -132,162 +130,103 @@ final readonly class SyntaxHighlighter
         };
     }
 
-    private function highlightPhp(string $line): string
+    /**
+     * The token-highlighting spec for a canonical language, or null if unsupported.
+     * `pattern` is a single regex of named groups; `roles` maps each group, in
+     * priority order, to a theme colour role.
+     *
+     * @return array{pattern: string, roles: array<string, string>}|null
+     */
+    private function tokenSpec(string $language): ?array
     {
-        $keywords = implode('|', self::PHP_KEYWORDS);
-        $pattern = '/(?P<comment>\/\/.*$|#.*$|\/\*.*?\*\/)'
-            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
-            . '|(?P<var>\$\w+)'
-            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['var'] ?? '') !== '' => $this->style('info')->apply($m['var']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
-            default => $m[0],
-        }, $line);
+        return match ($language) {
+            'php' => [
+                'pattern' => '/(?P<comment>\/\/.*$|#.*$|\/\*.*?\*\/)'
+                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
+                    . '|(?P<var>\$\w+)'
+                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    . '|(?P<kw>\b(?:' . implode('|', self::PHP_KEYWORDS) . ')\b)/',
+                'roles' => ['comment' => 'muted', 'string' => 'success', 'var' => 'info', 'num' => 'warning', 'kw' => 'primary'],
+            ],
+            'json' => [
+                'pattern' => '/(?P<key>"(?:\\\\.|[^"\\\\])*"(?=\s*:))'
+                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*")'
+                    . '|(?P<bool>\b(?:true|false|null)\b)'
+                    . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/',
+                'roles' => ['key' => 'accent', 'string' => 'success', 'bool' => 'primary', 'num' => 'warning'],
+            ],
+            'bash' => [
+                'pattern' => '/(?P<comment>(?<![\w$])#.*$)'
+                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
+                    . '|(?P<var>\$\{?\w+\}?)'
+                    . '|(?P<num>\b\d+\b)'
+                    . '|(?P<kw>\b(?:' . implode('|', self::BASH_KEYWORDS) . ')\b)/',
+                'roles' => ['comment' => 'muted', 'string' => 'success', 'var' => 'info', 'num' => 'warning', 'kw' => 'primary'],
+            ],
+            'yaml' => [
+                'pattern' => '/(?P<comment>(?<!\S)#.*$)'
+                    . '|(?P<key>^\s*[\w.-]+(?=\s*:))'
+                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
+                    . '|(?P<bool>\b(?:true|false|null|yes|no|on|off)\b)'
+                    . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/',
+                'roles' => ['comment' => 'muted', 'key' => 'accent', 'string' => 'success', 'bool' => 'primary', 'num' => 'warning'],
+            ],
+            'js' => [
+                'pattern' => '/(?P<comment>\/\/.*$|\/\*.*?\*\/)'
+                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'|`(?:\\\\.|[^`\\\\])*`)'
+                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    . '|(?P<kw>\b(?:' . implode('|', self::JS_KEYWORDS) . ')\b)/',
+                'roles' => ['comment' => 'muted', 'string' => 'success', 'num' => 'warning', 'kw' => 'primary'],
+            ],
+            'python' => [
+                'pattern' => '/(?P<comment>#.*$)'
+                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
+                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    . '|(?P<kw>\b(?:' . implode('|', self::PYTHON_KEYWORDS) . ')\b)/',
+                'roles' => ['comment' => 'muted', 'string' => 'success', 'num' => 'warning', 'kw' => 'primary'],
+            ],
+            'sql' => [
+                'pattern' => '/(?P<comment>--.*$|\/\*.*?\*\/)'
+                    . '|(?P<string>\'(?:\'\'|[^\'])*\')'
+                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    . '|(?P<kw>\b(?:' . implode('|', self::SQL_KEYWORDS) . ')\b)/i',
+                'roles' => ['comment' => 'muted', 'string' => 'success', 'num' => 'warning', 'kw' => 'primary'],
+            ],
+            'html' => [
+                'pattern' => '/(?P<comment><!--.*?-->)'
+                    . '|(?P<tag><\/?[a-zA-Z][\w-]*)'
+                    . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
+                    . '|(?P<attr>[a-zA-Z-]+(?==))/',
+                'roles' => ['comment' => 'muted', 'tag' => 'primary', 'string' => 'success', 'attr' => 'accent'],
+            ],
+            'css' => [
+                'pattern' => '/(?P<comment>\/\*.*?\*\/)'
+                    . '|(?P<atrule>@[\w-]+)'
+                    . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
+                    . '|(?P<hex>#[0-9a-fA-F]{3,8}\b)'
+                    . '|(?P<prop>[a-zA-Z-]+(?=\s*:))'
+                    . '|(?P<num>\b\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms)?\b)/',
+                'roles' => ['comment' => 'muted', 'atrule' => 'primary', 'string' => 'success', 'hex' => 'accent', 'prop' => 'accent', 'num' => 'warning'],
+            ],
+            default => null,
+        };
     }
 
-    private function highlightJson(string $line): string
+    /**
+     * Apply a spec: style the first matched named group per token by its role.
+     *
+     * @param array<string, string> $roles group => theme role, in priority order
+     */
+    private function applyTokens(string $line, string $pattern, array $roles): string
     {
-        $pattern = '/(?P<key>"(?:\\\\.|[^"\\\\])*"(?=\s*:))'
-            . '|(?P<string>"(?:\\\\.|[^"\\\\])*")'
-            . '|(?P<bool>\b(?:true|false|null)\b)'
-            . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/';
+        return (string) preg_replace_callback($pattern, function (array $m) use ($roles): string {
+            foreach ($roles as $group => $role) {
+                if (($m[$group] ?? '') !== '') {
+                    return $this->style($role)->apply($m[$group]);
+                }
+            }
 
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['key'] ?? '') !== '' => $this->style('accent')->apply($m['key']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['bool'] ?? '') !== '' => $this->style('primary')->apply($m['bool']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightBash(string $line): string
-    {
-        $keywords = implode('|', self::BASH_KEYWORDS);
-        $pattern = '/(?P<comment>(?<![\w$])#.*$)'
-            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
-            . '|(?P<var>\$\{?\w+\}?)'
-            . '|(?P<num>\b\d+\b)'
-            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['var'] ?? '') !== '' => $this->style('info')->apply($m['var']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightYaml(string $line): string
-    {
-        $pattern = '/(?P<comment>(?<!\S)#.*$)'
-            . '|(?P<key>^\s*[\w.-]+(?=\s*:))'
-            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
-            . '|(?P<bool>\b(?:true|false|null|yes|no|on|off)\b)'
-            . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['key'] ?? '') !== '' => $this->style('accent')->apply($m['key']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['bool'] ?? '') !== '' => $this->style('primary')->apply($m['bool']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightJs(string $line): string
-    {
-        $keywords = implode('|', self::JS_KEYWORDS);
-        $pattern = '/(?P<comment>\/\/.*$|\/\*.*?\*\/)'
-            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'|`(?:\\\\.|[^`\\\\])*`)'
-            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightPython(string $line): string
-    {
-        $keywords = implode('|', self::PYTHON_KEYWORDS);
-        $pattern = '/(?P<comment>#.*$)'
-            . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
-            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-            . '|(?P<kw>\b(?:' . $keywords . ')\b)/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightSql(string $line): string
-    {
-        $keywords = implode('|', self::SQL_KEYWORDS);
-        $pattern = '/(?P<comment>--.*$|\/\*.*?\*\/)'
-            . '|(?P<string>\'(?:\'\'|[^\'])*\')'
-            . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-            . '|(?P<kw>\b(?:' . $keywords . ')\b)/i';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            ($m['kw'] ?? '') !== '' => $this->style('primary')->apply($m['kw']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightHtml(string $line): string
-    {
-        $pattern = '/(?P<comment><!--.*?-->)'
-            . '|(?P<tag><\/?[a-zA-Z][\w-]*)'
-            . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
-            . '|(?P<attr>[a-zA-Z-]+(?==))/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['tag'] ?? '') !== '' => $this->style('primary')->apply($m['tag']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['attr'] ?? '') !== '' => $this->style('accent')->apply($m['attr']),
-            default => $m[0],
-        }, $line);
-    }
-
-    private function highlightCss(string $line): string
-    {
-        $pattern = '/(?P<comment>\/\*.*?\*\/)'
-            . '|(?P<atrule>@[\w-]+)'
-            . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
-            . '|(?P<hex>#[0-9a-fA-F]{3,8}\b)'
-            . '|(?P<prop>[a-zA-Z-]+(?=\s*:))'
-            . '|(?P<num>\b\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms)?\b)/';
-
-        return (string) preg_replace_callback($pattern, fn (array $m): string => match (true) {
-            ($m['comment'] ?? '') !== '' => $this->style('muted')->apply($m['comment']),
-            ($m['atrule'] ?? '') !== '' => $this->style('primary')->apply($m['atrule']),
-            ($m['string'] ?? '') !== '' => $this->style('success')->apply($m['string']),
-            ($m['hex'] ?? '') !== '' => $this->style('accent')->apply($m['hex']),
-            ($m['prop'] ?? '') !== '' => $this->style('accent')->apply($m['prop']),
-            ($m['num'] ?? '') !== '' => $this->style('warning')->apply($m['num']),
-            default => $m[0],
+            return $m[0];
         }, $line);
     }
 
