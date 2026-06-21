@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Security;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 final class OutputInjectionTest extends TestCase
@@ -37,6 +38,22 @@ final class OutputInjectionTest extends TestCase
         self::assertStringNotContainsString('javascript', ConsoleUIFormatter::link('x', 'javascript:alert(1)'));
         self::assertStringNotContainsString('href', ConsoleUIFormatter::link('x', 'file:///etc/passwd'));
         self::assertStringContainsString('example.com', ConsoleUIFormatter::link('site', 'https://example.com'));
+    }
+
+    /**
+     * A URL containing formatter-tag characters can't inject active markup through
+     * the clickable-link path — the href is escaped before interpolation.
+     */
+    public function test_link_url_cannot_inject_formatter_tags(): void
+    {
+        // an allow-listed scheme but with a smuggled formatter tag in the path
+        $rendered = ConsoleUIFormatter::link('label', 'https://example.com/<fg=red>x');
+
+        // the '<' is escaped to '\<', so it can't open an active formatter tag
+        self::assertStringContainsString('\\<fg=red', $rendered);
+        // and rendering it through a real formatter applies no colour to the label
+        $formatted = new OutputFormatter(true)->format($rendered);
+        self::assertStringNotContainsString("\033[31m", $formatted); // no red SGR injected
     }
 
     /**

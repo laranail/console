@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Tools\Formatting;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
 use Stringable;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
  * Fluent helper class for formatting Symfony Console output with badge support
@@ -464,9 +465,11 @@ class ConsoleUIFormatter implements Stringable
             return sprintf('<%s>%s</>', $this->styleTag, $displayMessage);
         }
 
-        // Use clickable href if set
+        // Use clickable href if set. Escape the URL so it can't inject formatter
+        // tags (e.g. a URL containing `<fg=red>`); Hyperlink vets the scheme, but
+        // `<`/`>` must still be neutralised for the Symfony tag syntax.
         if ($this->isClickable && $this->href) {
-            return sprintf('<href=%s>%s</>', $this->href, $displayMessage);
+            return sprintf('<href=%s>%s</>', OutputFormatter::escape($this->href), $displayMessage);
         }
 
         // Build custom formatting

@@ -18,7 +18,8 @@ Laravel/Symfony constraints live in `composer.json`.
   [`docs/`](../README.md#documentation): widgets, typography, the document/Markdown
   layer, charts, `Support\*` (Color, Capabilities, DisplayWidth, Symbols, Figlet,
   BrailleCanvas, …), command base + services, runners, observers, notifications,
-  validators, the `Renderable` / `Interactive` contracts, and the testing trait.
+  validators, the `Renderable` / `Interactive` contracts, the command traits
+  (`InteractsWithConsoleServices`, `SupportsNamespacedNames`), and the testing trait.
 
 **What is NOT covered:**
 

@@ -39,10 +39,11 @@ individual roles on top), or build a theme from one directly:
 ```
 
 ```php
+use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
 
 $theme = Theme::preset('dracula');       // throws on an unknown preset name
-echo Console::document(null, $theme)->h1('Hi')->render();
+echo (new Document(null, $theme))->h1('Hi')->render();
 ```
 
 An unknown preset in **config** falls back to the default palette (and is reported

@@ -57,7 +57,7 @@ full-screen [TUI integration](tools/tui.md). No dependency on the laranail core 
 
 Since 1.0 the public, SemVer-covered API is marked `@api` (the `Console`/`Prompter`
 facades, the `Renderable`/`Interactive` contracts, the `Command` base + the
-`InteractsWithConsoleServices` trait). Implementation-only classes are marked
+`InteractsWithConsoleServices` / `SupportsNamespacedNames` traits). Implementation-only classes are marked
 `@internal` (service providers, `RendersBlock`, `ResponsiveWidth`, the Prompter
 `ContextBuilderService`/`Helpers`) and are excluded from BC, as is the experimental
 TUI integration. See [Versioning & stability](release.md#versioning--stability).

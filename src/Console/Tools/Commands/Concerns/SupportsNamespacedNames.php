@@ -14,6 +14,8 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
  * so this trait sets the name (and aliases) past that validator by writing the
  * private property directly. Dispatch still works because Symfony resolves an exact
  * command name before its `:`-splitting namespace lookup.
+ *
+ * @api Stable extension point (SemVer-covered).
  */
 trait SupportsNamespacedNames
 {

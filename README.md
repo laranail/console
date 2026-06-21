@@ -9,7 +9,7 @@ A Rich-class console toolkit for Laravel. One package, two namespaces:
 
 - **`Console\Tools`** — terminal **output**: a fluent formatter, spinners,
   flavoured progress bars, boxes, trees, tables, banners, gauges, sparklines,
-  charts (bar/column/line/scatter/heatmap/histogram), a typography + Markdown
+  charts (bar/column/line/scatter/heatmap/histogram/stacked), a typography + Markdown
   layer, a multi-task progress widget, plus an enhanced Artisan command base.
 - **`Console\Prompter`** — terminal **input**: a fluent wrapper over
   `laravel/prompts` with a form builder and 26 validators.
@@ -103,7 +103,7 @@ The package has three output styles — know which you're holding:
 | [Colours & styles](docs/tools/colors.md) | Color parsing/downgrade/gradient + the fluent Style |
 | [Typography](docs/tools/typography.md) | Headings, paragraphs, lists, links, quotes, code, Text |
 | [Markdown](docs/tools/markdown.md) | Render a Markdown subset to the terminal |
-| [Charts](docs/tools/charts.md) | Bar, column, line, scatter, heatmap, histogram |
+| [Charts](docs/tools/charts.md) | Bar, column, line, scatter, heatmap, histogram, stacked |
 | [Emoji](docs/tools/emoji.md) | `:shortcode:` rendering + ASCII fallback |
 | [Symbols](docs/tools/symbols.md) | Capability-aware glyphs |
 | [Responsive output](docs/responsive.md) | How widgets adapt to the terminal width |
@@ -134,7 +134,7 @@ Changelog: [CHANGELOG.md](CHANGELOG.md).
 
 ## Stability
 
-`laranail/console` is **1.0** and follows [SemVer](https://semver.org). The public
+`laranail/console` is **1.x stable** and follows [SemVer](https://semver.org). The public
 API — the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
 classes — is stable; breaking changes only land in a major. Classes marked
 `@internal`, and the experimental full-screen TUI (`Console::tui()` /
