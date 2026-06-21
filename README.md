@@ -75,7 +75,7 @@ The package has three output styles — know which you're holding:
 | Style | APIs | How to print |
 |-------|------|--------------|
 | **Symfony markup** (e.g. `<fg=green>…</>`) | `Console::status()`, `ConsoleUIFormatter::success()/format()/badge()` | `$output->writeln(...)` / `$this->line(...)` — renders colour on a TTY, stripped when piped. Echoing prints literal tags. |
-| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `barChart`, `columnChart`, `lineChart`, `stackedBar`, `banner`, `steps`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
+| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `barChart`, `columnChart`, `lineChart`, `scatterPlot`, `heatmap`, `histogram`, `stackedBar`, `banner`, `steps`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
 | **Self-writing** | `spinner`, `progress`, `tasks` | They write to the output you pass them. |
 | **Interactive** | `prompter`, `menu`, `keypress`, `tui` | They read input / run a loop and return values — not render strings. |
 

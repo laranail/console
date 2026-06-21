@@ -5,6 +5,14 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.1] - 2026-06-21
+
+### Fixed
+
+- Docs accuracy: the README "Finished strings" list now includes all seven charts
+  (`scatterPlot`/`heatmap`/`histogram` were missing), and `docs/architecture.md` lists
+  the `DateTimeFormatValidator` + `ChoiceFieldValidator` abstract bases.
+
 ## [1.4.0] - 2026-06-21
 
 ### Fixed
