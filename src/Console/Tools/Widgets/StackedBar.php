@@ -49,7 +49,7 @@ final class StackedBar implements Renderable, Stringable
     public function __construct(array $data = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
         foreach ($data as $label => $value) {
-            $this->data[ConsoleUIFormatter::sanitizeText((string) $label)] = (float) $value;
+            $this->data[ConsoleUIFormatter::sanitizeText((string) $label)] = max(0.0, (float) $value);
         }
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->theme = $theme ?? Theme::resolve();
@@ -65,7 +65,7 @@ final class StackedBar implements Renderable, Stringable
 
     public function add(string $label, int|float $value): self
     {
-        $this->data[ConsoleUIFormatter::sanitizeText($label)] = (float) $value;
+        $this->data[ConsoleUIFormatter::sanitizeText($label)] = max(0.0, (float) $value);
 
         return $this;
     }

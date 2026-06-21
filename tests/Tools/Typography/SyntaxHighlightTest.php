@@ -74,6 +74,21 @@ final class SyntaxHighlightTest extends TestCase
         self::assertStringContainsString('$x', $out);
     }
 
+    public function test_very_long_line_is_returned_unhighlighted(): void
+    {
+        Capabilities::fake(colors: true, unicode: true, interactive: false);
+
+        // a pathological unterminated html comment, well over the 4000-char guard
+        $line = '<!--' . str_repeat('a', 8000);
+
+        $start = microtime(true);
+        $out = SyntaxHighlighter::make()->highlightLine($line, 'html');
+        $elapsed = microtime(true) - $start;
+
+        self::assertSame($line, $out);              // returned unchanged (skipped)
+        self::assertLessThan(0.5, $elapsed);        // no quadratic backtracking
+    }
+
     public function test_unknown_language_is_plain(): void
     {
         Capabilities::fake(colors: true, unicode: true, interactive: false);
