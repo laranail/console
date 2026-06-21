@@ -18,6 +18,18 @@ use Throwable;
  */
 class CommandServiceManager
 {
+    /**
+     * Recognised keys for {@see configure()} — the single source of truth for the
+     * public `InteractsWithConsoleServices::configureServices()` contract.
+     */
+    public const string NATIVE_EVENTS = 'native_events';
+
+    public const string CUSTOM_EVENTS = 'custom_events';
+
+    public const string SIGNALS = 'signals';
+
+    public const string NON_INTERACTIVE = 'non_interactive';
+
     protected CommandPerformanceService $performance;
 
     protected CommandEventService $events;
@@ -229,20 +241,20 @@ class CommandServiceManager
      */
     public function configure(array $config): self
     {
-        if (isset($config['native_events'])) {
-            $this->events->useNativeEvents($config['native_events']);
+        if (isset($config[self::NATIVE_EVENTS])) {
+            $this->events->useNativeEvents($config[self::NATIVE_EVENTS]);
         }
 
-        if (isset($config['custom_events'])) {
-            $this->events->useCustomEvents($config['custom_events']);
+        if (isset($config[self::CUSTOM_EVENTS])) {
+            $this->events->useCustomEvents($config[self::CUSTOM_EVENTS]);
         }
 
-        if (isset($config['signals'])) {
-            $this->signals->setupSignalHandling($config['signals']);
+        if (isset($config[self::SIGNALS])) {
+            $this->signals->setupSignalHandling($config[self::SIGNALS]);
         }
 
-        if (isset($config['non_interactive'])) {
-            $this->interaction->setNonInteractive($config['non_interactive']);
+        if (isset($config[self::NON_INTERACTIVE])) {
+            $this->interaction->setNonInteractive($config[self::NON_INTERACTIVE]);
         }
 
         return $this;

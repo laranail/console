@@ -75,7 +75,7 @@ trait InteractsWithConsoleServices
         // $input: the application sets it before run() is invoked, whereas
         // $this->input is not populated until parent::run() binds it below.
         $this->services->configure([
-            'non_interactive' => ! $input->isInteractive(),
+            CommandServiceManager::NON_INTERACTIVE => ! $input->isInteractive(),
         ]);
 
         // Dispatch starting events
@@ -186,8 +186,9 @@ trait InteractsWithConsoleServices
     }
 
     /**
-     * Configure service settings (native_events / custom_events / signals /
-     * non_interactive).
+     * Configure service settings. Recognised keys are the
+     * {@see CommandServiceManager}::`NATIVE_EVENTS` / `CUSTOM_EVENTS` / `SIGNALS` /
+     * `NON_INTERACTIVE` constants.
      *
      * @param array<string, mixed> $config
      */
