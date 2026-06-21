@@ -27,6 +27,9 @@ between sections as work happens.
 - Extracting the experimental `symfony/tui` integration into a companion package
   so the core can drop `minimum-stability: dev`.
 - A rendered documentation site at the package URL.
+- **v2.0 (breaking):** standardise validator constructor argument order. The current
+  convention (domain args first, then `errorMessage`/`replace`/`locale`) is sound and
+  named arguments give uniform ergonomics today, so this is deferred to the next major.
 
 ## Shipped (highlights)
 

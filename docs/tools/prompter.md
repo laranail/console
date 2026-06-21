@@ -77,9 +77,20 @@ gets an options-aware default validator unless you set your own.
 
 Each implements `ValidatorInterface::validate(mixed): ?string` (null = valid,
 otherwise the error message). All are **total** — non-string input returns the
-error rather than throwing. Every constructor ends with the common tail
-`(?string $errorMessage = null, array $replace = [], ?string $locale = null)`;
-messages default to `console::validators.*` (see [i18n](../i18n.md)).
+error rather than throwing. Messages default to `console::validators.*` (see
+[i18n](../i18n.md)). Length checks count **characters** (`mb_strlen`), not bytes.
+
+**Constructor convention.** Any validator-specific arguments come first, followed by
+the common tail `(?string $errorMessage = null, array $replace = [], ?string $locale = null)`.
+So a simple validator is just `new TextFieldValidator('Bad input')`, while one with
+options leads with them: `new StringFieldValidator(0, 64, 'Too long')`. Use **named
+arguments** to skip the domain args and set only the tail — uniform across every
+validator regardless of its leading parameters:
+
+```php
+new StringFieldValidator(errorMessage: 'Too long', locale: 'fr');
+new RadioFieldValidator(['a', 'b'], errorMessage: 'Pick one');
+```
 
 | Validator | Notable constructor args | Accepts |
 |-----------|--------------------------|---------|
