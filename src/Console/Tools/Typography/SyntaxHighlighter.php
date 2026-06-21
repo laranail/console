@@ -82,11 +82,24 @@ final readonly class SyntaxHighlighter
     }
 
     /**
+     * Maximum line length to tokenize — beyond this a line is returned unhighlighted.
+     * Real code lines are far shorter; this bounds the regex cost so a pathological
+     * very-long single line (e.g. an unterminated comment/string) can't cause
+     * quadratic backtracking. CodeBlock already clips to the terminal width.
+     */
+    private const int MAX_LINE = 4000;
+
+    /**
      * Highlight one line. Assumes plain input (no existing ANSI); returns a styled
-     * string. Unknown languages return the line unchanged.
+     * string. Unknown languages — or lines longer than {@see MAX_LINE} — are
+     * returned unchanged.
      */
     public function highlightLine(string $line, string $language): string
     {
+        if (strlen($line) > self::MAX_LINE) {
+            return $line;
+        }
+
         return match ($this->normalize($language)) {
             'php' => $this->highlightPhp($line),
             'json' => $this->highlightJson($line),

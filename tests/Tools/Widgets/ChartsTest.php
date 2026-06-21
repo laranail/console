@@ -162,4 +162,17 @@ final class ChartsTest extends TestCase
         self::assertSame([''], StackedBar::make([])->renderLines());
         self::assertSame([''], StackedBar::make(['a' => 0])->renderLines()); // zero total
     }
+
+    public function test_stacked_bar_clamps_negative_values(): void
+    {
+        Capabilities::fake(colors: false, unicode: true, width: 30);
+
+        // negative is clamped to 0 → no nonsensical percentages, geometry stays sane
+        $lines = StackedBar::make(['a' => -5, 'b' => 10])->width(30)->renderLines();
+
+        self::assertLessThanOrEqual(30, DisplayWidth::of($lines[0]));
+        self::assertStringContainsString('0%', $lines[1]);    // a → 0%
+        self::assertStringContainsString('100%', $lines[2]);  // b → 100%
+        self::assertStringNotContainsString('-', $lines[1]);  // no negative pct/value
+    }
 }
