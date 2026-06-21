@@ -8,6 +8,7 @@ use Laravel\Prompts\Key;
 use Laravel\Prompts\Prompt;
 use Mockery;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Live;
@@ -70,7 +71,7 @@ final class InteractiveTest extends TestCase
         // fallback enabled, and fallbackWhen() is sticky (only OR-sets true), so reset
         // the static directly — otherwise select() uses the framework fallback instead
         // of the faked terminal.
-        (new \ReflectionProperty(Prompt::class, 'shouldFallback'))->setValue(null, false);
+        new ReflectionProperty(Prompt::class, 'shouldFallback')->setValue(null, false);
         Prompt::fake([Key::DOWN, Key::ENTER]); // move to second option, select
 
         $choice = ButtonGroup::make(['save' => 'Save', 'discard' => 'Discard'])->prompt('Action');
