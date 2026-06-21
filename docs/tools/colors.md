@@ -26,7 +26,16 @@ echo $c->gradient('rainbow', ['#f00', '#0f0', '#00f']);
 
 Color::blend('#ff0000', '#0000ff', 0.5);   // '#800080'
 Color::adaptive('#000000', '#ffffff');     // picks by terminal background (COLORFGBG)
+
+Color::parse('slate');                     // '#64748b' — or null if unparseable (lenient)
+Color::parseStrict($userInput);            // '#rrggbb' — or throws InvalidColorException
 ```
+
+`parse()` is lenient (returns `null` on bad input, the graceful path used internally so
+NO_COLOR/invalid values never break output). Use **`parseStrict()`** to validate
+user- or config-supplied colours up front — it throws
+`Tools\Exceptions\InvalidColorException` with a localised message on anything it can't
+parse.
 
 ## Fluent style
 
