@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
 use Illuminate\Support\Facades\Log;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\ManagesCommandContext;
 use Throwable;
 
 /**
@@ -16,31 +17,13 @@ use Throwable;
  */
 class CommandErrorService
 {
-    /** @var array<string, mixed> */
-    protected array $context = [];
+    use ManagesCommandContext;
 
     public function __construct(protected string $commandName = '') {}
 
     public function setCommandName(string $commandName): self
     {
         $this->commandName = $commandName;
-
-        return $this;
-    }
-
-    public function addContext(string $key, mixed $value): self
-    {
-        $this->context[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * @param array<string, mixed> $context
-     */
-    public function addContextMany(array $context): self
-    {
-        $this->context = array_merge($this->context, $context);
 
         return $this;
     }
@@ -101,13 +84,6 @@ class CommandErrorService
     public function getContext(): array
     {
         return $this->context;
-    }
-
-    public function clearContext(): self
-    {
-        $this->context = [];
-
-        return $this;
     }
 
     /**

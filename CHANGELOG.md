@@ -5,6 +5,28 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-06-21
+
+Maintainability release from a code-quality audit. No behaviour changes — chart and
+highlighter output is byte-identical, verified against a snapshot.
+
+### Added
+
+- `Support\NumberFormat::trim()` — the shared compact number formatter (was duplicated
+  across the chart/widget family).
+- `Support\Align::JUSTIFY` constant (replaces a hardcoded `'justify'` string).
+- Test coverage for `Button`, `StatusLine`, `FileSize`, and `ConfigValidator`'s
+  defensive branches (415 → 429 tests).
+
+### Changed
+
+- Internal de-duplication (BC-safe): a `Concerns\ChartContext` trait for the seven
+  block charts (capabilities/theme DI, `width()`/`responsive()`, series-role cycle);
+  the `SyntaxHighlighter` token languages are now a single spec table + applier (adding
+  a language is one row); a shared `DateTimeFormatValidator` base for the date/time
+  validators; a `Commands\Concerns\ManagesCommandContext` trait for the command
+  logger/error services; and a simplified `UuidOrIntegerOrSlugValidator`.
+
 ## [1.2.2] - 2026-06-21
 
 Post-release audit fixes. No API changes.

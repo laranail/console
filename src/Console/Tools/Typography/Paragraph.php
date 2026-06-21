@@ -83,7 +83,7 @@ final class Paragraph implements Renderable, Stringable
     public function align(string $align): self
     {
         $this->align = match (strtolower($align)) {
-            'justify' => 'justify',
+            Align::JUSTIFY => Align::JUSTIFY,
             default => Align::normalize($align),
         };
 
@@ -117,7 +117,7 @@ final class Paragraph implements Renderable, Stringable
                 $line = $carry . $line;
             }
 
-            $aligned = $this->align === 'justify'
+            $aligned = $this->align === Align::JUSTIFY
                 ? $this->justify($line, $width, $i === $last)
                 : match ($this->align) {
                     Align::CENTER => DisplayWidth::center($line, $width),

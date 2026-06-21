@@ -32,6 +32,18 @@ abstract class Command extends BaseCommand
 {
     use InteractsWithConsoleServices;
 
+    /**
+     * Convenience aliases applied after construction — e.g. a bare `make:crud`
+     * alongside the namespaced `laranail::<package-slug>.<command>` name.
+     *
+     * Aliases are written through whatever `setAliases()` is in scope, so a
+     * command that also `use`s {@see Concerns\SupportsNamespacedNames} may list
+     * `::`-namespaced aliases here; otherwise standard Symfony validation applies.
+     *
+     * @var list<string>
+     */
+    protected array $commandAliases = [];
+
     public function __construct()
     {
         parent::__construct();
@@ -39,5 +51,9 @@ abstract class Command extends BaseCommand
         // Eagerly boot so $this->services is available immediately after
         // construction (the trait also boots lazily on run() for trait-only use).
         $this->bootConsoleSupport();
+
+        if ($this->commandAliases !== []) {
+            $this->setAliases($this->commandAliases);
+        }
     }
 }

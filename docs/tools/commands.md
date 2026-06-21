@@ -171,6 +171,25 @@ final class SyncCommand extends Command
 }
 ```
 
+### Convenience aliases (`$commandAliases`)
+
+The base `Command` applies an optional `$commandAliases` list after construction —
+handy for exposing a short, familiar alias alongside the namespaced name (e.g. a bare
+`make:crud` next to `laranail::your-package.make-crud`). Combined with
+`SupportsNamespacedNames`, the aliases may themselves use the `::` separator.
+
+```php
+final class MakeCrudCommand extends Command
+{
+    use SupportsNamespacedNames;
+
+    protected $signature = 'laranail::your-package.make-crud';
+
+    /** @var list<string> */
+    protected array $commandAliases = ['make:crud'];
+}
+```
+
 ## `laranail::console.check`
 
 Validates the `console.*` config and reports any problems, exiting non-zero on a bad
