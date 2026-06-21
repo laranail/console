@@ -11,13 +11,13 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class ArrayValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'array', $replace, $locale);
+        parent::__construct('array');
     }
 
     public function validate(mixed $value): ?string
     {
-        return is_array($value) ? null : $this->errorMessage;
+        return is_array($value) ? null : $this->resolvedMessage();
     }
 }

@@ -13,9 +13,9 @@ use Illuminate\Support\Str;
  */
 final class UuidOrIntegerOrSlugValidator extends AbstractValidator
 {
-    public function __construct(protected string $uuidVersion = 'uuid', ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(protected string $uuidVersion = 'uuid')
     {
-        parent::__construct($errorMessage, 'uuid_or_integer_or_slug', $replace, $locale);
+        parent::__construct('uuid_or_integer_or_slug');
     }
 
     public function validate(mixed $value): ?string
@@ -24,7 +24,7 @@ final class UuidOrIntegerOrSlugValidator extends AbstractValidator
             return null;
         }
 
-        return $this->errorMessage;
+        return $this->resolvedMessage();
     }
 
     /**

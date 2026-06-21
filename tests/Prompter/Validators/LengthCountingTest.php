@@ -17,7 +17,7 @@ final class LengthCountingTest extends TestCase
 {
     public function test_text_counts_characters_not_bytes(): void
     {
-        $v = new TextFieldValidator('e');
+        $v = new TextFieldValidator()->errorMessage('e');
 
         // 200 accented chars = 400 bytes; passes on chars (would fail on bytes <= 255)
         self::assertNull($v->validate(str_repeat('é', 200)));
@@ -29,7 +29,7 @@ final class LengthCountingTest extends TestCase
 
     public function test_password_counts_characters_not_bytes(): void
     {
-        $v = new PasswordFieldValidator('e');
+        $v = new PasswordFieldValidator()->errorMessage('e');
 
         // 3 emoji = 12 bytes but only 3 chars -> now correctly fails the 8-char minimum
         self::assertSame('e', $v->validate('🚀🚀🚀'));
@@ -42,7 +42,7 @@ final class LengthCountingTest extends TestCase
 
     public function test_string_validator_remains_character_based(): void
     {
-        $v = new StringFieldValidator(0, 5, 'e');
+        $v = new StringFieldValidator(0, 5)->errorMessage('e');
 
         self::assertNull($v->validate('éàçio'));        // 5 chars (10 bytes)
         self::assertSame('e', $v->validate('éàçios'));   // 6 chars

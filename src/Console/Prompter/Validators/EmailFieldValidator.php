@@ -11,13 +11,13 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class EmailFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'email', $replace, $locale);
+        parent::__construct('email');
     }
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && filter_var($value, FILTER_VALIDATE_EMAIL) !== false ? null : $this->errorMessage;
+        return is_string($value) && filter_var($value, FILTER_VALIDATE_EMAIL) !== false ? null : $this->resolvedMessage();
     }
 }

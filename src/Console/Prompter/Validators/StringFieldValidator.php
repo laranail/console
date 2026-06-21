@@ -9,19 +9,19 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class StringFieldValidator extends AbstractValidator
 {
-    public function __construct(protected int $minLength = 0, protected int $maxLength = 255, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(protected int $minLength = 0, protected int $maxLength = 255)
     {
-        parent::__construct($errorMessage, 'string', $replace, $locale);
+        parent::__construct('string');
     }
 
     public function validate(mixed $value): ?string
     {
         if (! is_string($value)) {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         $length = mb_strlen($value);
 
-        return $length >= $this->minLength && $length <= $this->maxLength ? null : $this->errorMessage;
+        return $length >= $this->minLength && $length <= $this->maxLength ? null : $this->resolvedMessage();
     }
 }

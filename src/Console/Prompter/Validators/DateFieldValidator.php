@@ -12,9 +12,9 @@ final class DateFieldValidator extends DateTimeFormatValidator
     /**
      * @param list<string>|null $formats
      */
-    public function __construct(?array $formats = null, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(?array $formats = null)
     {
-        parent::__construct($errorMessage, 'date', $replace, $locale);
+        parent::__construct('date');
 
         $this->formats = $formats ?? ['Y-m-d', 'Y/m/d', 'd-m-Y', 'd/m/Y', 'm/d/Y'];
     }

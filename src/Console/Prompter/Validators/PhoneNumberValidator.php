@@ -11,8 +11,8 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class PhoneNumberValidator extends RegexValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct('/^\+?\d{10,15}$/', $errorMessage, 'phone', $replace, $locale);
+        parent::__construct('/^\+?\d{10,15}$/', 'phone');
     }
 }

@@ -11,13 +11,13 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class PasswordFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'password', $replace, $locale);
+        parent::__construct('password');
     }
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && mb_strlen($value) >= 8 ? null : $this->errorMessage;
+        return is_string($value) && mb_strlen($value) >= 8 ? null : $this->resolvedMessage();
     }
 }

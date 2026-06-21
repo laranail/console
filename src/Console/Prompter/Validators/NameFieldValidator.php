@@ -11,8 +11,8 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class NameFieldValidator extends RegexValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct('/^[\p{L} \'-]+$/u', $errorMessage, 'name', $replace, $locale);
+        parent::__construct('/^[\p{L} \'-]+$/u', 'name');
     }
 }

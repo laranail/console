@@ -23,13 +23,13 @@ final class ValidatorSecurityTest extends TestCase
     public function test_validators_do_not_throw_on_non_string_input(): void
     {
         $validators = [
-            new AlphaValidator('e'),
-            new ColorValidator('e'),
-            new DateFieldValidator(null, 'e'),
-            new EmailFieldValidator('e'),
-            new JsonFieldValidator('e'),
-            new PathFieldValidator('e'),
-            new UUIDFieldValidator('e'),
+            new AlphaValidator()->errorMessage('e'),
+            new ColorValidator()->errorMessage('e'),
+            new DateFieldValidator()->errorMessage('e'),
+            new EmailFieldValidator()->errorMessage('e'),
+            new JsonFieldValidator()->errorMessage('e'),
+            new PathFieldValidator()->errorMessage('e'),
+            new UUIDFieldValidator()->errorMessage('e'),
         ];
 
         foreach ($validators as $validator) {
@@ -45,7 +45,7 @@ final class ValidatorSecurityTest extends TestCase
      */
     public function test_path_validator_rejects_traversal_and_null_bytes(): void
     {
-        $validator = new PathFieldValidator('bad');
+        $validator = new PathFieldValidator()->errorMessage('bad');
 
         self::assertNull($validator->validate('/usr/local/bin/app'));
         self::assertNull($validator->validate('relative/path.txt'));
@@ -59,7 +59,7 @@ final class ValidatorSecurityTest extends TestCase
      */
     public function test_select_validator_is_strict(): void
     {
-        $validator = new SelectFieldValidator(['admin', 'user'], 'bad');
+        $validator = new SelectFieldValidator(['admin', 'user'])->errorMessage('bad');
 
         self::assertNull($validator->validate('admin'));
         self::assertSame('bad', $validator->validate(0));
@@ -69,7 +69,7 @@ final class ValidatorSecurityTest extends TestCase
 
     public function test_date_validator_rejects_relative_strings(): void
     {
-        $validator = new DateFieldValidator(null, 'bad');
+        $validator = new DateFieldValidator()->errorMessage('bad');
 
         self::assertNull($validator->validate('2026-01-02'));
         self::assertSame('bad', $validator->validate('tomorrow'));
@@ -78,7 +78,7 @@ final class ValidatorSecurityTest extends TestCase
 
     public function test_uuid_validator_accepts_any_version(): void
     {
-        $validator = new UUIDFieldValidator('bad');
+        $validator = new UUIDFieldValidator()->errorMessage('bad');
 
         self::assertNull($validator->validate('a0eebc99-9c0b-11d1-80b4-00c04fd430c8')); // v1
         self::assertNull($validator->validate('f47ac10b-58cc-4372-a567-0e02b2c3d479')); // v4
