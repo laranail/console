@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
@@ -23,22 +24,13 @@ use Stringable;
  */
 final class LineChart implements Renderable, Stringable
 {
+    use ChartContext;
     use RendersBlock;
-
-    private const array SERIES_ROLES = ['primary', 'accent', 'success', 'warning', 'info', 'danger'];
 
     /** @var array<string, list<float>> series name => values */
     private array $series = [];
 
     private int $height = 8;
-
-    private ?int $width = null;
-
-    private bool $responsive = true;
-
-    private readonly Capabilities $capabilities;
-
-    private readonly Theme $theme;
 
     /**
      * @param array<string, list<int|float>>|list<int|float> $series a single series
@@ -46,8 +38,7 @@ final class LineChart implements Renderable, Stringable
      */
     public function __construct(array $series = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
-        $this->capabilities = $capabilities ?? Capabilities::detect();
-        $this->theme = $theme ?? Theme::resolve();
+        $this->initContext($capabilities, $theme);
 
         if ($series !== [] && $this->isSingleSeries($series)) {
             $series = ['' => $series];
@@ -80,20 +71,6 @@ final class LineChart implements Renderable, Stringable
     public function height(int $rows): self
     {
         $this->height = max($rows, 1);
-
-        return $this;
-    }
-
-    public function width(int $width): self
-    {
-        $this->width = max($width, 1);
-
-        return $this;
-    }
-
-    public function responsive(bool $responsive = true): self
-    {
-        $this->responsive = $responsive;
 
         return $this;
     }
@@ -173,7 +150,7 @@ final class LineChart implements Renderable, Stringable
 
     private function seriesStyle(int $index): Style
     {
-        $role = self::SERIES_ROLES[$index % count(self::SERIES_ROLES)];
+        $role = $this->cycleRole($index);
 
         return Style::make($this->capabilities)->fg($this->theme->color($role) ?? '#22d3ee');
     }

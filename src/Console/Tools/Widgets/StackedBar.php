@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
@@ -22,11 +23,10 @@ use Stringable;
  */
 final class StackedBar implements Renderable, Stringable
 {
+    use ChartContext;
     use RendersBlock;
 
     /** Palette roles cycled across segments. */
-    private const array ROLES = ['primary', 'accent', 'success', 'warning', 'info', 'danger'];
-
     private const array GLYPHS_UNICODE = ['█', '▓', '▒', '░'];
 
     private const array GLYPHS_ASCII = ['#', '=', '*', '+'];
@@ -34,15 +34,7 @@ final class StackedBar implements Renderable, Stringable
     /** @var array<string, float> */
     private array $data = [];
 
-    private ?int $width = null;
-
-    private bool $responsive = true;
-
     private bool $showLegend = true;
-
-    private readonly Capabilities $capabilities;
-
-    private readonly Theme $theme;
 
     /**
      * @param array<string, int|float> $data label => value
@@ -52,8 +44,7 @@ final class StackedBar implements Renderable, Stringable
         foreach ($data as $label => $value) {
             $this->data[ConsoleUIFormatter::sanitizeText((string) $label)] = max(0.0, (float) $value);
         }
-        $this->capabilities = $capabilities ?? Capabilities::detect();
-        $this->theme = $theme ?? Theme::resolve();
+        $this->initContext($capabilities, $theme);
     }
 
     /**
@@ -67,20 +58,6 @@ final class StackedBar implements Renderable, Stringable
     public function add(string $label, int|float $value): self
     {
         $this->data[ConsoleUIFormatter::sanitizeText($label)] = max(0.0, (float) $value);
-
-        return $this;
-    }
-
-    public function width(int $width): self
-    {
-        $this->width = max($width, 1);
-
-        return $this;
-    }
-
-    public function responsive(bool $responsive = true): self
-    {
-        $this->responsive = $responsive;
 
         return $this;
     }
@@ -147,7 +124,7 @@ final class StackedBar implements Renderable, Stringable
 
         if ($colour) {
             $glyph = $unicode ? '█' : '#';
-            $role = self::ROLES[$index % count(self::ROLES)];
+            $role = $this->cycleRole($index);
 
             return $this->theme->style($role)->apply(str_repeat($glyph, $segWidth));
         }

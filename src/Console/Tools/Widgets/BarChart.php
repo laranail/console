@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
@@ -21,20 +22,13 @@ use Stringable;
  */
 final class BarChart implements Renderable, Stringable
 {
+    use ChartContext;
     use RendersBlock;
 
     /** @var array<array-key, float> */
     private array $data = [];
 
-    private ?int $width = null;
-
-    private bool $responsive = true;
-
     private bool $showValues = true;
-
-    private readonly Capabilities $capabilities;
-
-    private readonly Theme $theme;
 
     /**
      * @param array<string, int|float> $data label => value
@@ -44,8 +38,7 @@ final class BarChart implements Renderable, Stringable
         foreach ($data as $label => $value) {
             $this->data[ConsoleUIFormatter::sanitizeText((string) $label)] = (float) $value;
         }
-        $this->capabilities = $capabilities ?? Capabilities::detect();
-        $this->theme = $theme ?? Theme::resolve();
+        $this->initContext($capabilities, $theme);
     }
 
     /**
@@ -59,20 +52,6 @@ final class BarChart implements Renderable, Stringable
     public function add(string $label, int|float $value): self
     {
         $this->data[ConsoleUIFormatter::sanitizeText($label)] = (float) $value;
-
-        return $this;
-    }
-
-    public function width(int $width): self
-    {
-        $this->width = max($width, 1);
-
-        return $this;
-    }
-
-    public function responsive(bool $responsive = true): self
-    {
-        $this->responsive = $responsive;
 
         return $this;
     }
