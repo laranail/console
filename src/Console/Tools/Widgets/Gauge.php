@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Stringable;
 
 /**
@@ -38,9 +39,9 @@ final class Gauge implements Stringable
         return $this;
     }
 
-    public function width(int $barWidth): self
+    public function width(int $width): self
     {
-        $this->barWidth = max($barWidth, 1);
+        $this->barWidth = max($width, 1);
 
         return $this;
     }
@@ -77,7 +78,7 @@ final class Gauge implements Stringable
 
     private function trim(float $n): string
     {
-        return rtrim(rtrim(number_format($n, 2, '.', ''), '0'), '.');
+        return NumberFormat::trim($n);
     }
 
     public function __toString(): string

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Theme;
 
+use InvalidArgumentException;
+
 /**
  * A semantic colour palette — the design tokens every component shares. Roles map
  * to colour specs (any {@see Color} spec).
@@ -39,6 +41,19 @@ final readonly class Palette
     public static function make(array $overrides = []): self
     {
         return new self($overrides);
+    }
+
+    /**
+     * A palette built from a named {@see Presets built-in preset}.
+     *
+     * @throws InvalidArgumentException on an unknown preset name
+     */
+    public static function preset(string $name): self
+    {
+        $roles = Presets::get($name)
+            ?? throw new InvalidArgumentException("Unknown theme preset '{$name}'. Available: " . implode(', ', Presets::names()) . '.');
+
+        return new self($roles);
     }
 
     public function get(string $role): ?string

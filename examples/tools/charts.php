@@ -16,6 +16,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 
 echo "Column chart\n";
 echo ColumnChart::make(['Mon' => 12, 'Tue' => 19, 'Wed' => 7, 'Thu' => 22, 'Fri' => 15])->height(6)->render(), "\n\n";
@@ -37,4 +38,7 @@ echo Heatmap::make([
 ])->labels(['low', 'mid', 'high'])->cellWidth(3)->render(), "\n\n";
 
 echo "Histogram\n";
-echo Histogram::make([1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 6, 7, 8, 9, 9])->height(6)->render(), "\n";
+echo Histogram::make([1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 6, 7, 8, 9, 9])->height(6)->render(), "\n\n";
+
+echo "Stacked / proportion bar\n";
+echo StackedBar::make(['done' => 18, 'in progress' => 6, 'todo' => 9, 'blocked' => 3])->render(), "\n";

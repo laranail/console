@@ -7,8 +7,10 @@ namespace Simtabi\Laranail\Console\Providers;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Simtabi\Laranail\Console\ConsoleManager;
+use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 use Simtabi\Laranail\Console\Prompter\Providers\PrompterServiceProvider;
 use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
+use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 
 /**
  * Root service provider for laranail/console.
@@ -16,6 +18,8 @@ use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
  * Owns package-wide wiring — configuration, translations, the ConsoleManager
  * binding — and registers the per-sub-domain child providers. New sub-domains
  * are added by registering their child provider here.
+ *
+ * @internal Auto-discovered framework wiring; not part of the public API.
  */
 final class ConsoleServiceProvider extends ServiceProvider
 {
@@ -46,6 +50,18 @@ final class ConsoleServiceProvider extends ServiceProvider
             $this->publishes([
                 self::LANG_PATH => $this->app->langPath(),
             ], 'console-lang');
+
+            // Opt-in fail-fast: validate console.* config at boot (console only, so
+            // web requests are never affected). Off by default.
+            if ((bool) config('console.validate_config', false)) {
+                $errors = ConfigValidator::validate();
+
+                if ($errors !== []) {
+                    throw new ConsoleException(
+                        "Invalid laranail/console configuration:\n  - " . implode("\n  - ", $errors),
+                    );
+                }
+            }
         }
     }
 }

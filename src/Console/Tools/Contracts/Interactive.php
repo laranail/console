@@ -11,5 +11,7 @@ namespace Simtabi\Laranail\Console\Tools\Contracts;
  *
  * Implementations MUST degrade to a single, non-animated render when the terminal
  * is not interactive (piped / CI), emitting no cursor-control sequences.
+ *
+ * @api Stable contract (SemVer-covered).
  */
 interface Interactive {}

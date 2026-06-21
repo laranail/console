@@ -18,6 +18,6 @@ final class TextFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && strlen($value) <= 255 ? null : $this->errorMessage;
+        return is_string($value) && mb_strlen($value) <= 255 ? null : $this->errorMessage;
     }
 }

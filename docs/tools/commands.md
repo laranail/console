@@ -57,6 +57,41 @@ command). Reach any service directly, e.g.
 `$this->services->metadata()->add(...)`. There are no per-method proxies on the
 base — one obvious access path, no Middle-Man indirection.
 
+## Use the trait (when you can't extend the base)
+
+The base is just `extends Illuminate\Console\Command` + the
+`Tools\Commands\Concerns\InteractsWithConsoleServices` trait. If your command must
+extend a different base (a vendor command, Laravel's `GeneratorCommand`, …), `use`
+the trait directly to get the **same** full support — `$this->services`, the managed
+lifecycle, signals, structured exceptions and the verbosity helpers:
+
+```php
+use Illuminate\Console\GeneratorCommand;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
+
+final class MakeWidgetCommand extends GeneratorCommand
+{
+    use InteractsWithConsoleServices;
+
+    protected $signature = 'make:widget {name}';
+
+    public function handle(): int
+    {
+        $this->services->display()->info('Generating…');
+
+        return self::SUCCESS;
+    }
+}
+```
+
+Implement `handle()` as usual — the trait owns `run()`. `$this->services` is booted
+lazily before `run()`; if you need it inside your own constructor, call
+`$this->bootConsoleSupport()` after `parent::__construct()`.
+
+For widgets/prompts in **any** class (no command, no inheritance at all), the
+[`Console`](../../README.md) facade works everywhere: `Console::box(...)`,
+`Console::table()`, `Console::prompter()->text(...)`.
+
 ## CommandDisplayService
 
 `$this->getServices()->display()` formats output: emoji status messages,
@@ -119,9 +154,53 @@ Methods: `askText()`, `askPassword()`, `askConfirm()`, `askSelect()`,
 
 ## Namespaced command names
 
-To use the `laranail::<package-slug>.<command>` separator, extend the
-package-tools base command or use its `SupportsNamespacedNames` trait — see
-the [package-tools command-naming docs](https://opensource.simtabi.com/package-tools/docs/).
+This package ships its own `Tools\Commands\Concerns\SupportsNamespacedNames` trait
+so commands can use the `laranail::<package-slug>.<command>` separator (Symfony's
+validator otherwise rejects the empty `::` segment). `use` it on a command and set a
+`::` name in the `$signature`:
+
+```php
+use Simtabi\Laranail\Console\Tools\Commands\Command;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+
+final class SyncCommand extends Command
+{
+    use SupportsNamespacedNames;
+
+    protected $signature = 'laranail::your-package.sync';
+}
+```
+
+### Convenience aliases (`$commandAliases`)
+
+The base `Command` applies an optional `$commandAliases` list after construction —
+handy for exposing a short, familiar alias alongside the namespaced name (e.g. a bare
+`make:crud` next to `laranail::your-package.make-crud`). Combined with
+`SupportsNamespacedNames`, the aliases may themselves use the `::` separator.
+
+```php
+final class MakeCrudCommand extends Command
+{
+    use SupportsNamespacedNames;
+
+    protected $signature = 'laranail::your-package.make-crud';
+
+    /** @var list<string> */
+    protected array $commandAliases = ['make:crud'];
+}
+```
+
+## `laranail::console.check`
+
+Validates the `console.*` config and reports any problems, exiting non-zero on a bad
+value (so it can gate CI/deploys):
+
+```bash
+php artisan laranail::console.check
+```
+
+It's the command form of `Console::validateConfig()` — see
+[Configuration › Validation](../configuration.md).
 
 ---
 

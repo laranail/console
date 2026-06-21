@@ -9,15 +9,13 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  *
  * Validates radio fields.
  */
-final class RadioFieldValidator extends AbstractValidator
+final class RadioFieldValidator extends ChoiceFieldValidator
 {
-    public function __construct(protected array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    /**
+     * @param list<mixed> $options
+     */
+    public function __construct(array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
     {
-        parent::__construct($errorMessage, 'radio', $replace, $locale);
-    }
-
-    public function validate(mixed $value): ?string
-    {
-        return in_array($value, $this->options, true) ? null : $this->errorMessage;
+        parent::__construct('radio', $options, $errorMessage, $replace, $locale);
     }
 }

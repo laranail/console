@@ -17,6 +17,9 @@ final class Align
 
     public const string RIGHT = 'right';
 
+    /** Full-justify (used by Paragraph); not handled by pad()/place(). */
+    public const string JUSTIFY = 'justify';
+
     /**
      * Pad each line out to $width according to $align (every returned line has the
      * exact display width $width).

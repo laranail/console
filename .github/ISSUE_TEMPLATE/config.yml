@@ -1,5 +1,8 @@
 blank_issues_enabled: false
 contact_links:
+  - name: Ideas, questions & proposals
+    url: https://github.com/laranail/console/discussions
+    about: Feature ideas, Q&A and roadmap proposals belong in Discussions, not Issues.
   - name: Security vulnerability
     url: https://github.com/laranail/console/security/policy
     about: Report security issues privately per SECURITY.md (opensource@simtabi.com). Do not open a public issue.

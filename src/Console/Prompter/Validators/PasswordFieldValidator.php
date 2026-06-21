@@ -18,6 +18,6 @@ final class PasswordFieldValidator extends AbstractValidator
 
     public function validate(mixed $value): ?string
     {
-        return is_string($value) && strlen($value) >= 8 ? null : $this->errorMessage;
+        return is_string($value) && mb_strlen($value) >= 8 ? null : $this->errorMessage;
     }
 }

@@ -11,6 +11,7 @@ use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Live;
@@ -51,6 +52,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Widgets\Summary;
@@ -235,6 +237,16 @@ final class ConsoleManager
     }
 
     /**
+     * A single proportion (stacked) bar with a legend.
+     *
+     * @param array<string, int|float> $data label => value
+     */
+    public function stackedBar(array $data = []): StackedBar
+    {
+        return StackedBar::make($data);
+    }
+
+    /**
      * A centred start-of-run banner/masthead.
      */
     public function banner(string $title): Banner
@@ -255,7 +267,7 @@ final class ConsoleManager
      *
      * @param array<string, mixed> $stats
      */
-    public function summary(array $stats, string $title = 'EXECUTION SUMMARY'): Summary
+    public function summary(array $stats, ?string $title = null): Summary
     {
         return Summary::make($stats, $title);
     }
@@ -324,6 +336,17 @@ final class ConsoleManager
     public function theme(): Theme
     {
         return Theme::resolve();
+    }
+
+    /**
+     * Validate the `console.*` config; returns a list of human-readable errors
+     * (empty = valid). See also the `laranail::console.check` command.
+     *
+     * @return list<string>
+     */
+    public function validateConfig(): array
+    {
+        return ConfigValidator::validate();
     }
 
     /**

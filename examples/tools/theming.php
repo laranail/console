@@ -20,4 +20,9 @@ echo new Document(null, $theme)
     ->paragraph('Headings, lists and code all follow the palette.')
     ->bulletList(['pink primary', 'cyan accent'])
     ->codeBlock('echo "themed";')
-    ->render(), "\n";
+    ->render(), "\n\n";
+
+// Built-in presets: dracula, nord, solarized, monochrome, github.
+foreach (['nord', 'dracula', 'github'] as $preset) {
+    echo new Document(null, Theme::preset($preset))->h2(ucfirst($preset) . ' preset')->render(), "\n";
+}

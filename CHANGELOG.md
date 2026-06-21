@@ -4,6 +4,39 @@ All notable changes to `laranail/console` are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [1.0.0] - 2026-06-21
+
+First SemVer-stable release, with the full 1.x hardening series folded in.
+
+### Added
+
+- **`Commands\Concerns\InteractsWithConsoleServices`** trait — the full managed command
+  lifecycle (`$this->services`, signals, structured exceptions, verbosity helpers) usable
+  on any `Illuminate\Console\Command`.
+- **Config validation** — `Console::validateConfig()` + the **`laranail::console.check`**
+  Artisan command, enabled by the new `Commands\Concerns\SupportsNamespacedNames` trait
+  (allows the `::` command namespace). Opt-in fail-fast at boot.
+- **Theme presets** — five built-in palettes (`dracula`, `nord`, `solarized`,
+  `monochrome`, `github`) via `Theme::preset()` / `console.theme.preset`.
+- **`Color::parseStrict()`**, the `StackedBar` chart, syntax highlighting for
+  python/sql/html/css/diff, and a phpbench suite (`composer bench`).
+
+### Changed
+
+- **Public-API surface defined:** `@api` on the facades and `Renderable`/`Interactive`
+  contracts; `@internal` on implementation-only classes (excluded from BC).
+- **Length validators count characters, not bytes** (`mb_strlen`) — behaviour change for
+  multibyte input.
+- Performance: `DisplayWidth::of()` caches its formatter (~3× on the hot path); broad
+  internal de-duplication (chart context, highlighter spec table, validator bases).
+
+### Fixed
+
+- Signal handling wires at `run()` time with a null-application guard (no longer fatals
+  when a command is constructed outside a running Application).
+- Hardening: clickable-link URLs are escaped against Symfony formatter-tag injection;
+  `SyntaxHighlighter` bounds regex cost on pathological long lines.
+
 ## [0.5.0] - 2026-06-20
 
 The foundational pre-1.0 build-out — a CLI **design system**: theme, typography, a

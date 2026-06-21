@@ -51,6 +51,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Rule;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Widgets\Summary;
@@ -79,9 +80,10 @@ use Symfony\Component\Tui\Tui;
  * @method static ScatterPlot scatterPlot(array $points = [])
  * @method static Heatmap heatmap(array $matrix = [])
  * @method static Histogram histogram(array $values = [])
+ * @method static StackedBar stackedBar(array $data = [])
  * @method static Banner banner(string $title)
  * @method static Header header(string $title)
- * @method static Summary summary(array $stats, string $title = 'EXECUTION SUMMARY')
+ * @method static Summary summary(array $stats, ?string $title = null)
  * @method static StepFlow steps(array $steps = [])
  * @method static TaskProgress tasks(?OutputInterface $output = null)
  * @method static Color color()
@@ -90,6 +92,7 @@ use Symfony\Component\Tui\Tui;
  * @method static string symbol(string $name)
  * @method static Os os()
  * @method static Theme theme()
+ * @method static array validateConfig()
  * @method static Text text(string $text = '')
  * @method static Paragraph paragraph(string $text)
  * @method static Heading heading(string $text, int $level = 1)
@@ -116,6 +119,8 @@ use Symfony\Component\Tui\Tui;
  * @method static Prompter prompter()
  *
  * @see ConsoleManager
+ *
+ * @api This facade is the package's stable public entry point (SemVer-covered).
  */
 final class Console extends Facade
 {

@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Stringable;
 
@@ -17,6 +19,7 @@ use Stringable;
  */
 final class Histogram implements Renderable, Stringable
 {
+    use ChartContext;
     use RendersBlock;
 
     /** @var list<float> */
@@ -26,22 +29,13 @@ final class Histogram implements Renderable, Stringable
 
     private int $height = 8;
 
-    private ?int $width = null;
-
-    private bool $responsive = true;
-
-    private readonly Capabilities $capabilities;
-
-    private readonly Theme $theme;
-
     /**
      * @param list<int|float> $values
      */
     public function __construct(array $values = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
         $this->values = array_map(static fn (int|float $v): float => (float) $v, array_values($values));
-        $this->capabilities = $capabilities ?? Capabilities::detect();
-        $this->theme = $theme ?? Theme::resolve();
+        $this->initContext($capabilities, $theme);
     }
 
     /**
@@ -62,20 +56,6 @@ final class Histogram implements Renderable, Stringable
     public function height(int $rows): self
     {
         $this->height = max($rows, 1);
-
-        return $this;
-    }
-
-    public function width(int $width): self
-    {
-        $this->width = max($width, 1);
-
-        return $this;
-    }
-
-    public function responsive(bool $responsive = true): self
-    {
-        $this->responsive = $responsive;
 
         return $this;
     }
@@ -127,6 +107,6 @@ final class Histogram implements Renderable, Stringable
 
     private function formatNumber(float $value): string
     {
-        return rtrim(rtrim(number_format($value, 2, '.', ''), '0'), '.');
+        return NumberFormat::trim($value);
     }
 }

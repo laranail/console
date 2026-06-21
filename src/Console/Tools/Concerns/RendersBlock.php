@@ -14,6 +14,9 @@ use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
  * `renderLines(): list<string>` and gets `render()`, `totalWidth()`,
  * `totalHeight()` and `__toString()` for free — DRY, one place. Each line is
  * expected to be the same display width (the typography components guarantee it).
+ *
+ * @internal Implementation detail of the block widgets; depend on the
+ * {@see Renderable} contract, not on this trait.
  */
 trait RendersBlock
 {

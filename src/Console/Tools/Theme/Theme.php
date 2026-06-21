@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Theme;
 
+use InvalidArgumentException;
 use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 
@@ -36,14 +37,31 @@ final readonly class Theme
     }
 
     /**
-     * The active theme, built from config('console.theme.palette').
+     * A theme built from a named built-in {@see Presets preset} (e.g. `nord`,
+     * `dracula`), optionally with per-element style overrides.
+     *
+     * @param array<string, Style> $styleOverrides
+     *
+     * @throws InvalidArgumentException on an unknown preset name
+     */
+    public static function preset(string $name, array $styleOverrides = []): self
+    {
+        return new self(Palette::preset($name), $styleOverrides);
+    }
+
+    /**
+     * The active theme. A `console.theme.preset` (if set and known) supplies the
+     * base palette; `console.theme.palette` entries then override it role-by-role.
      */
     public static function resolve(): self
     {
-        /** @var array<string, string> $palette */
-        $palette = (array) Config::get('theme.palette', []);
+        $preset = Config::get('theme.preset');
+        $base = is_string($preset) && $preset !== '' ? (Presets::get($preset) ?? []) : [];
 
-        return new self(Palette::make($palette));
+        /** @var array<string, string> $overrides */
+        $overrides = (array) Config::get('theme.palette', []);
+
+        return new self(Palette::make([...$base, ...$overrides]));
     }
 
     public function palette(): Palette

@@ -9,7 +9,7 @@ A Rich-class console toolkit for Laravel. One package, two namespaces:
 
 - **`Console\Tools`** — terminal **output**: a fluent formatter, spinners,
   flavoured progress bars, boxes, trees, tables, banners, gauges, sparklines,
-  charts (bar/column/line/scatter/heatmap/histogram), a typography + Markdown
+  charts (bar/column/line/scatter/heatmap/histogram/stacked), a typography + Markdown
   layer, a multi-task progress widget, plus an enhanced Artisan command base.
 - **`Console\Prompter`** — terminal **input**: a fluent wrapper over
   `laravel/prompts` with a form builder and 26 validators.
@@ -75,7 +75,7 @@ The package has three output styles — know which you're holding:
 | Style | APIs | How to print |
 |-------|------|--------------|
 | **Symfony markup** (e.g. `<fg=green>…</>`) | `Console::status()`, `ConsoleUIFormatter::success()/format()/badge()` | `$output->writeln(...)` / `$this->line(...)` — renders colour on a TTY, stripped when piped. Echoing prints literal tags. |
-| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `barChart`, `columnChart`, `lineChart`, `banner`, `steps`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
+| **Finished strings** | `box`, `tree`, `table`, `panel`, `columns`, `keyValue`, `rule`, `gauge`, `sparkline`, `barChart`, `columnChart`, `lineChart`, `scatterPlot`, `heatmap`, `histogram`, `stackedBar`, `banner`, `steps`, `summary`, `header`, and `Color`/`colorize()` (raw ANSI, echo-safe) | `echo` or `writeln` both fine. |
 | **Self-writing** | `spinner`, `progress`, `tasks` | They write to the output you pass them. |
 | **Interactive** | `prompter`, `menu`, `keypress`, `tui` | They read input / run a loop and return values — not render strings. |
 
@@ -103,7 +103,7 @@ The package has three output styles — know which you're holding:
 | [Colours & styles](docs/tools/colors.md) | Color parsing/downgrade/gradient + the fluent Style |
 | [Typography](docs/tools/typography.md) | Headings, paragraphs, lists, links, quotes, code, Text |
 | [Markdown](docs/tools/markdown.md) | Render a Markdown subset to the terminal |
-| [Charts](docs/tools/charts.md) | Bar, column, line, scatter, heatmap, histogram |
+| [Charts](docs/tools/charts.md) | Bar, column, line, scatter, heatmap, histogram, stacked |
 | [Emoji](docs/tools/emoji.md) | `:shortcode:` rendering + ASCII fallback |
 | [Symbols](docs/tools/symbols.md) | Capability-aware glyphs |
 | [Responsive output](docs/responsive.md) | How widgets adapt to the terminal width |
@@ -115,7 +115,7 @@ The package has three output styles — know which you're holding:
 | [Interactive menu](docs/tools/menu.md) | Key-driven menu with a prompts fallback |
 | [Full-screen TUI](docs/tools/tui.md) | symfony/tui integration — mount our widgets in a TUI app |
 | [Support utilities](docs/tools/support.md) | Capabilities, Color, DisplayWidth, Emoji, Figlet, Keypress, Terminal, ANSI primitives |
-| [Commands](docs/tools/commands.md) | The Artisan command base + services |
+| [Commands](docs/tools/commands.md) | The Artisan command base + services (or the `InteractsWithConsoleServices` trait) |
 | [Runners](docs/tools/runners.md) | Conditional console execution |
 | [Notifications](docs/tools/notifications.md) | The console channel |
 | [Observers & events](docs/tools/observers-events.md) | Command lifecycle hooks |
@@ -132,6 +132,15 @@ Changelog: [CHANGELOG.md](CHANGELOG.md).
 > `composer require symfony/tui` (experimental, needs `"minimum-stability": "dev"`)
 > only if you want it.
 
+## Stability
+
+`laranail/console` is **1.x stable** and follows [SemVer](https://semver.org). The public
+API — the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
+classes — is stable; breaking changes only land in a major. Classes marked
+`@internal`, and the experimental full-screen TUI (`Console::tui()` /
+[`symfony/tui`](docs/tools/tui.md)), are **not** covered by the BC guarantee. See
+[Versioning & stability](docs/release.md#versioning--stability).
+
 ## Local development
 
 ```bash
@@ -147,6 +156,12 @@ composer audit                # composer audit (security advisories)
 - [`laranail/package-tools`](https://github.com/laranail/package-tools) — runtime base library for building Laravel packages.
 - [`laranail/package-scaffolder`](https://github.com/laranail/package-scaffolder) — generator that scaffolds new packages.
 - [`laranail/laranail`](https://github.com/laranail/laranail) — Simtabi's Laravel utility toolbox.
+
+## Roadmap & community
+
+- [ROADMAP.md](ROADMAP.md) — direction at a glance (community-driven, no dates).
+- [Discussions](https://github.com/laranail/console/discussions) — ideas, questions, proposals.
+- [Issues](https://github.com/laranail/console/issues) — bug reports.
 
 ## Contributing & security
 

@@ -37,6 +37,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Validate config at boot
+    |--------------------------------------------------------------------------
+    |
+    | When true, the console.* config is validated on every Artisan run (console
+    | only — web requests are never affected) and a clear error is thrown on a bad
+    | value. Off by default; you can also run `php artisan laranail::console.check`
+    | or call Console::validateConfig() on demand.
+    |
+    */
+
+    'validate_config' => env('CONSOLE_VALIDATE_CONFIG', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Theme (design tokens)
     |--------------------------------------------------------------------------
     | The semantic colour palette the design system (typography, banners,
@@ -44,6 +58,10 @@ return [
     | accepts any colour spec (hex, rgb(), hsl(), named, @256).
     */
     'theme' => [
+        // A built-in preset palette (dracula, nord, solarized, monochrome, github),
+        // or null for the default. `palette` below overrides individual roles on top.
+        'preset' => env('CONSOLE_THEME_PRESET'),
+
         'palette' => [
             // 'primary' => '#7c3aed', 'accent' => '#06b6d4', 'success' => '#16a34a',
             // 'warning' => '#d97706', 'danger' => '#dc2626', 'info' => '#2563eb',

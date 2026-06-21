@@ -13,9 +13,12 @@
 /.gitignore            export-ignore
 /CODE_OF_CONDUCT.md    export-ignore
 /CONTRIBUTING.md       export-ignore
+/ROADMAP.md            export-ignore
 /SECURITY.md           export-ignore
 /phpstan.neon          export-ignore
 /phpstan-baseline.neon export-ignore
 /phpunit.xml           export-ignore
 /pint.json             export-ignore
 /rector.php            export-ignore
+/benchmarks            export-ignore
+/phpbench.json         export-ignore

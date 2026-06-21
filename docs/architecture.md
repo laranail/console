@@ -13,16 +13,17 @@ Console
 │   ├── Formatting\          # ConsoleUIFormatter (colour/badge/link primitives)
 │   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress,
 │   │                        #   Summary, Header, Banner, Panel/PanelBlock, Menu\…
-│   ├── Contracts\           # Renderable (panel composition)
+│   ├── Contracts\           # Renderable, Interactive (panel composition / live)
 │   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color,
-│   │                        #   Emoji, Figlet, Keypress, Terminal, Sgr/ControlChars/Csi
-│   ├── Commands\            # Command (enhanced base) + Services\ (nine services + manager)
+│   │                        #   Emoji, Figlet, Fonts\ (Block/Builtin/FontDefinition),
+│   │                        #   BrailleCanvas, Hyperlink, Keypress, Terminal, Sgr/ControlChars/Csi
+│   ├── Commands\            # Command base + Concerns\InteractsWithConsoleServices trait + Services\ (nine + manager)
 │   ├── Runners\             # BaseRunner + ConsoleRunner
 │   ├── Observers\, Events\  # command lifecycle hooks + CommandEvents
 │   └── Notifications\       # ConsoleChannel (+ contract)
 └── Prompter\                # INPUT
     ├── Prompter, Services\  # fluent wrapper + PromptService + FormBuilder
-    ├── Validators\          # 26 validators (incl. LaravelRule) + AbstractValidator/RegexValidator bases
+    ├── Validators\          # 26 validators (incl. LaravelRule) + AbstractValidator/RegexValidator/DateTimeFormatValidator/ChoiceFieldValidator bases
     ├── Commands\, Contracts\, Enums\, Facades\, Helpers\, Providers\
     └── Exceptions\          # PrompterException (extends ConsoleException)
 ```
@@ -51,6 +52,15 @@ Runtime: `illuminate/console`, `illuminate/support`, `illuminate/contracts`,
 `symfony/tui` (+ `symfony/event-dispatcher`, `symfony/string`, `revolt/event-loop`)
 is **optional** — `require-dev` + `suggest`, experimental — and only needed for the
 full-screen [TUI integration](tools/tui.md). No dependency on the laranail core package.
+
+## Public surface
+
+Since 1.0 the public, SemVer-covered API is marked `@api` (the `Console`/`Prompter`
+facades, the `Renderable`/`Interactive` contracts, the `Command` base + the
+`InteractsWithConsoleServices` / `SupportsNamespacedNames` traits). Implementation-only classes are marked
+`@internal` (service providers, `RendersBlock`, `ResponsiveWidth`, the Prompter
+`ContextBuilderService`/`Helpers`) and are excluded from BC, as is the experimental
+TUI integration. See [Versioning & stability](release.md#versioning--stability).
 
 ---
 
