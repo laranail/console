@@ -103,7 +103,9 @@ jobs:
         with:
           php-version: '8.5'
           extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
-          coverage: pcov
+          # xdebug (not pcov): Infection needs per-test coverage to map each mutant to
+          # its covering tests; pcov doesn't emit it and yields false escapes.
+          coverage: xdebug
           ini-values: error_reporting=E_ALL
 
       - name: Cache Composer files
@@ -116,8 +118,13 @@ jobs:
       - name: Install dependencies
         run: composer update --prefer-stable --no-interaction --no-progress
 
+      # Run Infection directly (not via a Composer script): Composer strips Xdebug from
+      # its subprocesses, but Infection needs per-test coverage (Xdebug) to map mutants
+      # to their covering tests. Pre-generate coverage with Pest, then --skip-initial-tests.
       - name: Infection (mutation testing)
-        run: composer test-mutation
+        run: |
+          php -d xdebug.mode=coverage vendor/bin/pest --coverage-xml=build/infection/coverage-xml --log-junit=build/infection/junit.xml
+          php vendor/bin/infection --coverage=build/infection --skip-initial-tests --threads=max --no-progress
 
   cross-platform:
     name: ${{ matrix.os }} · PHP 8.5

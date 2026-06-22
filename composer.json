@@ -79,7 +79,6 @@
     "test": "vendor/bin/pest --no-coverage --colors=always",
     "bench": "vendor/bin/phpbench run --report=aggregate",
     "test-coverage": "vendor/bin/pest --coverage --colors=always",
-    "test-mutation": "vendor/bin/infection --threads=max --no-progress",
     "test-dirty": "@test --dirty --compact",
     "examples": [
       "php examples/tools/widgets.php > /dev/null",
