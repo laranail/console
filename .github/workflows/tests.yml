@@ -147,5 +147,10 @@ jobs:
       - name: Run Pest
         run: composer test
 
+      # The `examples` script redirects to /dev/null; Composer runs scripts via cmd.exe
+      # on Windows (not this step's bash), so that redirect is invalid there. The full
+      # test suite already exercises the rendering code on Windows; examples stay smoked
+      # on Linux + macOS.
       - name: Smoke-test examples
+        if: runner.os != 'Windows'
         run: composer examples
