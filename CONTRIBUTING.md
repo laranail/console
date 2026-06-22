@@ -19,7 +19,7 @@ composer test
    ```bash
    composer lint          # pint + phpstan + rector --dry-run
    composer test          # vendor/bin/pest --no-coverage
-   composer test-coverage # add a coverage report (needs Xdebug/PCOV)
+   composer test-coverage # add a coverage report (needs Xdebug/PCOV); CI enforces a floor (--min)
    composer audit         # composer audit (security)
    composer bench         # phpbench micro-benchmarks (local only — noisy in CI)
    ```
