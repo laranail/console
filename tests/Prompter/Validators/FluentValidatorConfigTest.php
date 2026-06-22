@@ -39,4 +39,28 @@ final class FluentValidatorConfigTest extends TestCase
         $v->errorMessage('Late');                                               // change config after construction
         self::assertSame('Late', $v->validate('nope'));                         // reflected => lazy
     }
+
+    public function test_locale_and_replace_feed_the_translated_default(): void
+    {
+        // a throwaway locale with a placeholder message, registered at runtime
+        app('translator')->addLines(['validators.email' => 'invalid :what'], 'xx', 'console');
+
+        $msg = new EmailFieldValidator()->locale('xx')->replace(['what' => 'address'])->validate('nope');
+
+        // proves locale() resolves in 'xx' AND replace() substitutes the placeholder
+        self::assertSame('invalid address', $msg);
+    }
+
+    public function test_error_message_override_ignores_locale_and_replace(): void
+    {
+        app('translator')->addLines(['validators.email' => 'invalid :what'], 'xx', 'console');
+
+        $msg = new EmailFieldValidator()
+            ->locale('xx')
+            ->replace(['what' => 'address'])
+            ->errorMessage('Hard override')
+            ->validate('nope');
+
+        self::assertSame('Hard override', $msg); // override wins; no translation/substitution applied
+    }
 }
