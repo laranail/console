@@ -30,6 +30,22 @@ stdout is a TTY. Unicode follows `output.unicode`, then `WT_SESSION`/`ConEmuANSI
 lines and `Color` — routes through this one detector. See
 [Configuration](../configuration.md) to override any of it.
 
+## Os
+
+Platform / environment detection (`Console::os()`) — branch output on the host OS,
+WSL or CI.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Os;
+
+$os = Os::make();
+$os->isWindows(); $os->isMacos(); $os->isLinux();  // bool
+$os->isWsl();                                        // bool — Linux under WSL
+$os->isCi();                                         // bool — CI/GITHUB_ACTIONS/… set
+$os->terminalProgram();                              // 'vscode' | 'iTerm.app' | … | null
+$os->family();                                       // 'windows' | 'macos' | 'linux' | 'unknown'
+```
+
 ## Color
 
 24-bit / hex foreground colouring and per-character gradients, emitted as **raw
@@ -47,7 +63,15 @@ echo $c->gradient('Welcome', ['#00ffff', '#ff00ff']); // ≥ 2 stops
 
 Color::isValidHex('#ff8800'); // true (3-digit shorthand is not accepted)
 Color::hexToRgb('#ff8800');   // [255, 136, 0]
+
+Color::parse('rgb(255,136,0)'); // '#ff8800' — named/hex/rgb()/hsl()/@256 → 6-digit hex, or null
+Color::parseStrict('#zzz');     // throws InvalidColorException on an invalid spec
+Color::blend('#000000', '#ffffff', 0.5); // '#808080' — mix two colours (t = 0.0–1.0)
+Color::adaptive('#111111', '#eeeeee');    // adaptive(light, dark) — pick by terminal background
 ```
+
+To apply styles (fg/bg + bold/italic/underline…) to text, use the fluent
+[`Style`](colors.md) builder (`Console::style()`).
 
 > Because `Color` decides on/off from `Capabilities` (not from a specific
 > output's `isDecorated()`), prefer writing its output to a normal/auto-decorated
@@ -67,6 +91,25 @@ DisplayWidth::pad('hi', 5);               // 'hi   '
 DisplayWidth::padLeft('hi', 5);           // '   hi'
 DisplayWidth::center('hi', 6);            // '  hi  '
 DisplayWidth::truncate('hello world', 5); // 'hello' (by display width, wide-char aware)
+DisplayWidth::truncateAnsi("\033[31mhello world\033[0m", 5); // truncates to width 5, keeping + closing ANSI
+DisplayWidth::maxWidth(['hi', 'hello']);  // 5 — the widest line's display width
+```
+
+## Align
+
+Horizontal alignment of a block of lines within a target width — ANSI/wide-char
+aware (via `DisplayWidth`). `pad()` stretches each line to the exact width; `place()`
+keeps the block at its own width and shifts it with a margin (centre/right a box
+without stretching it).
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Align;
+
+Align::pad(['hi', 'hello'], 6, Align::CENTER);  // ['  hi  ', 'hello ']
+Align::place(['box'], 9, Align::RIGHT);          // ['      box']
+Align::normalize('middle');                       // 'left' (unknown → left)
+
+Align::LEFT; Align::CENTER; Align::RIGHT; Align::JUSTIFY; // the alignment tokens
 ```
 
 ## Emoji
@@ -246,6 +289,7 @@ use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
 Hyperlink::render('Docs', 'https://opensource.simtabi.com/console/docs/');
 Hyperlink::isAllowed($url);     // bool — scheme allow-list (http/https/mailto/…)
 Hyperlink::safe($url);          // the URL if allowed, otherwise null
+Hyperlink::sanitize($url);      // strip control chars + the OSC-8 ';' separator
 Hyperlink::schemes();           // the allowed scheme list
 ```
 
@@ -259,6 +303,23 @@ internally by `Capabilities`, `Banner`, `Menu`, etc.
 use Simtabi\Laranail\Console\Tools\Support\Config;
 
 Config::get('output.unicode', 'auto');   // reads config('console.output.unicode')
+Config::locale();                         // console.locale, or null to follow the app locale
+```
+
+Validate the `console.*` config with [`Console::validateConfig()`](../configuration.md#validation)
+(or the `laranail::console.check` command).
+
+## Lang
+
+Resolves widget strings from the `console::console.*` translations, honouring
+`console.locale` **without** mutating the host app's global locale; falls back to the
+given default (with `:placeholder` interpolation) when no translation exists.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Lang;
+
+Lang::get('summary.title', 'Summary');                       // translated, or 'Summary'
+Lang::get('progress.eta', 'ETA :time', ['time' => '2m 18s']); // ':time' interpolated
 ```
 
 ## FileSize
@@ -273,5 +334,24 @@ FileSize::format(1024);       // '1 KB'
 FileSize::format(1536);       // '1.5 KB'
 FileSize::format(1048576);    // '1 MB'
 ```
+
+## NumberFormat
+
+Compact numeric formatting shared by the chart/widget family: fixed-decimal rounding
+with trailing zeros (and a dangling decimal point) trimmed.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
+
+NumberFormat::trim(3.50);     // '3.5'
+NumberFormat::trim(12.0);     // '12'
+NumberFormat::trim(7.255, 2); // '7.26'
+```
+
+## Live
+
+The live-render engine behind animated bars, spinners and in-place redraws is
+`Support\Live` (`Console::live($output)`) — see
+[Interactive & live](interactive.md) for `draw()` / `refresh()` / `animate()`.
 
 [← Docs index](../../README.md#documentation)

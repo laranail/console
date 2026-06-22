@@ -136,13 +136,40 @@ The regex-pattern validators (`Alpha`, `Alphanumeric`, `Name`, `Username`,
 `PhoneNumber`, `UUID`) share an abstract `RegexValidator` base — extend it to add
 your own single-pattern validator.
 
-The choice validators take `$options` (required), then configure the message fluently:
+### Examples by shape
+
+Every validator shares the same fluent API (`->errorMessage()` / `->replace()` /
+`->locale()`); only the constructor (domain) arguments differ. One example per shape:
 
 ```php
-use Simtabi\Laranail\Console\Prompter\Validators\SelectFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators as V;
 
-new SelectFieldValidator(['mysql', 'pgsql'])->errorMessage('Pick a supported driver');
+// No domain args (most validators — Text, TextArea, Number, Email, Password,
+// Checkbox, Boolean, Array, Object, NullOrEmpty, Path, Color, Json, UUID, Alpha,
+// Alphanumeric, Name, Username, Phone):
+new V\EmailFieldValidator()->errorMessage('Invalid email');
+
+// Length-constrained:
+new V\StringFieldValidator(3, 20)->errorMessage('Must be 3–20 characters');
+
+// Choice (options required):
+new V\SelectFieldValidator(['mysql', 'pgsql'])->errorMessage('Pick a supported driver');
+new V\RadioFieldValidator(['yes', 'no']);
+
+// Date / time (optional format override; defaults are in the table above):
+new V\DateFieldValidator(['Y-m-d', 'j/n/Y'])->errorMessage('Use Y-m-d');
+new V\TimeFieldValidator();
+
+// UUID / integer / slug (optional UUID version):
+new V\UuidOrIntegerOrSlugValidator('uuid4');
+
+// Keep the translated default message, but tweak its placeholders + locale:
+new V\PathFieldValidator()->replace(['attribute' => 'config path'])->locale('fr');
 ```
+
+The default messages live under `console::validators.*` (see [i18n](../i18n.md)):
+`->errorMessage()` replaces the message outright, while `->replace([...])` /
+`->locale(...)` feed the translated default. Resolution happens at validate-time.
 
 ### Laravel rule bridge
 
