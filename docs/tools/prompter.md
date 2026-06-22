@@ -91,6 +91,15 @@ new StringFieldValidator(0, 64)->errorMessage('Too long')->locale('fr');
 new RadioFieldValidator(['a', 'b'])->errorMessage('Pick one');
 ```
 
+`->errorMessage()` sets a fixed string. Without it, the default
+`console::validators.*` message is used; `->replace([...])` substitutes placeholders
+into that translated default and `->locale(...)` resolves it in a specific locale (see
+[i18n](../i18n.md)). All three resolve at validate-time, so the active locale is honoured:
+
+```php
+new EmailFieldValidator()->replace(['attribute' => 'work email'])->locale('fr');
+```
+
 > Upgrading from 1.x (where the message was a constructor argument)? See
 > [UPGRADING.md](../../UPGRADING.md).
 
