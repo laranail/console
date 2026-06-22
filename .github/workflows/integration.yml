@@ -1,0 +1,58 @@
+name: Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    name: Real-app smoke test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout package
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          path: package
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.5'
+          extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
+          coverage: none
+          ini-values: error_reporting=E_ALL
+
+      - name: Create a fresh Laravel app
+        run: composer create-project laravel/laravel:^13.0 app --no-interaction --prefer-dist
+
+      - name: Require the package from a path repository
+        working-directory: app
+        run: |
+          composer config minimum-stability dev
+          composer config prefer-stable true
+          composer config repositories.laranail-console '{"type":"path","url":"../package","options":{"symlink":true}}'
+          composer require "laranail/console:@dev" --no-interaction --with-all-dependencies
+
+      - name: End-to-end checks in the real app
+        working-directory: app
+        run: |
+          set -e
+          # config publishes
+          php artisan vendor:publish --tag=console-config --no-interaction
+          test -f config/console.php
+          # the namespaced "::" command is registered + dispatches in a real Artisan kernel
+          php artisan list | grep -q 'laranail::console.check'
+          out=$(php artisan laranail::console.check)
+          echo "$out"
+          echo "$out" | grep -q 'configuration is valid'
