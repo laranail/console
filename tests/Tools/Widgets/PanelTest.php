@@ -5,12 +5,19 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 
 final class PanelTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        Capabilities::clearFake();
+        parent::tearDown();
+    }
+
     /**
      * @return list<int>
      */
@@ -42,6 +49,8 @@ final class PanelTest extends TestCase
 
     public function test_vertical_panel_with_border_and_dividers(): void
     {
+        Capabilities::fake(unicode: true); // assert Unicode borders deterministically (CI runners vary)
+
         $rendered = Panel::make()->border()->dividers()
             ->add(PanelBlock::make('one'))
             ->add(PanelBlock::make('two'))
