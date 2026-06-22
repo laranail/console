@@ -9,14 +9,11 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class UUIDFieldValidator extends RegexValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
         parent::__construct(
             '/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/',
-            $errorMessage,
             'uuid',
-            $replace,
-            $locale,
         );
     }
 }

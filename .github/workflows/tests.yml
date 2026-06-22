@@ -57,3 +57,110 @@ jobs:
 
       - name: Smoke-test examples
         run: composer examples
+
+  coverage:
+    name: Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.5'
+          extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
+          coverage: pcov
+          ini-values: error_reporting=E_ALL
+
+      - name: Cache Composer files
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/composer/files
+          key: composer-coverage-${{ hashFiles('composer.json') }}
+          restore-keys: composer-coverage-
+
+      - name: Install dependencies
+        run: composer update --prefer-stable --no-interaction --no-progress
+
+      - name: Pest with coverage gate
+        run: composer test-coverage -- --min=75
+
+  mutation:
+    name: Mutation testing
+    runs-on: ubuntu-latest
+    # Mutation testing is slow (~10 min); run it on PRs (and manual dispatch) only —
+    # re-running on the post-merge push to main is redundant (the PR already gated it).
+    if: github.event_name != 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.5'
+          extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
+          # xdebug (not pcov): Infection needs per-test coverage to map each mutant to
+          # its covering tests; pcov doesn't emit it and yields false escapes.
+          coverage: xdebug
+          ini-values: error_reporting=E_ALL
+
+      - name: Cache Composer files
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.cache/composer/files
+          key: composer-mutation-${{ hashFiles('composer.json') }}
+          restore-keys: composer-mutation-
+
+      - name: Install dependencies
+        run: composer update --prefer-stable --no-interaction --no-progress
+
+      # Run Infection directly (not via a Composer script): Composer strips Xdebug from
+      # its subprocesses, but Infection needs per-test coverage (Xdebug) to map mutants
+      # to their covering tests. Pre-generate coverage with Pest, then --skip-initial-tests.
+      - name: Infection (mutation testing)
+        run: |
+          php -d xdebug.mode=coverage vendor/bin/pest --coverage-xml=build/infection/coverage-xml --log-junit=build/infection/junit.xml
+          php vendor/bin/infection --coverage=build/infection --skip-initial-tests --threads=max --no-progress
+
+  cross-platform:
+    name: ${{ matrix.os }} · PHP 8.5
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.5'
+          extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
+          coverage: none
+          ini-values: error_reporting=E_ALL
+
+      - name: Install dependencies
+        run: composer update --prefer-stable --no-interaction --no-progress
+
+      - name: Run Pest
+        run: composer test
+
+      # The `examples` script redirects to /dev/null; Composer runs scripts via cmd.exe
+      # on Windows (not this step's bash), so that redirect is invalid there. The full
+      # test suite already exercises the rendering code on Windows; examples stay smoked
+      # on Linux + macOS.
+      - name: Smoke-test examples
+        if: runner.os != 'Windows'
+        run: composer examples

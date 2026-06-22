@@ -9,19 +9,19 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class JsonFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'json', $replace, $locale);
+        parent::__construct('json');
     }
 
     public function validate(mixed $value): ?string
     {
         if (! is_string($value) || $value === '') {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         json_decode($value);
 
-        return json_last_error() === JSON_ERROR_NONE ? null : $this->errorMessage;
+        return json_last_error() === JSON_ERROR_NONE ? null : $this->resolvedMessage();
     }
 }

@@ -15,13 +15,13 @@ abstract class ChoiceFieldValidator extends AbstractValidator
     /**
      * @param list<mixed> $options
      */
-    public function __construct(string $messageKey, protected array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(string $messageKey, protected array $options)
     {
-        parent::__construct($errorMessage, $messageKey, $replace, $locale);
+        parent::__construct($messageKey);
     }
 
     public function validate(mixed $value): ?string
     {
-        return in_array($value, $this->options, true) ? null : $this->errorMessage;
+        return in_array($value, $this->options, true) ? null : $this->resolvedMessage();
     }
 }

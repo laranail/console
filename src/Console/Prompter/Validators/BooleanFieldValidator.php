@@ -24,13 +24,13 @@ final class BooleanFieldValidator extends AbstractValidator
         0,
     ];
 
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'boolean', $replace, $locale);
+        parent::__construct('boolean');
     }
 
     public function validate(mixed $value): ?string
     {
-        return in_array($value, $this->validBooleans, true) ? null : $this->errorMessage;
+        return in_array($value, $this->validBooleans, true) ? null : $this->resolvedMessage();
     }
 }

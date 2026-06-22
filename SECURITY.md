@@ -2,11 +2,12 @@
 
 ## Supported versions
 
-| Version | Status         |
-|---------|----------------|
-| 1.x     | Active support |
+| Version | Status              |
+|---------|---------------------|
+| 2.x     | Active support      |
+| 1.x     | Security fixes only |
 
-Security fixes are released on the latest `1.x` tag.
+Security fixes are released on the latest `2.x` tag.
 
 ## Reporting a vulnerability
 

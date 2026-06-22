@@ -14,8 +14,8 @@ final class SelectFieldValidator extends ChoiceFieldValidator
     /**
      * @param list<mixed> $options
      */
-    public function __construct(array $options, ?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct(array $options)
     {
-        parent::__construct('select', $options, $errorMessage, $replace, $locale);
+        parent::__construct('select', $options);
     }
 }

@@ -22,3 +22,4 @@
 /rector.php            export-ignore
 /benchmarks            export-ignore
 /phpbench.json         export-ignore
+/infection.json5       export-ignore

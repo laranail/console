@@ -11,13 +11,13 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class NumberFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'number', $replace, $locale);
+        parent::__construct('number');
     }
 
     public function validate(mixed $value): ?string
     {
-        return is_numeric($value) ? null : $this->errorMessage;
+        return is_numeric($value) ? null : $this->resolvedMessage();
     }
 }

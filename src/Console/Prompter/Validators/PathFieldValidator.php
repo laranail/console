@@ -13,25 +13,25 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class PathFieldValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'path', $replace, $locale);
+        parent::__construct('path');
     }
 
     public function validate(mixed $value): ?string
     {
         if (! is_string($value) || $value === '') {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         if (str_contains($value, "\0")) {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         $segments = preg_split('#[/\\\\]#', $value) ?: [];
 
         if (in_array('..', $segments, true)) {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         return null;

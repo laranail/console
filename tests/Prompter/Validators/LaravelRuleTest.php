@@ -24,7 +24,7 @@ final class LaravelRuleTest extends TestCase
 
     public function test_explicit_message_overrides(): void
     {
-        $result = new LaravelRule(['email'], [], 'Bad address')->validate('nope');
+        $result = new LaravelRule(['email'])->errorMessage('Bad address')->validate('nope');
 
         self::assertSame('Bad address', $result);
     }

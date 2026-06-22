@@ -19,7 +19,12 @@ composer test
    ```bash
    composer lint          # pint + phpstan + rector --dry-run
    composer test          # vendor/bin/pest --no-coverage
-   composer test-coverage # add a coverage report (needs Xdebug/PCOV)
+   composer test-coverage # add a coverage report (needs Xdebug/PCOV); CI enforces a floor (--min)
+   # Mutation testing (Infection) — needs Xdebug per-test coverage, so run it directly,
+   # NOT through Composer (Composer strips Xdebug from its subprocesses):
+   #   php -d xdebug.mode=coverage vendor/bin/pest \
+   #     --coverage-xml=build/infection/coverage-xml --log-junit=build/infection/junit.xml
+   #   php vendor/bin/infection --coverage=build/infection --skip-initial-tests --no-progress
    composer audit         # composer audit (security)
    composer bench         # phpbench micro-benchmarks (local only — noisy in CI)
    ```
@@ -35,7 +40,7 @@ composer test
 - PHPStan level 8 (see `phpstan.neon`); `composer lint` must be clean.
 - Rector dry-run must be clean (see `rector.php`).
 
-## Public-API conventions (locked at 1.0)
+## Public-API conventions (locked at 1.0; first breaking revision in 2.0)
 
 Since 1.0 the public API follows SemVer (see [docs/release.md](docs/release.md#versioning--stability)).
 Keep new components consistent with the family so the surface stays uniform:

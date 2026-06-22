@@ -12,8 +12,8 @@ use Illuminate\Support\Facades\Validator;
  *
  *   $prompter->text('Email', validate: new LaravelRule(['required', 'email']));
  *
- * Returns the first Laravel validation message (or an explicit override), or
- * null when the value passes.
+ * Returns the first Laravel validation message (or a fluent `->errorMessage()`
+ * override), or null when the value passes.
  */
 final class LaravelRule extends AbstractValidator
 {
@@ -24,10 +24,8 @@ final class LaravelRule extends AbstractValidator
     public function __construct(
         private readonly array|string $rules,
         private readonly array $messages = [],
-        private readonly ?string $explicitMessage = null,
-        ?string $locale = null,
     ) {
-        parent::__construct($this->explicitMessage ?? '', '', [], $locale);
+        parent::__construct();
     }
 
     public function validate(mixed $value): ?string
@@ -42,7 +40,7 @@ final class LaravelRule extends AbstractValidator
             return null;
         }
 
-        return $this->explicitMessage ?? (string) $validator->errors()->first('value');
+        return $this->customMessageOrNull() ?? (string) $validator->errors()->first('value');
     }
 
     /**

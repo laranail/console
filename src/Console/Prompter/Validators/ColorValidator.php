@@ -9,15 +9,15 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class ColorValidator extends AbstractValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct($errorMessage, 'color', $replace, $locale);
+        parent::__construct('color');
     }
 
     public function validate(mixed $value): ?string
     {
         if (! is_string($value)) {
-            return $this->errorMessage;
+            return $this->resolvedMessage();
         }
 
         $patterns = [
@@ -32,6 +32,6 @@ final class ColorValidator extends AbstractValidator
             }
         }
 
-        return $this->errorMessage;
+        return $this->resolvedMessage();
     }
 }

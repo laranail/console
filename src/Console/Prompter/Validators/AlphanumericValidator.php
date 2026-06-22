@@ -11,8 +11,8 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
  */
 final class AlphanumericValidator extends RegexValidator
 {
-    public function __construct(?string $errorMessage = null, array $replace = [], ?string $locale = null)
+    public function __construct()
     {
-        parent::__construct('/^[a-zA-Z0-9]+$/', $errorMessage, 'alphanumeric', $replace, $locale);
+        parent::__construct('/^[a-zA-Z0-9]+$/', 'alphanumeric');
     }
 }
