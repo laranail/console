@@ -51,8 +51,10 @@ recorded in the [CHANGELOG](../CHANGELOG.md) (and, from the first 2.0, an
    git tag -a vX.Y.Z -m "vX.Y.Z — summary"
    git push origin vX.Y.Z
    ```
-6. The release workflow publishes the GitHub Release. Verify it, then prune merged
-   branches (`git remote prune origin`).
+6. The release workflow publishes the GitHub Release. Its body is the tagged
+   version's `CHANGELOG.md` section (auto-extracted), plus the generated
+   contributor/PR list — so every release carries a real "what changed" summary,
+   not just a stub. Verify it, then prune merged branches (`git remote prune origin`).
 
 ## Conventions
 

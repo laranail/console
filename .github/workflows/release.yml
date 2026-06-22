@@ -37,10 +37,28 @@ jobs:
           upload-artifact: false
           upload-release-assets: false   # the release step below attaches the SBOM (avoids a duplicate asset)
 
+      - name: Extract this version's CHANGELOG section
+        id: changelog
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          notes=$(awk -v v="$version" '
+            $0 ~ "^## \\[" v "\\]" { f=1; next }
+            f && /^## \[/ { exit }
+            f { print }
+          ' CHANGELOG.md)
+          {
+            echo "body<<__CHANGELOG_EOF__"
+            if [ -n "$notes" ]; then printf '%s\n' "$notes"; else
+              echo "See [CHANGELOG.md](https://github.com/laranail/console/blob/main/CHANGELOG.md)."
+            fi
+            echo
+            echo "Full history: [CHANGELOG.md](https://github.com/laranail/console/blob/main/CHANGELOG.md)."
+            echo "__CHANGELOG_EOF__"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@718ea10b132b3b2eba29c1007bb80653f286566b # v3.0.1
         with:
           generate_release_notes: true
-          body: |
-            See [CHANGELOG.md](https://github.com/laranail/console/blob/main/CHANGELOG.md) for details.
+          body: ${{ steps.changelog.outputs.body }}
           files: console.cdx.json
