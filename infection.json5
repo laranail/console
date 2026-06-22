@@ -1,0 +1,18 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "src"
+        ]
+    },
+    "mutators": {
+        "@default": true
+    },
+    // Regression gate at the measured baseline (MSI 53% / covered-code MSI 53%,
+    // 5377 mutations). Raising these by killing escaped mutants is incremental work.
+    "minMsi": 50,
+    "minCoveredMsi": 50,
+    "logs": {
+        "text": "php://stderr"
+    }
+}
