@@ -3,15 +3,26 @@
     "source": {
         "directories": [
             "src"
+        ],
+        // @internal service providers are framework glue (register/boot wiring). Their
+        // surviving mutants are equivalent (e.g. boot() public→protected — Laravel calls
+        // it via reflection regardless) or pure registration calls whose effect is
+        // verified end-to-end by the real-app Integration job, not by Infection-mappable
+        // unit tests. Excluding them keeps mutation testing focused on logic.
+        "excludes": [
+            "Console/Providers",
+            "Console/Tools/Providers",
+            "Console/Prompter/Providers"
         ]
     },
     "mutators": {
         "@default": true
     },
-    // Regression gate at the measured baseline (MSI 53% / covered-code MSI 53%,
-    // 5377 mutations). Raising these by killing escaped mutants is incremental work.
-    "minMsi": 50,
-    "minCoveredMsi": 50,
+    // The suite kills 100% of mutants in the (provider-excluded) logic code. Gate at the
+    // full bar so any future weakening is caught. Requires a per-test coverage driver
+    // (xdebug) — pcov does NOT emit per-test coverage and yields false escapes.
+    "minMsi": 100,
+    "minCoveredMsi": 100,
     "logs": {
         "text": "php://stderr"
     }
