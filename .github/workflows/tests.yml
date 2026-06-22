@@ -90,6 +90,9 @@ jobs:
   mutation:
     name: Mutation testing
     runs-on: ubuntu-latest
+    # Mutation testing is slow (~10 min); run it on PRs (and manual dispatch) only —
+    # re-running on the post-merge push to main is redundant (the PR already gated it).
+    if: github.event_name != 'push'
 
     steps:
       - name: Checkout
