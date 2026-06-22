@@ -115,3 +115,42 @@ jobs:
 
       - name: Infection (mutation testing)
         run: composer test-mutation
+
+  cross-platform:
+    name: ${{ matrix.os }} · PHP 8.5
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest]
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+        with:
+          php-version: '8.5'
+          extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
+          coverage: none
+          ini-values: error_reporting=E_ALL
+
+      - name: Install dependencies
+        run: composer update --prefer-stable --no-interaction --no-progress
+
+      - name: Run Pest
+        run: composer test
+
+      # The `examples` script redirects to /dev/null; Composer runs scripts via cmd.exe
+      # on Windows (not this step's bash), so that redirect is invalid there. The full
+      # test suite already exercises the rendering code on Windows; examples stay smoked
+      # on Linux + macOS.
+      - name: Smoke-test examples
+        if: runner.os != 'Windows'
+        run: composer examples

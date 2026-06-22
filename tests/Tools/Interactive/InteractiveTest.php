@@ -39,7 +39,7 @@ final class InteractiveTest extends TestCase
         Live::make($out)->refresh(static fn (int $i): string => "frame {$i}", 5, 0);
 
         $text = $out->fetch();
-        self::assertSame("frame 4\n", $text);                 // only final frame
+        self::assertSame('frame 4' . PHP_EOL, $text);         // only final frame (writeln uses PHP_EOL)
         self::assertStringNotContainsString("\033[", $text);  // no cursor control
     }
 
@@ -66,6 +66,10 @@ final class InteractiveTest extends TestCase
 
     public function test_button_group_returns_scripted_choice(): void
     {
+        if (PHP_OS_FAMILY === 'Windows') {
+            self::markTestSkipped('Laravel\Prompts is not supported on Windows (use WSL/a fallback).');
+        }
+
         Capabilities::fake(interactive: true);
         // A prior test that ran an Artisan command leaves Laravel\Prompts' console
         // fallback enabled, and fallbackWhen() is sticky (only OR-sets true), so reset

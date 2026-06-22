@@ -20,6 +20,10 @@ final class CommandSignalServiceTest extends TestCase
 
     public function test_setup_registers_requested_signals(): void
     {
+        if (! extension_loaded('pcntl')) {
+            self::markTestSkipped('Signal handling requires ext-pcntl (POSIX-only).');
+        }
+
         $service = new CommandSignalService;
         $service->setupSignalHandling([SIGTERM, SIGINT]);
 
@@ -42,6 +46,10 @@ final class CommandSignalServiceTest extends TestCase
 
     public function test_simulating_registered_signal_stops_running(): void
     {
+        if (! extension_loaded('pcntl')) {
+            self::markTestSkipped('Signal handling requires ext-pcntl (POSIX-only).');
+        }
+
         $service = new CommandSignalService('cmd');
         $service->setupSignalHandling([SIGTERM]);
 
@@ -52,6 +60,10 @@ final class CommandSignalServiceTest extends TestCase
 
     public function test_simulating_unregistered_signal_is_a_noop(): void
     {
+        if (! extension_loaded('pcntl')) {
+            self::markTestSkipped('Signal handling requires ext-pcntl (POSIX-only).');
+        }
+
         $service = new CommandSignalService('cmd');
         $service->setupSignalHandling([SIGTERM]);
 
