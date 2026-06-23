@@ -5,624 +5,100 @@ All notable changes to `laranail/console` are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.2] - 2026-06-21
+> The early rapid-iteration releases were consolidated into three milestone
+> versions — **0.5.0** (foundation), **1.0.0** (first stable), and **2.0.0**
+> (current) — each summarising the work of its line. The full granular commit
+> history remains in git.
 
-Documentation only — no code change.
+## [2.0.0] - 2026-06-22
 
-### Added
-
-- Expanded the Support-utilities docs: new sections for `Align`, `Os`, `Lang` and
-  `NumberFormat`, cross-references for `Style`/`Live`/`ConfigValidator`, and method
-  coverage for `Color` (`parse`/`parseStrict`/`blend`/`adaptive`), `DisplayWidth`
-  (`truncateAnsi`/`maxWidth`), `Hyperlink` (`sanitize`) and `Config` (`locale`).
-- A grouped "Examples by shape" section in the validators docs covering every
-  validator's fluent usage. All new code blocks were executed/verified.
-
-## [2.0.1] - 2026-06-21
-
-Stabilization patch — no code or behaviour change.
-
-### Added
-
-- Behavioural test coverage for the fluent validator config: `->replace()` placeholder
-  substitution and `->locale()` resolution (previously only chainability was asserted),
-  plus a fuller fluent-config example in the validator docs.
-
-## [2.0.0] - 2026-06-21
-
-First major release. See [UPGRADING.md](UPGRADING.md).
+Current stable. A breaking validator-message redesign plus a full QA-hardening pass.
 
 ### Changed
 
 - **BREAKING — validator constructors take only domain arguments.** The failure
   message, translation replacements and locale moved from trailing constructor
   arguments to chainable methods — `->errorMessage()`, `->replace()`, `->locale()` —
-  uniform across every validator, resolved lazily at validation time. This removes the
-  inconsistent message-argument position between validators. Domain arguments (e.g.
-  `StringFieldValidator(int $minLength, int $maxLength)`, `RadioFieldValidator(array $options)`)
-  are unchanged. `LaravelRule` drops its `explicitMessage`/`locale` constructor params in
-  favour of the inherited fluent methods. Migration: [UPGRADING.md](UPGRADING.md).
-
-## [1.4.1] - 2026-06-21
-
-### Fixed
-
-- Docs accuracy: the README "Finished strings" list now includes all seven charts
-  (`scatterPlot`/`heatmap`/`histogram` were missing), and `docs/architecture.md` lists
-  the `DateTimeFormatValidator` + `ChoiceFieldValidator` abstract bases.
-
-## [1.4.0] - 2026-06-21
-
-### Fixed
-
-- **Length validators now count characters, not bytes.** `TextFieldValidator` (≤ 255)
-  and `PasswordFieldValidator` (≥ 8) used `strlen` (byte count); they now use
-  `mb_strlen`, matching their "characters" message text, `StringFieldValidator`, and
-  Laravel's string rules. **Behaviour change for multibyte input** — e.g. a 3-emoji
-  password now correctly fails the 8-character minimum, and a 200-character accented
-  string passes the 255 limit.
+  uniform across every validator, resolved lazily at validation time. Domain arguments
+  (e.g. `StringFieldValidator(int $minLength, int $maxLength)`) are unchanged.
+  `LaravelRule` drops its `explicitMessage`/`locale` constructor params in favour of the
+  inherited fluent methods. Migration: [UPGRADING.md](UPGRADING.md).
 
 ### Added
 
-- `CommandServiceManager` config-key constants (`NATIVE_EVENTS`, `CUSTOM_EVENTS`,
-  `SIGNALS`, `NON_INTERACTIVE`) — the single source of truth for the
-  `configureServices()` contract (also removes a cross-file duplicate of the
-  `non_interactive` literal).
+- **QA hardening:** an enforced coverage gate, mutation testing (Infection, MSI 100 on
+  logic code), a Windows + macOS CI matrix, and a real-app integration smoke test.
+- Behavioural coverage for the fluent validator config (`->replace()` substitution,
+  `->locale()` resolution) and an expanded Support-utilities / validators doc set.
 
-### Changed
+## [1.0.0] - 2026-06-21
 
-- Internal `ChoiceFieldValidator` base shared by `RadioFieldValidator` /
-  `SelectFieldValidator` (both remain distinct public classes; constructors unchanged).
-- Documented the validator constructor convention (domain args first, then the
-  `errorMessage`/`replace`/`locale` tail; named-arg ergonomics).
-
-## [1.3.0] - 2026-06-21
-
-Maintainability release from a code-quality audit. No behaviour changes — chart and
-highlighter output is byte-identical, verified against a snapshot.
+First SemVer-stable release, with the full 1.x hardening series folded in.
 
 ### Added
 
-- `Support\NumberFormat::trim()` — the shared compact number formatter (was duplicated
-  across the chart/widget family).
-- `Support\Align::JUSTIFY` constant (replaces a hardcoded `'justify'` string).
-- Test coverage for `Button`, `StatusLine`, `FileSize`, and `ConfigValidator`'s
-  defensive branches (415 → 429 tests).
-
-### Changed
-
-- Internal de-duplication (BC-safe): a `Concerns\ChartContext` trait for the seven
-  block charts (capabilities/theme DI, `width()`/`responsive()`, series-role cycle);
-  the `SyntaxHighlighter` token languages are now a single spec table + applier (adding
-  a language is one row); a shared `DateTimeFormatValidator` base for the date/time
-  validators; a `Commands\Concerns\ManagesCommandContext` trait for the command
-  logger/error services; and a simplified `UuidOrIntegerOrSlugValidator`.
-
-## [1.2.2] - 2026-06-21
-
-Post-release audit fixes. No API changes.
-
-### Fixed
-
-- **Hardening:** `ConsoleUIFormatter::render()` now escapes a clickable link's URL
-  (`OutputFormatter::escape`) so a URL containing `<…>` can't inject Symfony
-  formatter tags. (The OSC-8 link path was never affected.)
-- `Commands\Concerns\SupportsNamespacedNames` is now marked `@api` (it was a
-  documented public extension point missing the marker).
-- Docs: fixed a non-runnable `docs/tools/theming.md` example (`Console::document()`
-  takes no args → `new Document(null, $theme)`), a wrong named argument in
-  `docs/tools/prompter.md` (`errorMessage:` → `explicitMessage:`), an incomplete
-  `Menu` FQCN, the README chart list (now lists `stacked`) and stability line (1.x),
-  the `SyntaxHighlighter` class docblock (all 10 languages), and the `PrompterFacade`
-  `@method` hints (`note()` `$type`, `form()`, `context()`).
-
-## [1.2.1] - 2026-06-21
-
-### Fixed
-
-- **Signal handling no longer fatals when a command is constructed outside a
-  running Application.** The base `Command` / `InteractsWithConsoleServices`
-  wired SIGTERM/SIGINT traps in the constructor (via `bootConsoleSupport()`),
-  but Laravel's `trap()` dereferences `$this->getApplication()->getSignalRegistry()`,
-  which is null until the command is attached to an Application — so on
-  ext-pcntl platforms, merely constructing a command (e.g. container resolution
-  during static analysis) threw `Call to a member function getSignalRegistry()
-  on null`. Signal handling now wires at `run()` time, with a null-application
-  guard and idempotency; `bootConsoleSupport()` only initialises `$this->services`.
-
-## [1.2.0] - 2026-06-21
-
-### Added
-
+- **`Commands\Concerns\InteractsWithConsoleServices`** trait — the full managed command
+  lifecycle (`$this->services`, signals, structured exceptions, verbosity helpers) usable
+  on any `Illuminate\Console\Command`.
+- **Config validation** — `Console::validateConfig()` + the **`laranail::console.check`**
+  Artisan command, enabled by the new `Commands\Concerns\SupportsNamespacedNames` trait
+  (allows the `::` command namespace). Opt-in fail-fast at boot.
 - **Theme presets** — five built-in palettes (`dracula`, `nord`, `solarized`,
-  `monochrome`, `github`) via `Theme::preset('nord')` / `Palette::preset()` and a
-  `console.theme.preset` config key (the `theme.palette` block overrides it
-  role-by-role). `CONSOLE_THEME_PRESET` env.
-- **Config validation** — `Console::validateConfig()` checks `console.*` (palette
-  colours via `Color::parseStrict`, `theme.preset`, `output.symbols`/`emoji.mode`
-  enums, `responsive`, `banner.font`) and the **`laranail::console.check`** Artisan
-  command (new `Commands\Concerns\SupportsNamespacedNames` trait enables the `::`
-  name). Opt-in fail-fast at boot via `console.validate_config` (console only,
-  off by default).
-- **Roadmap + Discussions** — `ROADMAP.md` and GitHub Discussions for the 1.x
-  package (proposals → Discussions, bugs → Issues).
+  `monochrome`, `github`) via `Theme::preset()` / `console.theme.preset`.
+- **`Color::parseStrict()`**, the `StackedBar` chart, syntax highlighting for
+  python/sql/html/css/diff, and a phpbench suite (`composer bench`).
 
-## [1.1.1] - 2026-06-21
+### Changed
+
+- **Public-API surface defined:** `@api` on the facades and `Renderable`/`Interactive`
+  contracts; `@internal` on implementation-only classes (excluded from BC).
+- **Length validators count characters, not bytes** (`mb_strlen`) — behaviour change for
+  multibyte input.
+- Performance: `DisplayWidth::of()` caches its formatter (~3× on the hot path); broad
+  internal de-duplication (chart context, highlighter spec table, validator bases).
 
 ### Fixed
 
-- `Typography\SyntaxHighlighter` now skips highlighting for lines over 4000 chars,
-  bounding regex cost so a pathological very-long `html`/`css` line can't backtrack
-  quadratically (a 50k-char line: ~50s → ~3ms). Normal code is unaffected
-  (`CodeBlock` already clips to the terminal width).
-- `Widgets\StackedBar` clamps negative values to `0` — a proportion can't be
-  negative, so the legend no longer shows nonsensical percentages.
-- Docs: README "finished strings" row lists `stackedBar`; `colors.md` gradient
-  example uses 6-digit hex (3-digit shorthand isn't parsed).
-
-## [1.1.0] - 2026-06-21
-
-### Added
-
-- **`Color::parseStrict()`** — validates a colour and throws `InvalidColorException`
-  on bad input (use it for user/config colour input). `parse()` stays lenient
-  (null on failure). Wires the previously-unused exception.
-- **`StackedBar`** proportion chart + **`Console::stackedBar()`** — one horizontal
-  bar split into proportional theme-coloured segments with a legend; the
-  terminal-friendly pie alternative (degrades to a distinct glyph cycle without colour).
-- **Syntax highlighting** for **python, sql, html, css and diff** (aliases
-  `py`, `xml`/`htm`, `patch`) — 10 languages total.
-- A **phpbench** benchmark suite (`composer bench`) covering the hot paths.
-
-### Changed
-
-- **Performance:** `Support\DisplayWidth::of()` caches its `OutputFormatter` instead
-  of constructing one per call — ~3× faster on the hottest path (every cell/pad/wrap),
-  with no behaviour change.
-
-## [1.0.1] - 2026-06-20
-
-Post-1.0 documentation accuracy + a small robustness fix. No API changes.
-
-### Fixed
-
-- `Commands\Concerns\InteractsWithConsoleServices::displayPerformanceSummary()` now
-  boots the service manager first, so it is safe to call before `run()` in a
-  trait-only command (matches the other public entry points).
-- Docs: `support.md` no longer references the removed `resources/fonts/` path (the
-  `block` font is `Support\Fonts\BlockFont`); `widgets.md` shows `Gauge::width($width)`
-  (renamed in 1.0.0); added `BrailleCanvas` and `Hyperlink` sections to `support.md`
-  (both linked from charts/typography docs); `architecture.md` now lists the
-  `Support\Fonts` namespace, `BrailleCanvas`, the `InteractsWithConsoleServices` trait,
-  and the `@api`/`@internal` public-surface model.
-
-## [1.0.0] - 2026-06-20
-
-First stable release. **No breaking changes from 0.8.0** — the public API is
-unchanged; this release promotes the package to SemVer-stable and defines the
-supported surface. 0.8.x code runs unchanged.
-
-### Added
-
-- **`Commands\Concerns\InteractsWithConsoleServices`** trait — the full command
-  support (`$this->services`, the managed run() lifecycle, signals, structured
-  exceptions and verbosity helpers) usable on **any** `Illuminate\Console\Command`,
-  even one extending a different base. The `Command` base now composes this trait.
-- A **Versioning & stability** policy ([docs/release.md](docs/release.md)): SemVer
-  covers the `Console`/`Prompter` facades and the documented `Tools\*`/`Prompter\*`
-  classes; `@internal` classes and the experimental `symfony/tui` integration
-  (`Console\Tui\*`, `Console::tui()`) are excluded.
-
-### Changed
-
-- **Public-API surface defined:** `@internal` on implementation-only classes
-  (service providers, `RendersBlock`, `ResponsiveWidth`, Prompter `ContextBuilderService`
-  + `Helpers`); `@api` on the `Console`/`Prompter` facades and the `Renderable` /
-  `Interactive` contracts.
-- `Console::summary()` title is now i18n-aware via the facade (`?string $title = null`
-  instead of a forced literal) — the localised default is unchanged.
-- `Gauge::width()` parameter renamed `$barWidth` → `$width` for consistency with the
-  widget family (param names are part of the BC contract under named arguments).
-- `composer.json` `branch-alias` → `1.x-dev`; `SECURITY.md` supported versions → `1.x`.
-
-## [0.8.0] - 2026-06-20
-
-Adds a chart family, refactors the bundled font into classes, and removes the
-third-party attribution after a clean-room pass.
-
-### Added
-
-- **Charts** — `ColumnChart` (vertical block-eighths bars), `LineChart` (braille,
-  multi-series, y-axis), `ScatterPlot` (braille points), `Heatmap` (intensity blend
-  with a shade-ramp fallback + optional labels) and `Histogram` (Sturges binning),
-  built on a new `Support\BrailleCanvas` primitive. Facade methods `columnChart()`,
-  `lineChart()`, `scatterPlot()`, `heatmap()`, `histogram()`. All responsive, themed
-  and graceful-degrading; new `docs/tools/charts.md` + `examples/tools/charts.php`.
-- `docs/release.md` documenting the tag-driven release flow.
-
-### Changed
-
-- The bundled `block` FIGlet font moved from `resources/fonts/block.php` to reusable
-  `Support\Fonts` classes (`FontDefinition`, `BlockFont`, `BuiltinFonts` registry);
-  `resources/fonts/` removed. The public font API is unchanged
-  (`Figlet::font('block')`, `builtins()`, `Banner->font('block')`).
-- The multi-column/keypress/terminal utilities (`Panel`, `PanelBlock`, `Renderable`,
-  `Keypress`, `Terminal`) are independent implementations built on the package's own
-  ECMA-48-derived primitives; `THIRD_PARTY.md` removed (no derivative third-party
-  code remains).
-- Code highlighting now also covers **bash, yaml and js** (documented).
-
-### Fixed
-
-- Markdown tables: cells split on unescaped pipes only (`\|` is a literal pipe), and
-  a table directly after a paragraph (no blank line) is no longer swallowed as prose.
-- `Paragraph` rich/preformatted wrapping carries the active colour across continuation
-  lines, so a long styled span keeps its colour (still reset-terminated, no bleed).
-- `BarChart`/`ColumnChart`: numeric labels (coerced to int array keys) no longer
-  trigger a `DisplayWidth::of()` type error.
-- Documentation accuracy: validator count (26), removed a non-existent
-  `Console::callout()`, `symfony/tui` framed as optional, `composer test --no-coverage`,
-  `CONSOLE_SYMBOLS` env, real `Summary`/`Header` signatures.
-
-## [0.7.0] - 2026-06-20
-
-Rounds out the Markdown renderer — the last of the deferred design-system items.
-
-### Added
-
-- **Inline styling in list items, task lists & blockquotes** — `**bold**`,
-  `*italic*`, `` `code` `` and `[links](url)` now render with real ANSI styling
-  inside list items and quotes too (previously paragraphs only), via the new
-  `ListBlock::rich()` / `BlockQuote::rich()` modes. Degrades to plain without colour.
-- **Markdown tables** — GFM pipe tables (header + `---|---` separator + rows) render
-  through the responsive `Table` widget (columns shrink to fit, never dropped;
-  leading/trailing pipes optional; ragged rows padded to the header column count).
-- **More code highlighting** — `SyntaxHighlighter` now covers **bash, yaml and js**
-  in addition to php/json, with alias normalisation (`sh`/`shell`/`zsh` → bash,
-  `yml` → yaml, `javascript`/`node`/`mjs` → js). Unknown languages still render plain.
-
-## [0.6.2] - 2026-06-20
-
-Maintenance: upgrade the dev test stack and keep CI green under it.
-
-### Changed
-
-- Dev dependencies upgraded to latest: **Pest 3 → 4** and **PHPUnit 11 → 12**
-  (PHPUnit 13 is held back by Pest 4's `^12` constraint). Runtime requirements are
-  unchanged (Laravel `^13`, Symfony `^8`) — consumers are unaffected.
-- `AllValidatorsTest` uses the `#[DataProvider]` attribute instead of the
-  `@dataProvider` doc-comment (removed in PHPUnit 12).
-- The default `composer test` runs with `--no-coverage` (coverage is opt-in via
-  `composer test-coverage`), so the strict `failOnWarning` suite no longer fails on
-  the "no coverage driver" notice under Pest 4 / PHPUnit 12.
-
-## [0.6.1] - 2026-06-20
-
-Pre-open-source QA: one bug fix plus documentation-accuracy and hygiene polish.
-
-### Fixed
-
-- `Support\DisplayWidth::truncateAnsi()` corrupted OSC-8 hyperlinks — it only
-  recognised SGR sequences, so a clipped link (e.g. a `Link` inside a narrow
-  `Panel`/`Summary`) was cut mid-introducer, dropping the label/URL and leaving a
-  dangling hyperlink. OSC-8 sequences are now zero-width passthrough and any open
-  link/style is closed on truncation.
-- Documentation accuracy: removed a non-existent `Box::content()` (added the real
-  `responsive()`), fixed a broken `responsive.md` back-link, completed the
-  `FieldType` case list and the validator count/table (incl. `LaravelRule`), and
-  corrected the service-count and a class reference.
-
-### Changed
-
-- `composer.json` `branch-alias` `0.2.x-dev` → `0.x-dev`; Dependabot timezone
-  `UTC` → `America/New_York`.
-
-## [0.6.0] - 2026-06-20
-
-Clears the items deferred from v0.5.
-
-### Added
-
-- **Inline Markdown styling** — `Document\InlineMarkup` renders `**bold**`,
-  `*italic*`, `` `code` `` and `[label](url)` (+ `:emoji:`) to themed ANSI;
-  `Paragraph::rich()` wraps already-styled text (ANSI-aware, per-line reset).
-  Markdown paragraphs now render with real emphasis (degrade to plain without colour).
-- **Basic code highlighting** — `CodeBlock::language()` + `Typography\SyntaxHighlighter`
-  for **php** and **json** (others render plain); Markdown fenced blocks use their
-  info-string.
-- **`DisplayWidth::truncateAnsi()`** — width-truncate while preserving and closing
-  ANSI styling.
-- New examples (markdown, typography, theming, barchart, emoji, symbols) and doc
-  pages (markdown, barchart, emoji, symbols).
-
-### Changed
-
-- Responsiveness now also covers `Summary` content lines (clamped via
-  `truncateAnsi`) and `Panel` horizontal layouts (block widths shrink to fit the
-  terminal; `->responsive(false)` opts out).
-
-## [0.5.1] - 2026-06-20
-
-### Changed
-
-- Width-responsiveness now also covers `KeyValue`, `Tree` (rows clip to the
-  terminal on overflow) and `Summary` (divider clamps to the terminal); each
-  honours `config('console.responsive')` and `KeyValue`/`Tree` add `->responsive()`.
-
-### Documentation
-
-- New pages: theming, colours & styles, typography, responsive output, and the
-  interactive & live layer; README docs index updated.
+- Signal handling wires at `run()` time with a null-application guard (no longer fatals
+  when a command is constructed outside a running Application).
+- Hardening: clickable-link URLs are escaped against Symfony formatter-tag injection;
+  `SyntaxHighlighter` bounds regex cost on pathological long lines.
 
 ## [0.5.0] - 2026-06-20
 
-A CLI **design system**: theme + typography + document composer + an interactive/
-live layer, all responsive and degradation-safe.
+The foundational pre-1.0 build-out — a CLI **design system**: theme, typography, a
+document composer, widgets/charts, and an interactive/live layer, all responsive and
+degradation-safe, over two decoupled sub-domains (`Console\Tools` output,
+`Console\Prompter` input).
 
 ### Added
 
-- **Design tokens** — `Theme\Theme` (a stylesheet: semantic `Palette` + per-element
-  styles) + `config('console.theme.palette')`; `Console::theme()`. Re-skin the whole
-  UI from one palette.
-- **`Support\Style`** — an immutable, chainable text style (fg/bg + bold/dim/italic/
-  underline/strikethrough/inverse/blink) with graceful colour downgrade.
-- **Typography** (`Tools\Typography`) — `Heading` (1–6), `Paragraph` (wrap/center/
-  right/justify), `ListBlock` (unordered/ordered/task/definition), `Link`, `Quote`,
-  `BlockQuote`, `Code`, `CodeBlock`, and a fluent inline `Text` builder.
-- **Document** (`Tools\Document`) — `Document` fluent page composer + `Markdown`
-  subset renderer (`Console::document()`, `Console::markdown()`).
-- **Interactive & live layer** — `Support\Live` (native redraw engine, TTY-guarded),
-  `AnimatedBar`, `Badge`, `Pill`, `Button`, `ButtonGroup` (interactive choice via
-  laravel/prompts), and a `Contracts\Interactive` marker.
-- **`BarChart`** widget; **banner themes** (`Banner::theme()/success()/error()/…` +
-  `config('console.banner.themes.*')`).
-- **Primitives** — `Color` gains `rgb()/hsl()/named/@256` parsing, `bg()`,
-  `sequence()`, `blend()`, `adaptive()`; `Support\Os` (platform/WSL/CI detection),
-  `Support\Align`, `Support\ResponsiveWidth`, `Support\Hyperlink`; `Console::style()/
-  symbol()/os()/text()/paragraph()/heading()/list()/link()/quote()/blockQuote()/
-  code()/codeBlock()/badge()/pill()/button()/buttonGroup()/live()/animatedBar()/
-  barChart()`.
-- `config('console.responsive')`.
-
-### Changed
-
-- **Width-responsiveness is on by default**: `Box` (and `Callout`/`Banner`) and
-  `Table` clamp to the terminal so content never overflows; an explicit `->width()`
-  wins, `->responsive(false)` opts out, `config('console.responsive')` toggles
-  globally. The new design-system layer is responsive throughout. Wide-terminal
-  output for existing widgets is unchanged.
-- `Color` colour-profile downgrade (truecolor → 256 → 16 → strip) was already
-  present; extended with the new parsers + background sequences (BC: `fg()`/
-  `gradient()` unchanged). `ConsoleUIFormatter` link security now delegates to
-  `Support\Hyperlink` (no behaviour change).
-
-### Removed
-
-- `Prompter::getInstance()` (deprecated; use `Prompter::create()` / the `prompter()`
-  helper / the `Prompter` facade).
-
-## [0.4.0] - 2026-06-19
-
-### Added
-
-- **Testing helpers** — `Testing\InteractsWithConsole` (`withConsoleCapabilities()`
-  + `withPromptInput()`) and `Support\Capabilities::fake()` / `clearFake()`, so
-  downstream suites can force a deterministic terminal profile and script prompts.
-  See `docs/tools/testing.md`.
-- **Translatable widget strings** — `Summary`, `Header`, `Menu`, `TaskProgress`
-  and `Callout` resolve their text from `console::console.widgets.*` via a new
-  `Support\Lang` helper, honouring `config('console.locale')` without touching the
-  app's global locale. English output is unchanged.
-- `config('console.summary.*')` — tune the execution-summary layout (divider
-  width, label padding, message truncation, success-rate colour thresholds).
-- `Support\DisplayWidth::maxWidth()`.
-
-### Changed
-
-- **The enhanced `Command` base is slimmed to its lifecycle.** The ~31 one-line
-  "middle-man" pass-through helpers (`addMetadata`, `askText`, `getExecutionTime`,
-  `warning`, …) are removed; reach the services directly via
-  `$this->services->{service}()->…`. No production class extended the base
-  (`AbstractPrompterCommand` extends Illuminate directly), so no capability is
-  lost. The nine services keep their full public APIs.
-- The six regex validators now share a `RegexValidator` base; the 25 leaf
-  validators are marked `final` (command services stay extensible).
-- `Box`/`Banner`/`Table`/`Rule` resolve capabilities via `Capabilities::detect()`
-  (consistent with the other widgets; lets test fakes propagate). Production
-  behaviour unchanged.
-
-### Removed
-
-- Dead code: `Symbols::usesUnicode()`, `TaskStatus::isTerminal()`, `Box::content()`.
-
-## [0.3.0] - 2026-06-19
+- **Aggregator** — `ConsoleManager` + the `Console` facade exposing both sub-domains;
+  global `prompter()` helper.
+- **Rendering backbone** — `Support\*`: `Capabilities` (terminal/color/Unicode detection
+  honouring `NO_COLOR`/`FORCE_COLOR`), `Color` (truecolor/hex/hsl + gradients, degrading
+  truecolor → 256 → 16 → strip), `Style`, `DisplayWidth`, `Symbols`, `BrailleCanvas`,
+  `Os`, `Align`, `Hyperlink`, ANSI primitives (`Sgr`/`Csi`/`ControlChars`).
+- **Widgets** — spinner, progress/animated bars, status line, rule, box, tree, table
+  (grouped/tree/collection variants), callout, banner (FIGlet via `Figlet`), gauge,
+  sparkline, step flow, multi-task `TaskProgress` (ETA, non-zero on failure), key/value,
+  columns, panels (nestable multi-column layout), and an interactive `Menu`.
+- **Charts** — column, line, scatter, heatmap, histogram (braille/block, themed,
+  responsive).
+- **Typography & documents** — headings, paragraphs, lists, links, quotes, code blocks;
+  `Document` composer + Markdown subset renderer (inline styling, tables, fenced-code
+  highlighting).
+- **Interactive & live layer** — `Support\Live` redraw engine, badges/pills/buttons,
+  `Keypress`/`Terminal` readers; degrade safely on non-TTY.
+- **Input** — `Prompter` (fluent `laravel/prompts` wrapper) with a form builder and the
+  full validator suite, incl. `LaravelRule` bridging Illuminate rules.
+- **Testing helpers** — `Testing\InteractsWithConsole`, `Capabilities::fake()`.
+- **Packaging** — publishable `config/console.php` + `console::`-namespaced lang files;
+  `ConsoleException` hierarchy.
 
 ### Security
 
-- `Table` now sanitises every header/cell/group-label/tree-cell at render time
-  (was only `fromAssoc()`/`cell()`), closing terminal-control-character injection
-  from attacker-controlled rows.
-- `ConsoleUIFormatter::addTextColor()` routes its `href` through the OSC-8 scheme
-  allow-list (a hostile URL can no longer emit an arbitrary hyperlink).
-- Removed the dead, unredacted `CommandLoggerService::logError()` and other unused
-  log methods (errors are logged via the hardened `CommandErrorService`).
-- `Figlet` rejects null-byte font paths; `RenderableWidget` sanitises raw strings.
-
-### Changed
-
-- **`symfony/tui` is now OPTIONAL** (moved to `suggest` + `require-dev`). The core
-  installs **stably** — consumers no longer inherit a dev-stability requirement.
-  `composer require symfony/tui` enables `Console::tui()`; without it that method
-  throws a clear `ConsoleException`. PHP floor stays `^8.4.1`.
-- `Support\FileSize` scales at each 1024 boundary (`1024 B` → `1 KB`, `1 MiB` →
-  `1 MB`); it is now the single byte formatter (perf + display services agree).
-- Rector pinned to the `php84` set.
-
-### Added
-
-- `Widgets\KeyValue` (`Console::keyValue()`) — an aligned, sanitised definition list.
-- `Table::fromCollection()` — ingest a Laravel Collection / iterable of assoc rows.
-- `Console::summary()` / `Console::header()` accessors (+ facade `@method`).
-- `Tools\Exceptions\FontException` — Figlet failures route through the exception
-  hierarchy with `console::console.font_*` messages.
-- The four orphaned validators are wired into `FieldType` (boolean/name/string/json).
-
-### Removed
-
-- Dead code: `ConsoleUIFormatter` session/statistics block + `configure()`; the
-  `PromptService` closure map (the generic prompts forwarder covers it); dead
-  `ContextType`/`FieldType` enum helper methods.
-
-## [0.2.1] - 2026-06-19
-
-### Fixed
-
-- **TUI bridge** — `Console\Tui\RenderableWidget::render()` now clips lines to the
-  `RenderContext` width (display-width aware) and caps rows, so mounting a wide
-  widget no longer triggers symfony/tui's `RenderException`.
-- **`ConsoleUIFormatter::colorize()`** — background tokens (`BG_*`) now resolve to
-  the `*_bg` ANSI codes instead of foreground colours.
-- **Prompter `context()` helpers** — `warning`/`error`/`alert`/`info`/`intro`/`outro`
-  dispatch the correct `laravel/prompts` helper instead of rendering a plain note.
-- `ConsoleUIFormatter::render()` no longer discards a literal `"0"` (zero-count
-  `Summary` badges render `0`).
-
-### Added
-
-- `Console::summary()` and `Console::header()` accessors (+ facade `@method`) for
-  the `Summary`/`Header` widgets.
-
-### Changed
-
-- Rector pinned to the `php84` set (matching the 8.4.1 floor); dropped the stale
-  8.4→8.3 downgrade rule and applied the 8.4 modernizations.
-- `composer.json` `branch-alias` → `0.2.x-dev`; `menu.php`/`tui.php` added to the
-  examples smoke; docs cross-link + signature fixes.
-
-## [0.2.0] - 2026-06-19
-
-### Changed — BREAKING
-
-- **Minimum PHP is now `^8.4.1`** (dropped 8.3) and Symfony deps are **`^8.0`
-  only**, to natively integrate the experimental `symfony/tui`. The package sets
-  `minimum-stability: dev` + `prefer-stable: true`; consuming apps must do the same.
-
-### Added
-
-- **Full-screen TUI** — integrates `symfony/tui` (MIT, experimental):
-  `Console\Tui\RenderableWidget` mounts any of our widgets into a
-  `Symfony\Component\Tui\Tui` app; `Console::tui()` returns a ready app. See
-  `docs/tools/tui.md`.
-- **Table completeness** — `Table` gains `align()`, `columnWidths()`/
-  `maxColumnWidth()`, `title()`/`footer()`, `fromAssoc()`, and a `Table::cell()`
-  factory for per-cell alignment/colour.
-- **`Widgets\Columns`** (`Console::columns()`) — flow a flat list into balanced,
-  width-aware columns (auto-fits the terminal).
-- **Full Prompter parity** — the `Prompter` now forwards to any `laravel/prompts`
-  helper (number, clear, autocomplete, datatable, grid, task, notify, title,
-  stream, …) and auto-tracks new ones; `laravel/prompts` bumped to `^0.3.18|^1.0`.
-- `Spinner::elapsed()` shows elapsed time in manual mode; `Tree::fromArray()`
-  builds a tree from a nested array; Menu radios support independent `group`s.
-- **Interactive menu** — `Widgets\Menu\*` (`Console::menu()` + a `Command::macro('menu')`):
-  a native key-driven menu (options, checkboxes, radios, sub-menus, static items,
-  free-text questions) with a `laravel/prompts` fallback for non-TTY/Windows. No
-  `php-school/cli-menu` dependency. Configurable via `config('console.menu.*')`.
-  Mirrors the nunomaduro/laravel-console-menu API (MIT).
-- **Panel layout** — `Widgets\Panel` + `Widgets\PanelBlock` (`Tools\Contracts\Renderable`):
-  a multi-column / nestable layout engine, ported and hardened from
-  `ajaxray/ansikit` (MIT). `Console::panel()`.
-- `Support\Keypress` (`Console::keypress()`) — raw key/arrow/modifier reader,
-  POSIX-guarded with pure mappers; and `Support\Terminal` (`Console::terminal()`) —
-  bell, tab title, alt-screen, cursor/erase. Ported/expanded from `ajaxray/ansikit`.
-- `THIRD_PARTY.md` crediting ajaxray/ansikit, nunomaduro/laravel-console-menu,
-  bramus/ansi-php and symfony/tui.
-- **Banner designer** — `Banner` gains `font()` (FIGlet big-text via the new
-  `Support\Figlet` `.flf`/bundled-font renderer), `align()`, `color()`/`gradient()`,
-  `border()` and `padding()`, with a plain-title fallback when a font is missing or
-  too wide. Ships the bundled `block` font (`resources/fonts/`), configurable via
-  `config('console.banner.*')`.
-- ANSI primitives `Support\Sgr` (SGR styles + granular per-attribute resets),
-  `Support\ControlChars` (the full C0 set) and `Support\Csi` (typed CSI builder),
-  re-derived from ECMA-48.
-- `Support\Emoji` — a fluent ASCII/Unicode emoji helper (auto/unicode/ascii mode,
-  `:shortcode:` interpolation, custom maps, strip), exposed as `Console::emoji()`
-  and configurable via `config('console.emoji.*')`.
-- `Widgets\Summary` — an execution-summary widget (statistics, performance
-  metrics, error details, status badges) rendered from a stats array.
-- `Widgets\Header` — a glyph-prefixed section header with an optional item count.
-- `Support\FileSize::format()` — human-readable byte sizes (single source of truth).
-- `Support\TimeFormat::fromMillis()` — millisecond-scale adaptive time formatting.
-- `TaskProgress` rows now show a live **ETA** (`Task::eta()`), estimated from
-  elapsed progress.
-
-### Changed
-
-- `ConsoleUIFormatter` is slimmed to single-string primitives (colour, style,
-  badge, link, `colorize`, `sanitizeText`); composite/multi-line UI is the
-  widgets' job now.
-- `CommandDisplayService` renders through the widget layer (`StatusLine`/`Table`/
-  `ProgressBar`) instead of re-implementing output.
-- `Support\Symbols` is the single tree/status glyph source (absorbed the
-  formatter's `TREE_SYMBOLS`).
-
-### Moved / removed
-
-- Removed from `ConsoleUIFormatter` (use the widgets/Support instead):
-  `statusLine()`/`statusLineWithBadge()` → `Widgets\StatusLine`; `header()` →
-  `Widgets\Header`; `displaySummary()`/`displayStatisticsTable()`/
-  `displayPerformanceMetrics()`/`displayErrorDetails()`/`getExecutionStatusBadges()`/
-  `statisticsLine()` → `Widgets\Summary`; `progress()`/`progressBadge()` →
-  `Widgets\ProgressBar`/`StatusLine`; `getTreeSymbol()`/`treeLine()`/`TREE_SYMBOLS`
-  → `Support\Symbols`; `formatRuntime()`/`getPerformanceColor()` →
-  `Support\TimeFormat`/`Widgets\Summary`; `formatClassName()`/`getShortClassName()`
-  → `class_basename()`.
-
-## [0.1.0] - 2026-06-19
-
-Initial release — a rich console toolkit for Laravel with two decoupled
-sub-domains (`Console\Tools` for output, `Console\Prompter` for input) under one
-namespace root. Targets PHP `^8.3` (8.3–8.5) on Laravel `^13.0`.
-
-### Added
-
-**Aggregator**
-
-- `ConsoleManager` + the `Console` facade — a thin aggregator exposing both
-  sub-domains (`ui()`, `prompter()`, `spinner()`, `progress()`, `box()`, `tree()`,
-  `table()`, `gauge()`, `sparkline()`, `banner()`, `steps()`, `tasks()`,
-  `status()`, `rule()`, `capabilities()`, `color()`). Global `prompter()` helper.
-
-**Output (`Console\Tools`)**
-
-- `Support\*` rendering backbone — `Capabilities` (single source of truth for
-  terminal detection, honouring `NO_COLOR`/`FORCE_COLOR`/`TERM`/locale),
-  `DisplayWidth`, `Symbols`, `BorderStyle`, `Color` (truecolor/hex + gradients,
-  degrading truecolor → 256 → ANSI-16), and `TimeFormat`.
-- `Widgets\*` — `Spinner`, a flavoured `ProgressBar` (percent/elapsed/ETA/rate,
-  instance-scoped placeholders), `StatusLine`, `Rule`, `Box`, `Tree`,
-  `Table` (with `grouped()` and `tree()` variants), `Callout`, `Banner`, `Gauge`,
-  `Sparkline`, `StepFlow`, and a multi-task `TaskProgress` that exits non-zero on
-  failure.
-- An enhanced Artisan command base + conditional console runners, a console
-  notification channel, and command lifecycle observers/events.
-
-**Input (`Console\Prompter`)**
-
-- `Prompter` — a fluent wrapper over `laravel/prompts` with a form builder and a
-  total validator set (non-string input returns an error rather than throwing),
-  including `Validators\LaravelRule` to bridge Illuminate validation rules. Each
-  call resolves a fresh instance via `create()`.
-
-**Packaging**
-
-- Publishable `config/console.php` and `console::`-namespaced language files;
-  `Exceptions\ConsoleException` base with `fromKey()` + safe fallback.
-
-### Security
-
-- All rendered text is stripped of terminal control characters (no ANSI/`\r`
-  injection); terminal hyperlinks are limited to an allow-list of URL schemes.
-- `PathFieldValidator` validates shape only (rejects traversal and null bytes, no
-  filesystem-existence oracle); choice validators use strict comparison.
-- Signal handling is guarded by `ext-pcntl` (commands run on Windows too).
-- Sensitive keys are redacted and stack traces gated behind debug mode in logs.
+- All rendered text is stripped of terminal control characters; hyperlinks limited to an
+  allow-list of URL schemes. `PathFieldValidator` rejects traversal/null bytes (shape
+  only). Signal handling guarded by `ext-pcntl`. Sensitive log keys redacted; traces
+  gated behind debug mode.
