@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Simtabi\Laranail\Console\Tools\Support;
+namespace Simtabi\Laranail\Console\Tools\Enums;
 
 /**
  * Box-drawing glyph families.

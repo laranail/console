@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Commands;
 
 use Illuminate\Console\Command as BaseCommand;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleWriter;
 
 /**
  * Enhanced Artisan command base. Wraps {@see BaseCommand::run()} with a managed
@@ -31,6 +32,7 @@ use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleService
 abstract class Command extends BaseCommand
 {
     use InteractsWithConsoleServices;
+    use InteractsWithConsoleWriter;
 
     /**
      * Convenience aliases applied after construction — e.g. a bare `make:crud`

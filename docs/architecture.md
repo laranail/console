@@ -14,10 +14,12 @@ Console
 │   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress,
 │   │                        #   Summary, Header, Banner, Panel/PanelBlock, Menu\…
 │   ├── Contracts\           # Renderable, Interactive (panel composition / live)
-│   ├── Support\             # Capabilities, DisplayWidth, Symbols, BorderStyle, Color,
+│   ├── Enums\               # BorderStyle, ControlChars, Sgr (ANSI/box-drawing enums)
+│   ├── Support\             # Capabilities, DisplayWidth, Symbols, Color, Csi,
 │   │                        #   Emoji, Figlet, Fonts\ (Block/Builtin/FontDefinition),
-│   │                        #   BrailleCanvas, Hyperlink, Keypress, Terminal, Sgr/ControlChars/Csi
-│   ├── Commands\            # Command base + Concerns\InteractsWithConsoleServices trait + Services\ (nine + manager)
+│   │                        #   BrailleCanvas, Hyperlink, Keypress, Terminal, ConsoleWriterFactory
+│   ├── Services\            # ConsoleWriter (fluent output writer: styling, statuses, emoji)
+│   ├── Commands\            # Command base + Concerns\InteractsWithConsoleServices + InteractsWithConsoleWriter + Services\ (nine + manager)
 │   ├── Runners\             # BaseRunner + ConsoleRunner
 │   ├── Observers\, Events\  # command lifecycle hooks + CommandEvents
 │   └── Notifications\       # ConsoleChannel (+ contract)
@@ -41,8 +43,9 @@ import one another, which keeps each independently testable and re-splittable.
 
 Every renderer routes through `Tools\Support`: terminal capability detection
 (`Capabilities`), ANSI/wide-char-aware width (`DisplayWidth`), one glyph map
-(`Symbols`), box-drawing families (`BorderStyle`) and colour (`Color`). This is
-why Unicode/colour degrade consistently and aligned output never drifts.
+(`Symbols`) and colour (`Color`); box-drawing families live in `Tools\Enums`
+(`BorderStyle`). This is why Unicode/colour degrade consistently and aligned
+output never drifts.
 
 ## Dependencies
 

@@ -150,7 +150,7 @@ Symbols::ascii()->get('branch');                      // '|-'
 The box-drawing families used by `Box::style()` and `Rule::style()`:
 
 ```php
-use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
 
 BorderStyle::Ascii;   // + - |
 BorderStyle::Light;   // ┌ ─ │
@@ -183,7 +183,9 @@ Low-level escape-sequence primitives (re-derived from ECMA-48). They return raw
 sequences — gate emission on `Capabilities` at the call site.
 
 ```php
-use Simtabi\Laranail\Console\Tools\Support\{Sgr, ControlChars, Csi};
+use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
+use Simtabi\Laranail\Console\Tools\Enums\Sgr;
+use Simtabi\Laranail\Console\Tools\Support\Csi;
 
 Sgr::Underline->open();                  // "\e[4m"
 Sgr::sequence(Sgr::Bold, Sgr::Underline);// "\e[1;4m"

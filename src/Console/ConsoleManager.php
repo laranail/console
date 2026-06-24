@@ -9,9 +9,11 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
+use Simtabi\Laranail\Console\Tools\Support\ConsoleWriterFactory;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Live;
@@ -78,6 +80,14 @@ final class ConsoleManager
     public function ui(): ConsoleUIFormatter
     {
         return ConsoleUIFormatter::create();
+    }
+
+    /**
+     * A fluent, immutable output writer (styling, context statuses, emoji).
+     */
+    public function writer(?OutputInterface $output = null): ConsoleWriter
+    {
+        return app(ConsoleWriterFactory::class)->for($output);
     }
 
     /**

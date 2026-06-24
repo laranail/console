@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Support\ControlChars;
+use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
+use Simtabi\Laranail\Console\Tools\Enums\Sgr;
 use Simtabi\Laranail\Console\Tools\Support\Csi;
-use Simtabi\Laranail\Console\Tools\Support\Sgr;
 
 final class AnsiPrimitivesTest extends TestCase
 {

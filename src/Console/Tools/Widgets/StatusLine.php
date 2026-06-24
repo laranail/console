@@ -23,8 +23,10 @@ final readonly class StatusLine
     private const array COLORS = [
         'success' => 'green',
         'error' => 'red',
+        'danger' => 'red',
         'warning' => 'yellow',
         'info' => 'blue',
+        'note' => 'cyan',
         'pending' => 'gray',
     ];
 

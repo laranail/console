@@ -10,6 +10,7 @@ use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Document\Markdown;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
@@ -63,6 +64,7 @@ use Symfony\Component\Tui\Tui;
 
 /**
  * @method static ConsoleUIFormatter ui()
+ * @method static ConsoleWriter writer(?OutputInterface $output = null)
  * @method static Spinner spinner(string $message = '')
  * @method static ProgressBar progress(?OutputInterface $output = null, int $max = 0)
  * @method static StatusLine status()

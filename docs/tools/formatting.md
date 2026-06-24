@@ -12,6 +12,10 @@ the shared [Capabilities](support.md#capabilities).
 > [`ProgressBar`](widgets.md#progress-bar); tree glyphs →
 > [`Symbols`](support.md#symbols). The formatter keeps only single-string primitives.
 
+> For a **fluent writer** that styles *and writes* (chainable, with ready-to-use
+> context statuses and emoji), see the [Console writer](writing.md)
+> (`Console::writer()`). `ConsoleUIFormatter` returns strings; `ConsoleWriter` writes them.
+
 ## Two output modes
 
 - **Markup** — `success()`, `error()`, `warning()`, `info()`, `format()`,

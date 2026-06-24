@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\ServiceProvider;
 use Override;
 use Simtabi\Laranail\Console\Tools\Commands\CheckConfigCommand;
+use Simtabi\Laranail\Console\Tools\Support\ConsoleWriterFactory;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 
 /**
@@ -24,7 +25,7 @@ final class ToolsServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        //
+        $this->app->singleton(ConsoleWriterFactory::class, fn (): ConsoleWriterFactory => new ConsoleWriterFactory);
     }
 
     public function boot(): void

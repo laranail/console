@@ -4,6 +4,32 @@ All notable changes to `laranail/console` are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.5.0] - 2026-06-24
+
+A first-class fluent `ConsoleWriter` plus one namespace move.
+
+### Added
+
+- **First-class `ConsoleWriter`** — reach it via `Console::writer(?$output)`, the
+  `console_writer()` helper, or the `InteractsWithConsoleWriter` trait (now on the enhanced
+  `Command` base). A fluent, immutable wrapper over Symfony output.
+- **Context statuses** on the writer: `success()`, `error()`, `warning()`, `info()`,
+  `note()`, `danger()`, `pending()` — coloured glyph + message via `StatusLine`; `error`
+  and `danger` write to stderr.
+- **Emoji & symbols** on the writer: `emoji()` (Emoji name / `:shortcode:` / literal),
+  `symbol()` (Symbols glyph), `prefix()`, and inline `:shortcode:` rendering (toggle with
+  `emojis()`).
+- `note` and `danger` glyphs (with ASCII fallbacks) and colours added to `Symbols` and
+  `StatusLine`.
+
+### Changed
+
+- **BREAKING — `BorderStyle`, `ControlChars` and `Sgr` moved from `Tools\Support` to a new
+  `Tools\Enums` namespace.** Update imports (`use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;`
+  etc.); enum cases and method signatures are unchanged. `Csi` and all other `Support\*`
+  classes are unaffected. Migration: [UPGRADING.md](UPGRADING.md).
+
 ## [2.0.0] - 2026-06-22
 
 Current stable. A breaking validator-message redesign plus a full QA-hardening pass.

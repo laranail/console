@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
+use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;

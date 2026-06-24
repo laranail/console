@@ -109,6 +109,7 @@ The package has three output styles — know which you're holding:
 | [Responsive output](docs/responsive.md) | How widgets adapt to the terminal width |
 | [Interactive & live](docs/tools/interactive.md) | Live engine, animated bar, badges/pills, buttons |
 | [Output formatter](docs/tools/formatting.md) | Colour/badge/link string primitives |
+| [Console writer](docs/tools/writing.md) | Fluent output writer: styling, context statuses, emoji |
 | [Output widgets](docs/tools/widgets.md) | Spinner, progress (+ETA), box, tree, table, gauge, summary, bar chart… |
 | [Banner designer](docs/tools/banner.md) | FIGlet big-text, alignment, colour/gradient, borders |
 | [Panel layout](docs/tools/panel.md) | Multi-column / nestable layout (Panel + PanelBlock) |

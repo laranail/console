@@ -10,8 +10,7 @@ code is unaffected.
 ## Quick start
 
 ```php
-use Simtabi\Laranail\Console\Tools\Widgets\Banner;
-use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 
 echo Banner::make('app v1.0')->subtitle('Simtabi')->boxed()->render();
 

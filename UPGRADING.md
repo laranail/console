@@ -1,5 +1,30 @@
 # Upgrading
 
+## 2.x → 2.5.0
+
+One breaking change: **three ANSI/box-drawing enums moved from `Tools\Support` to a
+new `Tools\Enums` namespace.** Update your imports:
+
+```php
+// before (≤ 2.0.x)
+use Simtabi\Laranail\Console\Tools\Support\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Support\ControlChars;
+use Simtabi\Laranail\Console\Tools\Support\Sgr;
+
+// after (2.5.0+)
+use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
+use Simtabi\Laranail\Console\Tools\Enums\Sgr;
+```
+
+The enum cases and method signatures are unchanged — only the namespace moved
+(`Box::style(BorderStyle::Rounded)` etc. work exactly as before once the import is
+updated). `Csi` and every other `Support\*` class are unaffected.
+
+Everything else in 2.5.0 is additive (the first-class `ConsoleWriter` — `Console::writer()`,
+the `console_writer()` helper, and the `InteractsWithConsoleWriter` command trait — with
+fluent context statuses and emoji support).
+
 ## 1.x → 2.0
 
 One breaking change: **validator constructors take only validator-specific arguments**.

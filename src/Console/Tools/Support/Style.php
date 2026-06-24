@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
+use Simtabi\Laranail\Console\Tools\Enums\Sgr;
 use Stringable;
 
 /**

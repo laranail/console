@@ -91,6 +91,7 @@
       "php examples/tools/charts.php > /dev/null",
       "php examples/tools/emoji.php > /dev/null",
       "php examples/tools/symbols.php > /dev/null",
+      "php examples/tools/writing.php > /dev/null 2>&1",
       "php examples/tools/interactive.php > /dev/null",
       "php examples/tools/menu.php > /dev/null",
       "php examples/tools/tui.php > /dev/null",

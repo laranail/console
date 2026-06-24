@@ -14,8 +14,10 @@ final readonly class Symbols
     private const array FANCY = [
         'success' => '✓',
         'error' => '✗',
+        'danger' => '✖',
         'warning' => '⚠',
         'info' => 'ℹ',
+        'note' => '●',
         'pending' => '○',
         'running' => '◉',
         'skipped' => '⊘',
@@ -32,8 +34,10 @@ final readonly class Symbols
     private const array ASCII = [
         'success' => '[OK]',
         'error' => '[X]',
+        'danger' => '[!!]',
         'warning' => '[!]',
         'info' => '[i]',
+        'note' => '[note]',
         'pending' => '[ ]',
         'running' => '[*]',
         'skipped' => '[-]',
