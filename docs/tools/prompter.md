@@ -1,0 +1,187 @@
+# Prompts, forms & validators
+
+`Console\Prompter` is a fluent layer over `laravel/prompts` with a form builder and
+a library of 26 validators.
+
+## Prompting
+
+```php
+use Simtabi\Laranail\Console\Facades\Console;
+
+$name = Console::prompter()->text('Your name', required: true)->getResult();
+$pass = prompter()->password('Password')->getResult();
+$pick = prompter()->select('Driver', ['mysql' => 'MySQL', 'pgsql' => 'Postgres'])->getResult();
+```
+
+Each call returns the `Prompter` (fluent); the entered value is read with
+`getResult()`. `Console::prompter()`, the global `prompter()` helper and resolving
+`Prompter` from the container each return a **fresh instance**, so one chain's
+`getResult()` never clobbers another's.
+
+**Every `laravel/prompts` helper is available** — the wrapper forwards any unknown
+method to the matching `Laravel\Prompts\{name}()` function, so it auto-tracks the
+full prompts API (current and future) without per-method maintenance:
+
+`text`, `textarea`, `password`, `number`, `confirm`, `select`, `multiselect`,
+`suggest`, `search`, `multisearch`, `autocomplete`, `pause`, `clear`, `spin`,
+`progress`, `task`, `table`, `datatable`, `grid`, `stream`, `form`, and the
+context helpers `note`, `info`, `warning`, `error`, `alert`, `intro`, `outro`,
+`title`, `notify`. An unknown method throws `PrompterException`. Requires
+`laravel/prompts` `^0.3.18 || ^1.0`.
+
+### Context output
+
+The context helpers are reachable directly on the prompter or via `->context()`:
+
+```php
+prompter()->note('Saved.');           // also: error, warning, alert, info, intro, outro, title
+prompter()->context()->warning('Heads up');
+prompter()->number('Port', default: 8080)->getResult();   // newer prompts helpers too
+```
+
+## Forms
+
+`prompter()->form()` returns a raw `Laravel\Prompts\FormBuilder`. For richer,
+validated fields use the package's `FormBuilderService` + `FormFieldService`:
+
+```php
+use Laravel\Prompts\FormBuilder;
+use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
+use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormBuilderService;
+use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormFieldService;
+
+$form = new FormBuilderService(new FormBuilder());
+
+$form->addField('email', (new FormFieldService(FieldType::EMAIL))
+    ->label('Email')->required(true));
+
+$form->addField('driver', (new FormFieldService(FieldType::SELECT))
+    ->label('Driver')->options(['mysql' => 'MySQL', 'pgsql' => 'Postgres']));
+
+$answers = $form->build()->submit(); // ['email' => ..., 'driver' => ...]
+```
+
+`FormFieldService` is fully chainable: `label()`, `placeholder()`, `required()`,
+`hint()`, `default()`, `options()`, `validator()`, `customValidator()`,
+`customErrorMessage()`. Each `FieldType` maps to a real `FormBuilder` method and
+gets an options-aware default validator unless you set your own.
+
+### Field types
+
+`FieldType` cases: `TEXT`, `NUMBER`, `EMAIL`, `PASSWORD`, `TEXTAREA`, `DATE`,
+`TIME`, `SELECT`, `CHECKBOX`, `RADIO`, `PATH`, `USERNAME`, `PHONE`, `COLOR`,
+`NULL_OR_EMPTY`, `ARRAY`, `OBJECT`, `UUID`, `ALPHA`, `ALPHANUMERIC`,
+`UUID_OR_INTEGER_OR_SLUG`, `BOOLEAN`, `NAME`, `STRING`, `JSON`.
+
+## Validators
+
+Each implements `ValidatorInterface::validate(mixed): ?string` (null = valid,
+otherwise the error message). All are **total** — non-string input returns the
+error rather than throwing. Messages default to `console::validators.*` (see
+[i18n](../i18n.md)). Length checks count **characters** (`mb_strlen`), not bytes.
+
+**Constructor convention (2.0).** Constructors take **only validator-specific
+arguments**. The failure message, translation replacements and locale are configured
+**fluently** via `->errorMessage()`, `->replace()` and `->locale()` — uniform across
+every validator — and resolve lazily at validate-time:
+
+```php
+new TextFieldValidator()->errorMessage('Bad input');
+new StringFieldValidator(0, 64)->errorMessage('Too long')->locale('fr');
+new RadioFieldValidator(['a', 'b'])->errorMessage('Pick one');
+```
+
+`->errorMessage()` sets a fixed string. Without it, the default
+`console::validators.*` message is used; `->replace([...])` substitutes placeholders
+into that translated default and `->locale(...)` resolves it in a specific locale (see
+[i18n](../i18n.md)). All three resolve at validate-time, so the active locale is honoured:
+
+```php
+new EmailFieldValidator()->replace(['attribute' => 'work email'])->locale('fr');
+```
+
+> Upgrading from 1.x (where the message was a constructor argument)? See
+> [UPGRADING.md](../../UPGRADING.md).
+
+| Validator | Notable constructor args | Accepts |
+|-----------|--------------------------|---------|
+| `TextFieldValidator` | — | string ≤ 255 chars |
+| `TextAreaFieldValidator` | — | any string |
+| `StringFieldValidator` | `int $minLength = 0, int $maxLength = 255` | string within length |
+| `NumberFieldValidator` | — | numeric |
+| `EmailFieldValidator` | — | valid email |
+| `PasswordFieldValidator` | — | string ≥ 8 chars |
+| `NameFieldValidator` | — | letters/spaces/`'`/`-` |
+| `UsernameValidator` | — | `[A-Za-z0-9_]{3,20}` |
+| `PhoneNumberValidator` | — | `+?[0-9]{10,15}` |
+| `ColorValidator` | — | hex / rgb / rgba |
+| `DateFieldValidator` | `?array $formats = null` | a date in the given formats |
+| `TimeFieldValidator` | `?array $formats = null` | a time in the given formats |
+| `PathFieldValidator` | — | path shape (no `..`/null byte) |
+| `UUIDFieldValidator` | — | RFC-4122 UUID (any version) |
+| `UuidOrIntegerOrSlugValidator` | `string $uuidVersion = 'uuid'` | UUID, integer id, or slug |
+| `AlphaValidator` | — | `[A-Za-z]+` |
+| `AlphanumericValidator` | — | `[A-Za-z0-9]+` |
+| `BooleanFieldValidator` | — | bool / yes/no / 1/0 |
+| `CheckboxFieldValidator` | — | bool |
+| `SelectFieldValidator` | `array $options` | a value in `$options` |
+| `RadioFieldValidator` | `array $options` | a value in `$options` |
+| `ArrayValidator` | — | array |
+| `ObjectValidator` | — | object |
+| `JsonFieldValidator` | — | valid JSON string |
+| `NullOrEmptyValidator` | — | null or `''` |
+| `LaravelRule` | `array\|string $rules, array $messages = []` | anything passing the Laravel validation rules |
+
+The regex-pattern validators (`Alpha`, `Alphanumeric`, `Name`, `Username`,
+`PhoneNumber`, `UUID`) share an abstract `RegexValidator` base — extend it to add
+your own single-pattern validator.
+
+### Examples by shape
+
+Every validator shares the same fluent API (`->errorMessage()` / `->replace()` /
+`->locale()`); only the constructor (domain) arguments differ. One example per shape:
+
+```php
+use Simtabi\Laranail\Console\Prompter\Validators as V;
+
+// No domain args (most validators — Text, TextArea, Number, Email, Password,
+// Checkbox, Boolean, Array, Object, NullOrEmpty, Path, Color, Json, UUID, Alpha,
+// Alphanumeric, Name, Username, Phone):
+new V\EmailFieldValidator()->errorMessage('Invalid email');
+
+// Length-constrained:
+new V\StringFieldValidator(3, 20)->errorMessage('Must be 3–20 characters');
+
+// Choice (options required):
+new V\SelectFieldValidator(['mysql', 'pgsql'])->errorMessage('Pick a supported driver');
+new V\RadioFieldValidator(['yes', 'no']);
+
+// Date / time (optional format override; defaults are in the table above):
+new V\DateFieldValidator(['Y-m-d', 'j/n/Y'])->errorMessage('Use Y-m-d');
+new V\TimeFieldValidator();
+
+// UUID / integer / slug (optional UUID version):
+new V\UuidOrIntegerOrSlugValidator('uuid4');
+
+// Keep the translated default message, but tweak its placeholders + locale:
+new V\PathFieldValidator()->replace(['attribute' => 'config path'])->locale('fr');
+```
+
+The default messages live under `console::validators.*` (see [i18n](../i18n.md)):
+`->errorMessage()` replaces the message outright, while `->replace([...])` /
+`->locale(...)` feed the translated default. Resolution happens at validate-time.
+
+### Laravel rule bridge
+
+Reuse Illuminate validation rules in a prompt:
+
+```php
+use Simtabi\Laranail\Console\Prompter\Validators\LaravelRule;
+
+prompter()->text('Email', validate: new LaravelRule(['required', 'email']));
+// optional per-rule messages, or a single fluent override:
+new LaravelRule(['email'], ['email' => 'Bad address']);
+new LaravelRule(['email'])->errorMessage('Invalid');
+```
+
+[← Docs index](../../README.md#documentation)
