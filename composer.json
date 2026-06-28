@@ -72,6 +72,7 @@
     "psr-4": {
       "Simtabi\\Laranail\\Console\\Tools\\Tests\\": "tests/Tools/",
       "Simtabi\\Laranail\\Console\\Prompter\\Tests\\": "tests/Prompter/",
+      "Simtabi\\Laranail\\Console\\Progress\\Tests\\": "tests/Progress/",
       "Simtabi\\Laranail\\Console\\Benchmarks\\": "benchmarks/"
     }
   },

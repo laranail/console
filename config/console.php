@@ -93,6 +93,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | TUI (experimental)
+    |--------------------------------------------------------------------------
+    | Opt in to the experimental symfony/tui full-screen renderer for the
+    | ProgressReporter seam. Off by default → the laravel/prompts renderer (works
+    | everywhere, incl. CI). Only takes effect when symfony/tui is installed
+    | (`composer require symfony/tui`); otherwise it silently falls back.
+    */
+    'tui' => [
+        'progress' => env('CONSOLE_TUI_PROGRESS', false),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
     | Banner
     |--------------------------------------------------------------------------
     | font  : default FIGlet font for big-text banners — a bundled font name

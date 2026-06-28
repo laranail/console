@@ -62,4 +62,36 @@ is pure (no event loop), which is handy in tests.
 See the runnable demo in `examples/tools/tui.php` (interactive; not part of the CI
 smoke set).
 
+## Progress reporting seam
+
+For the common "run N steps and show progress" case you don't need symfony/tui
+directly — resolve the renderer-agnostic `ProgressReporter`:
+
+```php
+use Simtabi\Laranail\Console\Progress\ProgressReporter;
+
+app(ProgressReporter::class)->run(
+    'Installing',
+    $steps,                                        // iterable
+    fn ($step) => $step->run() ?? $step->label(),  // runs per step; return = step label
+);
+```
+
+By default this uses `PromptsProgressReporter` (laravel/prompts) — works everywhere,
+including non-interactive CI. To render the full-screen symfony/tui progress bar
+instead, install the optional package and opt in:
+
+```bash
+composer require symfony/tui
+```
+```php
+// config/console.php
+'tui' => ['progress' => env('CONSOLE_TUI_PROGRESS', true)],
+```
+
+`ProgressReporterFactory::make()` returns `TuiProgressReporter` only when the opt-in
+is on **and** symfony/tui is installed; otherwise it falls back to prompts. The TUI
+renderer needs a TTY (it drives symfony/tui's event loop), so the prompts default is
+correct for CI and tests.
+
 [← Docs index](../../README.md#documentation)
