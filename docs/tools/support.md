@@ -313,7 +313,7 @@ Validate the `console.*` config with [`Console::validateConfig()`](../configurat
 
 ## Lang
 
-Resolves widget strings from the `console::console.*` translations, honouring
+Resolves widget strings from the `laranail-console::console.*` translations, honouring
 `console.locale` **without** mutating the host app's global locale; falls back to the
 given default (with `:placeholder` interpolation) when no translation exists.
 

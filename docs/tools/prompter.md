@@ -77,7 +77,7 @@ gets an options-aware default validator unless you set your own.
 
 Each implements `ValidatorInterface::validate(mixed): ?string` (null = valid,
 otherwise the error message). All are **total** — non-string input returns the
-error rather than throwing. Messages default to `console::validators.*` (see
+error rather than throwing. Messages default to `laranail-console::validators.*` (see
 [i18n](../i18n.md)). Length checks count **characters** (`mb_strlen`), not bytes.
 
 **Constructor convention (2.0).** Constructors take **only validator-specific
@@ -92,7 +92,7 @@ new RadioFieldValidator(['a', 'b'])->errorMessage('Pick one');
 ```
 
 `->errorMessage()` sets a fixed string. Without it, the default
-`console::validators.*` message is used; `->replace([...])` substitutes placeholders
+`laranail-console::validators.*` message is used; `->replace([...])` substitutes placeholders
 into that translated default and `->locale(...)` resolves it in a specific locale (see
 [i18n](../i18n.md)). All three resolve at validate-time, so the active locale is honoured:
 
@@ -167,7 +167,7 @@ new V\UuidOrIntegerOrSlugValidator('uuid4');
 new V\PathFieldValidator()->replace(['attribute' => 'config path'])->locale('fr');
 ```
 
-The default messages live under `console::validators.*` (see [i18n](../i18n.md)):
+The default messages live under `laranail-console::validators.*` (see [i18n](../i18n.md)):
 `->errorMessage()` replaces the message outright, while `->replace([...])` /
 `->locale(...)` feed the translated default. Resolution happens at validate-time.
 

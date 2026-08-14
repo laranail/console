@@ -67,7 +67,7 @@ abstract class AbstractValidator implements ValidatorInterface
     protected function resolvedMessage(): string
     {
         return $this->customMessage
-            ?? __('console::validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
+            ?? __('laranail-console::validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
     }
 
     /**

@@ -9,7 +9,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Summary;
 
 /**
- * Widget strings resolve through the console:: translation namespace honouring
+ * Widget strings resolve through the laranail-console:: translation namespace honouring
  * config('console.locale') — without mutating the host app's global locale.
  */
 final class WidgetI18nTest extends TestCase
@@ -19,7 +19,7 @@ final class WidgetI18nTest extends TestCase
         app('translator')->addLines([
             'console.widgets.header.items' => 'objets',
             'console.widgets.summary.title' => 'RÉSUMÉ',
-        ], 'fr', 'console');
+        ], 'fr', 'laranail-console');
 
         config(['console.locale' => 'fr']);
 

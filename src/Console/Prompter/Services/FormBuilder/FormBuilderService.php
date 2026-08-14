@@ -132,7 +132,7 @@ class FormBuilderService
             $isEmpty = in_array($value, [null, '', []], true);
 
             if ($formField->required && $isEmpty) {
-                return $formField->customErrorMessage ?? __('console::prompter.field_required');
+                return $formField->customErrorMessage ?? __('laranail-console::prompter.field_required');
             }
 
             if ($isEmpty) {

@@ -40,7 +40,7 @@ final class ConsoleManagerTest extends TestCase
 
     public function test_translations_resolve_under_console_namespace(): void
     {
-        self::assertSame('Invalid input. Please try again.', __('console::console.invalid_input'));
-        self::assertSame('The input must be a valid email address.', __('console::validators.email'));
+        self::assertSame('Invalid input. Please try again.', __('laranail-console::console.invalid_input'));
+        self::assertSame('The input must be a valid email address.', __('laranail-console::validators.email'));
     }
 }

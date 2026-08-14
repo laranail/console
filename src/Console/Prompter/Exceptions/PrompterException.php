@@ -7,7 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter\Exceptions;
 use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 
 /**
- * Prompter-domain exception. Messages resolve from `console::prompter.*` with a
+ * Prompter-domain exception. Messages resolve from `laranail-console::prompter.*` with a
  * safe fallback (via {@see ConsoleException::fromKey()}), so a missing key never
  * produces an empty-message exception.
  */

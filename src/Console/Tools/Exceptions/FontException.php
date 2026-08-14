@@ -8,7 +8,7 @@ use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 
 /**
  * Thrown by {@see Figlet} when a font
- * can't be loaded. Messages resolve from `console::console.font_*`.
+ * can't be loaded. Messages resolve from `laranail-console::console.font_*`.
  */
 class FontException extends ConsoleException
 {

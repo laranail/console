@@ -140,7 +140,7 @@ class CommandInteractionService
                 return $answer;
             }
 
-            error(__('console::console.invalid_input'));
+            error(__('laranail-console::console.invalid_input'));
         } while (true);
     }
 

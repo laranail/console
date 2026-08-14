@@ -40,7 +40,7 @@ final class ConsoleServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadTranslationsFrom(self::LANG_PATH, 'console');
+        $this->loadTranslationsFrom(self::LANG_PATH, 'laranail-console');
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

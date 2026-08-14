@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Support;
 
 /**
- * Resolves widget strings from the `console::console.*` translation namespace,
+ * Resolves widget strings from the `laranail-console::console.*` translation namespace,
  * honouring `config('console.locale')` WITHOUT mutating the host app's global
  * locale. Falls back to the supplied English default (with `:placeholder`
  * interpolation) when no translator or key is available — so widgets render
@@ -18,7 +18,7 @@ final class Lang
      */
     public static function get(string $key, string $default, array $replace = []): string
     {
-        $namespaced = "console::console.{$key}";
+        $namespaced = "laranail-console::console.{$key}";
 
         if (function_exists('app') && app()->bound('translator')) {
             $message = trans($namespaced, $replace, Config::locale());

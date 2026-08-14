@@ -20,7 +20,7 @@ final class FluentValidatorConfigTest extends TestCase
 
     public function test_default_uses_the_translated_message(): void
     {
-        self::assertSame(__('console::validators.email'), new EmailFieldValidator()->validate('nope'));
+        self::assertSame(__('laranail-console::validators.email'), new EmailFieldValidator()->validate('nope'));
     }
 
     public function test_setters_are_chainable_and_order_independent(): void
@@ -34,7 +34,7 @@ final class FluentValidatorConfigTest extends TestCase
     public function test_message_is_resolved_lazily_not_frozen_at_construction(): void
     {
         $v = new EmailFieldValidator;
-        self::assertSame(__('console::validators.email'), $v->validate('nope')); // default at validate-time
+        self::assertSame(__('laranail-console::validators.email'), $v->validate('nope')); // default at validate-time
 
         $v->errorMessage('Late');                                               // change config after construction
         self::assertSame('Late', $v->validate('nope'));                         // reflected => lazy
@@ -43,7 +43,7 @@ final class FluentValidatorConfigTest extends TestCase
     public function test_locale_and_replace_feed_the_translated_default(): void
     {
         // a throwaway locale with a placeholder message, registered at runtime
-        app('translator')->addLines(['validators.email' => 'invalid :what'], 'xx', 'console');
+        app('translator')->addLines(['validators.email' => 'invalid :what'], 'xx', 'laranail-console');
 
         $msg = new EmailFieldValidator()->locale('xx')->replace(['what' => 'address'])->validate('nope');
 
@@ -53,7 +53,7 @@ final class FluentValidatorConfigTest extends TestCase
 
     public function test_error_message_override_ignores_locale_and_replace(): void
     {
-        app('translator')->addLines(['validators.email' => 'invalid :what'], 'xx', 'console');
+        app('translator')->addLines(['validators.email' => 'invalid :what'], 'xx', 'laranail-console');
 
         $msg = new EmailFieldValidator()
             ->locale('xx')

@@ -11,7 +11,7 @@ use Throwable;
  * Base exception for the laranail/console package.
  *
  * All Tools and Prompter exceptions extend this, so consumers can catch the
- * whole package with a single type. Messages are resolved from the `console::`
+ * whole package with a single type. Messages are resolved from the `laranail-console::`
  * translation namespace with a safe fallback, so a missing key never produces
  * an empty-message exception.
  *
@@ -35,7 +35,7 @@ class ConsoleException extends RuntimeException
      */
     protected static function resolveMessage(string $key, array $replace = []): string
     {
-        $namespaced = "console::{$key}";
+        $namespaced = "laranail-console::{$key}";
 
         // Only use the translator when a container has actually bound it, so
         // the exception is still usable outside a booted Laravel application.
