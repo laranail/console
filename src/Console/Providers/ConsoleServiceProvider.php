@@ -30,7 +30,7 @@ final class ConsoleServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->mergeConfigFrom(self::CONFIG_PATH, 'console');
+        $this->mergeConfigFrom(self::CONFIG_PATH, 'laranail.console');
 
         $this->app->singleton(ConsoleManager::class, static fn (): ConsoleManager => new ConsoleManager);
 
@@ -44,16 +44,19 @@ final class ConsoleServiceProvider extends ServiceProvider
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                self::CONFIG_PATH => $this->app->configPath('console.php'),
-            ], 'console-config');
+                self::CONFIG_PATH => $this->app->configPath('laranail/console.php'),
+            ], 'laranail::console-config');
 
+            // vendor/laranail-console, matching the namespace registered above.
+            // Publishing to the lang root put the files where the namespaced
+            // loader never looks, so every published override was ignored.
             $this->publishes([
-                self::LANG_PATH => $this->app->langPath(),
-            ], 'console-lang');
+                self::LANG_PATH => $this->app->langPath('vendor/laranail-console'),
+            ], 'laranail::console-lang');
 
             // Opt-in fail-fast: validate console.* config at boot (console only, so
             // web requests are never affected). Off by default.
-            if ((bool) config('console.validate_config', false)) {
+            if ((bool) config('laranail.console.validate_config', false)) {
                 $errors = ConfigValidator::validate();
 
                 if ($errors !== []) {

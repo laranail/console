@@ -8,7 +8,7 @@ namespace Simtabi\Laranail\Console\Tools\Theme;
  * Built-in named palettes for the design system. Each maps the seven semantic
  * roles (primary/accent/success/warning/danger/info/muted) to a hex colour from a
  * well-known scheme. Selectable via {@see Theme::preset()} or
- * `config('console.theme.preset')`. Add one by adding an entry here.
+ * `config('laranail.console.theme.preset')`. Add one by adding an entry here.
  */
 final class Presets
 {

@@ -14,7 +14,7 @@ use Simtabi\Laranail\Console\Tools\Support\Style;
  * status roles…). Element styles derive from the palette by default, so
  * re-skinning the palette restyles everything; any element can be overridden.
  *
- * Immutable + concurrency-safe: `resolve()` reads `config('console.theme.*')` and
+ * Immutable + concurrency-safe: `resolve()` reads `config('laranail.console.theme.*')` and
  * builds a fresh instance (no shared mutable state).
  */
 final readonly class Theme

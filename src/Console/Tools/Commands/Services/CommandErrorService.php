@@ -50,7 +50,7 @@ class CommandErrorService
             $logData['trace'] = $e->getTraceAsString();
         }
 
-        $channel = config('console.logging.channel');
+        $channel = config('laranail.console.logging.channel');
 
         ($channel ? Log::channel($channel) : Log::getFacadeRoot())
             ->error('Command Error', $logData);
@@ -94,7 +94,7 @@ class CommandErrorService
      */
     protected function scrub(array $context): array
     {
-        $redactKeys = (array) config('console.logging.redact_keys', ['password', 'secret', 'token', 'key', 'authorization']);
+        $redactKeys = (array) config('laranail.console.logging.redact_keys', ['password', 'secret', 'token', 'key', 'authorization']);
 
         foreach ($context as $key => $value) {
             foreach ($redactKeys as $needle) {
@@ -115,6 +115,6 @@ class CommandErrorService
 
     protected function traceInDebugOnly(): bool
     {
-        return (bool) config('console.logging.trace_in_debug_only', true);
+        return (bool) config('laranail.console.logging.trace_in_debug_only', true);
     }
 }

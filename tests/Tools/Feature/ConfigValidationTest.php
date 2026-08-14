@@ -16,7 +16,7 @@ final class ConfigValidationTest extends TestCase
 
     public function test_catches_a_bad_palette_colour(): void
     {
-        config()->set('console.theme.palette', ['primary' => 'not-a-colour']);
+        config()->set('laranail.console.theme.palette', ['primary' => 'not-a-colour']);
 
         $errors = ConfigValidator::validate();
         self::assertNotEmpty($errors);
@@ -25,15 +25,15 @@ final class ConfigValidationTest extends TestCase
 
     public function test_catches_an_unknown_preset(): void
     {
-        config()->set('console.theme.preset', 'bogus');
+        config()->set('laranail.console.theme.preset', 'bogus');
 
         self::assertNotEmpty(array_filter(ConfigValidator::validate(), fn (string $e): bool => str_contains($e, 'theme.preset')));
     }
 
     public function test_catches_a_bad_enum(): void
     {
-        config()->set('console.output.symbols', 'sparkly');
-        config()->set('console.emoji.mode', 'nope');
+        config()->set('laranail.console.output.symbols', 'sparkly');
+        config()->set('laranail.console.emoji.mode', 'nope');
 
         $errors = ConfigValidator::validate();
         self::assertNotEmpty(array_filter($errors, fn (string $e): bool => str_contains($e, 'output.symbols')));
@@ -42,7 +42,7 @@ final class ConfigValidationTest extends TestCase
 
     public function test_ignores_unknown_extra_keys(): void
     {
-        config()->set('console.totally.unknown.key', 'whatever');
+        config()->set('laranail.console.totally.unknown.key', 'whatever');
 
         self::assertSame([], ConfigValidator::validate());
     }
@@ -50,7 +50,7 @@ final class ConfigValidationTest extends TestCase
     public function test_non_string_palette_specs_are_skipped_not_flagged(): void
     {
         // a non-string colour value is ignored (lenient), not reported as invalid
-        config()->set('console.theme.palette', ['primary' => ['nested'], 'accent' => 123]);
+        config()->set('laranail.console.theme.palette', ['primary' => ['nested'], 'accent' => 123]);
 
         self::assertSame([], ConfigValidator::validate());
     }
@@ -59,7 +59,7 @@ final class ConfigValidationTest extends TestCase
     {
         // (array) 'not-an-array' === ['not-an-array']; the cast must not TypeError,
         // and the lone element is validated under key 0.
-        config()->set('console.theme.palette', 'not-an-array');
+        config()->set('laranail.console.theme.palette', 'not-an-array');
 
         self::assertNotEmpty(array_filter(
             ConfigValidator::validate(),
@@ -69,7 +69,7 @@ final class ConfigValidationTest extends TestCase
 
     public function test_non_scalar_enum_reports_its_type(): void
     {
-        config()->set('console.output.symbols', ['array']);
+        config()->set('laranail.console.output.symbols', ['array']);
 
         $errors = array_values(array_filter(ConfigValidator::validate(), fn (string $e): bool => str_contains($e, 'output.symbols')));
         self::assertNotEmpty($errors);
@@ -78,8 +78,8 @@ final class ConfigValidationTest extends TestCase
 
     public function test_non_bool_responsive_and_non_string_font_are_flagged(): void
     {
-        config()->set('console.responsive', 'yes');
-        config()->set('console.banner.font', 42);
+        config()->set('laranail.console.responsive', 'yes');
+        config()->set('laranail.console.banner.font', 42);
 
         $errors = ConfigValidator::validate();
         self::assertNotEmpty(array_filter($errors, fn (string $e): bool => str_contains($e, 'responsive')));
@@ -93,7 +93,7 @@ final class ConfigValidationTest extends TestCase
 
     public function test_check_command_fails_on_invalid_config(): void
     {
-        config()->set('console.theme.preset', 'bogus');
+        config()->set('laranail.console.theme.preset', 'bogus');
 
         $this->artisan('laranail::console.check')->assertExitCode(1);
     }

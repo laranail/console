@@ -87,7 +87,7 @@ abstract class AbstractValidator implements ValidatorInterface
     protected static function configuredLocale(): ?string
     {
         if (function_exists('app') && app()->bound('config')) {
-            $locale = config('console.locale');
+            $locale = config('laranail.console.locale');
 
             return is_string($locale) ? $locale : null;
         }

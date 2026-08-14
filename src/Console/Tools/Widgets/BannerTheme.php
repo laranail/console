@@ -12,7 +12,7 @@ use Simtabi\Laranail\Console\Tools\Theme\Theme;
  * A named banner preset — font + colour/gradient + border + alignment + padding —
  * applied via {@see Banner::theme()}. Built-in presets (success/error/warning/
  * info/plain) draw their colours from the design-system {@see Theme} palette; you
- * can also define custom presets under `config('console.banner.themes.*')`.
+ * can also define custom presets under `config('laranail.console.banner.themes.*')`.
  *
  * Null fields mean "leave the banner's current value" — so a theme sets defaults
  * and later explicit setters still override.

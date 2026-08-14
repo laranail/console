@@ -34,8 +34,8 @@ final class ConsoleManagerTest extends TestCase
 
     public function test_config_is_published_and_merged(): void
     {
-        self::assertSame('detailed', config('console.progress.format'));
-        self::assertContains('https', config('console.links.allowed_schemes'));
+        self::assertSame('detailed', config('laranail.console.progress.format'));
+        self::assertContains('https', config('laranail.console.links.allowed_schemes'));
     }
 
     public function test_translations_resolve_under_console_namespace(): void

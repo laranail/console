@@ -27,7 +27,7 @@ final class ProgressReporterFactory
 
     public static function tuiEnabled(): bool
     {
-        return (bool) config('console.tui.progress', false)
+        return (bool) config('laranail.console.tui.progress', false)
             && class_exists(Tui::class);
     }
 }

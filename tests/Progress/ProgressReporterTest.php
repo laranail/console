@@ -14,7 +14,7 @@ final class ProgressReporterTest extends TestCase
 {
     public function test_default_reporter_is_the_prompts_renderer(): void
     {
-        config()->set('console.tui.progress', false);
+        config()->set('laranail.console.tui.progress', false);
 
         self::assertInstanceOf(PromptsProgressReporter::class, ProgressReporterFactory::make());
         self::assertInstanceOf(PromptsProgressReporter::class, app(ProgressReporter::class));
@@ -23,7 +23,7 @@ final class ProgressReporterTest extends TestCase
     public function test_tui_renderer_is_selected_when_opted_in_and_installed(): void
     {
         // symfony/tui is a dev dependency, so it is installed here.
-        config()->set('console.tui.progress', true);
+        config()->set('laranail.console.tui.progress', true);
 
         self::assertTrue(ProgressReporterFactory::tuiEnabled());
         self::assertInstanceOf(TuiProgressReporter::class, ProgressReporterFactory::make());
@@ -33,7 +33,7 @@ final class ProgressReporterTest extends TestCase
     {
         // tuiEnabled() requires both the opt-in AND the symfony/tui class; when the
         // class is missing the factory must still return a working reporter.
-        config()->set('console.tui.progress', false);
+        config()->set('laranail.console.tui.progress', false);
 
         self::assertFalse(ProgressReporterFactory::tuiEnabled());
         self::assertInstanceOf(PromptsProgressReporter::class, ProgressReporterFactory::make());

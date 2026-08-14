@@ -12,8 +12,8 @@ namespace Simtabi\Laranail\Console\Tools\Support;
  *   Console::emoji()->ascii()->render('Done :tada:'); // "Done \o/"
  *   Console::emoji()->with(['deploy' => ['🚀', '>>']])->get('deploy');
  *
- * Configurable globally via config('console.emoji.mode') and
- * config('console.emoji.custom'); per call via auto()/unicode()/ascii()/with().
+ * Configurable globally via config('laranail.console.emoji.mode') and
+ * config('laranail.console.emoji.custom'); per call via auto()/unicode()/ascii()/with().
  */
 final class Emoji
 {

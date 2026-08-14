@@ -10,7 +10,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Summary;
 
 /**
  * Widget strings resolve through the laranail-console:: translation namespace honouring
- * config('console.locale') — without mutating the host app's global locale.
+ * config('laranail.console.locale') — without mutating the host app's global locale.
  */
 final class WidgetI18nTest extends TestCase
 {
@@ -21,7 +21,7 @@ final class WidgetI18nTest extends TestCase
             'console.widgets.summary.title' => 'RÉSUMÉ',
         ], 'fr', 'laranail-console');
 
-        config(['console.locale' => 'fr']);
+        config(['laranail.console.locale' => 'fr']);
 
         self::assertStringContainsString('3 objets', Header::make('Files')->count(3)->render());
         self::assertStringContainsString('RÉSUMÉ', Summary::make(['total' => 1, 'success' => 1])->render());
@@ -32,7 +32,7 @@ final class WidgetI18nTest extends TestCase
 
     public function test_default_locale_keeps_english(): void
     {
-        config(['console.locale' => null]);
+        config(['laranail.console.locale' => null]);
 
         self::assertStringContainsString('2 items', Header::make('X')->count(2)->render());
         self::assertStringContainsString('EXECUTION SUMMARY', Summary::make(['total' => 0])->render());

@@ -6,7 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Support;
 
 /**
  * Resolves widget strings from the `laranail-console::console.*` translation namespace,
- * honouring `config('console.locale')` WITHOUT mutating the host app's global
+ * honouring `config('laranail.console.locale')` WITHOUT mutating the host app's global
  * locale. Falls back to the supplied English default (with `:placeholder`
  * interpolation) when no translator or key is available — so widgets render
  * correctly both inside and outside a booted Laravel application.
