@@ -54,7 +54,10 @@ jobs:
           # vendor:publish reports "No publishable resources" and exits 0, so the failure only
           # surfaced on the `test -f` below, with nothing naming the cause.
           php artisan vendor:publish --tag=laranail::console-config --no-interaction
-          test -f config/console.php
+          # Nested, not flat. The config key is dotted (laranail.console), and Laravel reads a
+          # published override back from the matching nested path -- a flat config/console.php would
+          # load as config('console') and be invisible to the merged key.
+          test -f config/laranail/console.php
 
           # And the lang tag, which nothing exercised at all.
           php artisan vendor:publish --tag=laranail::console-lang --no-interaction
