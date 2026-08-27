@@ -22,7 +22,7 @@ final class Heading implements Renderable, Stringable
 {
     use RendersBlock;
 
-    private int $level = 1;
+    private int $level;
 
     private ?int $width = null;
 

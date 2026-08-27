@@ -1,7 +1,7 @@
 # Colours & styles
 
-`Console::color()` ([`Support\Color`](../../src/Console/Tools/Support/Color.php)) and
-`Console::style()` ([`Support\Style`](../../src/Console/Tools/Support/Style.php)) produce
+`Console::color()` ([`Support\Color`](../../src/Tools/Support/Color.php)) and
+`Console::style()` ([`Support\Style`](../../src/Tools/Support/Style.php)) produce
 ANSI-coloured strings that **degrade gracefully**: 24-bit truecolor → xterm-256 →
 nearest ANSI-16 → plain (under `NO_COLOR` / non-TTY), decided by
 [`Capabilities`](support.md).

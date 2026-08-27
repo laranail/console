@@ -244,7 +244,7 @@ class ConsoleUIFormatter implements Stringable
     private string $badgePadding = ' ';
 
     // Terminal capability detection
-    private bool $supportsColor = true;
+    private readonly bool $supportsColor;
 
     /**
      * Private constructor to enforce factory method usage

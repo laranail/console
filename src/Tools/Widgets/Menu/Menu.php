@@ -36,9 +36,9 @@ final class Menu
     /** @var list<Item> */
     private array $items = [];
 
-    private string $foreground = '';
+    private string $foreground;
 
-    private ?int $width = null;
+    private ?int $width;
 
     private int $padding = 1;
 

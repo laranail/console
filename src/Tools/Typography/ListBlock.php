@@ -24,7 +24,7 @@ final class ListBlock implements Renderable, Stringable
     private string $type = 'unordered';
 
     /** @var list<string> */
-    private array $items = [];
+    private array $items;
 
     /** @var array<string, bool> */
     private array $tasks = [];
