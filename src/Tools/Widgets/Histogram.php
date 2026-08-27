@@ -23,7 +23,7 @@ final class Histogram implements Renderable, Stringable
     use RendersBlock;
 
     /** @var list<float> */
-    private array $values = [];
+    private array $values;
 
     private ?int $bins = null;
 

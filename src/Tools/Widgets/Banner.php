@@ -29,9 +29,9 @@ final class Banner implements Stringable
 
     private bool $boxed = false;
 
-    private ?int $width = null;
+    private ?int $width;
 
-    private ?string $font = null;
+    private ?string $font;
 
     private string $align = 'center';
 

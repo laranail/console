@@ -89,7 +89,7 @@ final class Emoji
     ];
 
     /** @var array<string, array{0:string,1:string}> custom name => [unicode, ascii] */
-    private array $custom = [];
+    private array $custom;
 
     /** @var 'auto'|'unicode'|'ascii' */
     private string $mode;

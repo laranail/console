@@ -7,7 +7,7 @@ static frame with no cursor-control sequences. Side-effecting components impleme
 
 ## Live region
 
-[`Support\Live`](../../src/Console/Tools/Support/Live.php) redraws any renderable in
+[`Support\Live`](../../src/Tools/Support/Live.php) redraws any renderable in
 place via a Symfony console section:
 
 ```php
@@ -23,7 +23,7 @@ Piped/CI → only the final frame is written, once.
 
 ## Animated bar
 
-[`AnimatedBar`](../../src/Console/Tools/Widgets/AnimatedBar.php) — determinate
+[`AnimatedBar`](../../src/Tools/Widgets/AnimatedBar.php) — determinate
 (`->fraction(0..1)`) or indeterminate (`->indeterminate($tick)`); responsive +
 themed. Drive it with `Live`.
 

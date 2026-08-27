@@ -20,7 +20,7 @@ Set them in config (any [colour spec](colors.md)):
 ],
 ```
 
-`Console::theme()` returns the active [`Theme`](../../src/Console/Tools/Theme/Theme.php);
+`Console::theme()` returns the active [`Theme`](../../src/Tools/Theme/Theme.php);
 `$theme->color('primary')` reads a role, `$theme->style('h1')` returns the
 [`Style`](colors.md) for an element.
 

@@ -23,9 +23,9 @@ use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
  */
 final class ConsoleServiceProvider extends ServiceProvider
 {
-    private const string CONFIG_PATH = __DIR__ . '/../../../config/console.php';
+    private const string CONFIG_PATH = __DIR__ . '/../../config/console.php';
 
-    private const string LANG_PATH = __DIR__ . '/../../../resources/lang';
+    private const string LANG_PATH = __DIR__ . '/../../resources/lang';
 
     #[Override]
     public function register(): void

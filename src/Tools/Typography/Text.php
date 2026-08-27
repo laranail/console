@@ -21,7 +21,7 @@ use Stringable;
  */
 final class Text implements Stringable
 {
-    private string $buffer = '';
+    private string $buffer;
 
     private Style $style;
 

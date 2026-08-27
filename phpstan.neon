@@ -20,33 +20,33 @@ parameters:
         # template friction (spin/table/progress) is inherent to that API.
         -
             identifier: argument.type
-            path: src/Console/Prompter/Services/PromptService.php
+            path: src/Prompter/Services/PromptService.php
         -
             identifier: argument.templateType
-            path: src/Console/Prompter/Services/PromptService.php
+            path: src/Prompter/Services/PromptService.php
         -
             identifier: return.unusedType
-            path: src/Console/Prompter/Services/PromptService.php
+            path: src/Prompter/Services/PromptService.php
         # Exhaustive enum match keeps a defensive default arm for forward-compat.
         -
             identifier: match.alwaysTrue
-            path: src/Console/Prompter/Enums/FieldType.php
+            path: src/Prompter/Enums/FieldType.php
         # Terminal capability detection legitimately reads process env vars
         # (NO_COLOR/TERM/FORCE_COLOR); these are not Laravel config keys.
         -
             identifier: larastan.noEnvCallsOutsideOfConfig
-            path: src/Console/Tools/Support/Capabilities.php
+            path: src/Tools/Support/Capabilities.php
         # Performance metrics index by a computed numeric key; harmless.
         -
             identifier: offsetAccess.invalidOffset
-            path: src/Console/Tools/Commands/Services/CommandPerformanceService.php
+            path: src/Tools/Commands/Services/CommandPerformanceService.php
         # Command observer matches against names that may arrive as mixed.
         -
             identifier: argument.type
-            path: src/Console/Tools/Observers/ConsoleCommandObserver.php
+            path: src/Tools/Observers/ConsoleCommandObserver.php
         # Consumer-facing test trait — used by downstream test suites, not by src.
         -
             identifier: trait.unused
-            path: src/Console/Testing/InteractsWithConsole.php
+            path: src/Testing/InteractsWithConsole.php
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
