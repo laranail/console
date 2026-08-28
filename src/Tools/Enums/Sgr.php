@@ -43,14 +43,6 @@ enum Sgr: int
     case OverlinedOff = 55;
 
     /**
-     * This single code as an SGR escape sequence, e.g. `\e[4m`.
-     */
-    public function open(): string
-    {
-        return "\e[{$this->value}m";
-    }
-
-    /**
      * Combine several codes into one sequence, e.g. `\e[1;4m`.
      */
     public static function sequence(self ...$codes): string
@@ -66,5 +58,13 @@ enum Sgr: int
     public static function wrap(string $text, self ...$codes): string
     {
         return self::sequence(...$codes) . $text . self::Reset->open();
+    }
+
+    /**
+     * This single code as an SGR escape sequence, e.g. `\e[4m`.
+     */
+    public function open(): string
+    {
+        return "\e[{$this->value}m";
     }
 }

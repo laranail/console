@@ -6,14 +6,14 @@ namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use function Laravel\Prompts\spin;
 
-use Simtabi\Laranail\Console\Tools\Enums\SpinnerFrames;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Symfony\Component\Console\Cursor;
 use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
-use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
+use Simtabi\Laranail\Console\Tools\Enums\SpinnerFrames;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 /**
  * A fluent activity spinner.
@@ -135,15 +135,6 @@ final class Spinner
         return $frame . ' ' . $this->message . $this->elapsedSuffix();
     }
 
-    private function elapsedSuffix(): string
-    {
-        if (! $this->showElapsed || $this->startedAt === null) {
-            return '';
-        }
-
-        return ' ' . TimeFormat::duration(max(microtime(true) - $this->startedAt, 0.0));
-    }
-
     /**
      * Stop the spinner and print a final status line.
      *
@@ -163,5 +154,14 @@ final class Spinner
         $this->output->writeln($this->symbols->get($status) . ' ' . ($message ?? $this->message));
 
         return $this;
+    }
+
+    private function elapsedSuffix(): string
+    {
+        if (! $this->showElapsed || $this->startedAt === null) {
+            return '';
+        }
+
+        return ' ' . TimeFormat::duration(max(microtime(true) - $this->startedAt, 0.0));
     }
 }

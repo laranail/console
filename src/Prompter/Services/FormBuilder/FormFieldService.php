@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter\Services\FormBuilder;
 
 use Closure;
-use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
 use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
+use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
 
 /**
  * Class FormField

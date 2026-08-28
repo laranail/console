@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
-use Stringable;
 
 /**
  * An inline mini-chart built from block-eighths (`▁▂▃▄▅▆▇█`).
@@ -26,6 +26,11 @@ final readonly class Sparkline implements Stringable
     public function __construct(private array $values, ?Capabilities $capabilities = null)
     {
         $this->unicode = ($capabilities ?? Capabilities::detect())->supportsUnicode();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -68,10 +73,5 @@ final readonly class Sparkline implements Stringable
     private function trim(int|float $n): string
     {
         return NumberFormat::trim((float) $n);
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

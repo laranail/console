@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A fluent inline text builder unifying colour/style + emoji + symbols + theme
@@ -41,6 +41,11 @@ final class Text implements Stringable
         $this->symbols = Symbols::for($this->capabilities);
         $this->style = Style::make($this->capabilities);
         $this->buffer = $this->emoji->render(ConsoleUIFormatter::sanitizeText($text));
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(string $text = ''): self
@@ -167,10 +172,5 @@ final class Text implements Stringable
     public function render(): string
     {
         return $this->style->apply($this->buffer);
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

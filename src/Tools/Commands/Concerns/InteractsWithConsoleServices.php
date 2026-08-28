@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Commands\Concerns;
 
 use Override;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
+use Throwable;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
 
 /**
  * Full command support — the managed lifecycle (performance timing, event dispatch,
@@ -40,20 +40,6 @@ trait InteractsWithConsoleServices
     private bool $signalHandlingRegistered = false;
 
     /**
-     * Initialise the service manager. Idempotent, so it is safe to call from a
-     * constructor and again from {@see run()}. Signal handling is wired
-     * separately in {@see run()} (see {@see setupSignalHandling()}).
-     */
-    protected function bootConsoleSupport(): void
-    {
-        if (isset($this->services)) {
-            return;
-        }
-
-        $this->services = new CommandServiceManager($this->getCommandName());
-    }
-
-    /**
      * Wrap the run with event dispatching, timing and structured exception capture.
      */
     #[Override]
@@ -83,7 +69,7 @@ trait InteractsWithConsoleServices
             $this->getCommandName(),
             $input,
             $output,
-            $this->services->metadata()->all()
+            $this->services->metadata()->all(),
         );
 
         $exitCode = self::FAILURE;
@@ -107,11 +93,52 @@ trait InteractsWithConsoleServices
                 $input,
                 $output,
                 $exitCode,
-                $this->services->metadata()->all()
+                $this->services->metadata()->all(),
             );
         }
 
         return $exitCode;
+    }
+
+    /**
+     * Get the service manager — the access point for every command service
+     * (performance, events, signals, metadata, logger, error, config,
+     * interaction, display).
+     */
+    public function getServices(): CommandServiceManager
+    {
+        $this->bootConsoleSupport();
+
+        return $this->services;
+    }
+
+    /**
+     * Configure service settings. Recognised keys are the
+     * {@see CommandServiceManager}::`NATIVE_EVENTS` / `CUSTOM_EVENTS` / `SIGNALS` /
+     * `NON_INTERACTIVE` constants.
+     *
+     * @param array<string, mixed> $config
+     */
+    public function configureServices(array $config): self
+    {
+        $this->bootConsoleSupport();
+        $this->services->configure($config);
+
+        return $this;
+    }
+
+    /**
+     * Initialise the service manager. Idempotent, so it is safe to call from a
+     * constructor and again from {@see run()}. Signal handling is wired
+     * separately in {@see run()} (see {@see setupSignalHandling()}).
+     */
+    protected function bootConsoleSupport(): void
+    {
+        if (isset($this->services)) {
+            return;
+        }
+
+        $this->services = new CommandServiceManager($this->getCommandName());
     }
 
     /**
@@ -150,7 +177,7 @@ trait InteractsWithConsoleServices
             // Log the signal received
             $this->services->logger()->logSignal($signal, [
                 'execution_time' => $this->services->performance()->getFormattedExecutionTime(),
-                'memory_usage' => $this->services->performance()->getMemoryUsage(),
+                'memory_usage'   => $this->services->performance()->getMemoryUsage(),
             ]);
         });
     }
@@ -174,33 +201,6 @@ trait InteractsWithConsoleServices
     }
 
     /**
-     * Get the service manager — the access point for every command service
-     * (performance, events, signals, metadata, logger, error, config,
-     * interaction, display).
-     */
-    public function getServices(): CommandServiceManager
-    {
-        $this->bootConsoleSupport();
-
-        return $this->services;
-    }
-
-    /**
-     * Configure service settings. Recognised keys are the
-     * {@see CommandServiceManager}::`NATIVE_EVENTS` / `CUSTOM_EVENTS` / `SIGNALS` /
-     * `NON_INTERACTIVE` constants.
-     *
-     * @param array<string, mixed> $config
-     */
-    public function configureServices(array $config): self
-    {
-        $this->bootConsoleSupport();
-        $this->services->configure($config);
-
-        return $this;
-    }
-
-    /**
      * Display a performance summary for the current command via the display
      * service.
      */
@@ -210,7 +210,7 @@ trait InteractsWithConsoleServices
 
         $summary = $this->services->performance()->getPerformanceSummary(
             $this->getCommandName(),
-            $this->services->metadata()->all()
+            $this->services->metadata()->all(),
         );
 
         $this->info('Command Performance Summary:');

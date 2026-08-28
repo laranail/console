@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A section header: a package glyph + title, with an optional item count.
@@ -27,6 +27,11 @@ final class Header implements Stringable
         ?Capabilities $capabilities = null,
     ) {
         $this->symbols = Symbols::for($capabilities ?? Capabilities::detect());
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(string $title): self
@@ -55,10 +60,5 @@ final class Header implements Stringable
         }
 
         return $title;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

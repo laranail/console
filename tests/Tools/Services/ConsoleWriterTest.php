@@ -7,14 +7,14 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Services;
 use Illuminate\Console\Command;
 use Illuminate\Console\OutputStyle;
 use Simtabi\Laranail\Console\Facades\Console;
-use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleWriter;
-use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleWriter;
 
 final class ConsoleWriterTest extends TestCase
 {
@@ -22,11 +22,6 @@ final class ConsoleWriterTest extends TestCase
     {
         Capabilities::clearFake();
         parent::tearDown();
-    }
-
-    private function writer(BufferedOutput $out): ConsoleWriter
-    {
-        return ConsoleWriter::make($out);
     }
 
     // --- output + styling ---
@@ -212,5 +207,10 @@ final class ConsoleWriterTest extends TestCase
         $command->emit();
 
         self::assertStringContainsString('✓ from command', $out->fetch());
+    }
+
+    private function writer(BufferedOutput $out): ConsoleWriter
+    {
+        return ConsoleWriter::make($out);
     }
 }

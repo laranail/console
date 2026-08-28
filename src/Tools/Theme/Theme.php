@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Theme;
 
 use InvalidArgumentException;
-use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Support\Config;
 
 /**
  * The design system's stylesheet: a {@see Palette} plus a resolved {@see Style}
@@ -93,23 +93,23 @@ final readonly class Theme
         $s = Style::make();
 
         return match ($element) {
-            'h1' => $s->fg($p->get('primary') ?? '#7c3aed')->bold(),
-            'h2' => $s->fg($p->get('accent') ?? '#06b6d4')->bold(),
-            'h3' => $s->bold(),
-            'h4', 'h5', 'h6' => $s->fg($p->get('muted') ?? '#64748b')->bold(),
-            'paragraph' => $s,
-            'muted' => $s->fg($p->get('muted') ?? '#64748b'),
-            'link' => $s->fg($p->get('info') ?? '#2563eb')->underline(),
-            'quote' => $s->fg($p->get('muted') ?? '#64748b')->italic(),
-            'code' => $s->fg($p->get('accent') ?? '#06b6d4'),
+            'h1'                  => $s->fg($p->get('primary') ?? '#7c3aed')->bold(),
+            'h2'                  => $s->fg($p->get('accent') ?? '#06b6d4')->bold(),
+            'h3'                  => $s->bold(),
+            'h4', 'h5', 'h6'      => $s->fg($p->get('muted') ?? '#64748b')->bold(),
+            'paragraph'           => $s,
+            'muted'               => $s->fg($p->get('muted') ?? '#64748b'),
+            'link'                => $s->fg($p->get('info') ?? '#2563eb')->underline(),
+            'quote'               => $s->fg($p->get('muted') ?? '#64748b')->italic(),
+            'code'                => $s->fg($p->get('accent') ?? '#06b6d4'),
             'rule', 'list_marker' => $s->fg($p->get('muted') ?? '#64748b'),
-            'success' => $s->fg($p->get('success') ?? '#16a34a'),
-            'warning' => $s->fg($p->get('warning') ?? '#d97706'),
-            'danger', 'error' => $s->fg($p->get('danger') ?? '#dc2626'),
-            'info' => $s->fg($p->get('info') ?? '#2563eb'),
-            'primary' => $s->fg($p->get('primary') ?? '#7c3aed'),
-            'accent' => $s->fg($p->get('accent') ?? '#06b6d4'),
-            default => $s,
+            'success'             => $s->fg($p->get('success') ?? '#16a34a'),
+            'warning'             => $s->fg($p->get('warning') ?? '#d97706'),
+            'danger', 'error'     => $s->fg($p->get('danger') ?? '#dc2626'),
+            'info'                => $s->fg($p->get('info') ?? '#2563eb'),
+            'primary'             => $s->fg($p->get('primary') ?? '#7c3aed'),
+            'accent'              => $s->fg($p->get('accent') ?? '#06b6d4'),
+            default               => $s,
         };
     }
 }

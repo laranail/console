@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A full-width horizontal divider with an optional inline title.
@@ -29,6 +29,11 @@ final class Rule implements Stringable
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Light : BorderStyle::Ascii;
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(string $title = ''): self
@@ -88,10 +93,5 @@ final class Rule implements Stringable
         }
 
         return $line . $line . $label . str_repeat($line, $remaining - 2);
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

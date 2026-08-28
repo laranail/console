@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 use Simtabi\Laranail\Console\Tools\Theme\Presets;
+use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 
 /**
  * Validates the `console.*` configuration and returns human-readable error
@@ -74,6 +74,7 @@ final class ConfigValidator
 
     /**
      * @param list<string> $allowed
+     *
      * @return list<string>
      */
     private static function checkEnum(string $key, array $allowed, mixed $default): array

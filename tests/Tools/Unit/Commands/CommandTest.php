@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands;
 
-use Simtabi\Laranail\Console\Tools\Commands\Command;
-use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Simtabi\Laranail\Console\Tools\Commands\Command;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 
 /**
  * A successful command that records metadata during handle(), reaching the
@@ -52,14 +52,6 @@ final class AliasedCommand extends Command
 
 final class CommandTest extends TestCase
 {
-    private function makeCommand(): LifecycleSuccessCommand
-    {
-        $command = new LifecycleSuccessCommand;
-        $command->setLaravel($this->app);
-
-        return $command;
-    }
-
     public function test_service_manager_is_wired_with_command_name(): void
     {
         $command = $this->makeCommand();
@@ -170,5 +162,13 @@ final class CommandTest extends TestCase
 
         self::assertNull($command->getApplication());
         self::assertInstanceOf(CommandServiceManager::class, $command->getServices());
+    }
+
+    private function makeCommand(): LifecycleSuccessCommand
+    {
+        $command = new LifecycleSuccessCommand;
+        $command->setLaravel($this->app);
+
+        return $command;
     }
 }

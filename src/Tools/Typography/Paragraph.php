@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Support\Align;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A word-wrapped, themeable prose block. Wraps to the available width (responsive
@@ -84,7 +84,7 @@ final class Paragraph implements Renderable, Stringable
     {
         $this->align = match (strtolower($align)) {
             Align::JUSTIFY => Align::JUSTIFY,
-            default => Align::normalize($align),
+            default        => Align::normalize($align),
         };
 
         return $this;
@@ -121,8 +121,8 @@ final class Paragraph implements Renderable, Stringable
                 ? $this->justify($line, $width, $i === $last)
                 : match ($this->align) {
                     Align::CENTER => DisplayWidth::center($line, $width),
-                    Align::RIGHT => DisplayWidth::padLeft($line, $width),
-                    default => $line,
+                    Align::RIGHT  => DisplayWidth::padLeft($line, $width),
+                    default       => $line,
                 };
 
             // Pre-styled lines keep their own ANSI; close them so colour never

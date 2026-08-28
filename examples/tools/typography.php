@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
 use Simtabi\Laranail\Console\Tools\Typography\Code;
 use Simtabi\Laranail\Console\Tools\Typography\Heading;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
 
 echo Heading::make('Typography', 1)->render(), "\n\n";
 echo Paragraph::make(str_repeat('The quick brown fox jumps over the lazy dog. ', 4))->width(60)->align('justify')->render(), "\n\n";

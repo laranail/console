@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 
 final class EndToEndDesignSystemTest extends TestCase
 {

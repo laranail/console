@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Runners;
 
-use RuntimeException;
-use Simtabi\Laranail\Console\Tools\Runners\BaseRunner;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Throwable;
+use RuntimeException;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Simtabi\Laranail\Console\Tools\Runners\BaseRunner;
 
 /**
  * Concrete runner used to exercise the abstract BaseRunner behaviour.

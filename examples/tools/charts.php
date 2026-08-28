@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
-use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
+use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 
 echo "Column chart\n";
 echo ColumnChart::make(['Mon' => 12, 'Tue' => 19, 'Wed' => 7, 'Thu' => 22, 'Fri' => 15])->height(6)->render(), "\n\n";

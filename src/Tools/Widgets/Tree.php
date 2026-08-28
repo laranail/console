@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Renders a nested tree with `├─ │ └─` connectors (ASCII fallbacks without
@@ -38,6 +38,11 @@ final class Tree implements Stringable
         $this->symbols = Symbols::for($this->capabilities);
     }
 
+    public function __toString(): string
+    {
+        return $this->render();
+    }
+
     public static function make(string $label = ''): self
     {
         return new self($label);
@@ -56,26 +61,6 @@ final class Tree implements Stringable
         $tree->appendArray($nested);
 
         return $tree;
-    }
-
-    /**
-     * @param array<int|string, mixed> $nested
-     */
-    private function appendArray(array $nested): void
-    {
-        foreach ($nested as $key => $value) {
-            if (is_array($value)) {
-                /** @var array<int|string, mixed> $value */
-                $this->child((string) $key, function (self $node) use ($value): void {
-                    $node->appendArray($value);
-                });
-
-                continue;
-            }
-
-            $leaf = is_int($key) ? (string) $value : $key . ': ' . $value;
-            $this->child($leaf);
-        }
     }
 
     /**
@@ -126,6 +111,26 @@ final class Tree implements Stringable
         ));
     }
 
+    /**
+     * @param array<int|string, mixed> $nested
+     */
+    private function appendArray(array $nested): void
+    {
+        foreach ($nested as $key => $value) {
+            if (is_array($value)) {
+                /** @var array<int|string, mixed> $value */
+                $this->child((string) $key, function (self $node) use ($value): void {
+                    $node->appendArray($value);
+                });
+
+                continue;
+            }
+
+            $leaf = is_int($key) ? (string) $value : $key . ': ' . $value;
+            $this->child($leaf);
+        }
+    }
+
     private function renderChildren(string $prefix): string
     {
         $out = '';
@@ -148,10 +153,5 @@ final class Tree implements Stringable
         return $this->status !== null
             ? $this->symbols->get($this->status) . ' ' . $this->label
             : $this->label;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

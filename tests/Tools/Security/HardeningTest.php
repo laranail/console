@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Security;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 final class HardeningTest extends TestCase
 {

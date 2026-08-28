@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Services;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
-use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Formatter\OutputFormatterInterface;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 
 /**
  * A fluent, immutable wrapper over a Symfony {@see OutputInterface}.
@@ -55,14 +55,6 @@ class ConsoleWriter
     public static function make(OutputInterface $output): self
     {
         return new self($output);
-    }
-
-    private function with(callable $mutate): self
-    {
-        $clone = clone $this;
-        $mutate($clone);
-
-        return $clone;
     }
 
     // getters
@@ -205,7 +197,7 @@ class ConsoleWriter
     public function emoji(string $emoji): self
     {
         $resolved = Emoji::make($this->caps())->render(
-            str_contains($emoji, ':') ? $emoji : ':' . $emoji . ':'
+            str_contains($emoji, ':') ? $emoji : ':' . $emoji . ':',
         );
 
         // Unknown name: render() leaves an unmatched ":name:" intact — fall back to the literal.
@@ -348,6 +340,14 @@ class ConsoleWriter
         }
 
         return $text;
+    }
+
+    private function with(callable $mutate): self
+    {
+        $clone = clone $this;
+        $mutate($clone);
+
+        return $clone;
     }
 
     // internals

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Concerns;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 /**
  * Shared context for the chart widgets: the resolved {@see Capabilities} and
@@ -29,12 +29,6 @@ trait ChartContext
 
     private Theme $theme;
 
-    private function initContext(?Capabilities $capabilities, ?Theme $theme): void
-    {
-        $this->capabilities = $capabilities ?? Capabilities::detect();
-        $this->theme = $theme ?? Theme::resolve();
-    }
-
     public function width(int $width): self
     {
         $this->width = max($width, 1);
@@ -47,6 +41,12 @@ trait ChartContext
         $this->responsive = $responsive;
 
         return $this;
+    }
+
+    private function initContext(?Capabilities $capabilities, ?Theme $theme): void
+    {
+        $this->capabilities = $capabilities ?? Capabilities::detect();
+        $this->theme = $theme ?? Theme::resolve();
     }
 
     /** The theme role for series/segment number $index (cycled). */

@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Tui;
 
+use Symfony\Component\Tui\Tui;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\ConsoleManager;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
-use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
-use Simtabi\Laranail\Console\Tui\RenderableWidget;
 use Symfony\Component\Tui\Render\RenderContext;
-use Symfony\Component\Tui\Tui;
+use Simtabi\Laranail\Console\Tui\RenderableWidget;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 
 final class TuiBridgeTest extends TestCase
 {

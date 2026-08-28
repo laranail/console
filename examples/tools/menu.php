@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 if (! Capabilities::detect()->isInteractive() || ! Keypress::isSupported()) {
     fwrite(STDOUT, "menu.php needs an interactive TTY; skipping (would fall back to prompts in real use).\n");

@@ -38,6 +38,28 @@ class ContextBuilderService
     }
 
     /**
+     * Magic method to dynamically call context methods.
+     *
+     * @param string $method The name of the method.
+     * @param array $arguments The arguments to pass to the method.
+     *
+     * @return mixed The result of the method call.
+     *
+     * @throws PrompterException If the context method does not exist.
+     */
+    public function __call(string $method, array $arguments): mixed
+    {
+        if (isset($this->contexts[$method])) {
+            return $this->contexts[$method](...$arguments);
+        }
+
+        throw PrompterException::badMethodCall([
+            'method'  => $method,
+            'methods' => rtrim(implode(', ', array_keys($this->contexts)), ', '),
+        ]);
+    }
+
+    /**
      * Initialize context methods based on ContextType enum.
      */
     private function initializeContexts(): void
@@ -60,26 +82,5 @@ class ContextBuilderService
         return static function (string $message) use ($function): void {
             $function($message);
         };
-    }
-
-    /**
-     * Magic method to dynamically call context methods.
-     *
-     * @param string $method The name of the method.
-     * @param array $arguments The arguments to pass to the method.
-     * @return mixed The result of the method call.
-     *
-     * @throws PrompterException If the context method does not exist.
-     */
-    public function __call(string $method, array $arguments): mixed
-    {
-        if (isset($this->contexts[$method])) {
-            return $this->contexts[$method](...$arguments);
-        }
-
-        throw PrompterException::badMethodCall([
-            'method' => $method,
-            'methods' => rtrim(implode(', ', array_keys($this->contexts)), ', '),
-        ]);
     }
 }

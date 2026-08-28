@@ -43,36 +43,6 @@ class CommandSignalService
         }
     }
 
-    /**
-     * Register a single signal handler with the OS.
-     */
-    protected function registerSignalHandler(int $signal): void
-    {
-        $handler = function (int $receivedSignal): void {
-            $this->handleSignal($receivedSignal);
-        };
-
-        $this->signalHandlers[$signal] = $handler;
-
-        if (extension_loaded('pcntl')) {
-            pcntl_async_signals(true);
-            pcntl_signal($signal, $handler);
-        }
-    }
-
-    /**
-     * Flip the running flag and record the signal.
-     */
-    protected function handleSignal(int $signal): void
-    {
-        $this->shouldKeepRunning = false;
-
-        Log::info('Command received termination signal', [
-            'command' => $this->commandName,
-            'signal' => $signal,
-        ]);
-    }
-
     public function shouldKeepRunning(): bool
     {
         return $this->shouldKeepRunning;
@@ -121,5 +91,35 @@ class CommandSignalService
         if (isset($this->signalHandlers[$signal])) {
             ($this->signalHandlers[$signal])($signal);
         }
+    }
+
+    /**
+     * Register a single signal handler with the OS.
+     */
+    protected function registerSignalHandler(int $signal): void
+    {
+        $handler = function (int $receivedSignal): void {
+            $this->handleSignal($receivedSignal);
+        };
+
+        $this->signalHandlers[$signal] = $handler;
+
+        if (extension_loaded('pcntl')) {
+            pcntl_async_signals(true);
+            pcntl_signal($signal, $handler);
+        }
+    }
+
+    /**
+     * Flip the running flag and record the signal.
+     */
+    protected function handleSignal(int $signal): void
+    {
+        $this->shouldKeepRunning = false;
+
+        Log::info('Command received termination signal', [
+            'command' => $this->commandName,
+            'signal'  => $signal,
+        ]);
     }
 }

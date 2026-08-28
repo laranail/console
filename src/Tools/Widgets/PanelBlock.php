@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A single content block for a {@see Panel} (or standalone): text with optional
@@ -37,6 +37,11 @@ final class PanelBlock implements Renderable, Stringable
     public function __construct(?Capabilities $capabilities = null)
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -220,10 +225,5 @@ final class PanelBlock implements Renderable, Stringable
         $style = $this->capabilities->supportsUnicode() ? $this->style : $this->style->fallback();
 
         return $style->glyphs();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

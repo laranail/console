@@ -22,7 +22,7 @@ class CommandLoggerService
         /**
          * Command name for context
          */
-        protected string $commandName = ''
+        protected string $commandName = '',
     ) {}
 
     /**
@@ -41,7 +41,7 @@ class CommandLoggerService
     public function getContext(): array
     {
         return array_merge([
-            'command' => $this->commandName,
+            'command'   => $this->commandName,
             'timestamp' => Carbon::now()->toISOString(),
         ], $this->context);
     }
@@ -61,7 +61,7 @@ class CommandLoggerService
     {
         $logData = array_merge($this->getContext(), [
             'exit_code' => $exitCode,
-            'success' => $exitCode === 0,
+            'success'   => $exitCode === 0,
         ], $performanceData, $additionalContext);
 
         if ($exitCode === 0) {

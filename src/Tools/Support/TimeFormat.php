@@ -56,9 +56,9 @@ final class TimeFormat
         }
 
         return match (true) {
-            $ms < 1000 => number_format($ms, 2) . ' ms',
+            $ms < 1000  => number_format($ms, 2) . ' ms',
             $ms < 60000 => number_format($ms / 1000, 2) . ' s',
-            default => number_format($ms / 60000, 2) . ' min',
+            default     => number_format($ms / 60000, 2) . ' min',
         };
     }
 }

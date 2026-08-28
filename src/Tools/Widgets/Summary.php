@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Config;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\Lang;
-use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
+use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * An execution-summary block: statistics, performance metrics, error details and
@@ -36,6 +36,11 @@ final readonly class Summary implements Stringable
         ?Capabilities $capabilities = null,
     ) {
         $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -156,8 +161,8 @@ final readonly class Summary implements Stringable
         $successRate = ((int) ($stats['success'] ?? 0) / $total) * 100;
         $rateColor = match (true) {
             $successRate >= (float) Config::get('summary.rate_good', 100) => ConsoleUIFormatter::GREEN,
-            $successRate >= (float) Config::get('summary.rate_warn', 80) => ConsoleUIFormatter::YELLOW,
-            default => ConsoleUIFormatter::RED,
+            $successRate >= (float) Config::get('summary.rate_warn', 80)  => ConsoleUIFormatter::YELLOW,
+            default                                                       => ConsoleUIFormatter::RED,
         };
 
         $output[] = sprintf(
@@ -204,7 +209,7 @@ final readonly class Summary implements Stringable
 
         $badges = match (true) {
             $failed === 0 => [[Lang::get('widgets.summary.badge_all_completed', 'ALL COMPLETED'), ConsoleUIFormatter::BADGE_STYLE_SUCCESS]],
-            $success > 0 => [
+            $success > 0  => [
                 [Lang::get('widgets.summary.badge_completed_with_errors', 'COMPLETED WITH ERRORS'), ConsoleUIFormatter::BADGE_STYLE_WARNING],
                 [Lang::get('widgets.summary.badge_failed', ':count FAILED', ['count' => $failed]), ConsoleUIFormatter::BADGE_STYLE_DANGER],
             ],
@@ -222,15 +227,10 @@ final readonly class Summary implements Stringable
     private function performanceColor(float $ms): string
     {
         return match (true) {
-            $ms < 100 => ConsoleUIFormatter::GREEN,
-            $ms < 500 => ConsoleUIFormatter::GRAY,
+            $ms < 100  => ConsoleUIFormatter::GREEN,
+            $ms < 500  => ConsoleUIFormatter::GRAY,
             $ms < 1000 => ConsoleUIFormatter::YELLOW,
-            default => ConsoleUIFormatter::RED,
+            default    => ConsoleUIFormatter::RED,
         };
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

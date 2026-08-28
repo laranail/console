@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
-use Illuminate\Contracts\Events\Dispatcher;
+use Throwable;
 use Illuminate\Support\Facades\App;
+use Illuminate\Contracts\Events\Dispatcher;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * Command Service Manager
@@ -51,25 +51,6 @@ class CommandServiceManager
     public function __construct(protected string $commandName = '', ?OutputInterface $output = null)
     {
         $this->initializeServices($output);
-    }
-
-    /**
-     * Initialize all services
-     */
-    protected function initializeServices(?OutputInterface $output = null): void
-    {
-        $this->performance = new CommandPerformanceService;
-        $this->events = new CommandEventService(App::make(Dispatcher::class));
-        $this->signals = new CommandSignalService($this->commandName);
-        $this->metadata = new CommandMetadataService;
-        $this->logger = new CommandLoggerService($this->commandName);
-        $this->error = new CommandErrorService($this->commandName);
-        $this->config = new CommandConfigurationService;
-        $this->interaction = new CommandInteractionService;
-
-        if ($output instanceof OutputInterface) {
-            $this->display = new CommandDisplayService($output);
-        }
     }
 
     /**
@@ -187,7 +168,7 @@ class CommandServiceManager
 
         $performanceData = [
             'execution_time' => $this->performance->getFormattedExecutionTime(),
-            'memory_usage' => $this->performance->getMemoryUsage(),
+            'memory_usage'   => $this->performance->getMemoryUsage(),
         ];
 
         $this->logger->logCompletion($exitCode, $performanceData, $this->metadata->all());
@@ -200,8 +181,8 @@ class CommandServiceManager
     {
         $this->error->logError($exception, [
             'execution_time' => $this->performance->getFormattedExecutionTime(),
-            'memory_usage' => $this->performance->getMemoryUsage(),
-            'metadata' => $this->metadata->all(),
+            'memory_usage'   => $this->performance->getMemoryUsage(),
+            'metadata'       => $this->metadata->all(),
         ]);
     }
 
@@ -211,11 +192,11 @@ class CommandServiceManager
     public function getCommandSummary(): array
     {
         return [
-            'command' => $this->commandName,
+            'command'     => $this->commandName,
             'performance' => $this->performance->getPerformanceSummary($this->commandName, $this->metadata->all()),
-            'metadata' => $this->metadata->all(),
-            'signals' => $this->signals->getSignalHandlers(),
-            'events' => [
+            'metadata'    => $this->metadata->all(),
+            'signals'     => $this->signals->getSignalHandlers(),
+            'events'      => [
                 'native_enabled' => $this->events->isNativeEventsEnabled(),
                 'custom_enabled' => $this->events->isCustomEventsEnabled(),
             ],
@@ -266,5 +247,24 @@ class CommandServiceManager
     public function getCommandName(): string
     {
         return $this->commandName;
+    }
+
+    /**
+     * Initialize all services
+     */
+    protected function initializeServices(?OutputInterface $output = null): void
+    {
+        $this->performance = new CommandPerformanceService;
+        $this->events = new CommandEventService(App::make(Dispatcher::class));
+        $this->signals = new CommandSignalService($this->commandName);
+        $this->metadata = new CommandMetadataService;
+        $this->logger = new CommandLoggerService($this->commandName);
+        $this->error = new CommandErrorService($this->commandName);
+        $this->config = new CommandConfigurationService;
+        $this->interaction = new CommandInteractionService;
+
+        if ($output instanceof OutputInterface) {
+            $this->display = new CommandDisplayService($output);
+        }
     }
 }

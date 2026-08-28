@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
  * Computes the visible width a string occupies in a terminal — ignoring ANSI
@@ -90,14 +90,6 @@ final class DisplayWidth
     }
 
     /**
-     * Close any open OSC-8 hyperlink + SGR style left by a truncation.
-     */
-    private static function close(bool $linkOpen, bool $sgrOpen): string
-    {
-        return ($linkOpen ? "\e]8;;\e\\" : '') . ($sgrOpen ? "\e[0m" : '');
-    }
-
-    /**
      * The greatest visible width across the given lines (0 for an empty list).
      *
      * @param iterable<string> $lines
@@ -174,5 +166,13 @@ final class DisplayWidth
         $left = intdiv($missing, 2);
 
         return str_repeat($pad, $left) . $text . str_repeat($pad, $missing - $left);
+    }
+
+    /**
+     * Close any open OSC-8 hyperlink + SGR style left by a truncation.
+     */
+    private static function close(bool $linkOpen, bool $sgrOpen): string
+    {
+        return ($linkOpen ? "\e]8;;\e\\" : '') . ($sgrOpen ? "\e[0m" : '');
     }
 }

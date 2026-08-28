@@ -5,20 +5,12 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 
 final class BannerTest extends TestCase
 {
-    /**
-     * @return list<int>
-     */
-    private function widths(string $rendered): array
-    {
-        return array_map(DisplayWidth::of(...), explode("\n", $rendered));
-    }
-
     public function test_plain_banner_is_backward_compatible(): void
     {
         $out = Banner::make('Hello')->width(40)->render();
@@ -54,5 +46,13 @@ final class BannerTest extends TestCase
         $boxed = Banner::make('hey')->width(30)->border(BorderStyle::Double)->render();
         self::assertStringContainsString('hey', $boxed);
         self::assertCount(1, array_unique($this->widths($boxed)));
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function widths(string $rendered): array
+    {
+        return array_map(DisplayWidth::of(...), explode("\n", $rendered));
     }
 }

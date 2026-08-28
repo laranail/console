@@ -20,6 +20,11 @@ use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
  */
 trait RendersBlock
 {
+    public function __toString(): string
+    {
+        return $this->render();
+    }
+
     /**
      * @return list<string>
      */
@@ -38,10 +43,5 @@ trait RendersBlock
     public function totalHeight(): int
     {
         return count($this->renderLines());
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

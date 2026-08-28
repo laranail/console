@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 
 final class ColorTest extends TestCase
 {
@@ -25,13 +25,6 @@ final class ColorTest extends TestCase
         foreach ($this->savedEnv as $var => $value) {
             $value === false ? putenv($var) : putenv("{$var}={$value}");
         }
-    }
-
-    private function forceTruecolor(): void
-    {
-        putenv('NO_COLOR');
-        putenv('FORCE_COLOR=1');
-        putenv('COLORTERM=truecolor');
     }
 
     public function test_fg_emits_truecolor_sequence(): void
@@ -160,5 +153,12 @@ final class ColorTest extends TestCase
         self::assertSame('#000000', Color::adaptive('#000000', '#ffffff'));
 
         putenv('COLORFGBG');
+    }
+
+    private function forceTruecolor(): void
+    {
+        putenv('NO_COLOR');
+        putenv('FORCE_COLOR=1');
+        putenv('COLORTERM=truecolor');
     }
 }

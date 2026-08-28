@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter;
 
 use Closure;
-use Illuminate\Support\Collection;
+use Laravel\Prompts\FormBuilder;
 
 use function Laravel\Prompts\form;
 
-use Laravel\Prompts\FormBuilder;
+use Illuminate\Support\Collection;
+use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
-use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 
 /**
  * Class Prompter
@@ -65,16 +65,6 @@ class Prompter
     }
 
     /**
-     * Create a fresh Prompter: each fluent chain gets its own $result, so
-     * sequential/concurrent (e.g. Octane) callers never clobber one another's
-     * last value.
-     */
-    public static function create(): self
-    {
-        return new self;
-    }
-
-    /**
      * Magic method to dynamically call prompt methods.
      *
      * @param string $method The name of the method.
@@ -107,6 +97,16 @@ class Prompter
     public static function __callStatic(string $method, array $arguments): self
     {
         return self::create()->__call($method, $arguments);
+    }
+
+    /**
+     * Create a fresh Prompter: each fluent chain gets its own $result, so
+     * sequential/concurrent (e.g. Octane) callers never clobber one another's
+     * last value.
+     */
+    public static function create(): self
+    {
+        return new self;
     }
 
     /**

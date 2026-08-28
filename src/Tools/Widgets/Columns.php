@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Flow a flat list of items into N balanced columns (like `ls` / `artisan list`).
@@ -34,6 +34,11 @@ final class Columns implements Stringable
     {
         $this->items = array_values(array_map(ConsoleUIFormatter::sanitizeText(...), $items));
         $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -112,10 +117,5 @@ final class Columns implements Stringable
             : 1;
 
         return max(1, min($cols, $total));
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

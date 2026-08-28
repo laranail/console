@@ -16,6 +16,12 @@ use Symfony\Component\Console\Terminal;
  */
 final class Capabilities
 {
+    /**
+     * A forced capability profile for tests (see {@see fake()}). When set,
+     * detect() returns it so every widget resolves against the same profile.
+     */
+    private static ?self $fake = null;
+
     private ?bool $tty = null;
 
     private ?bool $colors = null;
@@ -23,12 +29,6 @@ final class Capabilities
     private ?bool $unicode = null;
 
     private ?int $width = null;
-
-    /**
-     * A forced capability profile for tests (see {@see fake()}). When set,
-     * detect() returns it so every widget resolves against the same profile.
-     */
-    private static ?self $fake = null;
 
     /**
      * @param resource|null $stream Output stream to probe (defaults to STDOUT).

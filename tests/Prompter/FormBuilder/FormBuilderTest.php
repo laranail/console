@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Tests\FormBuilder;
 
+use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
 use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
-use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormBuilderService;
 use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormFieldService;
-use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
+use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormBuilderService;
 
 final class FormBuilderTest extends TestCase
 {

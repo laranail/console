@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
-use Illuminate\Support\Facades\Log;
 use Mockery;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandLoggerService;
+use Illuminate\Support\Facades\Log;
 use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandLoggerService;
 
 final class CommandLoggerServiceTest extends TestCase
 {
@@ -38,7 +38,7 @@ final class CommandLoggerServiceTest extends TestCase
         Log::shouldReceive('info')
             ->once()
             ->with('Command completed successfully', Mockery::on(
-                fn (array $d): bool => $d['exit_code'] === 0 && $d['success'] === true
+                fn (array $d): bool => $d['exit_code'] === 0 && $d['success'] === true,
             ));
 
         new CommandLoggerService('cmd')->logCompletion(0);
@@ -49,7 +49,7 @@ final class CommandLoggerServiceTest extends TestCase
         Log::shouldReceive('warning')
             ->once()
             ->with('Command completed with errors', Mockery::on(
-                fn (array $d): bool => $d['exit_code'] === 2 && $d['success'] === false
+                fn (array $d): bool => $d['exit_code'] === 2 && $d['success'] === false,
             ));
 
         new CommandLoggerService('cmd')->logCompletion(2);
@@ -67,7 +67,7 @@ final class CommandLoggerServiceTest extends TestCase
         Log::shouldReceive('info')
             ->once()
             ->with('Command received termination signal', Mockery::on(
-                fn (array $d): bool => $d['signal'] === 15
+                fn (array $d): bool => $d['signal'] === 15,
             ));
 
         new CommandLoggerService('cmd')->logSignal(15);

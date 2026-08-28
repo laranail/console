@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Contracts\Events\Dispatcher;
-use Simtabi\Laranail\Console\Tools\Events\CommandEvents;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Events\CommandEvents;
 
 /**
  * Command Event Service
@@ -43,7 +43,7 @@ class CommandEventService
         string $commandName,
         InputInterface $input,
         OutputInterface $output,
-        array $metadata = []
+        array $metadata = [],
     ): void {
         // Dispatch custom starting event
         if ($this->useCustomEvents) {
@@ -52,8 +52,8 @@ class CommandEventService
                     (object) ['name' => $commandName],
                     $input,
                     null,
-                    $metadata
-                )
+                    $metadata,
+                ),
             );
         }
 
@@ -71,7 +71,7 @@ class CommandEventService
         InputInterface $input,
         OutputInterface $output,
         int $exitCode,
-        array $metadata = []
+        array $metadata = [],
     ): void {
         // Dispatch custom terminating event
         if ($this->useCustomEvents) {
@@ -81,8 +81,8 @@ class CommandEventService
                     $input,
                     $exitCode,
                     null,
-                    $metadata
-                )
+                    $metadata,
+                ),
             );
         }
 

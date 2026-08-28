@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Figlet;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
 
 final class FigletTest extends TestCase
 {

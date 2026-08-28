@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Symfony\Component\Tui\Tui;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tui\RenderableWidget;
-use Symfony\Component\Tui\Tui;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 if (! Capabilities::detect()->isInteractive()) {
     fwrite(STDOUT, "tui.php needs an interactive TTY; skipping.\n");
@@ -26,13 +26,13 @@ if (! Capabilities::detect()->isInteractive()) {
 
 $tui = new Tui;
 $tui->add(RenderableWidget::of(
-    Box::make(['Welcome to laranail/console', 'Press q or Ctrl-C to quit'])->title('TUI demo')->rounded()
+    Box::make(['Welcome to laranail/console', 'Press q or Ctrl-C to quit'])->title('TUI demo')->rounded(),
 ));
 $tui->add(RenderableWidget::of(
     Table::make()->fromAssoc([
         ['widget' => 'Box', 'mounted' => 'yes'],
         ['widget' => 'Table', 'mounted' => 'yes'],
-    ])
+    ]),
 ));
 
 $tui->run();

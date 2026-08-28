@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A definition list: aligned `key : value` pairs. Keys are padded to the widest
@@ -33,6 +33,11 @@ final class KeyValue implements Stringable
     {
         $this->pairs = $this->normalize($pairs);
         $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -84,6 +89,7 @@ final class KeyValue implements Stringable
 
     /**
      * @param array<string, scalar|null> $pairs
+     *
      * @return array<string, string>
      */
     private function normalize(array $pairs): array
@@ -95,10 +101,5 @@ final class KeyValue implements Stringable
         }
 
         return $normalized;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

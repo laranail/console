@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Support\Align;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A themed heading (levels 1–6). h1/h2 get an underline rule; deeper levels are

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 /**
  * A deliberately small, regex-based syntax highlighter for fenced code blocks.
@@ -120,13 +120,13 @@ final readonly class SyntaxHighlighter
     private function normalize(string $language): string
     {
         return match (strtolower(trim($language))) {
-            'sh', 'shell', 'zsh' => 'bash',
-            'yml' => 'yaml',
+            'sh', 'shell', 'zsh'        => 'bash',
+            'yml'                       => 'yaml',
             'javascript', 'node', 'mjs' => 'js',
-            'py' => 'python',
-            'xml', 'htm' => 'html',
-            'patch' => 'diff',
-            default => strtolower(trim($language)),
+            'py'                        => 'python',
+            'xml', 'htm'                => 'html',
+            'patch'                     => 'diff',
+            default                     => strtolower(trim($language)),
         };
     }
 

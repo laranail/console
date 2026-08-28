@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandInteractionService;
 use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandInteractionService;
 
 /**
  * Exercises the non-interactive branches, which short-circuit Laravel
@@ -14,11 +14,6 @@ use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
  */
 final class CommandInteractionServiceTest extends TestCase
 {
-    private function service(): CommandInteractionService
-    {
-        return (new CommandInteractionService)->setNonInteractive(true);
-    }
-
     public function test_non_interactive_flag_is_fluent_and_reported(): void
     {
         $service = new CommandInteractionService;
@@ -89,5 +84,10 @@ final class CommandInteractionServiceTest extends TestCase
     public function test_confirm_action_returns_default_when_non_interactive(): void
     {
         self::assertTrue($this->service()->confirmAction('Sure?', true));
+    }
+
+    private function service(): CommandInteractionService
+    {
+        return (new CommandInteractionService)->setNonInteractive(true);
     }
 }

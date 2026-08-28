@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Simtabi\Laranail\Console\Tools\Enums\Sgr;
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Enums\Sgr;
 
 /**
  * An immutable, chainable text style — foreground/background colour plus SGR
@@ -32,6 +32,11 @@ final readonly class Style implements Stringable
         public bool $blink = false,
         private ?Capabilities $capabilities = null,
     ) {}
+
+    public function __toString(): string
+    {
+        return $this->apply('');
+    }
 
     public static function make(?Capabilities $capabilities = null): self
     {
@@ -143,11 +148,6 @@ final readonly class Style implements Stringable
         }
 
         return $open === '' ? $text : $open . $text . "\033[0m";
-    }
-
-    public function __toString(): string
-    {
-        return $this->apply('');
     }
 
     private function with(

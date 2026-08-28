@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets\TaskProgress;
 
+use Simtabi\Laranail\Console\Tools\Support\Lang;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\Lang;
-use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 /**
  * A multi-task progress widget: a tree of task rows (status glyph, name, count,
@@ -30,6 +30,9 @@ final class TaskProgress
     private readonly bool $interactive;
 
     private ?ConsoleSectionOutput $section = null;
+
+    /** @var array<int, TaskStatus> last status emitted on a non-TTY, per task */
+    private array $emitted = [];
 
     public function __construct(?OutputInterface $output = null, ?Capabilities $capabilities = null)
     {
@@ -86,9 +89,6 @@ final class TaskProgress
 
         return $this;
     }
-
-    /** @var array<int, TaskStatus> last status emitted on a non-TTY, per task */
-    private array $emitted = [];
 
     /**
      * Print a summary footer; returns the non-zero exit code if any task failed.

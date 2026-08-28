@@ -19,15 +19,15 @@ final readonly class Color
 {
     /** Common colour names → hex. */
     private const array NAMES = [
-        'black' => '#000000', 'white' => '#ffffff', 'red' => '#ff0000',
-        'green' => '#00aa00', 'lime' => '#00ff00', 'blue' => '#0000ff',
-        'yellow' => '#ffff00', 'cyan' => '#00ffff', 'magenta' => '#ff00ff',
-        'gray' => '#808080', 'grey' => '#808080', 'silver' => '#c0c0c0',
-        'maroon' => '#800000', 'olive' => '#808000', 'navy' => '#000080',
-        'teal' => '#008080', 'purple' => '#800080', 'orange' => '#ff8800',
-        'pink' => '#ff69b4', 'brown' => '#a52a2a', 'gold' => '#ffd700',
-        'slate' => '#64748b', 'indigo' => '#4b0082', 'violet' => '#ee82ee',
-        'crimson' => '#dc143c', 'coral' => '#ff7f50', 'salmon' => '#fa8072',
+        'black'     => '#000000', 'white' => '#ffffff', 'red' => '#ff0000',
+        'green'     => '#00aa00', 'lime' => '#00ff00', 'blue' => '#0000ff',
+        'yellow'    => '#ffff00', 'cyan' => '#00ffff', 'magenta' => '#ff00ff',
+        'gray'      => '#808080', 'grey' => '#808080', 'silver' => '#c0c0c0',
+        'maroon'    => '#800000', 'olive' => '#808000', 'navy' => '#000080',
+        'teal'      => '#008080', 'purple' => '#800080', 'orange' => '#ff8800',
+        'pink'      => '#ff69b4', 'brown' => '#a52a2a', 'gold' => '#ffd700',
+        'slate'     => '#64748b', 'indigo' => '#4b0082', 'violet' => '#ee82ee',
+        'crimson'   => '#dc143c', 'coral' => '#ff7f50', 'salmon' => '#fa8072',
         'turquoise' => '#40e0d0', 'aqua' => '#00ffff', 'mint' => '#3eb489',
     ];
 
@@ -234,6 +234,65 @@ final readonly class Color
         return $out . "\033[0m";
     }
 
+    private static function hslToHex(int $h, int $s, int $l): string
+    {
+        $h = (($h % 360) + 360) % 360;
+        $sf = max(0, min(100, $s)) / 100;
+        $lf = max(0, min(100, $l)) / 100;
+
+        $c = (1 - abs(2 * $lf - 1)) * $sf;
+        $x = $c * (1 - abs(fmod($h / 60, 2) - 1));
+        $m = $lf - $c / 2;
+
+        [$r, $g, $b] = match (true) {
+            $h < 60  => [$c, $x, 0.0],
+            $h < 120 => [$x, $c, 0.0],
+            $h < 180 => [0.0, $c, $x],
+            $h < 240 => [0.0, $x, $c],
+            $h < 300 => [$x, 0.0, $c],
+            default  => [$c, 0.0, $x],
+        };
+
+        return self::rgbToHex(
+            (int) round(($r + $m) * 255),
+            (int) round(($g + $m) * 255),
+            (int) round(($b + $m) * 255),
+        );
+    }
+
+    private static function hexFromXterm256(int $index): string
+    {
+        if ($index < 16) {
+            $basic = [
+                '#000000', '#800000', '#008000', '#808000', '#000080', '#800080',
+                '#008080', '#c0c0c0', '#808080', '#ff0000', '#00ff00', '#ffff00',
+                '#0000ff', '#ff00ff', '#00ffff', '#ffffff',
+            ];
+
+            return $basic[$index];
+        }
+
+        if ($index >= 232) {
+            $v = 8 + ($index - 232) * 10;
+
+            return self::rgbToHex($v, $v, $v);
+        }
+
+        $index -= 16;
+        $steps = [0, 95, 135, 175, 215, 255];
+
+        return self::rgbToHex(
+            $steps[intdiv($index, 36) % 6],
+            $steps[intdiv($index, 6) % 6],
+            $steps[$index % 6],
+        );
+    }
+
+    private static function clamp(int $v): int
+    {
+        return max(0, min(255, $v));
+    }
+
     /**
      * Opening SGR sequence for an RGB colour at the best available depth:
      * 24-bit truecolor → xterm 256 → nearest ANSI-16. Foreground or background.
@@ -300,64 +359,5 @@ final readonly class Color
         }
 
         return $best;
-    }
-
-    private static function hslToHex(int $h, int $s, int $l): string
-    {
-        $h = (($h % 360) + 360) % 360;
-        $sf = max(0, min(100, $s)) / 100;
-        $lf = max(0, min(100, $l)) / 100;
-
-        $c = (1 - abs(2 * $lf - 1)) * $sf;
-        $x = $c * (1 - abs(fmod($h / 60, 2) - 1));
-        $m = $lf - $c / 2;
-
-        [$r, $g, $b] = match (true) {
-            $h < 60 => [$c, $x, 0.0],
-            $h < 120 => [$x, $c, 0.0],
-            $h < 180 => [0.0, $c, $x],
-            $h < 240 => [0.0, $x, $c],
-            $h < 300 => [$x, 0.0, $c],
-            default => [$c, 0.0, $x],
-        };
-
-        return self::rgbToHex(
-            (int) round(($r + $m) * 255),
-            (int) round(($g + $m) * 255),
-            (int) round(($b + $m) * 255),
-        );
-    }
-
-    private static function hexFromXterm256(int $index): string
-    {
-        if ($index < 16) {
-            $basic = [
-                '#000000', '#800000', '#008000', '#808000', '#000080', '#800080',
-                '#008080', '#c0c0c0', '#808080', '#ff0000', '#00ff00', '#ffff00',
-                '#0000ff', '#ff00ff', '#00ffff', '#ffffff',
-            ];
-
-            return $basic[$index];
-        }
-
-        if ($index >= 232) {
-            $v = 8 + ($index - 232) * 10;
-
-            return self::rgbToHex($v, $v, $v);
-        }
-
-        $index -= 16;
-        $steps = [0, 95, 135, 175, 215, 255];
-
-        return self::rgbToHex(
-            $steps[intdiv($index, 36) % 6],
-            $steps[intdiv($index, 6) % 6],
-            $steps[$index % 6],
-        );
-    }
-
-    private static function clamp(int $v): int
-    {
-        return max(0, min(255, $v));
     }
 }

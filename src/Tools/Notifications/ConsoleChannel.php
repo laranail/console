@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Notifications;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Notifications\Contracts\ConsoleChannelInterface;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Notifications\Contracts\ConsoleChannelInterface;
 
 /**
  * Standalone console notification channel.

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 /**
  * A framed admonition with a status glyph and title spliced into the top rule,
@@ -28,6 +28,11 @@ final class Callout implements Stringable
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->symbols = Symbols::for($this->capabilities);
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -76,10 +81,5 @@ final class Callout implements Stringable
         return Box::make($this->lines)
             ->title($heading)
             ->render();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

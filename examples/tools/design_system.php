@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Document\Document;
-use Simtabi\Laranail\Console\Tools\Document\Markdown;
-use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
 use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
 use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
-use Simtabi\Laranail\Console\Tools\Widgets\Pill;
+use Simtabi\Laranail\Console\Tools\Document\Document;
+use Simtabi\Laranail\Console\Tools\Document\Markdown;
 
 echo Banner::success('DESIGN SYSTEM')->render(), "\n\n";
 

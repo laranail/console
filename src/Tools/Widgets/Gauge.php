@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A single-value horizontal gauge/meter, e.g. `Disk  [██████░░] 72% (180/250)`.
@@ -25,6 +25,11 @@ final class Gauge implements Stringable
     public function __construct(private readonly float $value, private readonly float $max = 100.0, ?Capabilities $capabilities = null)
     {
         $this->unicode = ($capabilities ?? Capabilities::detect())->supportsUnicode();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(float $value, float $max = 100.0): self
@@ -79,10 +84,5 @@ final class Gauge implements Stringable
     private function trim(float $n): string
     {
         return NumberFormat::trim($n);
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

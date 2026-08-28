@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A themed list: unordered, ordered, task (checkbox) or definition. Each item is
@@ -131,7 +131,7 @@ final class ListBlock implements Renderable, Stringable
 
         return match ($this->type) {
             'definition' => $this->renderDefinitions($cap),
-            default => $this->renderItems($cap),
+            default      => $this->renderItems($cap),
         };
     }
 
@@ -187,8 +187,8 @@ final class ListBlock implements Renderable, Stringable
 
         return match ($this->type) {
             'ordered' => $this->styledMarker(($index + 1) . '. '),
-            'task' => $this->taskMarker((bool) ($this->tasks[$label] ?? false), $unicode),
-            default => $this->styledMarker($unicode ? '• ' : '- '),
+            'task'    => $this->taskMarker((bool) ($this->tasks[$label] ?? false), $unicode),
+            default   => $this->styledMarker($unicode ? '• ' : '- '),
         };
     }
 

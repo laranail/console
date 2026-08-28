@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Exceptions;
 
-use RuntimeException;
 use Throwable;
+use RuntimeException;
 
 /**
  * Base exception for the laranail/console package.

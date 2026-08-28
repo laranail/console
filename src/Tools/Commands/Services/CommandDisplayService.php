@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Support\FileSize;
-use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar as ProgressBarWidget;
+use Symfony\Component\Console\Output\OutputInterface;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\Table as TableWidget;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar as ProgressBarWidget;
 
 /**
  * Command Display Service

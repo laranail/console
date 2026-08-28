@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Override;
+use Illuminate\Support\ServiceProvider;
 use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Exceptions\ConsoleException;
-use Simtabi\Laranail\Console\Prompter\Providers\PrompterServiceProvider;
-use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
 use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
+use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
+use Simtabi\Laranail\Console\Prompter\Providers\PrompterServiceProvider;
 
 /**
  * Root service provider for laranail/console.

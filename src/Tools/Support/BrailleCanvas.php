@@ -118,6 +118,7 @@ final class BrailleCanvas
      * (a cell with no matching pen renders plain).
      *
      * @param array<int, Style> $pens
+     *
      * @return list<string>
      */
     public function render(array $pens = []): array

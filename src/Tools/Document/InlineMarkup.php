@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Document;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Emoji;
-use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
-use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Renders inline Markdown to a styled string: `**bold**`/`__bold__`, `*italic*`/

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Document;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
-use Simtabi\Laranail\Console\Tools\Widgets\Rule;
-use Simtabi\Laranail\Console\Tools\Widgets\Table;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
 
 /**
  * Render a documented Markdown subset to the terminal via the {@see Document}
@@ -34,6 +34,11 @@ final readonly class Markdown implements Stringable
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->theme = $theme ?? Theme::resolve();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(string $markdown): self
@@ -177,11 +182,6 @@ final readonly class Markdown implements Stringable
     public function render(): string
     {
         return $this->toDocument()->render();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 
     private function isBlockStart(string $line): bool

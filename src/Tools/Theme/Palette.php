@@ -16,12 +16,12 @@ final readonly class Palette
     /** @var array<string, string> */
     private const array DEFAULTS = [
         'primary' => '#7c3aed',
-        'accent' => '#06b6d4',
+        'accent'  => '#06b6d4',
         'success' => '#16a34a',
         'warning' => '#d97706',
-        'danger' => '#dc2626',
-        'info' => '#2563eb',
-        'muted' => '#64748b',
+        'danger'  => '#dc2626',
+        'info'    => '#2563eb',
+        'muted'   => '#64748b',
     ];
 
     /** @var array<string, string> */

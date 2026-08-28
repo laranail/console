@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Config;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Figlet;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A start-of-run masthead / banner designer.
@@ -56,6 +56,11 @@ final class Banner implements Stringable
 
         $configWidth = Config::get('banner.width');
         $this->width = is_numeric($configWidth) ? (int) $configWidth : null;
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(string $title): self
@@ -257,7 +262,7 @@ final class Banner implements Stringable
     private function alignLine(string $line, int $width): string
     {
         return match ($this->align) {
-            'left' => DisplayWidth::pad($line, $width),
+            'left'  => DisplayWidth::pad($line, $width),
             'right' => DisplayWidth::padLeft($line, $width),
             default => DisplayWidth::center($line, $width),
         };
@@ -274,10 +279,5 @@ final class Banner implements Stringable
         }
 
         return $line;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

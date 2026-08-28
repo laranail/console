@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Color;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A heatmap: a 2D matrix whose cells are coloured by intensity (a low→high blend,

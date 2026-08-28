@@ -60,24 +60,11 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * The failure message: the fluent override if set, else the translated default
-     * for this validator's message key. Resolved lazily so the active locale and
-     * any fluent config are honoured at validation time.
+     * Validate the given value.
+     *
+     * @return string|null The error message if validation fails, or null if it passes.
      */
-    protected function resolvedMessage(): string
-    {
-        return $this->customMessage
-            ?? __('laranail-console::validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
-    }
-
-    /**
-     * The fluent override message, or null if none was set. For subclasses that
-     * build their own default (e.g. {@see LaravelRule}) instead of a translation key.
-     */
-    protected function customMessageOrNull(): ?string
-    {
-        return $this->customMessage;
-    }
+    abstract public function validate(mixed $value): ?string;
 
     /**
      * The package's configured translation locale (`console.locale`), or null to
@@ -96,9 +83,22 @@ abstract class AbstractValidator implements ValidatorInterface
     }
 
     /**
-     * Validate the given value.
-     *
-     * @return string|null The error message if validation fails, or null if it passes.
+     * The failure message: the fluent override if set, else the translated default
+     * for this validator's message key. Resolved lazily so the active locale and
+     * any fluent config are honoured at validation time.
      */
-    abstract public function validate(mixed $value): ?string;
+    protected function resolvedMessage(): string
+    {
+        return $this->customMessage
+            ?? __('laranail-console::validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
+    }
+
+    /**
+     * The fluent override message, or null if none was set. For subclasses that
+     * build their own default (e.g. {@see LaravelRule}) instead of a translation key.
+     */
+    protected function customMessageOrNull(): ?string
+    {
+        return $this->customMessage;
+    }
 }

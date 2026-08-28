@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Formatting;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 
 /**
@@ -137,89 +137,89 @@ class ConsoleUIFormatter implements Stringable
     // ANSI Color Codes (for terminal compatibility)
     public const array ANSI_COLORS = [
         // Foreground colors
-        'black' => "\033[30m",
-        'red' => "\033[31m",
-        'green' => "\033[32m",
-        'yellow' => "\033[33m",
-        'blue' => "\033[34m",
-        'magenta' => "\033[35m",
-        'cyan' => "\033[36m",
-        'white' => "\033[37m",
-        'gray' => "\033[90m",
-        'bright_red' => "\033[91m",
-        'bright_green' => "\033[92m",
-        'bright_yellow' => "\033[93m",
-        'bright_blue' => "\033[94m",
+        'black'          => "\033[30m",
+        'red'            => "\033[31m",
+        'green'          => "\033[32m",
+        'yellow'         => "\033[33m",
+        'blue'           => "\033[34m",
+        'magenta'        => "\033[35m",
+        'cyan'           => "\033[36m",
+        'white'          => "\033[37m",
+        'gray'           => "\033[90m",
+        'bright_red'     => "\033[91m",
+        'bright_green'   => "\033[92m",
+        'bright_yellow'  => "\033[93m",
+        'bright_blue'    => "\033[94m",
         'bright_magenta' => "\033[95m",
-        'bright_cyan' => "\033[96m",
-        'bright_white' => "\033[97m",
+        'bright_cyan'    => "\033[96m",
+        'bright_white'   => "\033[97m",
 
         // Background colors
-        'black_bg' => "\033[40m",
-        'red_bg' => "\033[41m",
-        'green_bg' => "\033[42m",
-        'yellow_bg' => "\033[43m",
-        'blue_bg' => "\033[44m",
-        'magenta_bg' => "\033[45m",
-        'cyan_bg' => "\033[46m",
-        'white_bg' => "\033[47m",
-        'gray_bg' => "\033[100m",
-        'bright_red_bg' => "\033[101m",
-        'bright_green_bg' => "\033[102m",
-        'bright_yellow_bg' => "\033[103m",
-        'bright_blue_bg' => "\033[104m",
+        'black_bg'          => "\033[40m",
+        'red_bg'            => "\033[41m",
+        'green_bg'          => "\033[42m",
+        'yellow_bg'         => "\033[43m",
+        'blue_bg'           => "\033[44m",
+        'magenta_bg'        => "\033[45m",
+        'cyan_bg'           => "\033[46m",
+        'white_bg'          => "\033[47m",
+        'gray_bg'           => "\033[100m",
+        'bright_red_bg'     => "\033[101m",
+        'bright_green_bg'   => "\033[102m",
+        'bright_yellow_bg'  => "\033[103m",
+        'bright_blue_bg'    => "\033[104m",
         'bright_magenta_bg' => "\033[105m",
-        'bright_cyan_bg' => "\033[106m",
-        'bright_white_bg' => "\033[107m",
+        'bright_cyan_bg'    => "\033[106m",
+        'bright_white_bg'   => "\033[107m",
 
         // Text styles
-        'bold' => "\033[1m",
-        'dim' => "\033[2m",
-        'italic' => "\033[3m",
+        'bold'      => "\033[1m",
+        'dim'       => "\033[2m",
+        'italic'    => "\033[3m",
         'underline' => "\033[4m",
-        'reset' => "\033[0m",
+        'reset'     => "\033[0m",
     ];
 
     // Badge color schemes
     private const array BADGE_SCHEMES = [
         self::BADGE_STYLE_PRIMARY => [
-            'fg' => self::WHITE,
-            'bg' => '#0d6efd', // Bootstrap primary blue
+            'fg'     => self::WHITE,
+            'bg'     => '#0d6efd', // Bootstrap primary blue
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_SECONDARY => [
-            'fg' => self::WHITE,
-            'bg' => '#6c757d', // Bootstrap secondary gray
+            'fg'     => self::WHITE,
+            'bg'     => '#6c757d', // Bootstrap secondary gray
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_SUCCESS => [
-            'fg' => self::WHITE,
-            'bg' => '#198754', // Bootstrap success green
+            'fg'     => self::WHITE,
+            'bg'     => '#198754', // Bootstrap success green
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_DANGER => [
-            'fg' => self::WHITE,
-            'bg' => '#dc3545', // Bootstrap danger red
+            'fg'     => self::WHITE,
+            'bg'     => '#dc3545', // Bootstrap danger red
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_WARNING => [
-            'fg' => self::BLACK,
-            'bg' => '#ffc107', // Bootstrap warning yellow
+            'fg'     => self::BLACK,
+            'bg'     => '#ffc107', // Bootstrap warning yellow
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_INFO => [
-            'fg' => self::BLACK,
-            'bg' => '#0dcaf0', // Bootstrap info cyan
+            'fg'     => self::BLACK,
+            'bg'     => '#0dcaf0', // Bootstrap info cyan
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_LIGHT => [
-            'fg' => self::BLACK,
-            'bg' => '#f8f9fa', // Bootstrap light gray
+            'fg'     => self::BLACK,
+            'bg'     => '#f8f9fa', // Bootstrap light gray
             'styles' => [self::BOLD],
         ],
         self::BADGE_STYLE_DARK => [
-            'fg' => self::WHITE,
-            'bg' => '#212529', // Bootstrap dark
+            'fg'     => self::WHITE,
+            'bg'     => '#212529', // Bootstrap dark
             'styles' => [self::BOLD],
         ],
     ];
@@ -255,21 +255,19 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
+     * Convert to string (alias for render)
+     */
+    public function __toString(): string
+    {
+        return $this->render();
+    }
+
+    /**
      * Create a new instance with fresh state
      */
     public static function create(): self
     {
         return new self;
-    }
-
-    /**
-     * Set the message content
-     */
-    public function addMessage(string $message): self
-    {
-        $this->message = self::sanitizeText($message);
-
-        return $this;
     }
 
     /**
@@ -283,12 +281,182 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Constrain a colour token to safe characters so it cannot break out of or
-     * inject extra attributes into a `<fg=...>` / `<bg=...>` formatter tag.
+     * Create a badge with specified style
+     *
+     * @param string $text Badge text
+     * @param string|null $style Badge style (BADGE_STYLE_*)
      */
-    private function sanitizeColorToken(string $color): string
+    public static function badge(string $text, ?string $style = self::BADGE_STYLE_PRIMARY): string
     {
-        return (string) preg_replace('/[^A-Za-z0-9#]/', '', $color);
+        return self::create()
+            ->addMessage($text)
+            ->isBadge($style)
+            ->render();
+    }
+
+    /**
+     * Create multiple badges in a row
+     *
+     * @param array $badges Array of ['text' => string, 'style' => string] or just strings
+     * @param string $separator Separator between badges
+     */
+    public static function badges(array $badges, string $separator = ' '): string
+    {
+        $rendered = [];
+
+        foreach ($badges as $badge) {
+            if (is_string($badge)) {
+                $rendered[] = self::badge($badge);
+            } elseif (is_array($badge)) {
+                $text = $badge['text'] ?? $badge[0] ?? '';
+                $style = $badge['style'] ?? $badge[1] ?? self::BADGE_STYLE_PRIMARY;
+                $rendered[] = self::badge($text, $style);
+            }
+        }
+
+        return implode($separator, $rendered);
+    }
+
+    /**
+     * Static helper for quick formatting
+     *
+     * @param string $message The message to format
+     * @param string|null $foreground Foreground color
+     * @param string|null $background Background color
+     * @param array $styles Text styles
+     */
+    public static function format(
+        string $message,
+        ?string $foreground = null,
+        ?string $background = null,
+        array $styles = [],
+    ): string {
+        $formatter = self::create()->addMessage($message);
+
+        if ($foreground) {
+            $formatter->addTextColor($foreground);
+        }
+
+        if ($background) {
+            $formatter->addBackgroundColor($background);
+        }
+
+        if ($styles !== []) {
+            $formatter->addTextStyles($styles);
+        }
+
+        return $formatter->render();
+    }
+
+    /**
+     * Static helper for success messages
+     */
+    public static function success(string $message): string
+    {
+        return self::create()
+            ->addMessage($message)
+            ->addTextColor(self::GREEN)
+            ->addTextStyles(self::BOLD)
+            ->render();
+    }
+
+    /**
+     * Static helper for error messages
+     */
+    public static function error(string $message): string
+    {
+        return self::create()
+            ->addMessage($message)
+            ->addTextColor(self::WHITE)
+            ->addBackgroundColor(self::BG_RED)
+            ->addTextStyles(self::BOLD)
+            ->render();
+    }
+
+    /**
+     * Static helper for warning messages
+     */
+    public static function warning(string $message): string
+    {
+        return self::create()
+            ->addMessage($message)
+            ->addTextColor(self::YELLOW)
+            ->addTextStyles(self::BOLD)
+            ->render();
+    }
+
+    /**
+     * Static helper for info messages
+     */
+    public static function info(string $message): string
+    {
+        return self::create()
+            ->addMessage($message)
+            ->addTextColor(text: self::CYAN)
+            ->render();
+    }
+
+    /**
+     * Create a clickable link format
+     *
+     * @param string $text Display text
+     * @param string $url URL to link to
+     */
+    public static function link(string $text, string $url): string
+    {
+        return self::create()
+            ->addMessage($text)
+            ->setHref($url)
+            ->render();
+    }
+
+    /**
+     * Format with hex colors
+     *
+     * @param string $message The message
+     * @param string|null $hexFg Hex foreground color (e.g., '#e74c3c')
+     * @param string|null $hexBg Hex background color (e.g., '#2c3e50')
+     */
+    public static function hex(string $message, ?string $hexFg = null, ?string $hexBg = null): string
+    {
+        $formatter = self::create()->addMessage($message);
+
+        if ($hexFg) {
+            $formatter->addTextColor($hexFg);
+        }
+
+        if ($hexBg) {
+            $formatter->addBackgroundColor($hexBg);
+        }
+
+        return $formatter->render();
+    }
+
+    /**
+     * Get all available badge styles
+     */
+    public static function getBadgeStyles(): array
+    {
+        return [
+            self::BADGE_STYLE_PRIMARY,
+            self::BADGE_STYLE_SECONDARY,
+            self::BADGE_STYLE_SUCCESS,
+            self::BADGE_STYLE_DANGER,
+            self::BADGE_STYLE_WARNING,
+            self::BADGE_STYLE_INFO,
+            self::BADGE_STYLE_LIGHT,
+            self::BADGE_STYLE_DARK,
+        ];
+    }
+
+    /**
+     * Set the message content
+     */
+    public function addMessage(string $message): self
+    {
+        $this->message = self::sanitizeText($message);
+
+        return $this;
     }
 
     /**
@@ -303,7 +471,7 @@ class ConsoleUIFormatter implements Stringable
         string $text,
         ?string $styleTag = null,
         bool $isClickable = false,
-        ?string $href = null
+        ?string $href = null,
     ): self {
         $this->foregroundColor = $text;
         $this->styleTag = $styleTag;
@@ -437,16 +605,6 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Detect colour support via the shared Capabilities detector, so the whole
-     * package degrades by one consistent set of rules (NO_COLOR/FORCE_COLOR/
-     * TERM/TTY).
-     */
-    private function detectColorSupport(): bool
-    {
-        return Capabilities::detect()->supportsColor();
-    }
-
-    /**
      * Render the formatted string
      */
     public function render(): string
@@ -497,179 +655,21 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Convert to string (alias for render)
+     * Constrain a colour token to safe characters so it cannot break out of or
+     * inject extra attributes into a `<fg=...>` / `<bg=...>` formatter tag.
      */
-    public function __toString(): string
+    private function sanitizeColorToken(string $color): string
     {
-        return $this->render();
+        return (string) preg_replace('/[^A-Za-z0-9#]/', '', $color);
     }
 
     /**
-     * Create a badge with specified style
-     *
-     * @param string $text Badge text
-     * @param string|null $style Badge style (BADGE_STYLE_*)
+     * Detect colour support via the shared Capabilities detector, so the whole
+     * package degrades by one consistent set of rules (NO_COLOR/FORCE_COLOR/
+     * TERM/TTY).
      */
-    public static function badge(string $text, ?string $style = self::BADGE_STYLE_PRIMARY): string
+    private function detectColorSupport(): bool
     {
-        return self::create()
-            ->addMessage($text)
-            ->isBadge($style)
-            ->render();
-    }
-
-    /**
-     * Create multiple badges in a row
-     *
-     * @param array $badges Array of ['text' => string, 'style' => string] or just strings
-     * @param string $separator Separator between badges
-     */
-    public static function badges(array $badges, string $separator = ' '): string
-    {
-        $rendered = [];
-
-        foreach ($badges as $badge) {
-            if (is_string($badge)) {
-                $rendered[] = self::badge($badge);
-            } elseif (is_array($badge)) {
-                $text = $badge['text'] ?? $badge[0] ?? '';
-                $style = $badge['style'] ?? $badge[1] ?? self::BADGE_STYLE_PRIMARY;
-                $rendered[] = self::badge($text, $style);
-            }
-        }
-
-        return implode($separator, $rendered);
-    }
-
-    /**
-     * Static helper for quick formatting
-     *
-     * @param string $message The message to format
-     * @param string|null $foreground Foreground color
-     * @param string|null $background Background color
-     * @param array $styles Text styles
-     */
-    public static function format(
-        string $message,
-        ?string $foreground = null,
-        ?string $background = null,
-        array $styles = []
-    ): string {
-        $formatter = self::create()->addMessage($message);
-
-        if ($foreground) {
-            $formatter->addTextColor($foreground);
-        }
-
-        if ($background) {
-            $formatter->addBackgroundColor($background);
-        }
-
-        if ($styles !== []) {
-            $formatter->addTextStyles($styles);
-        }
-
-        return $formatter->render();
-    }
-
-    /**
-     * Static helper for success messages
-     */
-    public static function success(string $message): string
-    {
-        return self::create()
-            ->addMessage($message)
-            ->addTextColor(self::GREEN)
-            ->addTextStyles(self::BOLD)
-            ->render();
-    }
-
-    /**
-     * Static helper for error messages
-     */
-    public static function error(string $message): string
-    {
-        return self::create()
-            ->addMessage($message)
-            ->addTextColor(self::WHITE)
-            ->addBackgroundColor(self::BG_RED)
-            ->addTextStyles(self::BOLD)
-            ->render();
-    }
-
-    /**
-     * Static helper for warning messages
-     */
-    public static function warning(string $message): string
-    {
-        return self::create()
-            ->addMessage($message)
-            ->addTextColor(self::YELLOW)
-            ->addTextStyles(self::BOLD)
-            ->render();
-    }
-
-    /**
-     * Static helper for info messages
-     */
-    public static function info(string $message): string
-    {
-        return self::create()
-            ->addMessage($message)
-            ->addTextColor(text: self::CYAN)
-            ->render();
-    }
-
-    /**
-     * Create a clickable link format
-     *
-     * @param string $text Display text
-     * @param string $url URL to link to
-     */
-    public static function link(string $text, string $url): string
-    {
-        return self::create()
-            ->addMessage($text)
-            ->setHref($url)
-            ->render();
-    }
-
-    /**
-     * Format with hex colors
-     *
-     * @param string $message The message
-     * @param string|null $hexFg Hex foreground color (e.g., '#e74c3c')
-     * @param string|null $hexBg Hex background color (e.g., '#2c3e50')
-     */
-    public static function hex(string $message, ?string $hexFg = null, ?string $hexBg = null): string
-    {
-        $formatter = self::create()->addMessage($message);
-
-        if ($hexFg) {
-            $formatter->addTextColor($hexFg);
-        }
-
-        if ($hexBg) {
-            $formatter->addBackgroundColor($hexBg);
-        }
-
-        return $formatter->render();
-    }
-
-    /**
-     * Get all available badge styles
-     */
-    public static function getBadgeStyles(): array
-    {
-        return [
-            self::BADGE_STYLE_PRIMARY,
-            self::BADGE_STYLE_SECONDARY,
-            self::BADGE_STYLE_SUCCESS,
-            self::BADGE_STYLE_DANGER,
-            self::BADGE_STYLE_WARNING,
-            self::BADGE_STYLE_INFO,
-            self::BADGE_STYLE_LIGHT,
-            self::BADGE_STYLE_DARK,
-        ];
+        return Capabilities::detect()->supportsColor();
     }
 }

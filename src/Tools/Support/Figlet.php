@@ -80,25 +80,6 @@ final class Figlet
         return array_values($rows);
     }
 
-    /**
-     * Rows for a single character, falling back to its upper-case form then to a
-     * blank block of the font height.
-     *
-     * @return list<string>
-     */
-    private function glyph(string $char): array
-    {
-        $rows = $this->chars[$char] ?? $this->chars[mb_strtoupper($char)] ?? null;
-
-        if ($rows !== null) {
-            return $rows;
-        }
-
-        $width = isset($this->chars[' ']) ? DisplayWidth::of($this->chars[' '][0]) : 3;
-
-        return array_fill(0, $this->height, str_repeat(' ', $width));
-    }
-
     private static function loadBuiltin(string $name): self
     {
         $def = BuiltinFonts::get($name);
@@ -164,6 +145,7 @@ final class Figlet
      * every row to the glyph's widest row.
      *
      * @param list<string> $glyph
+     *
      * @return list<string>
      */
     private static function normalizeGlyph(array $glyph, string $hardblank): array
@@ -182,5 +164,24 @@ final class Figlet
         $width = DisplayWidth::maxWidth($rows);
 
         return array_values(array_map(static fn (string $row): string => DisplayWidth::pad($row, $width), $rows));
+    }
+
+    /**
+     * Rows for a single character, falling back to its upper-case form then to a
+     * blank block of the font height.
+     *
+     * @return list<string>
+     */
+    private function glyph(string $char): array
+    {
+        $rows = $this->chars[$char] ?? $this->chars[mb_strtoupper($char)] ?? null;
+
+        if ($rows !== null) {
+            return $rows;
+        }
+
+        $width = isset($this->chars[' ']) ? DisplayWidth::of($this->chars[' '][0]) : 3;
+
+        return array_fill(0, $this->height, str_repeat(' ', $width));
     }
 }

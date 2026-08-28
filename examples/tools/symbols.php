@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 $s = Symbols::for(Capabilities::detect());
 foreach (['arrow', 'success', 'warning', 'branch', 'last', 'bullet', 'pointer'] as $name) {

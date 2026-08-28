@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Interactive;
 
+use Mockery;
+use ReflectionProperty;
 use Laravel\Prompts\Key;
 use Laravel\Prompts\Prompt;
-use Mockery;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
+use Simtabi\Laranail\Console\Tools\Support\Live;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
+use Simtabi\Laranail\Console\Tools\Widgets\Badge;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\Live;
-use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
-use Simtabi\Laranail\Console\Tools\Widgets\Badge;
-use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
-use Simtabi\Laranail\Console\Tools\Widgets\Pill;
-use Symfony\Component\Console\Output\BufferedOutput;
 
 final class InteractiveTest extends TestCase
 {

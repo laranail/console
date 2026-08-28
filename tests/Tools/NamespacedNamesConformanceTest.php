@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests;
 
+use Throwable;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Throwable;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 
 /**
  * Conformance for the `laranail::<slug>.<command>` naming trait.

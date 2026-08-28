@@ -6,19 +6,19 @@ namespace Simtabi\Laranail\Console\Tools\Widgets\Menu;
 
 use Closure;
 
-use function Laravel\Prompts\multiselect;
-use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\multiselect;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Config;
-use Simtabi\Laranail\Console\Tools\Support\Keypress;
-use Simtabi\Laranail\Console\Tools\Support\Lang;
-use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A native interactive menu.
@@ -234,8 +234,8 @@ final class Menu
     {
         return match (true) {
             $item instanceof CheckboxItem => $item->checked ? '[x] ' : '[ ] ',
-            $item instanceof RadioItem => $item->checked ? '(o) ' : '( ) ',
-            default => '',
+            $item instanceof RadioItem    => $item->checked ? '(o) ' : '( ) ',
+            default                       => '',
         };
     }
 
@@ -333,11 +333,11 @@ final class Menu
     private function resolve(Item $item): mixed
     {
         return match (true) {
-            $item instanceof SubMenuItem => $item->submenu->open(),
-            $item instanceof QuestionItem => text($item->label(), $item->placeholder),
-            $item instanceof MenuItem => $this->fire($item),
+            $item instanceof SubMenuItem                              => $item->submenu->open(),
+            $item instanceof QuestionItem                             => text($item->label(), $item->placeholder),
+            $item instanceof MenuItem                                 => $this->fire($item),
             $item instanceof CheckboxItem, $item instanceof RadioItem => $item->value,
-            default => null,
+            default                                                   => null,
         };
     }
 

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 
 final class PanelTest extends TestCase
 {
@@ -16,14 +16,6 @@ final class PanelTest extends TestCase
     {
         Capabilities::clearFake();
         parent::tearDown();
-    }
-
-    /**
-     * @return list<int>
-     */
-    private function widths(string $rendered): array
-    {
-        return array_map(DisplayWidth::of(...), explode("\n", $rendered));
     }
 
     public function test_block_renders_bordered_equal_width(): void
@@ -74,5 +66,13 @@ final class PanelTest extends TestCase
         self::assertStringContainsString('inner', $rendered);
         self::assertStringContainsString('outer', $rendered);
         self::assertCount(1, array_unique($this->widths($rendered)));
+    }
+
+    /**
+     * @return list<int>
+     */
+    private function widths(string $rendered): array
+    {
+        return array_map(DisplayWidth::of(...), explode("\n", $rendered));
     }
 }

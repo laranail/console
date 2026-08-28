@@ -15,6 +15,11 @@ enum SpinnerFrames: string
     case Line = 'line';
     case Breath = 'breath';
 
+    public static function fromName(?string $name): self
+    {
+        return $name !== null ? (self::tryFrom($name) ?? self::Braille) : self::Braille;
+    }
+
     /**
      * @return list<string>
      */
@@ -26,14 +31,9 @@ enum SpinnerFrames: string
 
         return match ($this) {
             self::Braille => ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
-            self::Dots => ['⠁', '⠂', '⠄', '⡀', '⢀', '⠠', '⠐', '⠈'],
-            self::Line => ['-', '\\', '|', '/'],
-            self::Breath => ['.', 'o', 'O', '°', 'O', 'o'],
+            self::Dots    => ['⠁', '⠂', '⠄', '⡀', '⢀', '⠠', '⠐', '⠈'],
+            self::Line    => ['-', '\\', '|', '/'],
+            self::Breath  => ['.', 'o', 'O', '°', 'O', 'o'],
         };
-    }
-
-    public static function fromName(?string $name): self
-    {
-        return $name !== null ? (self::tryFrom($name) ?? self::Braille) : self::Braille;
     }
 }

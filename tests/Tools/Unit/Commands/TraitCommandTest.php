@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands;
 
 use Illuminate\Console\Command as BaseCommand;
-use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Symfony\Component\Console\Input\ArrayInput;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
 
 /**
  * A command that does NOT extend our base — it extends Illuminate's command and
@@ -34,14 +34,6 @@ final class TraitOnlyCommand extends BaseCommand
 
 final class TraitCommandTest extends TestCase
 {
-    private function makeCommand(): TraitOnlyCommand
-    {
-        $command = new TraitOnlyCommand;
-        $command->setLaravel($this->app);
-
-        return $command;
-    }
-
     public function test_trait_boots_the_service_manager_lazily(): void
     {
         $services = $this->makeCommand()->getServices();
@@ -67,5 +59,13 @@ final class TraitCommandTest extends TestCase
         $command = $this->makeCommand();
 
         self::assertSame($command, $command->configureServices(['native_events' => false]));
+    }
+
+    private function makeCommand(): TraitOnlyCommand
+    {
+        $command = new TraitOnlyCommand;
+        $command->setLaravel($this->app);
+
+        return $command;
     }
 }

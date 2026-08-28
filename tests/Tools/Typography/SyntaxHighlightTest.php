@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Typography;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\SyntaxHighlighter;
@@ -15,6 +15,28 @@ final class SyntaxHighlightTest extends TestCase
     protected function tearDown(): void
     {
         Capabilities::clearFake();
+    }
+
+    /**
+     * @return list<array{0:string, 1:string, 2:string}>
+     */
+    public static function languageCases(): array
+    {
+        return [
+            'bash'             => ['bash', 'if [ -n "$x" ]; then echo hi; fi # note', 'echo'],
+            'bash alias sh'    => ['sh', 'export FOO=1', 'export'],
+            'yaml'             => ['yaml', 'name: value # comment', 'name'],
+            'js'               => ['js', 'const x = `tpl`; // c', 'const'],
+            'js alias'         => ['javascript', 'function f() { return 1 }', 'function'],
+            'python'           => ['python', 'def go(self):  # run', 'def'],
+            'python alias py'  => ['py', 'import os', 'import'],
+            'sql'              => ['sql', 'SELECT * FROM users WHERE id = 1 -- c', 'SELECT'],
+            'html'             => ['html', '<a href="/x">link</a>', 'href'],
+            'html alias xml'   => ['xml', '<root attr="v"/>', 'attr'],
+            'css'              => ['css', '.btn { color: #fff; margin: 4px } /* c */', 'color'],
+            'diff'             => ['diff', '+added line', 'added'],
+            'diff alias patch' => ['patch', '-removed line', 'removed'],
+        ];
     }
 
     public function test_supports_known_languages_and_aliases(): void
@@ -28,28 +50,6 @@ final class SyntaxHighlightTest extends TestCase
             self::assertTrue($h->supports($lang), "should support {$lang}");
         }
         self::assertFalse($h->supports('rust'));
-    }
-
-    /**
-     * @return list<array{0:string, 1:string, 2:string}>
-     */
-    public static function languageCases(): array
-    {
-        return [
-            'bash' => ['bash', 'if [ -n "$x" ]; then echo hi; fi # note', 'echo'],
-            'bash alias sh' => ['sh', 'export FOO=1', 'export'],
-            'yaml' => ['yaml', 'name: value # comment', 'name'],
-            'js' => ['js', 'const x = `tpl`; // c', 'const'],
-            'js alias' => ['javascript', 'function f() { return 1 }', 'function'],
-            'python' => ['python', 'def go(self):  # run', 'def'],
-            'python alias py' => ['py', 'import os', 'import'],
-            'sql' => ['sql', 'SELECT * FROM users WHERE id = 1 -- c', 'SELECT'],
-            'html' => ['html', '<a href="/x">link</a>', 'href'],
-            'html alias xml' => ['xml', '<root attr="v"/>', 'attr'],
-            'css' => ['css', '.btn { color: #fff; margin: 4px } /* c */', 'color'],
-            'diff' => ['diff', '+added line', 'added'],
-            'diff alias patch' => ['patch', '-removed line', 'removed'],
-        ];
     }
 
     #[DataProvider('languageCases')]

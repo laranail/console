@@ -13,26 +13,26 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../vendor/autoload.php';
 
+use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
-use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
-use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
-use Simtabi\Laranail\Console\Tools\Widgets\Header;
-use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
-use Simtabi\Laranail\Console\Tools\Widgets\Panel;
-use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
-use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
-use Simtabi\Laranail\Console\Tools\Widgets\Rule;
-use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
-use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
-use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
-use Simtabi\Laranail\Console\Tools\Widgets\Table;
-use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
-use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
+use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
+use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
+use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
+use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 
 $out = new ConsoleOutput;
 
@@ -116,7 +116,7 @@ $out->writeln(
         ->add(PanelBlock::make("CPU\n42%"))
         ->add(PanelBlock::make("MEM\n7.1G"))
         ->add(PanelBlock::make("NET\n1.2M"))
-        ->render()
+        ->render(),
 );
 
 // The demo always exits 0 so it can serve as a CI smoke check; in real use you

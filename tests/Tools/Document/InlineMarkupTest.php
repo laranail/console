@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Document;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Document\InlineMarkup;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Document\InlineMarkup;
 
 final class InlineMarkupTest extends TestCase
 {

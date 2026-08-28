@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Frames text in a box drawn from a single {@see BorderStyle} family.
@@ -42,6 +42,11 @@ final class Box implements Stringable
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
         $this->style = $this->capabilities->supportsUnicode() ? BorderStyle::Rounded : BorderStyle::Ascii;
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     /**
@@ -168,10 +173,5 @@ final class Box implements Stringable
         $fill = max($inner - DisplayWidth::of($tagged), 0);
 
         return $left . $h . $tagged . str_repeat($h, max($fill - 1, 0)) . $right;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

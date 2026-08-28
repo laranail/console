@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Stringable;
-use Symfony\Component\Console\Helper\Table as SymfonyTable;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Symfony\Component\Console\Helper\Table as SymfonyTable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A fluent table over Symfony's Table helper with named style presets (incl. a
@@ -32,12 +32,12 @@ final class Table implements Stringable
 {
     /** @var array<string, string> preset => Symfony built-in style */
     private const array STYLES = [
-        'ascii' => 'default',
-        'light' => 'box',
-        'double' => 'box-double',
-        'compact' => 'compact',
+        'ascii'      => 'default',
+        'light'      => 'box',
+        'double'     => 'box-double',
+        'compact'    => 'compact',
         'borderless' => 'borderless',
-        'markdown' => 'markdown',
+        'markdown'   => 'markdown',
     ];
 
     /** @var list<string> */
@@ -76,6 +76,11 @@ final class Table implements Stringable
     public function __construct(?Capabilities $capabilities = null)
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(): self
@@ -348,9 +353,9 @@ final class Table implements Stringable
 
             $style = clone $table->getStyle();
             $style->setPadType(match ($direction) {
-                'right' => STR_PAD_LEFT,
+                'right'  => STR_PAD_LEFT,
                 'center' => STR_PAD_BOTH,
-                default => STR_PAD_RIGHT,
+                default  => STR_PAD_RIGHT,
             });
 
             $table->setColumnStyle((int) $index, $style);
@@ -362,6 +367,7 @@ final class Table implements Stringable
      * instances and separators pass through untouched).
      *
      * @param list<string|TableCell>|TableCell[]|TableSeparator $row
+     *
      * @return list<string|TableCell>|TableCell[]|TableSeparator
      */
     private function sanitizeRow(array|TableSeparator $row): array|TableSeparator
@@ -385,8 +391,8 @@ final class Table implements Stringable
     {
         return match ($this->mode) {
             'grouped' => $this->buildGroupedRows(),
-            'tree' => $this->buildTreeRows(),
-            default => $this->rows,
+            'tree'    => $this->buildTreeRows(),
+            default   => $this->rows,
         };
     }
 
@@ -440,10 +446,5 @@ final class Table implements Stringable
         }
 
         return $built;
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
+use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Stringable;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A multi-block layout: stacks {@see Renderable} blocks vertically or arranges
@@ -42,6 +42,11 @@ final class Panel implements Renderable, Stringable
     public function __construct(?Capabilities $capabilities = null)
     {
         $this->capabilities = $capabilities ?? Capabilities::detect();
+    }
+
+    public function __toString(): string
+    {
+        return $this->render();
     }
 
     public static function make(): self
@@ -182,6 +187,7 @@ final class Panel implements Renderable, Stringable
      * Shrink block widths proportionally so a horizontal row fits the terminal.
      *
      * @param array<int, int> $widths
+     *
      * @return array<int, int>
      */
     private function fitWidths(array $widths): array
@@ -267,10 +273,5 @@ final class Panel implements Renderable, Stringable
         $style = $this->capabilities->supportsUnicode() ? $this->style : $this->style->fallback();
 
         return $style->glyphs();
-    }
-
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

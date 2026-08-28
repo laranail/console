@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Runners;
 
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Support\Arr;
 use Override;
+use Illuminate\Support\Arr;
+use Illuminate\Contracts\Foundation\Application;
 
 /**
  * Conditional runner specialised for console-only execution: it skips
@@ -27,28 +27,6 @@ class ConsoleRunner extends BaseRunner
         return $instance;
     }
 
-    #[Override]
-    protected function initialize(): void
-    {
-        // Console is required by default
-        if (! $this->app->runningInConsole()) {
-            $this->shouldRun = false;
-            $this->conditions[] = [
-                'type' => 'console_check',
-                'label' => 'running_in_console',
-                'passed' => false,
-                'timestamp' => now()->toIso8601String(),
-            ];
-        } else {
-            $this->conditions[] = [
-                'type' => 'console_check',
-                'label' => 'running_in_console',
-                'passed' => true,
-                'timestamp' => now()->toIso8601String(),
-            ];
-        }
-    }
-
     /**
      * Only run when not in maintenance
      */
@@ -56,7 +34,7 @@ class ConsoleRunner extends BaseRunner
     {
         return $this->unless(
             fn () => $this->app->isDownForMaintenance(),
-            'maintenance_mode'
+            'maintenance_mode',
         );
     }
 
@@ -76,7 +54,7 @@ class ConsoleRunner extends BaseRunner
 
                 return $command !== null && in_array($command, $commands, true);
             },
-            'command_' . implode('_or_', $commands)
+            'command_' . implode('_or_', $commands),
         );
     }
 
@@ -87,7 +65,7 @@ class ConsoleRunner extends BaseRunner
     {
         return $this->when(
             fn (): bool => defined('LARAVEL_START_FROM_SCHEDULE'),
-            'scheduled_task'
+            'scheduled_task',
         );
     }
 
@@ -98,8 +76,30 @@ class ConsoleRunner extends BaseRunner
     {
         return $this->when(
             fn (): bool => $this->detectVerbosity() >= $level,
-            "verbose_level_{$level}"
+            "verbose_level_{$level}",
         );
+    }
+
+    #[Override]
+    protected function initialize(): void
+    {
+        // Console is required by default
+        if (! $this->app->runningInConsole()) {
+            $this->shouldRun = false;
+            $this->conditions[] = [
+                'type'      => 'console_check',
+                'label'     => 'running_in_console',
+                'passed'    => false,
+                'timestamp' => now()->toIso8601String(),
+            ];
+        } else {
+            $this->conditions[] = [
+                'type'      => 'console_check',
+                'label'     => 'running_in_console',
+                'passed'    => true,
+                'timestamp' => now()->toIso8601String(),
+            ];
+        }
     }
 
     /**

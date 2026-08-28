@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Observers;
 
+use PHPUnit\Framework\TestCase;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Events\Dispatcher;
-use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Observers\ConsoleCommandObserver;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Console\Tools\Observers\ConsoleCommandObserver;
 
 final class ConsoleCommandObserverTest extends TestCase
 {
@@ -20,16 +20,6 @@ final class ConsoleCommandObserverTest extends TestCase
     {
         parent::setUp();
         $this->events = new Dispatcher;
-    }
-
-    private function fireStarting(string $command): void
-    {
-        $this->events->dispatch(new CommandStarting($command, new ArrayInput([]), new BufferedOutput));
-    }
-
-    private function fireFinished(string $command, int $exitCode = 0): void
-    {
-        $this->events->dispatch(new CommandFinished($command, new ArrayInput([]), new BufferedOutput, $exitCode));
     }
 
     public function test_start_and_finish_callbacks_fire_for_matching_commands(): void
@@ -174,5 +164,15 @@ final class ConsoleCommandObserverTest extends TestCase
         $event = new CommandFinished('cmd', new ArrayInput([]), $output, 0);
 
         self::assertStringContainsString('hello from command', (string) ConsoleCommandObserver::fetchOutput($event));
+    }
+
+    private function fireStarting(string $command): void
+    {
+        $this->events->dispatch(new CommandStarting($command, new ArrayInput([]), new BufferedOutput));
+    }
+
+    private function fireFinished(string $command, int $exitCode = 0): void
+    {
+        $this->events->dispatch(new CommandFinished($command, new ArrayInput([]), new BufferedOutput, $exitCode));
     }
 }

@@ -5,15 +5,23 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Theme;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Theme\Palette;
 use Simtabi\Laranail\Console\Tools\Theme\Presets;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
 
 final class PresetsTest extends TestCase
 {
     private const array ROLES = ['primary', 'accent', 'success', 'warning', 'danger', 'info', 'muted'];
+
+    /**
+     * @return list<array{0:string}>
+     */
+    public static function presetNames(): array
+    {
+        return [['dracula'], ['nord'], ['solarized'], ['monochrome'], ['github']];
+    }
 
     public function test_registry_lists_the_builtins(): void
     {
@@ -23,14 +31,6 @@ final class PresetsTest extends TestCase
         }
         self::assertFalse(Presets::has('nope'));
         self::assertNull(Presets::get('nope'));
-    }
-
-    /**
-     * @return list<array{0:string}>
-     */
-    public static function presetNames(): array
-    {
-        return [['dracula'], ['nord'], ['solarized'], ['monochrome'], ['github']];
     }
 
     #[DataProvider('presetNames')]

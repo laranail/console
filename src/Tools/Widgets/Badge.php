@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A themed inline badge — a filled, padded label coloured by a semantic role
@@ -60,6 +60,14 @@ class Badge implements Renderable, Stringable
         return new self($label, 'info');
     }
 
+    /**
+     * @return list<string>
+     */
+    public function renderLines(): array
+    {
+        return [$this->style()->apply(' ' . $this->label . ' ')];
+    }
+
     protected function background(): string
     {
         return $this->theme->color($this->role) ?? '#64748b';
@@ -68,14 +76,6 @@ class Badge implements Renderable, Stringable
     protected function capabilities(): Capabilities
     {
         return $this->capabilities;
-    }
-
-    /**
-     * @return list<string>
-     */
-    public function renderLines(): array
-    {
-        return [$this->style()->apply(' ' . $this->label . ' ')];
     }
 
     private function style(): Style
