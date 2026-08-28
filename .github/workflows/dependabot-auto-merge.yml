@@ -12,6 +12,10 @@ name: Dependabot auto-merge
 
 on: pull_request_target
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: write
   pull-requests: write
@@ -20,6 +24,7 @@ jobs:
   auto-merge:
     name: Auto-merge patch & minor
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Only Dependabot PRs. This job never checks out PR code, so pull_request_target
     # is safe here (no untrusted code runs with the write token).
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}

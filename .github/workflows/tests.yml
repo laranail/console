@@ -1,8 +1,6 @@
 name: Tests
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -18,6 +16,7 @@ jobs:
   pest:
     name: PHP ${{ matrix.php }} · ${{ matrix.dependency-versions }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     strategy:
       fail-fast: false
@@ -61,6 +60,7 @@ jobs:
   coverage:
     name: Coverage
     runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
       - name: Checkout
@@ -90,6 +90,7 @@ jobs:
   mutation:
     name: Mutation testing
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     # Mutation testing is slow (~10 min); run it on PRs (and manual dispatch) only —
     # re-running on the post-merge push to main is redundant (the PR already gated it).
     if: github.event_name != 'push'
@@ -129,6 +130,7 @@ jobs:
   cross-platform:
     name: ${{ matrix.os }} · PHP 8.5
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
 
     strategy:
       fail-fast: false
