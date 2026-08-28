@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
   workflow_dispatch:
+  # macOS runners bill at 10x. The cross-platform job below therefore runs
+  # Windows on every pull request and adds macOS only on this weekly run.
+  schedule:
+    - cron: '42 5 * * 2'
 
 permissions:
   contents: read
@@ -135,7 +139,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest]
+        # Windows every PR -- path handling is what actually breaks in PHP
+        # packages. macOS only on the weekly schedule, because it bills at 10x
+        # and has never been the platform that caught a defect here.
+        # Kept on one line: newlines inside ${{ }} are not reliably evaluated.
+        os: ${{ github.event_name == 'schedule' && fromJSON('["windows-latest","macos-latest"]') || fromJSON('["windows-latest"]') }}
 
     defaults:
       run:
