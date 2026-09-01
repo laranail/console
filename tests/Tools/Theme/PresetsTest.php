@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Theme;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Theme\Palette;
 use Simtabi\Laranail\Console\Tools\Theme\Presets;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 
 final class PresetsTest extends TestCase
 {

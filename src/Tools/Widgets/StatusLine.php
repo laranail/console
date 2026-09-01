@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
 
 /**
  * One-line status messages with a coloured glyph prefix.
@@ -22,11 +22,11 @@ final readonly class StatusLine
     /** @var array<string, string> status => formatter colour */
     private const array COLORS = [
         'success' => 'green',
-        'error'   => 'red',
-        'danger'  => 'red',
+        'error' => 'red',
+        'danger' => 'red',
         'warning' => 'yellow',
-        'info'    => 'blue',
-        'note'    => 'cyan',
+        'info' => 'blue',
+        'note' => 'cyan',
         'pending' => 'gray',
     ];
 
@@ -77,7 +77,7 @@ final readonly class StatusLine
         $message = ConsoleUIFormatter::sanitizeText($message);
 
         return ConsoleUIFormatter::create()
-            ->addMessage($glyph . ' ' . $message)
+            ->addMessage($glyph.' '.$message)
             ->addTextColor($color)
             ->render();
     }

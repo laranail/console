@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 
 /**
  * A full-width horizontal divider with an optional inline title.
@@ -83,15 +83,15 @@ final class Rule implements Stringable
             return str_repeat($line, $width);
         }
 
-        $label = ' ' . DisplayWidth::truncate($this->title, $titleBudget) . ' ';
+        $label = ' '.DisplayWidth::truncate($this->title, $titleBudget).' ';
         $remaining = $width - DisplayWidth::of($label); // >= 2 by construction
 
         if ($this->align === 'center') {
             $left = intdiv($remaining, 2);
 
-            return str_repeat($line, $left) . $label . str_repeat($line, $remaining - $left);
+            return str_repeat($line, $left).$label.str_repeat($line, $remaining - $left);
         }
 
-        return $line . $line . $label . str_repeat($line, $remaining - 2);
+        return $line.$line.$label.str_repeat($line, $remaining - 2);
     }
 }

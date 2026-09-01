@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Stringable;
 
 /**
  * A themed list: unordered, ordered, task (checkbox) or definition. Each item is
@@ -43,7 +43,7 @@ final class ListBlock implements Renderable, Stringable
     private readonly Theme $theme;
 
     /**
-     * @param list<string> $items
+     * @param  list<string>  $items
      */
     public function __construct(array $items = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
@@ -53,7 +53,7 @@ final class ListBlock implements Renderable, Stringable
     }
 
     /**
-     * @param list<string> $items
+     * @param  list<string>  $items
      */
     public static function make(array $items = []): self
     {
@@ -75,7 +75,7 @@ final class ListBlock implements Renderable, Stringable
     }
 
     /**
-     * @param array<string, bool> $items label => done
+     * @param  array<string, bool>  $items  label => done
      */
     public function tasks(array $items): self
     {
@@ -86,7 +86,7 @@ final class ListBlock implements Renderable, Stringable
     }
 
     /**
-     * @param array<string, string> $items term => description
+     * @param  array<string, string>  $items  term => description
      */
     public function definition(array $items): self
     {
@@ -131,7 +131,7 @@ final class ListBlock implements Renderable, Stringable
 
         return match ($this->type) {
             'definition' => $this->renderDefinitions($cap),
-            default      => $this->renderItems($cap),
+            default => $this->renderItems($cap),
         };
     }
 
@@ -153,7 +153,7 @@ final class ListBlock implements Renderable, Stringable
                 : Paragraph::make(ConsoleUIFormatter::sanitizeText((string) $label))->width($bodyWidth)->responsive(false)->renderLines();
 
             foreach ($wrapped as $j => $line) {
-                $out[] = ($j === 0 ? $marker : str_repeat(' ', $indent)) . $line;
+                $out[] = ($j === 0 ? $marker : str_repeat(' ', $indent)).$line;
             }
         }
 
@@ -171,7 +171,7 @@ final class ListBlock implements Renderable, Stringable
             $out[] = $this->theme->style('h4')->apply(ConsoleUIFormatter::sanitizeText((string) $term));
 
             foreach (Paragraph::make((string) $description)->width(max($cap - 2, 1))->responsive(false)->renderLines() as $line) {
-                $out[] = '  ' . $line;
+                $out[] = '  '.$line;
             }
         }
 
@@ -186,9 +186,9 @@ final class ListBlock implements Renderable, Stringable
         $unicode = $this->capabilities->supportsUnicode();
 
         return match ($this->type) {
-            'ordered' => $this->styledMarker(($index + 1) . '. '),
-            'task'    => $this->taskMarker((bool) ($this->tasks[$label] ?? false), $unicode),
-            default   => $this->styledMarker($unicode ? '• ' : '- '),
+            'ordered' => $this->styledMarker(($index + 1).'. '),
+            'task' => $this->taskMarker((bool) ($this->tasks[$label] ?? false), $unicode),
+            default => $this->styledMarker($unicode ? '• ' : '- '),
         };
     }
 

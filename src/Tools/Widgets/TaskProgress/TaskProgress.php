@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets\TaskProgress;
 
-use Simtabi\Laranail\Console\Tools\Support\Lang;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Symfony\Component\Console\Output\ConsoleSectionOutput;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\ConsoleSectionOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A multi-task progress widget: a tree of task rows (status glyph, name, count,
@@ -105,7 +105,7 @@ final class TaskProgress
             ? TaskStatus::Success->glyph($glyph)
             : TaskStatus::Failed->glyph($glyph);
 
-        $summary = $marker . ' ' . Lang::get(
+        $summary = $marker.' '.Lang::get(
             'widgets.task_progress.succeeded',
             ':done/:total tasks succeeded',
             ['done' => $total - $failed, 'total' => $total],
@@ -138,7 +138,7 @@ final class TaskProgress
         $elapsed = $task->elapsed() > 0 ? TimeFormat::duration($task->elapsed()) : '';
 
         $eta = $task->eta();
-        $etaStr = ($eta !== null && $eta > 0) ? Lang::get('widgets.task_progress.eta', 'ETA ') . TimeFormat::duration($eta) : '';
+        $etaStr = ($eta !== null && $eta > 0) ? Lang::get('widgets.task_progress.eta', 'ETA ').TimeFormat::duration($eta) : '';
 
         $parts = array_filter([
             $glyph,

@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
-use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
-use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
+use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 
 final class ChartsTest extends TestCase
 {

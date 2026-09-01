@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Feature;
 
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 
 final class ConfigValidationTest extends TestCase
 {

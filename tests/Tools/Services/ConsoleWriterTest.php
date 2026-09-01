@@ -7,14 +7,14 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Services;
 use Illuminate\Console\Command;
 use Illuminate\Console\OutputStyle;
 use Simtabi\Laranail\Console\Facades\Console;
-use Symfony\Component\Console\Input\ArrayInput;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleWriter;
+use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 final class ConsoleWriterTest extends TestCase
 {
@@ -31,7 +31,7 @@ final class ConsoleWriterTest extends TestCase
         $out = new BufferedOutput;
         $this->writer($out)->line('a')->lines('b', 'c');
 
-        self::assertSame('a' . PHP_EOL . 'b' . PHP_EOL . 'c' . PHP_EOL, $out->fetch());
+        self::assertSame('a'.PHP_EOL.'b'.PHP_EOL.'c'.PHP_EOL, $out->fetch());
     }
 
     public function test_write_has_no_newline_and_newline_adds_them(): void
@@ -39,7 +39,7 @@ final class ConsoleWriterTest extends TestCase
         $out = new BufferedOutput;
         $this->writer($out)->write('x')->newLine(2);
 
-        self::assertSame('x' . PHP_EOL . PHP_EOL, $out->fetch());
+        self::assertSame('x'.PHP_EOL.PHP_EOL, $out->fetch());
     }
 
     public function test_immutable_styling_returns_new_instances(): void
@@ -91,7 +91,7 @@ final class ConsoleWriterTest extends TestCase
             ->when(true, fn (ConsoleWriter $w): ConsoleWriter => $w->line('yes'))
             ->when(false, fn (ConsoleWriter $w): ConsoleWriter => $w->line('no'));
 
-        self::assertSame('yes' . PHP_EOL, $out->fetch());
+        self::assertSame('yes'.PHP_EOL, $out->fetch());
     }
 
     // --- context statuses ---
@@ -144,15 +144,15 @@ final class ConsoleWriterTest extends TestCase
 
         $byName = new BufferedOutput;
         $this->writer($byName)->emoji('rocket')->line('go');
-        self::assertSame('🚀 go' . PHP_EOL, $byName->fetch());
+        self::assertSame('🚀 go'.PHP_EOL, $byName->fetch());
 
         $byShortcode = new BufferedOutput;
         $this->writer($byShortcode)->emoji(':fire:')->line('hot');
-        self::assertSame('🔥 hot' . PHP_EOL, $byShortcode->fetch());
+        self::assertSame('🔥 hot'.PHP_EOL, $byShortcode->fetch());
 
         $literal = new BufferedOutput;
         $this->writer($literal)->emoji('✅')->line('ok');
-        self::assertSame('✅ ok' . PHP_EOL, $literal->fetch());
+        self::assertSame('✅ ok'.PHP_EOL, $literal->fetch());
     }
 
     public function test_symbol_prefix_from_symbols_map(): void
@@ -162,7 +162,7 @@ final class ConsoleWriterTest extends TestCase
 
         $this->writer($out)->symbol('arrow')->line('next');
 
-        self::assertSame('→ next' . PHP_EOL, $out->fetch());
+        self::assertSame('→ next'.PHP_EOL, $out->fetch());
     }
 
     public function test_inline_shortcodes_render_and_can_be_disabled(): void
@@ -171,11 +171,11 @@ final class ConsoleWriterTest extends TestCase
 
         $on = new BufferedOutput;
         $this->writer($on)->line('Done :tada:');
-        self::assertSame('Done 🎉' . PHP_EOL, $on->fetch());
+        self::assertSame('Done 🎉'.PHP_EOL, $on->fetch());
 
         $off = new BufferedOutput;
         $this->writer($off)->emojis(false)->line('Done :tada:');
-        self::assertSame('Done :tada:' . PHP_EOL, $off->fetch());
+        self::assertSame('Done :tada:'.PHP_EOL, $off->fetch());
     }
 
     // --- first-class exposure ---

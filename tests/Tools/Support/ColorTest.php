@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
+use Simtabi\Laranail\Console\Tools\Support\Color;
 
 final class ColorTest extends TestCase
 {

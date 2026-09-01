@@ -11,8 +11,7 @@ use Simtabi\Laranail\Console\Providers\ConsoleServiceProvider;
 abstract class TestCase extends Orchestra
 {
     /**
-     * @param Application $app
-     *
+     * @param  Application  $app
      * @return array<int, class-string>
      */
     protected function getPackageProviders($app): array
@@ -21,10 +20,10 @@ abstract class TestCase extends Orchestra
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      */
     protected function defineEnvironment($app): void
     {
-        $app['config']->set('app.key', 'base64:' . base64_encode(random_bytes(32)));
+        $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
     }
 }

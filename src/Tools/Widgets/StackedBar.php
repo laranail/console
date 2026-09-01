@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Stringable;
 
 /**
  * A single horizontal **proportion (stacked) bar**: one bar split into segments
@@ -37,7 +37,7 @@ final class StackedBar implements Renderable, Stringable
     private bool $showLegend = true;
 
     /**
-     * @param array<string, int|float> $data label => value
+     * @param  array<string, int|float>  $data  label => value
      */
     public function __construct(array $data = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
@@ -48,7 +48,7 @@ final class StackedBar implements Renderable, Stringable
     }
 
     /**
-     * @param array<string, int|float> $data
+     * @param  array<string, int|float>  $data
      */
     public static function make(array $data = []): self
     {
@@ -108,7 +108,7 @@ final class StackedBar implements Renderable, Stringable
             foreach ($this->data as $label => $value) {
                 $swatch = $this->segment($index, 2, $colour, $unicode);
                 $pct = (int) round($value / $total * 100);
-                $lines[] = $swatch . ' ' . $label . '  ' . $this->theme->style('muted')->apply($this->formatValue($value) . " ({$pct}%)");
+                $lines[] = $swatch.' '.$label.'  '.$this->theme->style('muted')->apply($this->formatValue($value)." ({$pct}%)");
                 $index++;
             }
         }

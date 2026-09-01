@@ -5,20 +5,19 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets\Menu;
 
 use Closure;
-
-use function Laravel\Prompts\text;
-use function Laravel\Prompts\select;
-use function Laravel\Prompts\multiselect;
-
-use Simtabi\Laranail\Console\Tools\Widgets\Box;
-use Simtabi\Laranail\Console\Tools\Support\Lang;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Config;
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Lang;
+use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+
+use function Laravel\Prompts\multiselect;
+use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 /**
  * A native interactive menu.
@@ -49,7 +48,7 @@ final class Menu
     private readonly OutputInterface $output;
 
     /**
-     * @param array<int|string, string>|list<string> $options
+     * @param  array<int|string, string>|list<string>  $options
      */
     public function __construct(
         private string $title = '',
@@ -72,7 +71,7 @@ final class Menu
     }
 
     /**
-     * @param array<int|string, string>|list<string> $options
+     * @param  array<int|string, string>|list<string>  $options
      */
     public static function make(string $title = '', array $options = []): self
     {
@@ -90,7 +89,7 @@ final class Menu
      * Bulk add options. A list adds label==value entries; an associative array is
      * treated as value => label.
      *
-     * @param array<int|string, string>|list<string> $options
+     * @param  array<int|string, string>|list<string>  $options
      */
     public function addOptions(array $options): self
     {
@@ -125,7 +124,7 @@ final class Menu
     }
 
     /**
-     * @param Closure(self): void $build
+     * @param  Closure(self): void  $build
      */
     public function addSubMenu(string $label, Closure $build): self
     {
@@ -213,11 +212,11 @@ final class Menu
 
         foreach ($this->items as $index => $item) {
             $pointer = $index === $cursor && $item->selectable() ? '> ' : '  ';
-            $lines[] = $pointer . $this->mark($item) . $item->label();
+            $lines[] = $pointer.$this->mark($item).$item->label();
         }
 
         $lines[] = '';
-        $lines[] = '  [' . ($this->exitText ?? Lang::get('widgets.menu.exit', 'Exit')) . ']';
+        $lines[] = '  ['.($this->exitText ?? Lang::get('widgets.menu.exit', 'Exit')).']';
 
         $box = Box::make($lines)->title($this->title)->padding($this->padding);
 
@@ -234,8 +233,8 @@ final class Menu
     {
         return match (true) {
             $item instanceof CheckboxItem => $item->checked ? '[x] ' : '[ ] ',
-            $item instanceof RadioItem    => $item->checked ? '(o) ' : '( ) ',
-            default                       => '',
+            $item instanceof RadioItem => $item->checked ? '(o) ' : '( ) ',
+            default => '',
         };
     }
 
@@ -333,11 +332,11 @@ final class Menu
     private function resolve(Item $item): mixed
     {
         return match (true) {
-            $item instanceof SubMenuItem                              => $item->submenu->open(),
-            $item instanceof QuestionItem                             => text($item->label(), $item->placeholder),
-            $item instanceof MenuItem                                 => $this->fire($item),
+            $item instanceof SubMenuItem => $item->submenu->open(),
+            $item instanceof QuestionItem => text($item->label(), $item->placeholder),
+            $item instanceof MenuItem => $this->fire($item),
             $item instanceof CheckboxItem, $item instanceof RadioItem => $item->value,
-            default                                                   => null,
+            default => null,
         };
     }
 

@@ -20,8 +20,8 @@ interface ProgressReporter
      * Mirrors the shape of `Laravel\Prompts\progress()`: each step is passed to
      * `$callback`, whose (optional) string return is shown as that step's label.
      *
-     * @param iterable<mixed> $steps
-     * @param callable(mixed): (string|null) $callback
+     * @param  iterable<mixed>  $steps
+     * @param  callable(mixed): (string|null)  $callback
      */
     public function run(string $label, iterable $steps, callable $callback): void;
 }

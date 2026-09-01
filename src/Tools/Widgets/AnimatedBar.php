@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Stringable;
 
 /**
  * A single-line bar for live progress/loading — determinate (a 0–1 fraction) or
@@ -103,8 +103,8 @@ final class AnimatedBar implements Renderable, Stringable
         $track = $unicode ? '░' : '-';
 
         $total = ResponsiveWidth::cap($this->width, $this->responsive, $this->capabilities) ?? 40;
-        $prefix = $this->label !== '' ? $this->label . ' ' : '';
-        $suffix = ($this->tick === null && $this->showPercent) ? ' ' . str_pad((string) (int) round($this->fraction * 100), 3, ' ', STR_PAD_LEFT) . '%' : '';
+        $prefix = $this->label !== '' ? $this->label.' ' : '';
+        $suffix = ($this->tick === null && $this->showPercent) ? ' '.str_pad((string) (int) round($this->fraction * 100), 3, ' ', STR_PAD_LEFT).'%' : '';
         $barArea = max($total - DisplayWidth::of($prefix) - DisplayWidth::of($suffix), 1);
 
         $fillStyle = $this->theme->style('primary');
@@ -114,10 +114,10 @@ final class AnimatedBar implements Renderable, Stringable
             $bar = $this->indeterminateBar($barArea, $this->tick, $fill, $track, $fillStyle, $trackStyle);
         } else {
             $filled = (int) round($this->fraction * $barArea);
-            $bar = $fillStyle->apply(str_repeat($fill, $filled)) . $trackStyle->apply(str_repeat($track, $barArea - $filled));
+            $bar = $fillStyle->apply(str_repeat($fill, $filled)).$trackStyle->apply(str_repeat($track, $barArea - $filled));
         }
 
-        return [$prefix . $bar . $suffix];
+        return [$prefix.$bar.$suffix];
     }
 
     private function indeterminateBar(int $area, int $tick, string $fill, string $track, Style $fillStyle, Style $trackStyle): string
@@ -131,6 +131,6 @@ final class AnimatedBar implements Renderable, Stringable
         $before = str_repeat($track, $offset);
         $after = str_repeat($track, max($area - $offset - $block, 0));
 
-        return $trackStyle->apply($before) . $fillStyle->apply(str_repeat($fill, $block)) . $trackStyle->apply($after);
+        return $trackStyle->apply($before).$fillStyle->apply(str_repeat($fill, $block)).$trackStyle->apply($after);
     }
 }

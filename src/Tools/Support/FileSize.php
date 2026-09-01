@@ -23,6 +23,6 @@ final class FileSize
             $value /= 1024;
         }
 
-        return round($value, $precision) . ' ' . self::UNITS[$i];
+        return round($value, $precision).' '.self::UNITS[$i];
     }
 }

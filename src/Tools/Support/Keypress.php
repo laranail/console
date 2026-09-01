@@ -70,23 +70,23 @@ final class Keypress
     public static function translateKey(string $key): string
     {
         return match ($key) {
-            "\033[A"            => self::KEY_UP,
-            "\033[B"            => self::KEY_DOWN,
-            "\033[C"            => self::KEY_RIGHT,
-            "\033[D"            => self::KEY_LEFT,
-            "\n", "\r"          => self::KEY_ENTER,
-            ' '                 => self::KEY_SPACE,
-            "\010", "\177"      => self::KEY_BACKSPACE,
-            "\t"                => self::KEY_TAB,
-            "\e", "\033"        => self::KEY_ESC,
-            "\x03"              => self::KEY_CTRL_C,
+            "\033[A" => self::KEY_UP,
+            "\033[B" => self::KEY_DOWN,
+            "\033[C" => self::KEY_RIGHT,
+            "\033[D" => self::KEY_LEFT,
+            "\n", "\r" => self::KEY_ENTER,
+            ' ' => self::KEY_SPACE,
+            "\010", "\177" => self::KEY_BACKSPACE,
+            "\t" => self::KEY_TAB,
+            "\e", "\033" => self::KEY_ESC,
+            "\x03" => self::KEY_CTRL_C,
             "\033[H", "\033[1~" => self::KEY_HOME,
             "\033[F", "\033[4~" => self::KEY_END,
-            "\033[5~"           => self::KEY_PAGE_UP,
-            "\033[6~"           => self::KEY_PAGE_DOWN,
-            "\033[2~"           => self::KEY_INSERT,
-            "\033[3~"           => self::KEY_DELETE,
-            default             => $key,
+            "\033[5~" => self::KEY_PAGE_UP,
+            "\033[6~" => self::KEY_PAGE_DOWN,
+            "\033[2~" => self::KEY_INSERT,
+            "\033[3~" => self::KEY_DELETE,
+            default => $key,
         };
     }
 
@@ -96,24 +96,24 @@ final class Keypress
     public static function getKeyName(string $key): string
     {
         return match ($key) {
-            self::KEY_UP        => 'UP ARROW',
-            self::KEY_DOWN      => 'DOWN ARROW',
-            self::KEY_LEFT      => 'LEFT ARROW',
-            self::KEY_RIGHT     => 'RIGHT ARROW',
-            self::KEY_ENTER     => 'ENTER',
-            self::KEY_SPACE     => 'SPACE',
+            self::KEY_UP => 'UP ARROW',
+            self::KEY_DOWN => 'DOWN ARROW',
+            self::KEY_LEFT => 'LEFT ARROW',
+            self::KEY_RIGHT => 'RIGHT ARROW',
+            self::KEY_ENTER => 'ENTER',
+            self::KEY_SPACE => 'SPACE',
             self::KEY_BACKSPACE => 'BACKSPACE',
-            self::KEY_TAB       => 'TAB',
-            self::KEY_ESC       => 'ESCAPE',
-            self::KEY_HOME      => 'HOME',
-            self::KEY_END       => 'END',
-            self::KEY_PAGE_UP   => 'PAGE UP',
+            self::KEY_TAB => 'TAB',
+            self::KEY_ESC => 'ESCAPE',
+            self::KEY_HOME => 'HOME',
+            self::KEY_END => 'END',
+            self::KEY_PAGE_UP => 'PAGE UP',
             self::KEY_PAGE_DOWN => 'PAGE DOWN',
-            self::KEY_INSERT    => 'INSERT',
-            self::KEY_DELETE    => 'DELETE',
-            self::KEY_CTRL_C    => 'CTRL+C',
-            default             => strlen($key) === 1 && ord($key) >= 32 && ord($key) <= 126
-                ? "'" . $key . "'"
+            self::KEY_INSERT => 'INSERT',
+            self::KEY_DELETE => 'DELETE',
+            self::KEY_CTRL_C => 'CTRL+C',
+            default => strlen($key) === 1 && ord($key) >= 32 && ord($key) <= 126
+                ? "'".$key."'"
                 : 'UNKNOWN SEQUENCE',
         };
     }
@@ -127,7 +127,7 @@ final class Keypress
             $char = substr($key, 1);
 
             if (strlen($char) === 1 && ord($char) >= 32 && ord($char) <= 126) {
-                return 'ALT+' . strtoupper($char);
+                return 'ALT+'.strtoupper($char);
             }
         }
 

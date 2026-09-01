@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Events;
 
-use stdClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Input\ArrayInput;
 use Simtabi\Laranail\Console\Tools\Events\CommandEvents;
+use stdClass;
+use Symfony\Component\Console\Input\ArrayInput;
 
 final class CommandEventsTest extends TestCase
 {

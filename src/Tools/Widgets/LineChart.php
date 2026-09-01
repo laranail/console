@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
-use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Support\BrailleCanvas;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Stringable;
 
 /**
  * A line chart: one or more numeric series plotted into a {@see BrailleCanvas}
@@ -33,8 +33,8 @@ final class LineChart implements Renderable, Stringable
     private int $height = 8;
 
     /**
-     * @param array<string, list<int|float>>|list<int|float> $series a single series
-     *                                                               (list of numbers) or named series (name => list of numbers)
+     * @param  array<string, list<int|float>>|list<int|float>  $series  a single series
+     *                                                                  (list of numbers) or named series (name => list of numbers)
      */
     public function __construct(array $series = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
@@ -51,7 +51,7 @@ final class LineChart implements Renderable, Stringable
     }
 
     /**
-     * @param array<string, list<int|float>>|list<int|float> $series
+     * @param  array<string, list<int|float>>|list<int|float>  $series
      */
     public static function make(array $series = []): self
     {
@@ -59,7 +59,7 @@ final class LineChart implements Renderable, Stringable
     }
 
     /**
-     * @param list<int|float> $values
+     * @param  list<int|float>  $values
      */
     public function series(string $name, array $values): self
     {
@@ -118,14 +118,14 @@ final class LineChart implements Renderable, Stringable
         $last = count($body) - 1;
         foreach ($body as $i => $line) {
             $label = $i === 0 ? $this->formatNumber($max) : ($i === $last ? $this->formatNumber($min) : '');
-            $out[] = DisplayWidth::padLeft($label, $gutter) . ' ' . $line;
+            $out[] = DisplayWidth::padLeft($label, $gutter).' '.$line;
         }
 
         return $out;
     }
 
     /**
-     * @param list<float> $values
+     * @param  list<float>  $values
      */
     private function plot(BrailleCanvas $canvas, array $values, float $min, float $range, int $pw, int $ph, int $pen): void
     {
@@ -156,7 +156,7 @@ final class LineChart implements Renderable, Stringable
     }
 
     /**
-     * @param array<string, list<int|float>>|list<int|float> $series
+     * @param  array<string, list<int|float>>|list<int|float>  $series
      */
     private function isSingleSeries(array $series): bool
     {

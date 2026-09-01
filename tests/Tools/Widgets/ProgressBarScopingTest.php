@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Symfony\Component\Console\Helper\ProgressBar as SymfonyProgressBar;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 final class ProgressBarScopingTest extends TestCase
 {

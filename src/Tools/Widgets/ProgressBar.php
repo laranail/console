@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Support\Config;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Simtabi\Laranail\Console\Tools\Enums\ProgressStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Symfony\Component\Console\Helper\ProgressBar as SymfonyProgressBar;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A flavoured progress bar over Symfony's ProgressBar.
@@ -24,10 +24,10 @@ final readonly class ProgressBar
 {
     /** @var array<string, array{0:string,1:string,2:string}> bar, empty, progress */
     private const array GLYPHS = [
-        'blocks'   => ['█', '░', '█'],
-        'ascii'    => ['#', '-', '>'],
-        'dots'     => ['●', '○', '●'],
-        'arrows'   => ['►', '▷', '►'],
+        'blocks' => ['█', '░', '█'],
+        'ascii' => ['#', '-', '>'],
+        'dots' => ['●', '○', '●'],
+        'arrows' => ['►', '▷', '►'],
         'gradient' => ['▓', '░', '▒'],
     ];
 

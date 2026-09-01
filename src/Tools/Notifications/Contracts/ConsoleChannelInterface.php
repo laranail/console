@@ -18,7 +18,7 @@ interface ConsoleChannelInterface
     /**
      * Write a message to the console.
      *
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function send(string $message, array $data = []): bool;
 }

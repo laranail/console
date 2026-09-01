@@ -14,7 +14,7 @@ namespace Simtabi\Laranail\Console\Tools\Support;
 final class Lang
 {
     /**
-     * @param array<string, scalar|null> $replace
+     * @param  array<string, scalar|null>  $replace
      */
     public static function get(string $key, string $default, array $replace = []): string
     {
@@ -32,12 +32,12 @@ final class Lang
     }
 
     /**
-     * @param array<string, scalar|null> $replace
+     * @param  array<string, scalar|null>  $replace
      */
     private static function interpolate(string $text, array $replace): string
     {
         foreach ($replace as $search => $value) {
-            $text = str_replace(':' . $search, (string) $value, $text);
+            $text = str_replace(':'.$search, (string) $value, $text);
         }
 
         return $text;

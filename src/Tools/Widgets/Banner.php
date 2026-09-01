@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Support\Color;
-use Simtabi\Laranail\Console\Tools\Support\Config;
-use Simtabi\Laranail\Console\Tools\Support\Figlet;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\Figlet;
+use Stringable;
 
 /**
  * A start-of-run masthead / banner designer.
@@ -169,7 +169,7 @@ final class Banner implements Stringable
     }
 
     /**
-     * @param list<string> $stops two or more hex colours
+     * @param  list<string>  $stops  two or more hex colours
      */
     public function gradient(array $stops): self
     {
@@ -262,7 +262,7 @@ final class Banner implements Stringable
     private function alignLine(string $line, int $width): string
     {
         return match ($this->align) {
-            'left'  => DisplayWidth::pad($line, $width),
+            'left' => DisplayWidth::pad($line, $width),
             'right' => DisplayWidth::padLeft($line, $width),
             default => DisplayWidth::center($line, $width),
         };

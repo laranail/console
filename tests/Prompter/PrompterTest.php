@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Tests;
 
-use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Prompter\Enums\ContextType;
-use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
+use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 
 final class PrompterTest extends TestCase
 {

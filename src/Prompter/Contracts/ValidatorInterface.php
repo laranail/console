@@ -14,8 +14,7 @@ interface ValidatorInterface
     /**
      * Validate the given value.
      *
-     * @param mixed $value The value to validate.
-     *
+     * @param  mixed  $value  The value to validate.
      * @return string|null The error message if validation fails, or null if validation passes.
      */
     public function validate(mixed $value): ?string;

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Runners;
 
-use Override;
-use Illuminate\Support\Arr;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Arr;
+use Override;
 
 /**
  * Conditional runner specialised for console-only execution: it skips
@@ -54,7 +54,7 @@ class ConsoleRunner extends BaseRunner
 
                 return $command !== null && in_array($command, $commands, true);
             },
-            'command_' . implode('_or_', $commands),
+            'command_'.implode('_or_', $commands),
         );
     }
 
@@ -87,16 +87,16 @@ class ConsoleRunner extends BaseRunner
         if (! $this->app->runningInConsole()) {
             $this->shouldRun = false;
             $this->conditions[] = [
-                'type'      => 'console_check',
-                'label'     => 'running_in_console',
-                'passed'    => false,
+                'type' => 'console_check',
+                'label' => 'running_in_console',
+                'passed' => false,
                 'timestamp' => now()->toIso8601String(),
             ];
         } else {
             $this->conditions[] = [
-                'type'      => 'console_check',
-                'label'     => 'running_in_console',
-                'passed'    => true,
+                'type' => 'console_check',
+                'label' => 'running_in_console',
+                'passed' => true,
                 'timestamp' => now()->toIso8601String(),
             ];
         }

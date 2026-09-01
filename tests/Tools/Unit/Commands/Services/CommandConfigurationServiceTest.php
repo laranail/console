@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandConfigurationService;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 
 final class CommandConfigurationServiceTest extends TestCase
 {

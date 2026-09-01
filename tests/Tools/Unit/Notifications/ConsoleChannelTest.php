@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Notifications;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
 use Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel;
 use Simtabi\Laranail\Console\Tools\Notifications\Contracts\ConsoleChannelInterface;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 final class ConsoleChannelTest extends TestCase
 {

@@ -24,17 +24,16 @@ final class Align
      * Pad each line out to $width according to $align (every returned line has the
      * exact display width $width).
      *
-     * @param list<string> $lines
-     *
+     * @param  list<string>  $lines
      * @return list<string>
      */
     public static function pad(array $lines, int $width, string $align = self::LEFT): array
     {
         return array_map(
             static fn (string $line): string => match ($align) {
-                self::RIGHT  => DisplayWidth::padLeft($line, $width),
+                self::RIGHT => DisplayWidth::padLeft($line, $width),
                 self::CENTER => DisplayWidth::center($line, $width),
-                default      => DisplayWidth::pad($line, $width),
+                default => DisplayWidth::pad($line, $width),
             },
             $lines,
         );
@@ -44,8 +43,7 @@ final class Align
      * Place a block (kept at its own width) within $width by prefixing a margin —
      * used to centre/right-align a sub-block (e.g. a box) without stretching it.
      *
-     * @param list<string> $lines
-     *
+     * @param  list<string>  $lines
      * @return list<string>
      */
     public static function place(array $lines, int $width, string $align = self::LEFT): array
@@ -56,9 +54,9 @@ final class Align
 
         $blockWidth = DisplayWidth::maxWidth($lines);
         $margin = match ($align) {
-            self::RIGHT  => max($width - $blockWidth, 0),
+            self::RIGHT => max($width - $blockWidth, 0),
             self::CENTER => (int) max(floor(($width - $blockWidth) / 2), 0),
-            default      => 0,
+            default => 0,
         };
 
         if ($margin === 0) {
@@ -67,7 +65,7 @@ final class Align
 
         $prefix = str_repeat(' ', $margin);
 
-        return array_map(static fn (string $line): string => $prefix . $line, $lines);
+        return array_map(static fn (string $line): string => $prefix.$line, $lines);
     }
 
     /**
@@ -76,9 +74,9 @@ final class Align
     public static function normalize(string $align): string
     {
         return match (strtolower($align)) {
-            self::RIGHT  => self::RIGHT,
+            self::RIGHT => self::RIGHT,
             self::CENTER => self::CENTER,
-            default      => self::LEFT,
+            default => self::LEFT,
         };
     }
 }

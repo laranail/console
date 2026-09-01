@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Observers;
 
-use PHPUnit\Framework\TestCase;
-use Illuminate\Events\Dispatcher;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
+use Illuminate\Events\Dispatcher;
+use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Observers\ConsoleCommandObserver;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Simtabi\Laranail\Console\Tools\Observers\ConsoleCommandObserver;
 
 final class ConsoleCommandObserverTest extends TestCase
 {

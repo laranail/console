@@ -8,10 +8,10 @@ declare(strict_types=1);
  *   php examples/tools/writing.php
  */
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
-use Symfony\Component\Console\Output\ConsoleOutput;
 use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
+use Symfony\Component\Console\Output\ConsoleOutput;
 
 $w = ConsoleWriter::make(new ConsoleOutput);
 

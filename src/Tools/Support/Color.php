@@ -19,15 +19,15 @@ final readonly class Color
 {
     /** Common colour names → hex. */
     private const array NAMES = [
-        'black'     => '#000000', 'white' => '#ffffff', 'red' => '#ff0000',
-        'green'     => '#00aa00', 'lime' => '#00ff00', 'blue' => '#0000ff',
-        'yellow'    => '#ffff00', 'cyan' => '#00ffff', 'magenta' => '#ff00ff',
-        'gray'      => '#808080', 'grey' => '#808080', 'silver' => '#c0c0c0',
-        'maroon'    => '#800000', 'olive' => '#808000', 'navy' => '#000080',
-        'teal'      => '#008080', 'purple' => '#800080', 'orange' => '#ff8800',
-        'pink'      => '#ff69b4', 'brown' => '#a52a2a', 'gold' => '#ffd700',
-        'slate'     => '#64748b', 'indigo' => '#4b0082', 'violet' => '#ee82ee',
-        'crimson'   => '#dc143c', 'coral' => '#ff7f50', 'salmon' => '#fa8072',
+        'black' => '#000000', 'white' => '#ffffff', 'red' => '#ff0000',
+        'green' => '#00aa00', 'lime' => '#00ff00', 'blue' => '#0000ff',
+        'yellow' => '#ffff00', 'cyan' => '#00ffff', 'magenta' => '#ff00ff',
+        'gray' => '#808080', 'grey' => '#808080', 'silver' => '#c0c0c0',
+        'maroon' => '#800000', 'olive' => '#808000', 'navy' => '#000080',
+        'teal' => '#008080', 'purple' => '#800080', 'orange' => '#ff8800',
+        'pink' => '#ff69b4', 'brown' => '#a52a2a', 'gold' => '#ffd700',
+        'slate' => '#64748b', 'indigo' => '#4b0082', 'violet' => '#ee82ee',
+        'crimson' => '#dc143c', 'coral' => '#ff7f50', 'salmon' => '#fa8072',
         'turquoise' => '#40e0d0', 'aqua' => '#00ffff', 'mint' => '#3eb489',
     ];
 
@@ -68,7 +68,7 @@ final readonly class Color
         $color = trim($color);
 
         if (self::isValidHex($color)) {
-            return '#' . strtolower(ltrim($color, '#'));
+            return '#'.strtolower(ltrim($color, '#'));
         }
 
         $lower = strtolower($color);
@@ -181,7 +181,7 @@ final readonly class Color
     {
         $seq = $this->sequence($hex);
 
-        return $seq === '' ? $text : $seq . $text . "\033[0m";
+        return $seq === '' ? $text : $seq.$text."\033[0m";
     }
 
     /**
@@ -191,13 +191,13 @@ final readonly class Color
     {
         $seq = $this->sequence($color, true);
 
-        return $seq === '' ? $text : $seq . $text . "\033[0m";
+        return $seq === '' ? $text : $seq.$text."\033[0m";
     }
 
     /**
      * Interpolate a per-character foreground gradient across colour stops.
      *
-     * @param list<string> $stops Colours (≥ 2; any parseable spec)
+     * @param  list<string>  $stops  Colours (≥ 2; any parseable spec)
      */
     public function gradient(string $text, array $stops): string
     {
@@ -228,10 +228,10 @@ final readonly class Color
             $g = (int) round($g1 + ($g2 - $g1) * $local);
             $b = (int) round($b1 + ($b2 - $b1) * $local);
 
-            $out .= $this->openSgr($r, $g, $b, false) . $char;
+            $out .= $this->openSgr($r, $g, $b, false).$char;
         }
 
-        return $out . "\033[0m";
+        return $out."\033[0m";
     }
 
     private static function hslToHex(int $h, int $s, int $l): string
@@ -245,12 +245,12 @@ final readonly class Color
         $m = $lf - $c / 2;
 
         [$r, $g, $b] = match (true) {
-            $h < 60  => [$c, $x, 0.0],
+            $h < 60 => [$c, $x, 0.0],
             $h < 120 => [$x, $c, 0.0],
             $h < 180 => [0.0, $c, $x],
             $h < 240 => [0.0, $x, $c],
             $h < 300 => [$x, 0.0, $c],
-            default  => [$c, 0.0, $x],
+            default => [$c, 0.0, $x],
         };
 
         return self::rgbToHex(
@@ -300,16 +300,16 @@ final readonly class Color
     private function openSgr(int $r, int $g, int $b, bool $background): string
     {
         if ($this->capabilities->supportsTrueColor()) {
-            return "\033[" . ($background ? '48' : '38') . ";2;{$r};{$g};{$b}m";
+            return "\033[".($background ? '48' : '38').";2;{$r};{$g};{$b}m";
         }
 
         if ($this->capabilities->supports256Color()) {
-            return "\033[" . ($background ? '48' : '38') . ';5;' . $this->rgbTo256($r, $g, $b) . 'm';
+            return "\033[".($background ? '48' : '38').';5;'.$this->rgbTo256($r, $g, $b).'m';
         }
 
         $base = $background ? 40 : 30;
 
-        return "\033[" . ($base + $this->nearestAnsi($r, $g, $b)) . 'm';
+        return "\033[".($base + $this->nearestAnsi($r, $g, $b)).'m';
     }
 
     /**

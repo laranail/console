@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Tui;
 
-use Symfony\Component\Tui\Tui;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\ConsoleManager;
-use Simtabi\Laranail\Console\Tools\Widgets\Box;
-use Symfony\Component\Tui\Render\RenderContext;
-use Simtabi\Laranail\Console\Tui\RenderableWidget;
-use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
+use Simtabi\Laranail\Console\Tui\RenderableWidget;
+use Symfony\Component\Tui\Render\RenderContext;
+use Symfony\Component\Tui\Tui;
 
 final class TuiBridgeTest extends TestCase
 {
@@ -38,7 +38,7 @@ final class TuiBridgeTest extends TestCase
     {
         // A line wider than the context must be clipped so symfony/tui's Renderer
         // does not throw RenderException.
-        $widget = RenderableWidget::of(str_repeat('x', 100) . "\n" . str_repeat('y', 100));
+        $widget = RenderableWidget::of(str_repeat('x', 100)."\n".str_repeat('y', 100));
 
         $lines = $widget->render(new RenderContext(20, 5));
 

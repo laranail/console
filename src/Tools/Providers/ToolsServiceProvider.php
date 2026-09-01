@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Providers;
 
-use Override;
 use Illuminate\Console\Command;
 use Illuminate\Support\ServiceProvider;
-use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
+use Override;
 use Simtabi\Laranail\Console\Tools\Commands\CheckConfigCommand;
 use Simtabi\Laranail\Console\Tools\Support\ConsoleWriterFactory;
+use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 
 /**
  * Child provider for the Tools sub-domain.

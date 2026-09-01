@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
+use Illuminate\Support\Facades\Log;
 use Mockery;
 use RuntimeException;
-use Illuminate\Support\Facades\Log;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandErrorService;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 
 final class CommandErrorServiceTest extends TestCase
 {

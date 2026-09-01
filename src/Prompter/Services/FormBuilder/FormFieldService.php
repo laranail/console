@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter\Services\FormBuilder;
 
 use Closure;
-use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
 use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
+use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
 
 /**
  * Class FormField
@@ -36,14 +36,14 @@ class FormFieldService
     /**
      * FormField constructor.
      *
-     * @param FieldType $type The type of the form field.
+     * @param  FieldType  $type  The type of the form field.
      */
     public function __construct(public FieldType $type) {}
 
     /**
      * Set the label of the form field.
      *
-     * @param string $label The label of the form field.
+     * @param  string  $label  The label of the form field.
      */
     public function label(string $label): self
     {
@@ -55,7 +55,7 @@ class FormFieldService
     /**
      * Set the placeholder of the form field.
      *
-     * @param string $placeholder The placeholder of the form field.
+     * @param  string  $placeholder  The placeholder of the form field.
      */
     public function placeholder(string $placeholder): self
     {
@@ -67,7 +67,7 @@ class FormFieldService
     /**
      * Set whether the form field is required.
      *
-     * @param bool $required Whether the form field is required.
+     * @param  bool  $required  Whether the form field is required.
      */
     public function required(bool $required): self
     {
@@ -79,7 +79,7 @@ class FormFieldService
     /**
      * Set the hint of the form field.
      *
-     * @param string $hint The hint of the form field.
+     * @param  string  $hint  The hint of the form field.
      */
     public function hint(string $hint): self
     {
@@ -91,7 +91,7 @@ class FormFieldService
     /**
      * Set the default value of the form field.
      *
-     * @param ?string $default The default value of the form field.
+     * @param  ?string  $default  The default value of the form field.
      */
     public function default(?string $default): self
     {
@@ -103,7 +103,7 @@ class FormFieldService
     /**
      * Set the options of the form field.
      *
-     * @param ?array $options The options of the form field.
+     * @param  ?array  $options  The options of the form field.
      */
     public function options(?array $options): self
     {
@@ -115,7 +115,7 @@ class FormFieldService
     /**
      * Set the validator of the form field.
      *
-     * @param ?ValidatorInterface $validator The validator of the form field.
+     * @param  ?ValidatorInterface  $validator  The validator of the form field.
      */
     public function validator(?ValidatorInterface $validator): self
     {
@@ -127,7 +127,7 @@ class FormFieldService
     /**
      * Set the custom validator of the form field.
      *
-     * @param ?Closure $customValidator The custom validator of the form field.
+     * @param  ?Closure  $customValidator  The custom validator of the form field.
      */
     public function customValidator(?Closure $customValidator): self
     {
@@ -139,7 +139,7 @@ class FormFieldService
     /**
      * Set the custom error message for the form field.
      *
-     * @param ?string $customErrorMessage The custom error message of the form field.
+     * @param  ?string  $customErrorMessage  The custom error message of the form field.
      */
     public function customErrorMessage(?string $customErrorMessage): self
     {

@@ -15,7 +15,7 @@ namespace Simtabi\Laranail\Console\Tools\Support\Fonts;
 final readonly class FontDefinition
 {
     /**
-     * @param array<int|string, list<string>> $chars character => glyph rows
+     * @param  array<int|string, list<string>>  $chars  character => glyph rows
      */
     public function __construct(
         public int $height,
@@ -24,7 +24,7 @@ final readonly class FontDefinition
     ) {}
 
     /**
-     * @param array<int|string, list<string>> $chars
+     * @param  array<int|string, list<string>>  $chars
      */
     public static function make(int $height, array $chars, int $gap = 1): self
     {
