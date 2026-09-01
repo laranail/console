@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Stringable;
 
 /**
  * A wizard/pipeline breadcrumb showing done / current / pending steps, e.g.
@@ -25,7 +25,7 @@ final class StepFlow implements Stringable
     private readonly bool $unicode;
 
     /**
-     * @param list<string> $steps
+     * @param  list<string>  $steps
      */
     public function __construct(array $steps = [], ?Capabilities $capabilities = null)
     {
@@ -41,7 +41,7 @@ final class StepFlow implements Stringable
     }
 
     /**
-     * @param list<string> $steps
+     * @param  list<string>  $steps
      */
     public static function make(array $steps = []): self
     {
@@ -67,17 +67,17 @@ final class StepFlow implements Stringable
 
     public function render(): string
     {
-        $separator = ' ' . $this->symbols->get('arrow') . ' ';
+        $separator = ' '.$this->symbols->get('arrow').' ';
         $rendered = [];
 
         foreach ($this->steps as $i => $label) {
             $glyph = match (true) {
-                $i < $this->current   => $this->symbols->get('success'),
+                $i < $this->current => $this->symbols->get('success'),
                 $i === $this->current => $this->unicode ? '●' : '[*]',
-                default               => $this->symbols->get('pending'),
+                default => $this->symbols->get('pending'),
             };
 
-            $rendered[] = $glyph . ' ' . $label;
+            $rendered[] = $glyph.' '.$label;
         }
 
         return implode($separator, $rendered);

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 
 /**
  * A single-value horizontal gauge/meter, e.g. `Disk  [██████░░] 72% (180/250)`.
@@ -71,8 +71,8 @@ final class Gauge implements Stringable
         }
 
         [$full, $empty] = $this->unicode ? ['█', '░'] : ['#', '-'];
-        $bar = str_repeat($full, $filled) . str_repeat($empty, $this->barWidth - $filled);
-        $out = ($this->label !== '' ? $this->label . '  ' : '') . "[{$bar}] {$percent}%";
+        $bar = str_repeat($full, $filled).str_repeat($empty, $this->barWidth - $filled);
+        $out = ($this->label !== '' ? $this->label.'  ' : '')."[{$bar}] {$percent}%";
 
         if ($this->showValue) {
             $out .= sprintf(' (%s/%s)', $this->trim($this->value), $this->trim($this->max));

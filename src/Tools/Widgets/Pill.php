@@ -31,9 +31,9 @@ final class Pill extends Badge
         $capStyle = Style::make($this->capabilities())->fg($bg);
 
         if ($this->capabilities()->supportsUnicode()) {
-            return [$capStyle->apply('▐') . $body . $capStyle->apply('▌')];
+            return [$capStyle->apply('▐').$body.$capStyle->apply('▌')];
         }
 
-        return ['(' . $body . ')'];
+        return ['('.$body.')'];
     }
 }

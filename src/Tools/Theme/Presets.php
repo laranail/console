@@ -49,27 +49,27 @@ final class Presets
             'dracula' => [
                 'primary' => '#bd93f9', 'accent' => '#8be9fd', 'success' => '#50fa7b',
                 'warning' => '#ffb86c', 'danger' => '#ff5555', 'info' => '#6272a4',
-                'muted'   => '#6272a4',
+                'muted' => '#6272a4',
             ],
             'nord' => [
                 'primary' => '#88c0d0', 'accent' => '#8fbcbb', 'success' => '#a3be8c',
                 'warning' => '#ebcb8b', 'danger' => '#bf616a', 'info' => '#5e81ac',
-                'muted'   => '#4c566a',
+                'muted' => '#4c566a',
             ],
             'solarized' => [
                 'primary' => '#268bd2', 'accent' => '#2aa198', 'success' => '#859900',
                 'warning' => '#b58900', 'danger' => '#dc322f', 'info' => '#6c71c4',
-                'muted'   => '#586e75',
+                'muted' => '#586e75',
             ],
             'monochrome' => [
                 'primary' => '#e5e5e5', 'accent' => '#bdbdbd', 'success' => '#d4d4d4',
                 'warning' => '#9e9e9e', 'danger' => '#ffffff', 'info' => '#a3a3a3',
-                'muted'   => '#737373',
+                'muted' => '#737373',
             ],
             'github' => [
                 'primary' => '#0969da', 'accent' => '#1f883d', 'success' => '#1a7f37',
                 'warning' => '#9a6700', 'danger' => '#cf222e', 'info' => '#0550ae',
-                'muted'   => '#656d76',
+                'muted' => '#656d76',
             ],
         ];
     }

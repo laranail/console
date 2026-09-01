@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
-use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Stringable;
 
 /**
  * A frequency histogram: bins a set of raw values and renders the distribution as
@@ -30,7 +30,7 @@ final class Histogram implements Renderable, Stringable
     private int $height = 8;
 
     /**
-     * @param list<int|float> $values
+     * @param  list<int|float>  $values
      */
     public function __construct(array $values = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
@@ -39,7 +39,7 @@ final class Histogram implements Renderable, Stringable
     }
 
     /**
-     * @param list<int|float> $values
+     * @param  list<int|float>  $values
      */
     public static function make(array $values = []): self
     {

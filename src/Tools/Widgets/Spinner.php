@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use function Laravel\Prompts\spin;
-
-use Symfony\Component\Console\Cursor;
-use Simtabi\Laranail\Console\Tools\Support\Config;
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\OutputInterface;
-use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Simtabi\Laranail\Console\Tools\Enums\SpinnerFrames;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
+use Symfony\Component\Console\Cursor;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+
+use function Laravel\Prompts\spin;
 
 /**
  * A fluent activity spinner.
@@ -117,7 +117,7 @@ final class Spinner
         $this->index++;
 
         if ($this->capabilities->isInteractive()) {
-            $this->output->write("\r" . $this->frameLine());
+            $this->output->write("\r".$this->frameLine());
         }
 
         return $this;
@@ -132,13 +132,13 @@ final class Spinner
         $set = $this->frames->frames($this->capabilities->supportsUnicode());
         $frame = $set[$this->index % count($set)];
 
-        return $frame . ' ' . $this->message . $this->elapsedSuffix();
+        return $frame.' '.$this->message.$this->elapsedSuffix();
     }
 
     /**
      * Stop the spinner and print a final status line.
      *
-     * @param 'success'|'error'|'warning'|'info' $status
+     * @param  'success'|'error'|'warning'|'info'  $status
      */
     public function finish(string $status = 'success', ?string $message = null): self
     {
@@ -151,7 +151,7 @@ final class Spinner
             $cursor->show();
         }
 
-        $this->output->writeln($this->symbols->get($status) . ' ' . ($message ?? $this->message));
+        $this->output->writeln($this->symbols->get($status).' '.($message ?? $this->message));
 
         return $this;
     }
@@ -162,6 +162,6 @@ final class Spinner
             return '';
         }
 
-        return ' ' . TimeFormat::duration(max(microtime(true) - $this->startedAt, 0.0));
+        return ' '.TimeFormat::duration(max(microtime(true) - $this->startedAt, 0.0));
     }
 }

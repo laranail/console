@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
 
 final class EndToEndDesignSystemTest extends TestCase
 {
@@ -33,7 +33,7 @@ final class EndToEndDesignSystemTest extends TestCase
                 ->paragraph(str_repeat('lorem ipsum dolor ', 10))
                 ->bulletList([str_repeat('a', 60), 'short'])
                 ->blockQuote(str_repeat('quoted ', 12))
-                ->codeBlock('echo ' . str_repeat('x', 60) . ';')
+                ->codeBlock('echo '.str_repeat('x', 60).';')
                 ->add(BarChart::make(['api' => 9, 'web' => 3])->width($width))
                 ->render();
 
@@ -41,7 +41,7 @@ final class EndToEndDesignSystemTest extends TestCase
                 self::assertLessThanOrEqual(
                     $width,
                     DisplayWidth::of($line),
-                    "line exceeded width {$width}: " . $line,
+                    "line exceeded width {$width}: ".$line,
                 );
             }
         }

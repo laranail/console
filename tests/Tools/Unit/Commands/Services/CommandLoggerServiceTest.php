@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
-use Mockery;
 use Illuminate\Support\Facades\Log;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Mockery;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandLoggerService;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 
 final class CommandLoggerServiceTest extends TestCase
 {

@@ -10,12 +10,12 @@ declare(strict_types=1);
  *   php examples/tools/interactive.php
  */
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Live;
 use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 $interactive = Capabilities::detect()->isInteractive();
 

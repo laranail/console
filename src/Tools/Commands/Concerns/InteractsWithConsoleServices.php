@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Commands\Concerns;
 
 use Override;
-use Throwable;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
+use Throwable;
 
 /**
  * Full command support — the managed lifecycle (performance timing, event dispatch,
@@ -117,7 +117,7 @@ trait InteractsWithConsoleServices
      * {@see CommandServiceManager}::`NATIVE_EVENTS` / `CUSTOM_EVENTS` / `SIGNALS` /
      * `NON_INTERACTIVE` constants.
      *
-     * @param array<string, mixed> $config
+     * @param  array<string, mixed>  $config
      */
     public function configureServices(array $config): self
     {
@@ -177,7 +177,7 @@ trait InteractsWithConsoleServices
             // Log the signal received
             $this->services->logger()->logSignal($signal, [
                 'execution_time' => $this->services->performance()->getFormattedExecutionTime(),
-                'memory_usage'   => $this->services->performance()->getMemoryUsage(),
+                'memory_usage' => $this->services->performance()->getMemoryUsage(),
             ]);
         });
     }
@@ -219,7 +219,7 @@ trait InteractsWithConsoleServices
         $this->line("  Peak Memory: {$summary['memory_usage']['peak_memory']}");
 
         if (! empty($summary['metadata'])) {
-            $this->line('  Metadata: ' . json_encode($summary['metadata']));
+            $this->line('  Metadata: '.json_encode($summary['metadata']));
         }
     }
 
@@ -278,7 +278,7 @@ trait InteractsWithConsoleServices
     /**
      * Execute a command with error handling
      *
-     * @param array<string, mixed> $arguments
+     * @param  array<string, mixed>  $arguments
      */
     protected function executeCommand(string $command, array $arguments = [], bool $throwOnError = true): int
     {

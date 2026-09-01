@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Tools\Support\Align;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 
 final class OsAlignResponsiveTest extends TestCase

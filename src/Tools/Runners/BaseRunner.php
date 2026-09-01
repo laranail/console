@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Runners;
 
 use Closure;
-use Throwable;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Throwable;
 
 /**
  * @phpstan-consistent-constructor
@@ -116,11 +116,11 @@ abstract class BaseRunner
             $this->shouldRun = (bool) $result;
 
             $this->conditions[] = [
-                'type'              => 'when',
-                'label'             => $label ?? 'condition_' . count($this->conditions),
-                'passed'            => $result,
+                'type' => 'when',
+                'label' => $label ?? 'condition_'.count($this->conditions),
+                'passed' => $result,
                 'execution_time_ms' => $calculateExecutionTimeMs($startTime),
-                'timestamp'         => now()->toIso8601String(),
+                'timestamp' => now()->toIso8601String(),
             ];
 
             $this->logCondition('when', $label, $result);
@@ -140,11 +140,11 @@ abstract class BaseRunner
             $this->shouldRun = ! $result;
 
             $this->conditions[] = [
-                'type'              => 'unless',
-                'label'             => $label ?? 'unless_' . count($this->conditions),
-                'passed'            => ! $result,
+                'type' => 'unless',
+                'label' => $label ?? 'unless_'.count($this->conditions),
+                'passed' => ! $result,
                 'execution_time_ms' => round((microtime(true) - $startTime) * 1000, 4),
-                'timestamp'         => now()->toIso8601String(),
+                'timestamp' => now()->toIso8601String(),
             ];
 
             $this->logCondition('unless', $label, ! $result);
@@ -160,7 +160,7 @@ abstract class BaseRunner
     {
         return $this->when(
             fn () => $this->app->environment($environments),
-            'environment_' . (is_array($environments) ? implode('_', $environments) : $environments),
+            'environment_'.(is_array($environments) ? implode('_', $environments) : $environments),
         );
     }
 
@@ -345,9 +345,9 @@ abstract class BaseRunner
         $startTime = microtime(true);
 
         $this->log('debug', 'Execution starting', [
-            'execution_id'       => $executionId,
-            'runner_type'        => static::class,
-            'should_run'         => $this->shouldRun,
+            'execution_id' => $executionId,
+            'runner_type' => static::class,
+            'should_run' => $this->shouldRun,
             'conditions_checked' => count($this->conditions),
         ]);
 
@@ -359,12 +359,12 @@ abstract class BaseRunner
             } catch (Throwable $e) {
                 $this->log('error', 'Error in onSkipped callback', [
                     'execution_id' => $executionId,
-                    'error'        => $e->getMessage(),
+                    'error' => $e->getMessage(),
                 ]);
             }
 
             $this->log('info', 'Execution skipped - conditions not met', [
-                'execution_id'      => $executionId,
+                'execution_id' => $executionId,
                 'failed_conditions' => $this->getFailedConditions(),
             ]);
 
@@ -382,7 +382,7 @@ abstract class BaseRunner
                 } catch (Throwable $e) {
                     $this->log('error', 'Error in before callback', [
                         'execution_id' => $executionId,
-                        'error'        => $e->getMessage(),
+                        'error' => $e->getMessage(),
                     ]);
                     throw $e;
                 }
@@ -400,7 +400,7 @@ abstract class BaseRunner
                 } catch (Throwable $e) {
                     $this->log('error', 'Error in after callback', [
                         'execution_id' => $executionId,
-                        'error'        => $e->getMessage(),
+                        'error' => $e->getMessage(),
                     ]);
                     throw $e;
                 }
@@ -412,15 +412,15 @@ abstract class BaseRunner
                 } catch (Throwable $e) {
                     $this->log('error', 'Error in success callback', [
                         'execution_id' => $executionId,
-                        'error'        => $e->getMessage(),
+                        'error' => $e->getMessage(),
                     ]);
                 }
             }
 
             $this->log('info', 'Execution completed successfully', [
                 'execution_id' => $executionId,
-                'duration_ms'  => round((microtime(true) - $startTime) * 1000, 2),
-                'has_result'   => $result !== null,
+                'duration_ms' => round((microtime(true) - $startTime) * 1000, 2),
+                'has_result' => $result !== null,
             ]);
 
             return $this->expectReturn ? $result : null;
@@ -434,26 +434,26 @@ abstract class BaseRunner
                     if ($handled !== null && $this->expectReturn) {
                         $this->log('warning', 'Error handled with fallback value', [
                             'execution_id' => $executionId,
-                            'error'        => $e->getMessage(),
+                            'error' => $e->getMessage(),
                         ]);
 
                         return $handled;
                     }
                 } catch (Throwable $handlerError) {
                     $this->log('critical', 'Error handler itself failed', [
-                        'execution_id'   => $executionId,
+                        'execution_id' => $executionId,
                         'original_error' => $e->getMessage(),
-                        'handler_error'  => $handlerError->getMessage(),
+                        'handler_error' => $handlerError->getMessage(),
                     ]);
                 }
             }
 
             $this->log('error', 'Execution failed with error', [
                 'execution_id' => $executionId,
-                'error'        => $e->getMessage(),
-                'file'         => $e->getFile(),
-                'line'         => $e->getLine(),
-                'duration_ms'  => round((microtime(true) - $startTime) * 1000, 2),
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'duration_ms' => round((microtime(true) - $startTime) * 1000, 2),
             ]);
 
             report($e);
@@ -465,20 +465,20 @@ abstract class BaseRunner
                     ($this->onFinally)($result, $error, $this->context);
                     $this->log('debug', 'Finally callback executed', [
                         'execution_id' => $executionId,
-                        'had_error'    => $error instanceof Throwable,
+                        'had_error' => $error instanceof Throwable,
                     ]);
                 } catch (Throwable $e) {
                     $this->log('error', 'Error in finally callback', [
                         'execution_id' => $executionId,
-                        'error'        => $e->getMessage(),
+                        'error' => $e->getMessage(),
                     ]);
                 }
             }
 
             $this->log('debug', 'Execution completed', [
-                'execution_id'      => $executionId,
+                'execution_id' => $executionId,
                 'total_duration_ms' => round((microtime(true) - $startTime) * 1000, 2),
-                'success'           => ! $error instanceof Throwable,
+                'success' => ! $error instanceof Throwable,
             ]);
         }
     }
@@ -521,23 +521,23 @@ abstract class BaseRunner
     public function debug(): array
     {
         return [
-            'name'       => $this->name,
-            'type'       => static::class,
+            'name' => $this->name,
+            'type' => static::class,
             'should_run' => $this->shouldRun,
             'conditions' => $this->conditions,
-            'context'    => $this->context,
-            'callbacks'  => [
-                'before'  => $this->onBefore instanceof Closure,
-                'after'   => $this->onAfter instanceof Closure,
+            'context' => $this->context,
+            'callbacks' => [
+                'before' => $this->onBefore instanceof Closure,
+                'after' => $this->onAfter instanceof Closure,
                 'success' => $this->onSuccess instanceof Closure,
-                'error'   => $this->onError instanceof Closure,
+                'error' => $this->onError instanceof Closure,
                 'finally' => $this->onFinally instanceof Closure,
                 'skipped' => $this->onSkipped instanceof Closure,
             ],
             'logging' => [
                 'conditions' => $this->logConditions,
-                'execution'  => $this->logExecution,
-                'channel'    => $this->logChannel,
+                'execution' => $this->logExecution,
+                'channel' => $this->logChannel,
             ],
         ];
     }
@@ -565,8 +565,8 @@ abstract class BaseRunner
         }
 
         $context = array_merge($this->context, $context, [
-            'runner'           => $this->name,
-            'runner_class'     => static::class,
+            'runner' => $this->name,
+            'runner_class' => static::class,
             'conditions_count' => count($this->conditions),
         ]);
 
@@ -587,8 +587,8 @@ abstract class BaseRunner
         }
 
         $this->log('debug', "Condition checked: {$type}", [
-            'label'      => $label ?? 'unnamed',
-            'passed'     => $passed,
+            'label' => $label ?? 'unnamed',
+            'passed' => $passed,
             'should_run' => $this->shouldRun,
         ]);
     }

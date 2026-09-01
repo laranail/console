@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Support\Config;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 
 /**
  * A named banner preset — font + colour/gradient + border + alignment + padding —
@@ -20,7 +20,7 @@ use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
 final readonly class BannerTheme
 {
     /**
-     * @param list<string>|null $gradient
+     * @param  list<string>|null  $gradient
      */
     public function __construct(
         public ?string $font = null,
@@ -55,16 +55,16 @@ final readonly class BannerTheme
         $palette = Theme::resolve()->palette();
 
         return match ($name) {
-            'success'         => new self(color: $palette->get('success'), border: BorderStyle::Light, align: 'center', padding: 1),
+            'success' => new self(color: $palette->get('success'), border: BorderStyle::Light, align: 'center', padding: 1),
             'error', 'danger' => new self(color: $palette->get('danger'), border: BorderStyle::Heavy, align: 'center', padding: 1),
-            'warning'         => new self(color: $palette->get('warning'), border: BorderStyle::Light, align: 'center', padding: 1),
-            'info'            => new self(color: $palette->get('info'), border: BorderStyle::Light, align: 'center', padding: 1),
-            default           => new self(align: 'center'),
+            'warning' => new self(color: $palette->get('warning'), border: BorderStyle::Light, align: 'center', padding: 1),
+            'info' => new self(color: $palette->get('info'), border: BorderStyle::Light, align: 'center', padding: 1),
+            default => new self(align: 'center'),
         };
     }
 
     /**
-     * @param array<string, mixed> $config
+     * @param  array<string, mixed>  $config
      */
     private static function fromConfig(array $config): self
     {

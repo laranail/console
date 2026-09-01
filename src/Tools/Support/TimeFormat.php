@@ -24,7 +24,7 @@ final class TimeFormat
             $rounded = round($seconds, 1);
 
             if ($rounded < 60.0) {
-                return rtrim(rtrim(number_format($rounded, 1, '.', ''), '0'), '.') . 's';
+                return rtrim(rtrim(number_format($rounded, 1, '.', ''), '0'), '.').'s';
             }
 
             $seconds = 60.0;
@@ -56,9 +56,9 @@ final class TimeFormat
         }
 
         return match (true) {
-            $ms < 1000  => number_format($ms, 2) . ' ms',
-            $ms < 60000 => number_format($ms / 1000, 2) . ' s',
-            default     => number_format($ms / 60000, 2) . ' min',
+            $ms < 1000 => number_format($ms, 2).' ms',
+            $ms < 60000 => number_format($ms / 1000, 2).' s',
+            default => number_format($ms / 60000, 2).' min',
         };
     }
 }

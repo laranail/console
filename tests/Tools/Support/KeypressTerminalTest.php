@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
 use Simtabi\Laranail\Console\Tools\Support\Keypress;
 use Simtabi\Laranail\Console\Tools\Support\Terminal;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
 
 final class KeypressTerminalTest extends TestCase
 {

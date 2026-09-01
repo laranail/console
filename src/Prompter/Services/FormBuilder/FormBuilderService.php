@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Console\Prompter\Services\FormBuilder;
 
 use Closure;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
-use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
 use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
+use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Validators\RadioFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\SelectFieldValidator;
@@ -78,8 +78,8 @@ class FormBuilderService
 
         return match ($formField->type) {
             FieldType::SELECT => new SelectFieldValidator($identifiers),
-            FieldType::RADIO  => new RadioFieldValidator($identifiers),
-            default           => FieldType::getDefaultValidator($formField->type),
+            FieldType::RADIO => new RadioFieldValidator($identifiers),
+            default => FieldType::getDefaultValidator($formField->type),
         };
     }
 
@@ -95,17 +95,17 @@ class FormBuilderService
         $validate = $this->makeValidator($formField);
 
         $common = [
-            'label'    => $formField->label,
+            'label' => $formField->label,
             'required' => $formField->required,
             'validate' => $validate,
-            'hint'     => $formField->hint,
-            'name'     => $name,
+            'hint' => $formField->hint,
+            'name' => $name,
         ];
 
         $parameters = match ($method) {
             'text', 'textarea' => $common + [
                 'placeholder' => $formField->placeholder,
-                'default'     => $formField->default ?? '',
+                'default' => $formField->default ?? '',
             ],
             'password' => $common + [
                 'placeholder' => $formField->placeholder,

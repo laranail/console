@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use function Laravel\Prompts\select;
-
 use Simtabi\Laranail\Console\Tools\Contracts\Interactive;
+
+use function Laravel\Prompts\select;
 
 /**
  * An interactive single-choice control rendered as buttons. Selection is
@@ -17,12 +17,12 @@ use Simtabi\Laranail\Console\Tools\Contracts\Interactive;
 final class ButtonGroup implements Interactive
 {
     /**
-     * @param array<int|string, string>|list<string> $options
+     * @param  array<int|string, string>|list<string>  $options
      */
     public function __construct(private array $options = []) {}
 
     /**
-     * @param array<int|string, string>|list<string> $options
+     * @param  array<int|string, string>|list<string>  $options
      */
     public static function make(array $options = []): self
     {

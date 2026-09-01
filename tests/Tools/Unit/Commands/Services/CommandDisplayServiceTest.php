@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandDisplayService;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandDisplayService;
 
 final class CommandDisplayServiceTest extends TestCase
 {

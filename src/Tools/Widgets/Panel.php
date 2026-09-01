@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Symfony\Component\Console\Output\OutputInterface;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Stringable;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * A multi-block layout: stacks {@see Renderable} blocks vertically or arranges
@@ -76,7 +76,7 @@ final class Panel implements Renderable, Stringable
     }
 
     /**
-     * @param array<int, int> $sizes per-block widths for horizontal layout
+     * @param  array<int, int>  $sizes  per-block widths for horizontal layout
      */
     public function sizes(array $sizes): self
     {
@@ -159,25 +159,25 @@ final class Panel implements Renderable, Stringable
         $lines = [];
 
         if ($this->border) {
-            $lines[] = $g['tl'] . str_repeat($g['h'], $width) . $g['tr'];
+            $lines[] = $g['tl'].str_repeat($g['h'], $width).$g['tr'];
         }
 
         $last = count($this->blocks) - 1;
         foreach ($this->blocks as $index => $block) {
             foreach ($block->renderLines() as $line) {
                 $line = DisplayWidth::pad($line, $width);
-                $lines[] = $this->border ? $g['v'] . $line . $g['v'] : $line;
+                $lines[] = $this->border ? $g['v'].$line.$g['v'] : $line;
             }
 
             if ($this->dividers && $index < $last) {
                 $lines[] = $this->border
-                    ? $g['teeRight'] . str_repeat($g['h'], $width) . $g['teeLeft']
+                    ? $g['teeRight'].str_repeat($g['h'], $width).$g['teeLeft']
                     : str_repeat($g['h'], $width);
             }
         }
 
         if ($this->border) {
-            $lines[] = $g['bl'] . str_repeat($g['h'], $width) . $g['br'];
+            $lines[] = $g['bl'].str_repeat($g['h'], $width).$g['br'];
         }
 
         return $lines;
@@ -186,8 +186,7 @@ final class Panel implements Renderable, Stringable
     /**
      * Shrink block widths proportionally so a horizontal row fits the terminal.
      *
-     * @param array<int, int> $widths
-     *
+     * @param  array<int, int>  $widths
      * @return array<int, int>
      */
     private function fitWidths(array $widths): array
@@ -241,7 +240,7 @@ final class Panel implements Renderable, Stringable
         $lines = [];
 
         if ($this->border) {
-            $lines[] = $g['tl'] . str_repeat($g['h'], $innerWidth) . $g['tr'];
+            $lines[] = $g['tl'].str_repeat($g['h'], $innerWidth).$g['tr'];
         }
 
         for ($row = 0; $row < $height; $row++) {
@@ -255,11 +254,11 @@ final class Panel implements Renderable, Stringable
             }
 
             $line = implode($divider, $segments);
-            $lines[] = $this->border ? $g['v'] . $line . $g['v'] : $line;
+            $lines[] = $this->border ? $g['v'].$line.$g['v'] : $line;
         }
 
         if ($this->border) {
-            $lines[] = $g['bl'] . str_repeat($g['h'], $innerWidth) . $g['br'];
+            $lines[] = $g['bl'].str_repeat($g['h'], $innerWidth).$g['br'];
         }
 
         return $lines;

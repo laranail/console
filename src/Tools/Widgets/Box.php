@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 
 /**
  * Frames text in a box drawn from a single {@see BorderStyle} family.
@@ -36,7 +36,7 @@ final class Box implements Stringable
     private readonly Capabilities $capabilities;
 
     /**
-     * @param list<string> $lines
+     * @param  list<string>  $lines
      */
     public function __construct(private readonly array $lines = [], ?Capabilities $capabilities = null)
     {
@@ -50,7 +50,7 @@ final class Box implements Stringable
     }
 
     /**
-     * @param list<string>|string $lines
+     * @param  list<string>|string  $lines
      */
     public static function make(array|string $lines = []): self
     {
@@ -157,7 +157,7 @@ final class Box implements Stringable
 
         $body = [];
         foreach ($lines as $line) {
-            $body[] = $g['v'] . $pad . DisplayWidth::pad(DisplayWidth::truncate($line, $interior), $interior) . $pad . $g['v'];
+            $body[] = $g['v'].$pad.DisplayWidth::pad(DisplayWidth::truncate($line, $interior), $interior).$pad.$g['v'];
         }
 
         return implode("\n", [$top, ...$body, $bottom]);
@@ -166,12 +166,12 @@ final class Box implements Stringable
     private function rule(string $left, string $right, string $h, int $inner, string $label): string
     {
         if ($label === '') {
-            return $left . str_repeat($h, $inner) . $right;
+            return $left.str_repeat($h, $inner).$right;
         }
 
-        $tagged = ' ' . $label . ' ';
+        $tagged = ' '.$label.' ';
         $fill = max($inner - DisplayWidth::of($tagged), 0);
 
-        return $left . $h . $tagged . str_repeat($h, max($fill - 1, 0)) . $right;
+        return $left.$h.$tagged.str_repeat($h, max($fill - 1, 0)).$right;
     }
 }

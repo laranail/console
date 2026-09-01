@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Validator;
 final class LaravelRule extends AbstractValidator
 {
     /**
-     * @param array<int|string, mixed>|string $rules
-     * @param array<string, string> $messages
+     * @param  array<int|string, mixed>|string  $rules
+     * @param  array<string, string>  $messages
      */
     public function __construct(
         private readonly array|string $rules,

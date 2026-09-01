@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Tests\Validators;
 
-use stdClass;
 use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
 use Simtabi\Laranail\Console\Prompter\Validators\AlphaValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\ColorValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\DateFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\EmailFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\JsonFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\PathFieldValidator;
-use Simtabi\Laranail\Console\Prompter\Validators\UUIDFieldValidator;
-use Simtabi\Laranail\Console\Prompter\Validators\EmailFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\SelectFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\UUIDFieldValidator;
+use stdClass;
 
 final class ValidatorSecurityTest extends TestCase
 {
@@ -34,7 +34,7 @@ final class ValidatorSecurityTest extends TestCase
 
         foreach ($validators as $validator) {
             foreach ([123, [], null, new stdClass, 1.5, true] as $input) {
-                self::assertSame('e', $validator->validate($input), $validator::class . ' on ' . gettype($input));
+                self::assertSame('e', $validator->validate($input), $validator::class.' on '.gettype($input));
             }
         }
     }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Support\Style;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 
 /**
  * A deliberately small, regex-based syntax highlighter for fenced code blocks.
@@ -120,13 +120,13 @@ final readonly class SyntaxHighlighter
     private function normalize(string $language): string
     {
         return match (strtolower(trim($language))) {
-            'sh', 'shell', 'zsh'        => 'bash',
-            'yml'                       => 'yaml',
+            'sh', 'shell', 'zsh' => 'bash',
+            'yml' => 'yaml',
             'javascript', 'node', 'mjs' => 'js',
-            'py'                        => 'python',
-            'xml', 'htm'                => 'html',
-            'patch'                     => 'diff',
-            default                     => strtolower(trim($language)),
+            'py' => 'python',
+            'xml', 'htm' => 'html',
+            'patch' => 'diff',
+            default => strtolower(trim($language)),
         };
     }
 
@@ -142,70 +142,70 @@ final readonly class SyntaxHighlighter
         return match ($language) {
             'php' => [
                 'pattern' => '/(?P<comment>\/\/.*$|#.*$|\/\*.*?\*\/)'
-                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
-                    . '|(?P<var>\$\w+)'
-                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-                    . '|(?P<kw>\b(?:' . implode('|', self::PHP_KEYWORDS) . ')\b)/',
+                    .'|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
+                    .'|(?P<var>\$\w+)'
+                    .'|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    .'|(?P<kw>\b(?:'.implode('|', self::PHP_KEYWORDS).')\b)/',
                 'roles' => ['comment' => 'muted', 'string' => 'success', 'var' => 'info', 'num' => 'warning', 'kw' => 'primary'],
             ],
             'json' => [
                 'pattern' => '/(?P<key>"(?:\\\\.|[^"\\\\])*"(?=\s*:))'
-                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*")'
-                    . '|(?P<bool>\b(?:true|false|null)\b)'
-                    . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/',
+                    .'|(?P<string>"(?:\\\\.|[^"\\\\])*")'
+                    .'|(?P<bool>\b(?:true|false|null)\b)'
+                    .'|(?P<num>-?\b\d+(?:\.\d+)?\b)/',
                 'roles' => ['key' => 'accent', 'string' => 'success', 'bool' => 'primary', 'num' => 'warning'],
             ],
             'bash' => [
                 'pattern' => '/(?P<comment>(?<![\w$])#.*$)'
-                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
-                    . '|(?P<var>\$\{?\w+\}?)'
-                    . '|(?P<num>\b\d+\b)'
-                    . '|(?P<kw>\b(?:' . implode('|', self::BASH_KEYWORDS) . ')\b)/',
+                    .'|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
+                    .'|(?P<var>\$\{?\w+\}?)'
+                    .'|(?P<num>\b\d+\b)'
+                    .'|(?P<kw>\b(?:'.implode('|', self::BASH_KEYWORDS).')\b)/',
                 'roles' => ['comment' => 'muted', 'string' => 'success', 'var' => 'info', 'num' => 'warning', 'kw' => 'primary'],
             ],
             'yaml' => [
                 'pattern' => '/(?P<comment>(?<!\S)#.*$)'
-                    . '|(?P<key>^\s*[\w.-]+(?=\s*:))'
-                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
-                    . '|(?P<bool>\b(?:true|false|null|yes|no|on|off)\b)'
-                    . '|(?P<num>-?\b\d+(?:\.\d+)?\b)/',
+                    .'|(?P<key>^\s*[\w.-]+(?=\s*:))'
+                    .'|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'[^\']*\')'
+                    .'|(?P<bool>\b(?:true|false|null|yes|no|on|off)\b)'
+                    .'|(?P<num>-?\b\d+(?:\.\d+)?\b)/',
                 'roles' => ['comment' => 'muted', 'key' => 'accent', 'string' => 'success', 'bool' => 'primary', 'num' => 'warning'],
             ],
             'js' => [
                 'pattern' => '/(?P<comment>\/\/.*$|\/\*.*?\*\/)'
-                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'|`(?:\\\\.|[^`\\\\])*`)'
-                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-                    . '|(?P<kw>\b(?:' . implode('|', self::JS_KEYWORDS) . ')\b)/',
+                    .'|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\'|`(?:\\\\.|[^`\\\\])*`)'
+                    .'|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    .'|(?P<kw>\b(?:'.implode('|', self::JS_KEYWORDS).')\b)/',
                 'roles' => ['comment' => 'muted', 'string' => 'success', 'num' => 'warning', 'kw' => 'primary'],
             ],
             'python' => [
                 'pattern' => '/(?P<comment>#.*$)'
-                    . '|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
-                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-                    . '|(?P<kw>\b(?:' . implode('|', self::PYTHON_KEYWORDS) . ')\b)/',
+                    .'|(?P<string>"(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')'
+                    .'|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    .'|(?P<kw>\b(?:'.implode('|', self::PYTHON_KEYWORDS).')\b)/',
                 'roles' => ['comment' => 'muted', 'string' => 'success', 'num' => 'warning', 'kw' => 'primary'],
             ],
             'sql' => [
                 'pattern' => '/(?P<comment>--.*$|\/\*.*?\*\/)'
-                    . '|(?P<string>\'(?:\'\'|[^\'])*\')'
-                    . '|(?P<num>\b\d+(?:\.\d+)?\b)'
-                    . '|(?P<kw>\b(?:' . implode('|', self::SQL_KEYWORDS) . ')\b)/i',
+                    .'|(?P<string>\'(?:\'\'|[^\'])*\')'
+                    .'|(?P<num>\b\d+(?:\.\d+)?\b)'
+                    .'|(?P<kw>\b(?:'.implode('|', self::SQL_KEYWORDS).')\b)/i',
                 'roles' => ['comment' => 'muted', 'string' => 'success', 'num' => 'warning', 'kw' => 'primary'],
             ],
             'html' => [
                 'pattern' => '/(?P<comment><!--.*?-->)'
-                    . '|(?P<tag><\/?[a-zA-Z][\w-]*)'
-                    . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
-                    . '|(?P<attr>[a-zA-Z-]+(?==))/',
+                    .'|(?P<tag><\/?[a-zA-Z][\w-]*)'
+                    .'|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
+                    .'|(?P<attr>[a-zA-Z-]+(?==))/',
                 'roles' => ['comment' => 'muted', 'tag' => 'primary', 'string' => 'success', 'attr' => 'accent'],
             ],
             'css' => [
                 'pattern' => '/(?P<comment>\/\*.*?\*\/)'
-                    . '|(?P<atrule>@[\w-]+)'
-                    . '|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
-                    . '|(?P<hex>#[0-9a-fA-F]{3,8}\b)'
-                    . '|(?P<prop>[a-zA-Z-]+(?=\s*:))'
-                    . '|(?P<num>\b\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms)?\b)/',
+                    .'|(?P<atrule>@[\w-]+)'
+                    .'|(?P<string>"(?:[^"]*)"|\'(?:[^\']*)\')'
+                    .'|(?P<hex>#[0-9a-fA-F]{3,8}\b)'
+                    .'|(?P<prop>[a-zA-Z-]+(?=\s*:))'
+                    .'|(?P<num>\b\d+(?:\.\d+)?(?:px|em|rem|%|vh|vw|s|ms)?\b)/',
                 'roles' => ['comment' => 'muted', 'atrule' => 'primary', 'string' => 'success', 'hex' => 'accent', 'prop' => 'accent', 'num' => 'warning'],
             ],
             default => null,
@@ -215,7 +215,7 @@ final readonly class SyntaxHighlighter
     /**
      * Apply a spec: style the first matched named group per token by its role.
      *
-     * @param array<string, string> $roles group => theme role, in priority order
+     * @param  array<string, string>  $roles  group => theme role, in priority order
      */
     private function applyTokens(string $line, string $pattern, array $roles): string
     {

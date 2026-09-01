@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Providers;
 
-use Override;
 use Illuminate\Support\ServiceProvider;
+use Override;
 use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Exceptions\ConsoleException;
-use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
-use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
 use Simtabi\Laranail\Console\Prompter\Providers\PrompterServiceProvider;
+use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
+use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 
 /**
  * Root service provider for laranail/console.
@@ -23,9 +23,9 @@ use Simtabi\Laranail\Console\Prompter\Providers\PrompterServiceProvider;
  */
 final class ConsoleServiceProvider extends ServiceProvider
 {
-    private const string CONFIG_PATH = __DIR__ . '/../../config/console.php';
+    private const string CONFIG_PATH = __DIR__.'/../../config/console.php';
 
-    private const string LANG_PATH = __DIR__ . '/../../resources/lang';
+    private const string LANG_PATH = __DIR__.'/../../resources/lang';
 
     #[Override]
     public function register(): void
@@ -61,7 +61,7 @@ final class ConsoleServiceProvider extends ServiceProvider
 
                 if ($errors !== []) {
                     throw new ConsoleException(
-                        "Invalid laranail/console configuration:\n  - " . implode("\n  - ", $errors),
+                        "Invalid laranail/console configuration:\n  - ".implode("\n  - ", $errors),
                     );
                 }
             }

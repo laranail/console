@@ -31,7 +31,7 @@ final class Capabilities
     private ?int $width = null;
 
     /**
-     * @param resource|null $stream Output stream to probe (defaults to STDOUT).
+     * @param  resource|null  $stream  Output stream to probe (defaults to STDOUT).
      */
     public function __construct(private $stream = null) {}
 

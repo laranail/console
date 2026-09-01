@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands;
 
-use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 
 /**
  * Validates the `console.*` configuration and reports any problems.
@@ -35,9 +35,9 @@ final class CheckConfigCommand extends Command
             return self::SUCCESS;
         }
 
-        $display->error(count($errors) . ' configuration problem(s) found:');
+        $display->error(count($errors).' configuration problem(s) found:');
         foreach ($errors as $error) {
-            $this->line('  • ' . $error);
+            $this->line('  • '.$error);
         }
 
         return self::FAILURE;

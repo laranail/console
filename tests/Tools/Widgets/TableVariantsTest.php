@@ -6,8 +6,8 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Helper\TableCell;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Symfony\Component\Console\Helper\TableCell;
 
 final class TableVariantsTest extends TestCase
 {

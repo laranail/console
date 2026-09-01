@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands;
 
-use Symfony\Component\Console\Input\ArrayInput;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Simtabi\Laranail\Console\Tools\Commands\Command;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * A successful command that records metadata during handle(), reaching the

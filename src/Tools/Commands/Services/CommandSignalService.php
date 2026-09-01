@@ -28,7 +28,7 @@ class CommandSignalService
      * Signal constants are only referenced when ext-pcntl is loaded, so calling
      * this on a platform without pcntl is safe.
      *
-     * @param array<int, int> $signals
+     * @param  array<int, int>  $signals
      */
     public function setupSignalHandling(array $signals = []): void
     {
@@ -119,7 +119,7 @@ class CommandSignalService
 
         Log::info('Command received termination signal', [
             'command' => $this->commandName,
-            'signal'  => $signal,
+            'signal' => $signal,
         ]);
     }
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Helper\Helper;
 
 /**
  * Computes the visible width a string occupies in a terminal — ignoring ANSI
@@ -78,7 +78,7 @@ final class DisplayWidth
                 $charWidth = self::of($char);
 
                 if ($width + $charWidth > $max) {
-                    return $out . self::close($linkOpen, $sgrOpen);
+                    return $out.self::close($linkOpen, $sgrOpen);
                 }
 
                 $out .= $char;
@@ -86,13 +86,13 @@ final class DisplayWidth
             }
         }
 
-        return $out . self::close($linkOpen, $sgrOpen);
+        return $out.self::close($linkOpen, $sgrOpen);
     }
 
     /**
      * The greatest visible width across the given lines (0 for an empty list).
      *
-     * @param iterable<string> $lines
+     * @param  iterable<string>  $lines
      */
     public static function maxWidth(iterable $lines): int
     {
@@ -112,7 +112,7 @@ final class DisplayWidth
     {
         $missing = $width - self::of($text);
 
-        return $missing > 0 ? $text . str_repeat($pad, $missing) : $text;
+        return $missing > 0 ? $text.str_repeat($pad, $missing) : $text;
     }
 
     /**
@@ -122,7 +122,7 @@ final class DisplayWidth
     {
         $missing = $width - self::of($text);
 
-        return $missing > 0 ? str_repeat($pad, $missing) . $text : $text;
+        return $missing > 0 ? str_repeat($pad, $missing).$text : $text;
     }
 
     /**
@@ -142,7 +142,7 @@ final class DisplayWidth
         $out = '';
 
         foreach (mb_str_split($text) as $char) {
-            if (self::of($out . $char) > $max) {
+            if (self::of($out.$char) > $max) {
                 break;
             }
 
@@ -165,7 +165,7 @@ final class DisplayWidth
 
         $left = intdiv($missing, 2);
 
-        return str_repeat($pad, $left) . $text . str_repeat($pad, $missing - $left);
+        return str_repeat($pad, $left).$text.str_repeat($pad, $missing - $left);
     }
 
     /**
@@ -173,6 +173,6 @@ final class DisplayWidth
      */
     private static function close(bool $linkOpen, bool $sgrOpen): string
     {
-        return ($linkOpen ? "\e]8;;\e\\" : '') . ($sgrOpen ? "\e[0m" : '');
+        return ($linkOpen ? "\e]8;;\e\\" : '').($sgrOpen ? "\e[0m" : '');
     }
 }

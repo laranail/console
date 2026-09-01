@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Stringable;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Stringable;
 
 /**
  * A fenced code block: an indented, themed gutter-barred block with an optional
@@ -112,7 +112,7 @@ final class CodeBlock implements Renderable, Stringable
                 ? $highlighter->highlightLine($line, (string) $this->language)
                 : $codeStyle->apply($line);
 
-            $out[] = $gutterStyle->apply($gutter) . $rendered;
+            $out[] = $gutterStyle->apply($gutter).$rendered;
         }
 
         return $out;

@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter\Facades;
 
 use Closure;
-use Laravel\Prompts\FormBuilder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
+use Laravel\Prompts\FormBuilder;
 use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
 

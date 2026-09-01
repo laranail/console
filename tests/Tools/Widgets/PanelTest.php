@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Widgets\Panel;
-use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
 
 final class PanelTest extends TestCase
 {

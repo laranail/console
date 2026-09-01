@@ -9,7 +9,7 @@ declare(strict_types=1);
  *   php examples/tools/colors.php
  */
 
-require __DIR__ . '/../../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Style;
@@ -24,8 +24,8 @@ echo $color->fg('xterm   @196', '@196'), "\n";
 echo $color->bg('  background  ', '#1e293b'), "\n\n";
 
 echo $color->gradient('gradient across a sentence of colour', ['#06b6d4', '#7c3aed', '#ec4899']), "\n";
-echo 'blend 50% of red+blue = ' . Color::blend('#ff0000', '#0000ff', 0.5), "\n";
-echo 'adaptive (by background) = ' . Color::adaptive('#000000', '#ffffff'), "\n\n";
+echo 'blend 50% of red+blue = '.Color::blend('#ff0000', '#0000ff', 0.5), "\n";
+echo 'adaptive (by background) = '.Color::adaptive('#000000', '#ffffff'), "\n\n";
 
 echo Style::make()->fg('#16a34a')->bold()->apply('bold green'), '  ';
 echo Style::make()->fg('#d97706')->italic()->underline()->apply('italic underline'), '  ';

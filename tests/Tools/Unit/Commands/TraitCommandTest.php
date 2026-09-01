@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands;
 
 use Illuminate\Console\Command as BaseCommand;
-use Symfony\Component\Console\Input\ArrayInput;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
-use Symfony\Component\Console\Output\BufferedOutput;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 /**
  * A command that does NOT extend our base — it extends Illuminate's command and
