@@ -69,10 +69,10 @@ class CommandPerformanceService
         $time = $this->getExecutionTime();
 
         if ($time < 1) {
-            return round($time * 1000, 2).'ms';
+            return round($time * 1000, 2) . 'ms';
         }
 
-        return round($time, 2).'s';
+        return round($time, 2) . 's';
     }
 
     /**
@@ -81,10 +81,10 @@ class CommandPerformanceService
     public function getMemoryUsage(): array
     {
         return [
-            'start_memory' => $this->formatBytes($this->startMemory),
+            'start_memory'   => $this->formatBytes($this->startMemory),
             'current_memory' => $this->formatBytes(memory_get_usage(true)),
-            'peak_memory' => $this->formatBytes($this->peakMemory),
-            'memory_limit' => ini_get('memory_limit'),
+            'peak_memory'    => $this->formatBytes($this->peakMemory),
+            'memory_limit'   => ini_get('memory_limit'),
         ];
     }
 
@@ -102,11 +102,11 @@ class CommandPerformanceService
     public function getPerformanceSummary(string $commandName, array $metadata = []): array
     {
         return [
-            'command' => $commandName,
+            'command'        => $commandName,
             'execution_time' => $this->getFormattedExecutionTime(),
-            'memory_usage' => $this->getMemoryUsage(),
-            'metadata' => $metadata,
-            'timestamp' => Carbon::now()->toISOString(),
+            'memory_usage'   => $this->getMemoryUsage(),
+            'metadata'       => $metadata,
+            'timestamp'      => Carbon::now()->toISOString(),
         ];
     }
 

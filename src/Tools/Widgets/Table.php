@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
 use Stringable;
-use Symfony\Component\Console\Helper\Table as SymfonyTable;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
+use Symfony\Component\Console\Helper\Table as SymfonyTable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A fluent table over Symfony's Table helper with named style presets (incl. a
@@ -32,12 +32,12 @@ final class Table implements Stringable
 {
     /** @var array<string, string> preset => Symfony built-in style */
     private const array STYLES = [
-        'ascii' => 'default',
-        'light' => 'box',
-        'double' => 'box-double',
-        'compact' => 'compact',
+        'ascii'      => 'default',
+        'light'      => 'box',
+        'double'     => 'box-double',
+        'compact'    => 'compact',
         'borderless' => 'borderless',
-        'markdown' => 'markdown',
+        'markdown'   => 'markdown',
     ];
 
     /** @var list<string> */
@@ -104,7 +104,7 @@ final class Table implements Stringable
     }
 
     /**
-     * @param  list<string>  $headers
+     * @param list<string> $headers
      */
     public function headers(array $headers): self
     {
@@ -114,7 +114,7 @@ final class Table implements Stringable
     }
 
     /**
-     * @param  list<list<string|TableCell>>  $rows
+     * @param list<list<string|TableCell>> $rows
      */
     public function rows(array $rows): self
     {
@@ -127,7 +127,7 @@ final class Table implements Stringable
     /**
      * Build headers + rows from a list of associative rows (headers = first row's keys).
      *
-     * @param  list<array<string, scalar|null>>  $rows
+     * @param list<array<string, scalar|null>> $rows
      */
     public function fromAssoc(array $rows): self
     {
@@ -156,7 +156,7 @@ final class Table implements Stringable
      * Build headers + rows from a Laravel Collection (or any iterable) of
      * associative rows — headers come from the first row's keys.
      *
-     * @param  iterable<array<string, scalar|null>>  $rows
+     * @param iterable<array<string, scalar|null>> $rows
      */
     public function fromCollection(iterable $rows): self
     {
@@ -166,7 +166,7 @@ final class Table implements Stringable
     /**
      * Segment rows under labelled group headers within a single frame.
      *
-     * @param  array<string, list<list<string>>>  $groups  label => rows
+     * @param array<string, list<list<string>>> $groups label => rows
      */
     public function grouped(array $groups): self
     {
@@ -179,7 +179,7 @@ final class Table implements Stringable
     /**
      * Render an indented hierarchy in the first column.
      *
-     * @param  list<array{0:int,1:list<string>}>  $rows  [depth, cells] per row
+     * @param list<array{0:int,1:list<string>}> $rows [depth, cells] per row
      */
     public function tree(array $rows): self
     {
@@ -192,7 +192,7 @@ final class Table implements Stringable
     /**
      * Per-column alignment, keyed by column index or header name: left|right|center.
      *
-     * @param  array<int|string, string>  $map
+     * @param array<int|string, string> $map
      */
     public function align(array $map): self
     {
@@ -204,7 +204,7 @@ final class Table implements Stringable
     /**
      * Fixed column widths, keyed by column index.
      *
-     * @param  array<int, int>  $widths
+     * @param array<int, int> $widths
      */
     public function columnWidths(array $widths): self
     {
@@ -353,9 +353,9 @@ final class Table implements Stringable
 
             $style = clone $table->getStyle();
             $style->setPadType(match ($direction) {
-                'right' => STR_PAD_LEFT,
+                'right'  => STR_PAD_LEFT,
                 'center' => STR_PAD_BOTH,
-                default => STR_PAD_RIGHT,
+                default  => STR_PAD_RIGHT,
             });
 
             $table->setColumnStyle((int) $index, $style);
@@ -366,7 +366,8 @@ final class Table implements Stringable
      * Strip terminal control characters from a row's string cells (TableCell
      * instances and separators pass through untouched).
      *
-     * @param  list<string|TableCell>|TableCell[]|TableSeparator  $row
+     * @param list<string|TableCell>|TableCell[]|TableSeparator $row
+     *
      * @return list<string|TableCell>|TableCell[]|TableSeparator
      */
     private function sanitizeRow(array|TableSeparator $row): array|TableSeparator
@@ -390,8 +391,8 @@ final class Table implements Stringable
     {
         return match ($this->mode) {
             'grouped' => $this->buildGroupedRows(),
-            'tree' => $this->buildTreeRows(),
-            default => $this->rows,
+            'tree'    => $this->buildTreeRows(),
+            default   => $this->rows,
         };
     }
 
@@ -439,8 +440,8 @@ final class Table implements Stringable
         $built = [];
 
         foreach ($this->treeRows as [$depth, $cells]) {
-            $indent = $depth > 0 ? str_repeat('   ', $depth - 1).$stem : '';
-            $cells[0] = $indent.($cells[0] ?? '');
+            $indent = $depth > 0 ? str_repeat('   ', $depth - 1) . $stem : '';
+            $cells[0] = $indent . ($cells[0] ?? '');
             $built[] = $cells;
         }
 

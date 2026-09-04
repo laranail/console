@@ -58,7 +58,7 @@ final class MarkdownTableTest extends TestCase
     {
         Capabilities::fake(colors: false, unicode: true, width: 28, interactive: false);
 
-        $md = "| Name | Description |\n|---|---|\n| x | ".str_repeat('word ', 20).'|';
+        $md = "| Name | Description |\n|---|---|\n| x | " . str_repeat('word ', 20) . '|';
         foreach (explode("\n", rtrim(Markdown::make($md)->render(), "\n")) as $line) {
             self::assertLessThanOrEqual(28, DisplayWidth::of($line));
         }

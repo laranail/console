@@ -6,9 +6,9 @@ namespace Simtabi\Laranail\Console\Progress\Tests;
 
 use Laravel\Prompts\Prompt;
 use Simtabi\Laranail\Console\Progress\ProgressReporter;
+use Simtabi\Laranail\Console\Progress\TuiProgressReporter;
 use Simtabi\Laranail\Console\Progress\ProgressReporterFactory;
 use Simtabi\Laranail\Console\Progress\PromptsProgressReporter;
-use Simtabi\Laranail\Console\Progress\TuiProgressReporter;
 
 final class ProgressReporterTest extends TestCase
 {

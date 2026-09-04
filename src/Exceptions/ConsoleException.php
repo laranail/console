@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Exceptions;
 
-use RuntimeException;
 use Throwable;
+use RuntimeException;
 
 /**
  * Base exception for the laranail/console package.
@@ -20,7 +20,7 @@ use Throwable;
 class ConsoleException extends RuntimeException
 {
     /**
-     * @param  array<string, scalar|null>  $replace
+     * @param array<string, scalar|null> $replace
      */
     public static function fromKey(string $key, array $replace = [], ?Throwable $previous = null): static
     {
@@ -31,7 +31,7 @@ class ConsoleException extends RuntimeException
      * Resolve a translation key to a message, falling back to a readable string
      * when translations are unavailable or the key is missing.
      *
-     * @param  array<string, scalar|null>  $replace
+     * @param array<string, scalar|null> $replace
      */
     protected static function resolveMessage(string $key, array $replace = []): string
     {

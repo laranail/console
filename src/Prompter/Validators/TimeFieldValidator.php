@@ -10,7 +10,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 final class TimeFieldValidator extends DateTimeFormatValidator
 {
     /**
-     * @param  list<string>|null  $formats
+     * @param list<string>|null $formats
      */
     public function __construct(?array $formats = null)
     {

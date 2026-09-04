@@ -11,13 +11,13 @@ declare(strict_types=1);
  *   php examples/tools/tui.php        (press q / Ctrl-C to quit)
  */
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Symfony\Component\Tui\Tui;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tui\RenderableWidget;
-use Symfony\Component\Tui\Tui;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 if (! Capabilities::detect()->isInteractive()) {
     fwrite(STDOUT, "tui.php needs an interactive TTY; skipping.\n");

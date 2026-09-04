@@ -17,7 +17,7 @@ final class WidgetI18nTest extends TestCase
     public function test_widget_strings_follow_the_configured_locale(): void
     {
         app('translator')->addLines([
-            'console.widgets.header.items' => 'objets',
+            'console.widgets.header.items'  => 'objets',
             'console.widgets.summary.title' => 'RÉSUMÉ',
         ], 'fr', 'laranail-console');
 

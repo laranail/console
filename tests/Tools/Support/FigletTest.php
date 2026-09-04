@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Figlet;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Exceptions\FontException;
 
 final class FigletTest extends TestCase
 {
@@ -38,11 +38,11 @@ final class FigletTest extends TestCase
     public function test_parses_a_minimal_flf_font(): void
     {
         $flf = "flf2a\$ 2 2 4 -1 0\n"
-            .".\$@\n"
-            .".\$@@\n"   // glyph for ' ' (ascii 32): two rows, hardblank '$'
-            ."AA@\n"
-            ."AA@@\n";   // glyph for '!' (ascii 33)
-        $path = sys_get_temp_dir().'/laranail_test_'.getmypid().'.flf';
+            . ".\$@\n"
+            . ".\$@@\n"   // glyph for ' ' (ascii 32): two rows, hardblank '$'
+            . "AA@\n"
+            . "AA@@\n";   // glyph for '!' (ascii 33)
+        $path = sys_get_temp_dir() . '/laranail_test_' . getmypid() . '.flf';
         file_put_contents($path, $flf);
 
         try {

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Document;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
-use Simtabi\Laranail\Console\Tools\Widgets\Rule;
-use Simtabi\Laranail\Console\Tools\Widgets\Table;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
 
 /**
  * Render a documented Markdown subset to the terminal via the {@see Document}
@@ -193,7 +193,7 @@ final readonly class Markdown implements Stringable
      * Does a GFM table begin at line $i? (a pipe row followed by a `---|---`
      * separator). Used both to render tables and to stop a paragraph swallowing one.
      *
-     * @param  list<string>  $lines
+     * @param list<string> $lines
      */
     private function isTableAt(array $lines, int $i): bool
     {

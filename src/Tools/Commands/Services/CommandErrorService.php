@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
+use Throwable;
 use Illuminate\Support\Facades\Log;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\ManagesCommandContext;
-use Throwable;
 
 /**
  * Structured error logging for console commands.
@@ -31,18 +31,18 @@ class CommandErrorService
     /**
      * Log an exception with scrubbed context.
      *
-     * @param  array<string, mixed>  $additionalContext
+     * @param array<string, mixed> $additionalContext
      */
     public function logError(Throwable $e, array $additionalContext = []): void
     {
         $context = $this->scrub(array_merge($this->context, $additionalContext));
 
         $logData = array_merge($context, [
-            'command' => $this->commandName,
+            'command'   => $this->commandName,
             'exception' => $e::class,
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
+            'message'   => $e->getMessage(),
+            'file'      => $e->getFile(),
+            'line'      => $e->getLine(),
             'timestamp' => now()->toISOString(),
         ]);
 
@@ -89,7 +89,8 @@ class CommandErrorService
     /**
      * Redact values whose key matches a configured sensitive token.
      *
-     * @param  array<string, mixed>  $context
+     * @param array<string, mixed> $context
+     *
      * @return array<string, mixed>
      */
     protected function scrub(array $context): array

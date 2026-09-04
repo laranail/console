@@ -117,7 +117,8 @@ final class BrailleCanvas
      * Render to `height` lines of `width` cells. `$pens` maps a pen id → `Style`
      * (a cell with no matching pen renders plain).
      *
-     * @param  array<int, Style>  $pens
+     * @param array<int, Style> $pens
+     *
      * @return list<string>
      */
     public function render(array $pens = []): array

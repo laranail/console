@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests;
 
+use Throwable;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Throwable;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 
 /**
  * Conformance for the `laranail::<slug>.<command>` naming trait.
@@ -70,7 +70,7 @@ final class NamespacedNamesConformanceTest extends TestCase
         try {
             $this->assertSame('laranail::atlas.b', $this->command()->setName('laranail::atlas.b')->getName());
         } catch (Throwable $throwable) {
-            $this->fail('setName() threw without a declared alias list: '.$throwable->getMessage());
+            $this->fail('setName() threw without a declared alias list: ' . $throwable->getMessage());
         }
     }
 

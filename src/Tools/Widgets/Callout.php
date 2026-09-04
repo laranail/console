@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 /**
  * A framed admonition with a status glyph and title spliced into the top rule,
@@ -22,7 +22,7 @@ final class Callout implements Stringable
     private readonly Capabilities $capabilities;
 
     /**
-     * @param  list<string>  $lines
+     * @param list<string> $lines
      */
     public function __construct(private readonly string $status, private readonly array $lines, ?Capabilities $capabilities = null)
     {
@@ -36,7 +36,7 @@ final class Callout implements Stringable
     }
 
     /**
-     * @param  list<string>|string  $content
+     * @param list<string>|string $content
      */
     public static function make(string $status, array|string $content): self
     {
@@ -74,9 +74,9 @@ final class Callout implements Stringable
     {
         $label = $this->title !== ''
             ? $this->title
-            : Lang::get('widgets.callout.'.$this->status, ucfirst($this->status));
+            : Lang::get('widgets.callout.' . $this->status, ucfirst($this->status));
 
-        $heading = trim($this->symbols->get($this->status).' '.$label);
+        $heading = trim($this->symbols->get($this->status) . ' ' . $label);
 
         return Box::make($this->lines)
             ->title($heading)

@@ -31,9 +31,9 @@ enum SpinnerFrames: string
 
         return match ($this) {
             self::Braille => ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
-            self::Dots => ['⠁', '⠂', '⠄', '⡀', '⢀', '⠠', '⠐', '⠈'],
-            self::Line => ['-', '\\', '|', '/'],
-            self::Breath => ['.', 'o', 'O', '°', 'O', 'o'],
+            self::Dots    => ['⠁', '⠂', '⠄', '⡀', '⢀', '⠠', '⠐', '⠈'],
+            self::Line    => ['-', '\\', '|', '/'],
+            self::Breath  => ['.', 'o', 'O', '°', 'O', 'o'],
         };
     }
 }
