@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter;
 
 use Closure;
-use Illuminate\Support\Collection;
 use Laravel\Prompts\FormBuilder;
-use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
-use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
-use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 
 use function Laravel\Prompts\form;
+
+use Illuminate\Support\Collection;
+use Simtabi\Laranail\Console\Prompter\Services\PromptService;
+use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
+use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
 
 /**
  * Class Prompter
@@ -66,8 +67,8 @@ class Prompter
     /**
      * Magic method to dynamically call prompt methods.
      *
-     * @param  string  $method  The name of the method.
-     * @param  array  $arguments  The arguments to pass to the method.
+     * @param string $method The name of the method.
+     * @param array $arguments The arguments to pass to the method.
      *
      * @throws PrompterException If the method does not exist.
      */
@@ -88,8 +89,8 @@ class Prompter
     /**
      * Magic static method to dynamically call prompt methods.
      *
-     * @param  string  $method  The name of the method.
-     * @param  array  $arguments  The arguments to pass to the method.
+     * @param string $method The name of the method.
+     * @param array $arguments The arguments to pass to the method.
      *
      * @throws PrompterException If the method does not exist.
      */

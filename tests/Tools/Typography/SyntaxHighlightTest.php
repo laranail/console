@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Typography;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\SyntaxHighlighter;
@@ -23,18 +23,18 @@ final class SyntaxHighlightTest extends TestCase
     public static function languageCases(): array
     {
         return [
-            'bash' => ['bash', 'if [ -n "$x" ]; then echo hi; fi # note', 'echo'],
-            'bash alias sh' => ['sh', 'export FOO=1', 'export'],
-            'yaml' => ['yaml', 'name: value # comment', 'name'],
-            'js' => ['js', 'const x = `tpl`; // c', 'const'],
-            'js alias' => ['javascript', 'function f() { return 1 }', 'function'],
-            'python' => ['python', 'def go(self):  # run', 'def'],
-            'python alias py' => ['py', 'import os', 'import'],
-            'sql' => ['sql', 'SELECT * FROM users WHERE id = 1 -- c', 'SELECT'],
-            'html' => ['html', '<a href="/x">link</a>', 'href'],
-            'html alias xml' => ['xml', '<root attr="v"/>', 'attr'],
-            'css' => ['css', '.btn { color: #fff; margin: 4px } /* c */', 'color'],
-            'diff' => ['diff', '+added line', 'added'],
+            'bash'             => ['bash', 'if [ -n "$x" ]; then echo hi; fi # note', 'echo'],
+            'bash alias sh'    => ['sh', 'export FOO=1', 'export'],
+            'yaml'             => ['yaml', 'name: value # comment', 'name'],
+            'js'               => ['js', 'const x = `tpl`; // c', 'const'],
+            'js alias'         => ['javascript', 'function f() { return 1 }', 'function'],
+            'python'           => ['python', 'def go(self):  # run', 'def'],
+            'python alias py'  => ['py', 'import os', 'import'],
+            'sql'              => ['sql', 'SELECT * FROM users WHERE id = 1 -- c', 'SELECT'],
+            'html'             => ['html', '<a href="/x">link</a>', 'href'],
+            'html alias xml'   => ['xml', '<root attr="v"/>', 'attr'],
+            'css'              => ['css', '.btn { color: #fff; margin: 4px } /* c */', 'color'],
+            'diff'             => ['diff', '+added line', 'added'],
             'diff alias patch' => ['patch', '-removed line', 'removed'],
         ];
     }
@@ -79,7 +79,7 @@ final class SyntaxHighlightTest extends TestCase
         Capabilities::fake(colors: true, unicode: true, interactive: false);
 
         // a pathological unterminated html comment, well over the 4000-char guard
-        $line = '<!--'.str_repeat('a', 8000);
+        $line = '<!--' . str_repeat('a', 8000);
 
         $start = microtime(true);
         $out = SyntaxHighlighter::make()->highlightLine($line, 'html');

@@ -7,12 +7,12 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Unit;
 use Simtabi\Laranail\Console\ConsoleManager;
 use Simtabi\Laranail\Console\Facades\Console;
 use Simtabi\Laranail\Console\Prompter\Prompter;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
-use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
-use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 
 final class ConsoleManagerTest extends TestCase
 {

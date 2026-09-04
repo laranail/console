@@ -19,73 +19,73 @@ final class Emoji
 {
     /** @var array<string, array{0:string,1:string}> name => [unicode, ascii] */
     private const array MAP = [
-        'rocket' => ['🚀', '->'],
-        'check' => ['✅', '[OK]'],
+        'rocket'           => ['🚀', '->'],
+        'check'            => ['✅', '[OK]'],
         'white_check_mark' => ['✅', '[OK]'],
         'heavy_check_mark' => ['✔️', '[ok]'],
-        'cross' => ['❌', '[X]'],
-        'x' => ['❌', '[X]'],
-        'warning' => ['⚠️', '[!]'],
-        'info' => ['ℹ️', '[i]'],
-        'question' => ['❓', '[?]'],
-        'sparkles' => ['✨', '*'],
-        'fire' => ['🔥', '!!'],
-        'package' => ['📦', '[pkg]'],
-        'gear' => ['⚙️', '*'],
-        'bug' => ['🐛', 'bug'],
-        'tada' => ['🎉', '\\o/'],
-        'party' => ['🥳', '\\o/'],
-        'bulb' => ['💡', '*'],
-        'lock' => ['🔒', '[lock]'],
-        'unlock' => ['🔓', '[open]'],
-        'key' => ['🔑', 'key'],
-        'hourglass' => ['⏳', '...'],
-        'clock' => ['🕐', '[time]'],
-        'star' => ['⭐', '*'],
-        'zap' => ['⚡', '!'],
-        'wrench' => ['🔧', '*'],
-        'hammer' => ['🔨', '*'],
-        'broom' => ['🧹', '*'],
-        'mag' => ['🔍', '?'],
-        'save' => ['💾', '[save]'],
-        'trash' => ['🗑️', '[del]'],
-        'inbox' => ['📥', '[in]'],
-        'outbox' => ['📤', '[out]'],
-        'download' => ['⬇️', 'v'],
-        'upload' => ['⬆️', '^'],
-        'link' => ['🔗', '[link]'],
-        'bell' => ['🔔', '[bell]'],
-        'eyes' => ['👀', 'oo'],
-        'thumbsup' => ['👍', '+1'],
-        'thumbsdown' => ['👎', '-1'],
-        'stop' => ['🛑', '[stop]'],
-        'construction' => ['🚧', '[wip]'],
-        'green_circle' => ['🟢', '(o)'],
-        'red_circle' => ['🔴', '(x)'],
-        'yellow_circle' => ['🟡', '(!)'],
-        'arrow_right' => ['➡️', '->'],
-        'arrow_left' => ['⬅️', '<-'],
-        'arrow_up' => ['⬆️', '^'],
-        'arrow_down' => ['⬇️', 'v'],
-        'heart' => ['❤️', '<3'],
-        'computer' => ['💻', '[pc]'],
-        'folder' => ['📁', '[dir]'],
-        'page' => ['📄', '[doc]'],
-        'calendar' => ['📅', '[date]'],
-        'email' => ['📧', '[mail]'],
-        'globe' => ['🌐', '[www]'],
-        'cloud' => ['☁️', '[cloud]'],
-        'coffee' => ['☕', '[coffee]'],
-        'robot' => ['🤖', '[bot]'],
-        'skull' => ['💀', 'x_x'],
-        'wave' => ['👋', '\\o'],
-        'pray' => ['🙏', 'ty'],
-        'muscle' => ['💪', '!'],
-        'brain' => ['🧠', '[brain]'],
-        'ok_hand' => ['👌', 'ok'],
-        'point_right' => ['👉', '->'],
-        'point_left' => ['👈', '<-'],
-        'snake' => ['🐍', '~'],
+        'cross'            => ['❌', '[X]'],
+        'x'                => ['❌', '[X]'],
+        'warning'          => ['⚠️', '[!]'],
+        'info'             => ['ℹ️', '[i]'],
+        'question'         => ['❓', '[?]'],
+        'sparkles'         => ['✨', '*'],
+        'fire'             => ['🔥', '!!'],
+        'package'          => ['📦', '[pkg]'],
+        'gear'             => ['⚙️', '*'],
+        'bug'              => ['🐛', 'bug'],
+        'tada'             => ['🎉', '\\o/'],
+        'party'            => ['🥳', '\\o/'],
+        'bulb'             => ['💡', '*'],
+        'lock'             => ['🔒', '[lock]'],
+        'unlock'           => ['🔓', '[open]'],
+        'key'              => ['🔑', 'key'],
+        'hourglass'        => ['⏳', '...'],
+        'clock'            => ['🕐', '[time]'],
+        'star'             => ['⭐', '*'],
+        'zap'              => ['⚡', '!'],
+        'wrench'           => ['🔧', '*'],
+        'hammer'           => ['🔨', '*'],
+        'broom'            => ['🧹', '*'],
+        'mag'              => ['🔍', '?'],
+        'save'             => ['💾', '[save]'],
+        'trash'            => ['🗑️', '[del]'],
+        'inbox'            => ['📥', '[in]'],
+        'outbox'           => ['📤', '[out]'],
+        'download'         => ['⬇️', 'v'],
+        'upload'           => ['⬆️', '^'],
+        'link'             => ['🔗', '[link]'],
+        'bell'             => ['🔔', '[bell]'],
+        'eyes'             => ['👀', 'oo'],
+        'thumbsup'         => ['👍', '+1'],
+        'thumbsdown'       => ['👎', '-1'],
+        'stop'             => ['🛑', '[stop]'],
+        'construction'     => ['🚧', '[wip]'],
+        'green_circle'     => ['🟢', '(o)'],
+        'red_circle'       => ['🔴', '(x)'],
+        'yellow_circle'    => ['🟡', '(!)'],
+        'arrow_right'      => ['➡️', '->'],
+        'arrow_left'       => ['⬅️', '<-'],
+        'arrow_up'         => ['⬆️', '^'],
+        'arrow_down'       => ['⬇️', 'v'],
+        'heart'            => ['❤️', '<3'],
+        'computer'         => ['💻', '[pc]'],
+        'folder'           => ['📁', '[dir]'],
+        'page'             => ['📄', '[doc]'],
+        'calendar'         => ['📅', '[date]'],
+        'email'            => ['📧', '[mail]'],
+        'globe'            => ['🌐', '[www]'],
+        'cloud'            => ['☁️', '[cloud]'],
+        'coffee'           => ['☕', '[coffee]'],
+        'robot'            => ['🤖', '[bot]'],
+        'skull'            => ['💀', 'x_x'],
+        'wave'             => ['👋', '\\o'],
+        'pray'             => ['🙏', 'ty'],
+        'muscle'           => ['💪', '!'],
+        'brain'            => ['🧠', '[brain]'],
+        'ok_hand'          => ['👌', 'ok'],
+        'point_right'      => ['👉', '->'],
+        'point_left'       => ['👈', '<-'],
+        'snake'            => ['🐍', '~'],
     ];
 
     /** @var array<string, array{0:string,1:string}> custom name => [unicode, ascii] */
@@ -136,7 +136,7 @@ final class Emoji
      * Add or override emoji. Each value is `[unicode, ascii]` or a single string
      * used for both.
      *
-     * @param  array<string, array{0:string,1:string}|string>  $map
+     * @param array<string, array{0:string,1:string}|string> $map
      */
     public function with(array $map): self
     {
@@ -207,8 +207,8 @@ final class Emoji
     {
         return match ($this->mode) {
             'unicode' => true,
-            'ascii' => false,
-            default => $this->capabilities->supportsUnicode(),
+            'ascii'   => false,
+            default   => $this->capabilities->supportsUnicode(),
         };
     }
 
@@ -219,13 +219,14 @@ final class Emoji
     {
         return match (strtolower($mode)) {
             'unicode' => 'unicode',
-            'ascii' => 'ascii',
-            default => 'auto',
+            'ascii'   => 'ascii',
+            default   => 'auto',
         };
     }
 
     /**
-     * @param  array<string, array{0:string,1:string}|string>  $map
+     * @param array<string, array{0:string,1:string}|string> $map
+     *
      * @return array<string, array{0:string,1:string}>
      */
     private function normalizeMap(array $map): array

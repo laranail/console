@@ -8,7 +8,7 @@ declare(strict_types=1);
  *   php examples/tools/emoji.php
  */
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 

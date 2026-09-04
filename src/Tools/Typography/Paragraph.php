@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Support\Align;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A word-wrapped, themeable prose block. Wraps to the available width (responsive
@@ -84,7 +84,7 @@ final class Paragraph implements Renderable, Stringable
     {
         $this->align = match (strtolower($align)) {
             Align::JUSTIFY => Align::JUSTIFY,
-            default => Align::normalize($align),
+            default        => Align::normalize($align),
         };
 
         return $this;
@@ -114,15 +114,15 @@ final class Paragraph implements Renderable, Stringable
             // Pre-styled (rich) text: re-open any colour still active at the end of
             // the previous line, so a styled span keeps its colour across a wrap.
             if ($this->preformatted && $carry !== '') {
-                $line = $carry.$line;
+                $line = $carry . $line;
             }
 
             $aligned = $this->align === Align::JUSTIFY
                 ? $this->justify($line, $width, $i === $last)
                 : match ($this->align) {
                     Align::CENTER => DisplayWidth::center($line, $width),
-                    Align::RIGHT => DisplayWidth::padLeft($line, $width),
-                    default => $line,
+                    Align::RIGHT  => DisplayWidth::padLeft($line, $width),
+                    default       => $line,
                 };
 
             // Pre-styled lines keep their own ANSI; close them so colour never
@@ -154,7 +154,7 @@ final class Paragraph implements Renderable, Stringable
                 }
 
                 foreach ($this->breakLongWord($word, $width) as $piece) {
-                    $candidate = $current === '' ? $piece : $current.' '.$piece;
+                    $candidate = $current === '' ? $piece : $current . ' ' . $piece;
 
                     if (DisplayWidth::of($candidate) <= $width) {
                         $current = $candidate;
@@ -188,7 +188,7 @@ final class Paragraph implements Renderable, Stringable
         $chunk = '';
 
         foreach (mb_str_split($word) as $char) {
-            if (DisplayWidth::of($chunk.$char) > $width && $chunk !== '') {
+            if (DisplayWidth::of($chunk . $char) > $width && $chunk !== '') {
                 $chunks[] = $chunk;
                 $chunk = '';
             }
@@ -217,7 +217,7 @@ final class Paragraph implements Renderable, Stringable
 
         $open = '';
         foreach ($matches[0] as $seq) {
-            $open = ($seq === "\033[0m" || $seq === "\033[m") ? '' : $open.$seq;
+            $open = ($seq === "\033[0m" || $seq === "\033[m") ? '' : $open . $seq;
         }
 
         return $open;
@@ -232,7 +232,7 @@ final class Paragraph implements Renderable, Stringable
             return $line;
         }
 
-        return $line."\033[0m";
+        return $line . "\033[0m";
     }
 
     private function justify(string $line, int $width, bool $isLast): string

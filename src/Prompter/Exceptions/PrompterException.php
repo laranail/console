@@ -14,7 +14,7 @@ use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 class PrompterException extends ConsoleException
 {
     /**
-     * @param  array<string, scalar|null>  $variables
+     * @param array<string, scalar|null> $variables
      */
     public static function triggerErrorMessage(string $key, array $variables = []): static
     {
@@ -22,7 +22,7 @@ class PrompterException extends ConsoleException
     }
 
     /**
-     * @param  array<string, scalar|null>  $variables
+     * @param array<string, scalar|null> $variables
      */
     public static function badMethodCall(array $variables = []): static
     {

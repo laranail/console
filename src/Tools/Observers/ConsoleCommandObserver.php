@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Observers;
 
 use Closure;
+use Throwable;
+use ReflectionFunction;
+use Illuminate\Support\Str;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Str;
-use ReflectionFunction;
-use Throwable;
 
 final class ConsoleCommandObserver
 {
@@ -124,9 +124,9 @@ final class ConsoleCommandObserver
         $argc = $ref->getNumberOfParameters();
 
         return match (true) {
-            $argc >= 2 => $callback($event, $this),
+            $argc >= 2  => $callback($event, $this),
             $argc === 1 => $callback($event),
-            default => $callback(),
+            default     => $callback(),
         };
     }
 

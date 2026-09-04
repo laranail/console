@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\Color;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 
 final class SupportTest extends TestCase
 {

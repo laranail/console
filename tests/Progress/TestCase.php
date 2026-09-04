@@ -11,7 +11,8 @@ use Simtabi\Laranail\Console\Providers\ConsoleServiceProvider;
 abstract class TestCase extends Orchestra
 {
     /**
-     * @param  Application  $app
+     * @param Application $app
+     *
      * @return array<int, class-string>
      */
     protected function getPackageProviders($app): array

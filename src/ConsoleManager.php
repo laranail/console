@@ -4,65 +4,65 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console;
 
-use Simtabi\Laranail\Console\Exceptions\ConsoleException;
+use Symfony\Component\Tui\Tui;
+use Simtabi\Laranail\Console\Tools\Support\Os;
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Support\Live;
+use Simtabi\Laranail\Console\Tools\Widgets\Pill;
+use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Tree;
+use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Widgets\Badge;
+use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Widgets\Banner;
+use Simtabi\Laranail\Console\Tools\Widgets\Button;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Widgets\Columns;
+use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
+use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Widgets\Summary;
+use Simtabi\Laranail\Console\Tools\Support\Keypress;
+use Simtabi\Laranail\Console\Tools\Support\Terminal;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
+use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Document\Markdown;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Color;
-use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
-use Simtabi\Laranail\Console\Tools\Support\ConsoleWriterFactory;
-use Simtabi\Laranail\Console\Tools\Support\Emoji;
-use Simtabi\Laranail\Console\Tools\Support\Keypress;
-use Simtabi\Laranail\Console\Tools\Support\Live;
-use Simtabi\Laranail\Console\Tools\Support\Os;
-use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Support\Terminal;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
-use Simtabi\Laranail\Console\Tools\Typography\Code;
-use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
-use Simtabi\Laranail\Console\Tools\Typography\Heading;
-use Simtabi\Laranail\Console\Tools\Typography\Link;
-use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
-use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
-use Simtabi\Laranail\Console\Tools\Typography\Quote;
-use Simtabi\Laranail\Console\Tools\Typography\Text;
-use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
-use Simtabi\Laranail\Console\Tools\Widgets\Badge;
-use Simtabi\Laranail\Console\Tools\Widgets\Banner;
-use Simtabi\Laranail\Console\Tools\Widgets\BarChart;
-use Simtabi\Laranail\Console\Tools\Widgets\Box;
-use Simtabi\Laranail\Console\Tools\Widgets\Button;
-use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
-use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
-use Simtabi\Laranail\Console\Tools\Widgets\Columns;
-use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
-use Simtabi\Laranail\Console\Tools\Widgets\Header;
-use Simtabi\Laranail\Console\Tools\Widgets\Heatmap;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
-use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
-use Simtabi\Laranail\Console\Tools\Widgets\Panel;
-use Simtabi\Laranail\Console\Tools\Widgets\Pill;
-use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
-use Simtabi\Laranail\Console\Tools\Widgets\Rule;
-use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
 use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
-use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
 use Simtabi\Laranail\Console\Tools\Widgets\StackedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
-use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
-use Simtabi\Laranail\Console\Tools\Widgets\Summary;
-use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
+use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
+use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
+use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
+use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
+use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Exceptions\ConsoleException;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
+use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
+use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
+use Simtabi\Laranail\Console\Tools\Support\ConsoleWriterFactory;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
-use Simtabi\Laranail\Console\Tools\Widgets\Tree;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Tui\Tui;
 
 /**
  * Unified entry point for the laranail/console package.
@@ -125,7 +125,7 @@ final class ConsoleManager
     /**
      * Frame text in a box.
      *
-     * @param  list<string>|string  $content
+     * @param list<string>|string $content
      */
     public function box(array|string $content = []): Box
     {
@@ -151,7 +151,7 @@ final class ConsoleManager
     /**
      * Flow a flat list of items into balanced columns.
      *
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public function columns(array $items): Columns
     {
@@ -161,7 +161,7 @@ final class ConsoleManager
     /**
      * An aligned key/value definition list.
      *
-     * @param  array<string, scalar|null>  $pairs
+     * @param array<string, scalar|null> $pairs
      */
     public function keyValue(array $pairs = []): KeyValue
     {
@@ -179,7 +179,7 @@ final class ConsoleManager
     /**
      * An inline block-eighths sparkline.
      *
-     * @param  list<int|float>  $values
+     * @param list<int|float> $values
      */
     public function sparkline(array $values): Sparkline
     {
@@ -189,7 +189,7 @@ final class ConsoleManager
     /**
      * A labelled horizontal bar chart (responsive, themed).
      *
-     * @param  array<string, int|float>  $data  label => value
+     * @param array<string, int|float> $data label => value
      */
     public function barChart(array $data = []): BarChart
     {
@@ -199,7 +199,7 @@ final class ConsoleManager
     /**
      * A labelled vertical bar (column) chart.
      *
-     * @param  array<string, int|float>  $data  label => value
+     * @param array<string, int|float> $data label => value
      */
     public function columnChart(array $data = []): ColumnChart
     {
@@ -209,7 +209,7 @@ final class ConsoleManager
     /**
      * A braille line chart of one or more numeric series.
      *
-     * @param  array<string, list<int|float>>|list<int|float>  $series
+     * @param array<string, list<int|float>>|list<int|float> $series
      */
     public function lineChart(array $series = []): LineChart
     {
@@ -219,7 +219,7 @@ final class ConsoleManager
     /**
      * A braille scatter plot of (x, y) points.
      *
-     * @param  list<array{0: int|float, 1: int|float}>  $points
+     * @param list<array{0: int|float, 1: int|float}> $points
      */
     public function scatterPlot(array $points = []): ScatterPlot
     {
@@ -229,7 +229,7 @@ final class ConsoleManager
     /**
      * A colour-intensity heatmap of a 2D matrix.
      *
-     * @param  list<list<int|float>>  $matrix
+     * @param list<list<int|float>> $matrix
      */
     public function heatmap(array $matrix = []): Heatmap
     {
@@ -239,7 +239,7 @@ final class ConsoleManager
     /**
      * A frequency histogram of raw values (binned).
      *
-     * @param  list<int|float>  $values
+     * @param list<int|float> $values
      */
     public function histogram(array $values = []): Histogram
     {
@@ -249,7 +249,7 @@ final class ConsoleManager
     /**
      * A single proportion (stacked) bar with a legend.
      *
-     * @param  array<string, int|float>  $data  label => value
+     * @param array<string, int|float> $data label => value
      */
     public function stackedBar(array $data = []): StackedBar
     {
@@ -275,7 +275,7 @@ final class ConsoleManager
     /**
      * An execution-summary block (statistics, performance, errors, status badges).
      *
-     * @param  array<string, mixed>  $stats
+     * @param array<string, mixed> $stats
      */
     public function summary(array $stats, ?string $title = null): Summary
     {
@@ -285,7 +285,7 @@ final class ConsoleManager
     /**
      * A wizard/pipeline breadcrumb (done / current / pending).
      *
-     * @param  list<string>  $steps
+     * @param list<string> $steps
      */
     public function steps(array $steps = []): StepFlow
     {
@@ -386,7 +386,7 @@ final class ConsoleManager
     /**
      * A themed list (unordered / ordered / task / definition).
      *
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public function list(array $items = []): ListBlock
     {
@@ -492,7 +492,7 @@ final class ConsoleManager
     /**
      * An interactive single-choice control rendered as buttons.
      *
-     * @param  array<int|string, string>|list<string>  $options
+     * @param array<int|string, string>|list<string> $options
      */
     public function buttonGroup(array $options = []): ButtonGroup
     {
@@ -510,7 +510,7 @@ final class ConsoleManager
     /**
      * A native interactive menu (key-driven on a TTY, prompts fallback otherwise).
      *
-     * @param  array<int|string, string>|list<string>  $options
+     * @param array<int|string, string>|list<string> $options
      */
     public function menu(string $title = '', array $options = []): Menu
     {

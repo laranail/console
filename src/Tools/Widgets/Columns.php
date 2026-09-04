@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Flow a flat list of items into N balanced columns (like `ls` / `artisan list`).
@@ -28,7 +28,7 @@ final class Columns implements Stringable
     private readonly Capabilities $capabilities;
 
     /**
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public function __construct(array $items, ?Capabilities $capabilities = null)
     {
@@ -42,7 +42,7 @@ final class Columns implements Stringable
     }
 
     /**
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public static function make(array $items): self
     {

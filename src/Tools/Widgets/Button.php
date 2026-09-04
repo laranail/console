@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A visual button affordance — a themed, bracketed label. Pure (renders a static
@@ -54,12 +54,12 @@ final class Button implements Renderable, Stringable
     public function renderLines(): array
     {
         $color = $this->theme->color($this->role) ?? '#64748b';
-        $label = ' '.$this->label.' ';
+        $label = ' ' . $this->label . ' ';
 
         $style = $this->focused
             ? Style::make($this->capabilities)->bg($color)->fg('#ffffff')->bold()
             : Style::make($this->capabilities)->fg($color)->bold();
 
-        return ['['.$style->apply($label).']'];
+        return ['[' . $style->apply($label) . ']'];
     }
 }

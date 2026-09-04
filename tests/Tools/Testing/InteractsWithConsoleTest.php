@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Testing;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Testing\InteractsWithConsole;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Testing\InteractsWithConsole;
 
 final class InteractsWithConsoleTest extends TestCase
 {

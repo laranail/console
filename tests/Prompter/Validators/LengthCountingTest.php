@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter\Tests\Validators;
 
 use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
-use Simtabi\Laranail\Console\Prompter\Validators\PasswordFieldValidator;
-use Simtabi\Laranail\Console\Prompter\Validators\StringFieldValidator;
 use Simtabi\Laranail\Console\Prompter\Validators\TextFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\StringFieldValidator;
+use Simtabi\Laranail\Console\Prompter\Validators\PasswordFieldValidator;
 
 /**
  * Length validators count characters (mb_strlen), not bytes — matching the
