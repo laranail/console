@@ -132,7 +132,7 @@ final class ConsoleCommandObserver
 
     private function passesPredicate(object $event): bool
     {
-        return ! $this->predicate || (bool) ($this->predicate)($event);
+        return ! $this->predicate instanceof Closure || (bool) ($this->predicate)($event);
     }
 
     /** Determine if a command name matches the filter. */
