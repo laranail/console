@@ -46,7 +46,7 @@
     "require-dev": {
         "infection/infection": "^0.35",
         "larastan/larastan": "^3.0",
-        "laravel/pint": "^1.18",
+        "laravel/pint": "^1.30",
         "mockery/mockery": "^1.6",
         "orchestra/testbench": "^11.0",
         "pestphp/pest": "^4.0",
