@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
-use Simtabi\Laranail\Console\Tools\Widgets\Callout;
-use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
-use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\Rule;
-use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
+use Simtabi\Laranail\Console\Tools\Widgets\Tree;
+use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Widgets\Banner;
+use Simtabi\Laranail\Console\Tools\Widgets\Callout;
 use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
-use Simtabi\Laranail\Console\Tools\Widgets\Table;
-use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
-use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
+use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 
 final class WidgetsTest extends TestCase
 {
@@ -141,6 +141,6 @@ final class WidgetsTest extends TestCase
         $lines = explode("\n", $rendered);
         $widths = array_map(DisplayWidth::of(...), $lines);
 
-        self::assertCount(1, array_unique($widths), 'Lines are not equal width: '.implode(',', $widths));
+        self::assertCount(1, array_unique($widths), 'Lines are not equal width: ' . implode(',', $widths));
     }
 }

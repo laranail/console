@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
-use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
-use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Widgets\Tree;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
+use Simtabi\Laranail\Console\Tools\Widgets\Spinner;
+use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 final class Ws7PolishTest extends TestCase
 {
@@ -44,7 +44,7 @@ final class Ws7PolishTest extends TestCase
 
         $out = Tree::make('root')->child('node', fn (Tree $t): Tree => $t->status('success'))->render();
 
-        self::assertStringContainsString($glyph.' node', $out);
+        self::assertStringContainsString($glyph . ' node', $out);
     }
 
     public function test_menu_radio_groups_toggle_independently(): void

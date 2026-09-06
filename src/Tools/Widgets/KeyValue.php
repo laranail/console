@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A definition list: aligned `key : value` pairs. Keys are padded to the widest
@@ -27,7 +27,7 @@ final class KeyValue implements Stringable
     private readonly Capabilities $capabilities;
 
     /**
-     * @param  array<string, scalar|null>  $pairs
+     * @param array<string, scalar|null> $pairs
      */
     public function __construct(array $pairs = [], ?Capabilities $capabilities = null)
     {
@@ -41,7 +41,7 @@ final class KeyValue implements Stringable
     }
 
     /**
-     * @param  array<string, scalar|null>  $pairs
+     * @param array<string, scalar|null> $pairs
      */
     public static function make(array $pairs = []): self
     {
@@ -80,7 +80,7 @@ final class KeyValue implements Stringable
 
         $lines = [];
         foreach ($this->pairs as $key => $value) {
-            $line = DisplayWidth::pad($key, $width).' '.$this->separator.' '.$value;
+            $line = DisplayWidth::pad($key, $width) . ' ' . $this->separator . ' ' . $value;
             $lines[] = $cap === null ? $line : DisplayWidth::truncate($line, $cap);
         }
 
@@ -88,7 +88,8 @@ final class KeyValue implements Stringable
     }
 
     /**
-     * @param  array<string, scalar|null>  $pairs
+     * @param array<string, scalar|null> $pairs
+     *
      * @return array<string, string>
      */
     private function normalize(array $pairs): array

@@ -20,9 +20,9 @@ return [
     */
     'output' => [
         'unicode' => env('CONSOLE_UNICODE', 'auto'),
-        'colors' => env('CONSOLE_COLORS', 'auto'),
+        'colors'  => env('CONSOLE_COLORS', 'auto'),
         'symbols' => env('CONSOLE_SYMBOLS', 'auto'),
-        'width' => env('CONSOLE_WIDTH'),
+        'width'   => env('CONSOLE_WIDTH'),
     ],
 
     /*
@@ -113,7 +113,7 @@ return [
     | width : default inner content width, or null to auto-fit the terminal.
     */
     'banner' => [
-        'font' => env('CONSOLE_BANNER_FONT'),
+        'font'  => env('CONSOLE_BANNER_FONT'),
         'width' => env('CONSOLE_BANNER_WIDTH'),
 
         // Custom named themes for Banner::theme('name'); each is a subset of
@@ -133,10 +133,10 @@ return [
     */
     'summary' => [
         'divider_width' => 60,
-        'label_pad' => 16,
-        'message_max' => 80,
-        'rate_good' => 100,
-        'rate_warn' => 80,
+        'label_pad'     => 16,
+        'message_max'   => 80,
+        'rate_good'     => 100,
+        'rate_warn'     => 80,
     ],
 
     /*
@@ -149,7 +149,7 @@ return [
     |          'deploy' => ['🚀', '>>'].
     */
     'emoji' => [
-        'mode' => env('CONSOLE_EMOJI_MODE', 'auto'),
+        'mode'   => env('CONSOLE_EMOJI_MODE', 'auto'),
         'custom' => [],
     ],
 
@@ -162,7 +162,7 @@ return [
     */
     'menu' => [
         'foreground' => env('CONSOLE_MENU_FG'),
-        'width' => env('CONSOLE_MENU_WIDTH'),
+        'width'      => env('CONSOLE_MENU_WIDTH'),
     ],
 
     /*
@@ -185,9 +185,9 @@ return [
     | channel              : log channel name, or null for the default
     */
     'logging' => [
-        'redact_keys' => ['password', 'secret', 'token', 'key', 'authorization'],
+        'redact_keys'         => ['password', 'secret', 'token', 'key', 'authorization'],
         'trace_in_debug_only' => true,
-        'channel' => env('CONSOLE_LOG_CHANNEL'),
+        'channel'             => env('CONSOLE_LOG_CHANNEL'),
     ],
 
     /*

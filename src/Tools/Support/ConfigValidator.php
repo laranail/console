@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 use Simtabi\Laranail\Console\Tools\Theme\Presets;
+use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 
 /**
  * Validates the `console.*` configuration and returns human-readable error
@@ -48,7 +48,7 @@ final class ConfigValidator
         // theme.preset — null or a known preset.
         $preset = Config::get('theme.preset');
         if (is_string($preset) && $preset !== '' && ! Presets::has($preset)) {
-            $errors[] = "theme.preset: unknown preset '{$preset}'. Available: ".implode(', ', Presets::names()).'.';
+            $errors[] = "theme.preset: unknown preset '{$preset}'. Available: " . implode(', ', Presets::names()) . '.';
         }
 
         // output.symbols / emoji.mode — enums.
@@ -73,7 +73,8 @@ final class ConfigValidator
     }
 
     /**
-     * @param  list<string>  $allowed
+     * @param list<string> $allowed
+     *
      * @return list<string>
      */
     private static function checkEnum(string $key, array $allowed, mixed $default): array
@@ -86,6 +87,6 @@ final class ConfigValidator
 
         $shown = is_scalar($value) ? (string) $value : gettype($value);
 
-        return ["{$key}: '{$shown}' must be one of: ".implode(', ', $allowed).'.'];
+        return ["{$key}: '{$shown}' must be one of: " . implode(', ', $allowed) . '.'];
     }
 }

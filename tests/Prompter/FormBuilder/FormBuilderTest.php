@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Tests\FormBuilder;
 
+use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
 use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
-use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormBuilderService;
 use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormFieldService;
-use Simtabi\Laranail\Console\Prompter\Tests\TestCase;
+use Simtabi\Laranail\Console\Prompter\Services\FormBuilder\FormBuilderService;
 
 final class FormBuilderTest extends TestCase
 {
@@ -38,13 +38,13 @@ final class FormBuilderTest extends TestCase
         $service = new FormBuilderService(new PromptsFormBuilder);
 
         foreach (FieldType::cases() as $i => $type) {
-            $field = new FormFieldService($type)->label('Field '.$type->value);
+            $field = new FormFieldService($type)->label('Field ' . $type->value);
 
             if (in_array($type, [FieldType::SELECT, FieldType::RADIO], true)) {
                 $field->options(['a' => 'A', 'b' => 'B']);
             }
 
-            $service->addField('field_'.$i, $field);
+            $service->addField('field_' . $i, $field);
         }
 
         $service->build();

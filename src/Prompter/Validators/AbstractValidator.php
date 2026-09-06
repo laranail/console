@@ -40,7 +40,7 @@ abstract class AbstractValidator implements ValidatorInterface
     /**
      * Placeholders to substitute into the translated default message.
      *
-     * @param  array<string, string>  $replace
+     * @param array<string, string> $replace
      */
     public function replace(array $replace): static
     {
@@ -90,7 +90,7 @@ abstract class AbstractValidator implements ValidatorInterface
     protected function resolvedMessage(): string
     {
         return $this->customMessage
-            ?? __('laranail-console::validators.'.$this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
+            ?? __('laranail-console::validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
     }
 
     /**

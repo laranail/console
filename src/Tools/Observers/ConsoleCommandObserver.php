@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Observers;
 
 use Closure;
+use Throwable;
+use ReflectionFunction;
+use Illuminate\Support\Str;
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Support\Str;
-use ReflectionFunction;
-use Throwable;
 
 final class ConsoleCommandObserver
 {
@@ -32,7 +32,7 @@ final class ConsoleCommandObserver
      */
     private $filter;
 
-    private Dispatcher $events;
+    private readonly Dispatcher $events;
 
     public function __construct(
         string|array|callable|null $commandFilter = null,
@@ -124,15 +124,15 @@ final class ConsoleCommandObserver
         $argc = $ref->getNumberOfParameters();
 
         return match (true) {
-            $argc >= 2 => $callback($event, $this),
+            $argc >= 2  => $callback($event, $this),
             $argc === 1 => $callback($event),
-            default => $callback(),
+            default     => $callback(),
         };
     }
 
     private function passesPredicate(object $event): bool
     {
-        return ! $this->predicate || (bool) ($this->predicate)($event);
+        return ! $this->predicate instanceof Closure || (bool) ($this->predicate)($event);
     }
 
     /** Determine if a command name matches the filter. */

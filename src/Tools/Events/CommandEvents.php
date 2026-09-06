@@ -59,7 +59,7 @@ class CommandEvents
     }
 
     /**
-     * @param  array<string, mixed>|null  $metadata
+     * @param array<string, mixed>|null $metadata
      */
     private function populate(string $action, string $type, ?Request $request = null, ?array $metadata = null): void
     {

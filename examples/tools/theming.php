@@ -8,10 +8,10 @@ declare(strict_types=1);
  *   php examples/tools/theming.php
  */
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
-use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Document\Document;
 
 $theme = Theme::make(['primary' => '#ec4899', 'accent' => '#22d3ee', 'success' => '#84cc16']);
 
@@ -24,5 +24,5 @@ echo new Document(null, $theme)
 
 // Built-in presets: dracula, nord, solarized, monochrome, github.
 foreach (['nord', 'dracula', 'github'] as $preset) {
-    echo new Document(null, Theme::preset($preset))->h2(ucfirst($preset).' preset')->render(), "\n";
+    echo new Document(null, Theme::preset($preset))->h2(ucfirst($preset) . ' preset')->render(), "\n";
 }

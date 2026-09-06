@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Commands\Services;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Commands\Services\CommandInteractionService;
 use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
+use Simtabi\Laranail\Console\Tools\Commands\Services\CommandInteractionService;
 
 /**
  * Exercises the non-interactive branches, which short-circuit Laravel

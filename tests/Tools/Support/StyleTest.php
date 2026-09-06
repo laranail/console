@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 
 final class StyleTest extends TestCase
 {

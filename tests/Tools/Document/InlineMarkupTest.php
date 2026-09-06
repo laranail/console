@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Document;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Document\InlineMarkup;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
+use Simtabi\Laranail\Console\Tools\Document\InlineMarkup;
 
 final class InlineMarkupTest extends TestCase
 {
@@ -65,7 +65,7 @@ final class InlineMarkupTest extends TestCase
             self::assertLessThanOrEqual(20, DisplayWidth::of($line));
             // a line that opens a colour must also close it (no bleed across wraps)
             if (str_contains($line, "\033[") && ! str_ends_with($line, "\033[0m")) {
-                self::fail('styled line not reset-terminated: '.$line);
+                self::fail('styled line not reset-terminated: ' . $line);
             }
         }
     }
@@ -84,7 +84,7 @@ final class InlineMarkupTest extends TestCase
             if (trim(preg_replace('/\033\[[0-9;]*m/', '', $line) ?? '') === '') {
                 continue;
             }
-            self::assertStringContainsString("\033[1m", $line, 'bold carried onto: '.$line);
+            self::assertStringContainsString("\033[1m", $line, 'bold carried onto: ' . $line);
             self::assertStringEndsWith("\033[0m", $line);
         }
     }

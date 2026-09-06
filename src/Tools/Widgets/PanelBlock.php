@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Stringable;
 use Simtabi\Laranail\Console\Tools\Enums\BorderStyle;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A single content block for a {@see Panel} (or standalone): text with optional
@@ -45,7 +45,7 @@ final class PanelBlock implements Renderable, Stringable
     }
 
     /**
-     * @param  string|list<string>  $content
+     * @param string|list<string> $content
      */
     public static function make(string|array $content = ''): self
     {
@@ -53,7 +53,7 @@ final class PanelBlock implements Renderable, Stringable
     }
 
     /**
-     * @param  string|list<string>  $content
+     * @param string|list<string> $content
      */
     public function content(string|array $content): self
     {
@@ -127,9 +127,9 @@ final class PanelBlock implements Renderable, Stringable
         }
 
         $g = $this->glyphs();
-        $top = $g['tl'].str_repeat($g['h'], $contentWidth).$g['tr'];
-        $bottom = $g['bl'].str_repeat($g['h'], $contentWidth).$g['br'];
-        $body = array_map(static fn (string $l): string => $g['v'].$l.$g['v'], $lines);
+        $top = $g['tl'] . str_repeat($g['h'], $contentWidth) . $g['tr'];
+        $bottom = $g['bl'] . str_repeat($g['h'], $contentWidth) . $g['br'];
+        $body = array_map(static fn (string $l): string => $g['v'] . $l . $g['v'], $lines);
 
         return [$top, ...$body, $bottom];
     }
@@ -189,7 +189,7 @@ final class PanelBlock implements Renderable, Stringable
         $current = '';
 
         foreach (explode(' ', $line) as $word) {
-            $candidate = $current === '' ? $word : $current.' '.$word;
+            $candidate = $current === '' ? $word : $current . ' ' . $word;
 
             if (DisplayWidth::of($candidate) <= $width) {
                 $current = $candidate;

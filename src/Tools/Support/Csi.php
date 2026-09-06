@@ -27,6 +27,6 @@ final class Csi
      */
     public static function sequence(string $finalByte, int|string ...$params): string
     {
-        return self::CSI.implode(';', array_map(static fn (int|string $p): string => (string) $p, $params)).$finalByte;
+        return self::CSI . implode(';', array_map(static fn (int|string $p): string => (string) $p, $params)) . $finalByte;
     }
 }

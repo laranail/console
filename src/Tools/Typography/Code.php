@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Inline code — themed (accent), padded with hair spaces so it reads as a token.
@@ -37,6 +37,6 @@ final readonly class Code implements Renderable, Stringable
      */
     public function renderLines(): array
     {
-        return [$this->theme->style('code')->apply(' '.$this->text.' ')];
+        return [$this->theme->style('code')->apply(' ' . $this->text . ' ')];
     }
 }

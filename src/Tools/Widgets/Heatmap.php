@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Style;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Concerns\ChartContext;
 use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Support\Color;
-use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\Style;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A heatmap: a 2D matrix whose cells are coloured by intensity (a low→high blend,
@@ -43,7 +43,7 @@ final class Heatmap implements Renderable, Stringable
     private int $cellWidth = 2;
 
     /**
-     * @param  list<list<int|float>>  $matrix  rows of values
+     * @param list<list<int|float>> $matrix rows of values
      */
     public function __construct(array $matrix = [], ?Capabilities $capabilities = null, ?Theme $theme = null)
     {
@@ -54,7 +54,7 @@ final class Heatmap implements Renderable, Stringable
     }
 
     /**
-     * @param  list<list<int|float>>  $matrix
+     * @param list<list<int|float>> $matrix
      */
     public static function make(array $matrix = []): self
     {
@@ -62,8 +62,8 @@ final class Heatmap implements Renderable, Stringable
     }
 
     /**
-     * @param  list<string>  $rows
-     * @param  list<string>  $cols
+     * @param list<string> $rows
+     * @param list<string> $cols
      */
     public function labels(array $rows = [], array $cols = []): self
     {

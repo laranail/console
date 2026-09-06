@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Typography;
 
 use PHPUnit\Framework\TestCase;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\Text;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
-use Simtabi\Laranail\Console\Tools\Typography\Code;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
-use Simtabi\Laranail\Console\Tools\Typography\Heading;
-use Simtabi\Laranail\Console\Tools\Typography\Link;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
-use Simtabi\Laranail\Console\Tools\Typography\Quote;
-use Simtabi\Laranail\Console\Tools\Typography\Text;
 
 final class TypographyTest extends TestCase
 {

@@ -12,7 +12,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 final class SelectFieldValidator extends ChoiceFieldValidator
 {
     /**
-     * @param  list<mixed>  $options
+     * @param list<mixed> $options
      */
     public function __construct(array $options)
     {

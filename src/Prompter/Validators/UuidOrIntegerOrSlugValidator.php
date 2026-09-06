@@ -45,7 +45,7 @@ final class UuidOrIntegerOrSlugValidator extends AbstractValidator
         };
 
         return $version === null
-            || (bool) preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-'.$version.'[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value);
+            || (bool) preg_match('/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-' . $version . '[0-9a-fA-F]{3}-[89ab][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/', $value);
     }
 
     /**

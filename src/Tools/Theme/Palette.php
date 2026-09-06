@@ -16,19 +16,19 @@ final readonly class Palette
     /** @var array<string, string> */
     private const array DEFAULTS = [
         'primary' => '#7c3aed',
-        'accent' => '#06b6d4',
+        'accent'  => '#06b6d4',
         'success' => '#16a34a',
         'warning' => '#d97706',
-        'danger' => '#dc2626',
-        'info' => '#2563eb',
-        'muted' => '#64748b',
+        'danger'  => '#dc2626',
+        'info'    => '#2563eb',
+        'muted'   => '#64748b',
     ];
 
     /** @var array<string, string> */
     public array $roles;
 
     /**
-     * @param  array<string, string>  $overrides
+     * @param array<string, string> $overrides
      */
     public function __construct(array $overrides = [])
     {
@@ -36,7 +36,7 @@ final readonly class Palette
     }
 
     /**
-     * @param  array<string, string>  $overrides
+     * @param array<string, string> $overrides
      */
     public static function make(array $overrides = []): self
     {
@@ -51,7 +51,7 @@ final readonly class Palette
     public static function preset(string $name): self
     {
         $roles = Presets::get($name)
-            ?? throw new InvalidArgumentException("Unknown theme preset '{$name}'. Available: ".implode(', ', Presets::names()).'.');
+            ?? throw new InvalidArgumentException("Unknown theme preset '{$name}'. Available: " . implode(', ', Presets::names()) . '.');
 
         return new self($roles);
     }

@@ -27,13 +27,13 @@ class PromptService
     /**
      * Forward a call to the matching laravel/prompts helper function.
      *
-     * @param  array<int|string, mixed>  $arguments
+     * @param array<int|string, mixed> $arguments
      *
      * @throws PrompterException If no such prompts helper exists.
      */
     public function __call(string $method, array $arguments): mixed
     {
-        $function = 'Laravel\\Prompts\\'.$method;
+        $function = 'Laravel\\Prompts\\' . $method;
 
         if (function_exists($function)) {
             return $function(...$arguments);
@@ -47,7 +47,7 @@ class PromptService
      */
     public function has(string $method): bool
     {
-        return function_exists('Laravel\\Prompts\\'.$method);
+        return function_exists('Laravel\\Prompts\\' . $method);
     }
 
     /**

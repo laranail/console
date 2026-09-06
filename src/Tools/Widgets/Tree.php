@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Renders a nested tree with `├─ │ └─` connectors (ASCII fallbacks without
@@ -53,7 +53,7 @@ final class Tree implements Stringable
      * by its key; a scalar value becomes a leaf (labelled `value` for list keys,
      * or `key: value` for string keys).
      *
-     * @param  array<int|string, mixed>  $nested
+     * @param array<int|string, mixed> $nested
      */
     public static function fromArray(string $label, array $nested): self
     {
@@ -98,7 +98,7 @@ final class Tree implements Stringable
 
     public function render(): string
     {
-        $out = rtrim($this->label()."\n".$this->renderChildren(''));
+        $out = rtrim($this->label() . "\n" . $this->renderChildren(''));
         $cap = ResponsiveWidth::cap(null, $this->responsive, $this->capabilities);
 
         if ($cap === null) {
@@ -112,7 +112,7 @@ final class Tree implements Stringable
     }
 
     /**
-     * @param  array<int|string, mixed>  $nested
+     * @param array<int|string, mixed> $nested
      */
     private function appendArray(array $nested): void
     {
@@ -126,7 +126,7 @@ final class Tree implements Stringable
                 continue;
             }
 
-            $leaf = is_int($key) ? (string) $value : $key.': '.$value;
+            $leaf = is_int($key) ? (string) $value : $key . ': ' . $value;
             $this->child($leaf);
         }
     }
@@ -141,8 +141,8 @@ final class Tree implements Stringable
             $connector = $this->symbols->get($isLast ? 'last' : 'branch');
             $stem = $isLast ? $this->symbols->get('gap') : $this->symbols->get('stem');
 
-            $out .= $prefix.$connector.' '.$child->label()."\n";
-            $out .= $child->renderChildren($prefix.$stem);
+            $out .= $prefix . $connector . ' ' . $child->label() . "\n";
+            $out .= $child->renderChildren($prefix . $stem);
         }
 
         return $out;
@@ -151,7 +151,7 @@ final class Tree implements Stringable
     private function label(): string
     {
         return $this->status !== null
-            ? $this->symbols->get($this->status).' '.$this->label
+            ? $this->symbols->get($this->status) . ' ' . $this->label
             : $this->label;
     }
 }

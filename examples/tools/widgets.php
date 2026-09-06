@@ -11,28 +11,28 @@ declare(strict_types=1);
  * Symfony output (colour renders on a TTY, and is stripped when piped).
  */
 
-require __DIR__.'/../../vendor/autoload.php';
+require __DIR__ . '/../../vendor/autoload.php';
 
+use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Rule;
+use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
+use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
+use Simtabi\Laranail\Console\Tools\Widgets\Panel;
+use Simtabi\Laranail\Console\Tools\Widgets\Table;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
-use Simtabi\Laranail\Console\Tools\Widgets\Box;
+use Simtabi\Laranail\Console\Tools\Widgets\Header;
 use Simtabi\Laranail\Console\Tools\Widgets\Callout;
 use Simtabi\Laranail\Console\Tools\Widgets\Columns;
-use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
-use Simtabi\Laranail\Console\Tools\Widgets\Header;
-use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
-use Simtabi\Laranail\Console\Tools\Widgets\Panel;
-use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
-use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
-use Simtabi\Laranail\Console\Tools\Widgets\Rule;
-use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
-use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
-use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
-use Simtabi\Laranail\Console\Tools\Widgets\Table;
-use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
-use Simtabi\Laranail\Console\Tools\Widgets\Tree;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
+use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
+use Simtabi\Laranail\Console\Tools\Widgets\Sparkline;
+use Simtabi\Laranail\Console\Tools\Widgets\PanelBlock;
+use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
+use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
 
 $out = new ConsoleOutput;
 
@@ -65,7 +65,7 @@ $out->writeln(Tree::make('app')
 $out->writeln('');
 
 $out->writeln(Gauge::make(184, 250)->label('Disk C:')->showValue()->render());
-$out->writeln('CPU '.Sparkline::make([1, 2, 3, 5, 7, 6, 4, 2, 1])->render());
+$out->writeln('CPU ' . Sparkline::make([1, 2, 3, 5, 7, 6, 4, 2, 1])->render());
 $out->writeln('');
 
 $out->writeln(Callout::info('Run `php artisan migrate` to finish setup.')->title('Next step')->render());

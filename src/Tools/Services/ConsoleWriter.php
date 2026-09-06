@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Services;
 
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
-use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
-use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Formatter\OutputFormatterInterface;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 
 /**
  * A fluent, immutable wrapper over a Symfony {@see OutputInterface}.
@@ -155,7 +155,7 @@ class ConsoleWriter
     }
 
     /**
-     * @param  int-mask-of<OutputInterface::OUTPUT_*|OutputInterface::VERBOSITY_*>  $level
+     * @param int-mask-of<OutputInterface::OUTPUT_*|OutputInterface::VERBOSITY_*> $level
      */
     public function verbosity(int $level): self
     {
@@ -197,11 +197,11 @@ class ConsoleWriter
     public function emoji(string $emoji): self
     {
         $resolved = Emoji::make($this->caps())->render(
-            str_contains($emoji, ':') ? $emoji : ':'.$emoji.':',
+            str_contains($emoji, ':') ? $emoji : ':' . $emoji . ':',
         );
 
         // Unknown name: render() leaves an unmatched ":name:" intact — fall back to the literal.
-        return $this->prefix($resolved === ':'.trim($emoji, ':').':' ? $emoji : $resolved);
+        return $this->prefix($resolved === ':' . trim($emoji, ':') . ':' ? $emoji : $resolved);
     }
 
     /** Set a leading glyph from the shared {@see Symbols} map (e.g. "arrow", "package"). */
@@ -357,7 +357,7 @@ class ConsoleWriter
      * `error`/`danger` are routed to stderr. Status markup is already styled,
      * so it is written without the writer's active inline style.
      *
-     * @param  string[]  $lines
+     * @param string[] $lines
      */
     private function status(string $status, array $lines): self
     {
@@ -383,7 +383,7 @@ class ConsoleWriter
         }
 
         if ($this->prefix !== null) {
-            return $this->prefix.' '.$text;
+            return $this->prefix . ' ' . $text;
         }
 
         return $text;
@@ -413,18 +413,18 @@ class ConsoleWriter
         $parts = [];
 
         if ($this->foreground !== null) {
-            $parts[] = 'fg='.$this->foreground;
+            $parts[] = 'fg=' . $this->foreground;
         }
 
         if ($this->background !== null) {
-            $parts[] = 'bg='.$this->background;
+            $parts[] = 'bg=' . $this->background;
         }
 
         if ($this->options !== []) {
-            $parts[] = 'options='.implode(',', $this->options);
+            $parts[] = 'options=' . implode(',', $this->options);
         }
 
-        $name = 'cw_'.substr(md5(implode(';', $parts)), 0, 12);
+        $name = 'cw_' . substr(md5(implode(';', $parts)), 0, 12);
         $formatter = $this->formatter();
 
         if (! $formatter->hasStyle($name)) {

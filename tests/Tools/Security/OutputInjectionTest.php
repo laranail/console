@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Security;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Simtabi\Laranail\Console\Tools\Notifications\ConsoleChannel;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 final class OutputInjectionTest extends TestCase
 {

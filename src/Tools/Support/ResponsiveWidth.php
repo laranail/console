@@ -35,8 +35,8 @@ final class ResponsiveWidth
     /**
      * The maximum width a widget should occupy, or null for "no cap" (legacy).
      *
-     * @param  int|null  $explicit  the widget's explicit ->width(), if any
-     * @param  bool  $widgetWantsResponsive  the widget's ->responsive() flag
+     * @param int|null $explicit the widget's explicit ->width(), if any
+     * @param bool $widgetWantsResponsive the widget's ->responsive() flag
      */
     public static function cap(?int $explicit, bool $widgetWantsResponsive = true, ?Capabilities $capabilities = null): ?int
     {

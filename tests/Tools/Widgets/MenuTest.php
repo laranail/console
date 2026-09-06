@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Tools\Widgets\Menu\CheckboxItem;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\MenuItem;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\StaticItem;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\SubMenuItem;
+use Simtabi\Laranail\Console\Tools\Widgets\Menu\CheckboxItem;
 
 final class MenuTest extends TestCase
 {

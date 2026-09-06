@@ -23,7 +23,7 @@ final class Figlet
     private static array $cache = [];
 
     /**
-     * @param  array<int|string, list<string>>  $chars  char => rows (equal width per char)
+     * @param array<int|string, list<string>> $chars char => rows (equal width per char)
      */
     private function __construct(
         private readonly int $height,
@@ -144,7 +144,8 @@ final class Figlet
      * Strip trailing endmark characters, swap the hardblank for a space, and pad
      * every row to the glyph's widest row.
      *
-     * @param  list<string>  $glyph
+     * @param list<string> $glyph
+     *
      * @return list<string>
      */
     private static function normalizeGlyph(array $glyph, string $hardblank): array

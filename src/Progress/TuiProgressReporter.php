@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Progress;
 
-use Symfony\Component\Tui\Event\TickEvent;
 use Symfony\Component\Tui\Tui;
-use Symfony\Component\Tui\Widget\ProgressBarWidget;
+use Symfony\Component\Tui\Event\TickEvent;
 use Symfony\Component\Tui\Widget\TextWidget;
+use Symfony\Component\Tui\Widget\ProgressBarWidget;
 
 /**
  * Progress reporter backed by the experimental symfony/tui full-screen renderer.

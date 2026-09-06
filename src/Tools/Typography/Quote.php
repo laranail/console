@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
-use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A short inline quotation — themed (italic/muted) and wrapped in typographic
@@ -44,6 +44,6 @@ final readonly class Quote implements Renderable, Stringable
     {
         [$open, $close] = $this->capabilities->supportsUnicode() ? ['“', '”'] : ['"', '"'];
 
-        return [$this->theme->style('quote')->apply($open.$this->text.$close)];
+        return [$this->theme->style('quote')->apply($open . $this->text . $close)];
     }
 }

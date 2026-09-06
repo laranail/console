@@ -40,7 +40,7 @@ trait InteractsWithConsole
      * to simulate (characters and Key::* constants), exactly as you would to
      * \Laravel\Prompts\Prompt::fake().
      *
-     * @param  array<int, string>  $keys
+     * @param array<int, string> $keys
      */
     protected function withPromptInput(array $keys = []): void
     {

@@ -91,9 +91,9 @@ final class Os
     {
         return match (PHP_OS_FAMILY) {
             'Windows' => 'windows',
-            'Darwin' => 'macos',
-            'Linux' => 'linux',
-            default => 'unknown',
+            'Darwin'  => 'macos',
+            'Linux'   => 'linux',
+            default   => 'unknown',
         };
     }
 }

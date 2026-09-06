@@ -40,8 +40,9 @@ class ContextBuilderService
     /**
      * Magic method to dynamically call context methods.
      *
-     * @param  string  $method  The name of the method.
-     * @param  array  $arguments  The arguments to pass to the method.
+     * @param string $method The name of the method.
+     * @param array $arguments The arguments to pass to the method.
+     *
      * @return mixed The result of the method call.
      *
      * @throws PrompterException If the context method does not exist.
@@ -53,7 +54,7 @@ class ContextBuilderService
         }
 
         throw PrompterException::badMethodCall([
-            'method' => $method,
+            'method'  => $method,
             'methods' => rtrim(implode(', ', array_keys($this->contexts)), ', '),
         ]);
     }
@@ -76,7 +77,7 @@ class ContextBuilderService
         // Dispatch to the matching laravel/prompts helper so each type renders
         // correctly (warning/error/alert/info/intro/outro are distinct prompts,
         // not a Note with a "type" string).
-        $function = '\\Laravel\\Prompts\\'.$type->value;
+        $function = '\\Laravel\\Prompts\\' . $type->value;
 
         return static function (string $message) use ($function): void {
             $function($message);

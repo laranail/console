@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Document;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
+use Simtabi\Laranail\Console\Tools\Typography\Code;
+use Simtabi\Laranail\Console\Tools\Typography\Link;
+use Simtabi\Laranail\Console\Tools\Typography\Quote;
+use Simtabi\Laranail\Console\Tools\Typography\Heading;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
-use Simtabi\Laranail\Console\Tools\Typography\Code;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
-use Simtabi\Laranail\Console\Tools\Typography\Heading;
-use Simtabi\Laranail\Console\Tools\Typography\Link;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
 use Simtabi\Laranail\Console\Tools\Typography\Paragraph;
-use Simtabi\Laranail\Console\Tools\Typography\Quote;
-use Stringable;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Simtabi\Laranail\Console\Tools\Typography\BlockQuote;
 
 /**
  * A fluent document composer: stitch typography + any renderable widget into one
@@ -100,7 +100,7 @@ final class Document implements Renderable, Stringable
     }
 
     /**
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public function bulletList(array $items): self
     {
@@ -108,7 +108,7 @@ final class Document implements Renderable, Stringable
     }
 
     /**
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public function orderedList(array $items): self
     {
@@ -116,7 +116,7 @@ final class Document implements Renderable, Stringable
     }
 
     /**
-     * @param  array<string, bool>  $items
+     * @param array<string, bool> $items
      */
     public function taskList(array $items): self
     {
@@ -124,7 +124,7 @@ final class Document implements Renderable, Stringable
     }
 
     /**
-     * @param  array<string, string>  $items
+     * @param array<string, string> $items
      */
     public function definitionList(array $items): self
     {

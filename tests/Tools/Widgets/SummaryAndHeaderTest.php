@@ -31,13 +31,13 @@ final class SummaryAndHeaderTest extends TestCase
     public function test_summary_renders_statistics_and_status(): void
     {
         $out = Summary::make([
-            'total' => 3,
-            'success' => 2,
-            'failed' => 1,
+            'total'     => 3,
+            'success'   => 2,
+            'failed'    => 1,
             'totalTime' => 1234.0,
-            'fastest' => ['class' => 'Fast', 'time' => 10.0],
-            'slowest' => ['class' => 'Slow', 'time' => 900.0],
-            'errors' => [['class' => 'Boom', 'type' => 'App\\X\\RuntimeProblem', 'message' => 'it broke']],
+            'fastest'   => ['class' => 'Fast', 'time' => 10.0],
+            'slowest'   => ['class' => 'Slow', 'time' => 900.0],
+            'errors'    => [['class' => 'Boom', 'type' => 'App\\X\\RuntimeProblem', 'message' => 'it broke']],
         ])->render();
 
         self::assertStringContainsString('EXECUTION SUMMARY', $out);

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use Override;
+use Illuminate\Support\ServiceProvider;
+use Simtabi\Laranail\Console\Prompter\Prompter;
 use Simtabi\Laranail\Console\Progress\ProgressReporter;
 use Simtabi\Laranail\Console\Progress\ProgressReporterFactory;
-use Simtabi\Laranail\Console\Prompter\Prompter;
 
 /**
  * Child provider for the Prompter sub-domain.

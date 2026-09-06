@@ -23,7 +23,7 @@ abstract class DateTimeFormatValidator extends AbstractValidator
         }
 
         foreach ($this->formats as $format) {
-            $parsed = DateTimeImmutable::createFromFormat('!'.$format, $value);
+            $parsed = DateTimeImmutable::createFromFormat('!' . $format, $value);
             $errors = DateTimeImmutable::getLastErrors();
 
             if ($parsed !== false && ($errors === false || ($errors['warning_count'] === 0 && $errors['error_count'] === 0))) {

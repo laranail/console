@@ -13,7 +13,7 @@ namespace Simtabi\Laranail\Console\Prompter\Validators;
 abstract class ChoiceFieldValidator extends AbstractValidator
 {
     /**
-     * @param  list<mixed>  $options
+     * @param list<mixed> $options
      */
     public function __construct(string $messageKey, protected array $options)
     {

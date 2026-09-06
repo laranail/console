@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Typography;
 
-use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
+use Stringable;
+use Simtabi\Laranail\Console\Tools\Theme\Theme;
 use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Concerns\RendersBlock;
 use Simtabi\Laranail\Console\Tools\Support\ResponsiveWidth;
-use Simtabi\Laranail\Console\Tools\Theme\Theme;
-use Stringable;
 
 /**
  * A block quote: a themed left bar + indented, word-wrapped body. Nestable
@@ -80,6 +80,6 @@ final class BlockQuote implements Renderable, Stringable
             ? Paragraph::rich($this->text, $this->capabilities, $this->theme)->width($bodyWidth)->responsive(false)->renderLines()
             : Paragraph::make($this->text)->width($bodyWidth)->responsive(false)->style($this->theme->style('quote'))->renderLines();
 
-        return array_map(static fn (string $line): string => $bar.$line, $body);
+        return array_map(static fn (string $line): string => $bar . $line, $body);
     }
 }

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Console\Events\CommandStarting;
-use Illuminate\Contracts\Events\Dispatcher;
-use Simtabi\Laranail\Console\Tools\Events\CommandEvents;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Events\CommandEvents;
 
 /**
  * Command Event Service

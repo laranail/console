@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
-use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Enums\ControlChars;
+use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * Low-level terminal control: bell, tab title, alternate-screen buffer, and
@@ -39,7 +39,7 @@ final readonly class Terminal
     {
         $title = ConsoleUIFormatter::sanitizeText($title);
 
-        return $this->emit(ControlChars::Esc->char().']0;'.$title.ControlChars::Bel->char());
+        return $this->emit(ControlChars::Esc->char() . ']0;' . $title . ControlChars::Bel->char());
     }
 
     public function restoreTabTitle(): self

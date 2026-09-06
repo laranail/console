@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Unit\Runners;
 
-use RuntimeException;
-use Simtabi\Laranail\Console\Tools\Runners\BaseRunner;
-use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Throwable;
+use RuntimeException;
+use Simtabi\Laranail\Console\Tools\Tests\TestCase;
+use Simtabi\Laranail\Console\Tools\Runners\BaseRunner;
 
 /**
  * Concrete runner used to exercise the abstract BaseRunner behaviour.
@@ -113,7 +113,7 @@ final class BaseRunnerTest extends TestCase
     {
         $result = TestRunner::make()
             ->expectReturn()
-            ->after(fn ($value): string => $value.'-mutated')
+            ->after(fn ($value): string => $value . '-mutated')
             ->run(fn (): string => 'base');
 
         self::assertSame('base-mutated', $result);

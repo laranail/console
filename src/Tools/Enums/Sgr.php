@@ -57,7 +57,7 @@ enum Sgr: int
      */
     public static function wrap(string $text, self ...$codes): string
     {
-        return self::sequence(...$codes).$text.self::Reset->open();
+        return self::sequence(...$codes) . $text . self::Reset->open();
     }
 
     /**

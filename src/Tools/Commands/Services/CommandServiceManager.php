@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
-use Illuminate\Contracts\Events\Dispatcher;
+use Throwable;
 use Illuminate\Support\Facades\App;
+use Illuminate\Contracts\Events\Dispatcher;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 /**
  * Command Service Manager
@@ -168,7 +168,7 @@ class CommandServiceManager
 
         $performanceData = [
             'execution_time' => $this->performance->getFormattedExecutionTime(),
-            'memory_usage' => $this->performance->getMemoryUsage(),
+            'memory_usage'   => $this->performance->getMemoryUsage(),
         ];
 
         $this->logger->logCompletion($exitCode, $performanceData, $this->metadata->all());
@@ -181,8 +181,8 @@ class CommandServiceManager
     {
         $this->error->logError($exception, [
             'execution_time' => $this->performance->getFormattedExecutionTime(),
-            'memory_usage' => $this->performance->getMemoryUsage(),
-            'metadata' => $this->metadata->all(),
+            'memory_usage'   => $this->performance->getMemoryUsage(),
+            'metadata'       => $this->metadata->all(),
         ]);
     }
 
@@ -192,11 +192,11 @@ class CommandServiceManager
     public function getCommandSummary(): array
     {
         return [
-            'command' => $this->commandName,
+            'command'     => $this->commandName,
             'performance' => $this->performance->getPerformanceSummary($this->commandName, $this->metadata->all()),
-            'metadata' => $this->metadata->all(),
-            'signals' => $this->signals->getSignalHandlers(),
-            'events' => [
+            'metadata'    => $this->metadata->all(),
+            'signals'     => $this->signals->getSignalHandlers(),
+            'events'      => [
                 'native_enabled' => $this->events->isNativeEventsEnabled(),
                 'custom_enabled' => $this->events->isCustomEventsEnabled(),
             ],

@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Commands\Services;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Support\FileSize;
-use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar as ProgressBarWidget;
+use Symfony\Component\Console\Output\OutputInterface;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\Table as TableWidget;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar as ProgressBarWidget;
 
 /**
  * Command Display Service
@@ -73,8 +73,8 @@ class CommandDisplayService
     /**
      * Display a table with data via the Table widget.
      *
-     * @param  list<string>  $headers
-     * @param  list<list<string>>  $rows
+     * @param list<string> $headers
+     * @param list<list<string>> $rows
      */
     public function displayTable(array $headers, array $rows): void
     {
@@ -110,7 +110,7 @@ class CommandDisplayService
     /**
      * Display a list of items.
      *
-     * @param  list<string>  $items
+     * @param list<string> $items
      */
     public function list(array $items, string $title = ''): void
     {
@@ -126,7 +126,7 @@ class CommandDisplayService
     /**
      * Display key-value pairs.
      *
-     * @param  array<string, string>  $data
+     * @param array<string, string> $data
      */
     public function keyValue(array $data, string $title = ''): void
     {

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Support;
 
-use Simtabi\Laranail\Console\Tools\Contracts\Interactive;
-use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
 use Stringable;
 use Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Contracts\Renderable;
+use Simtabi\Laranail\Console\Tools\Contracts\Interactive;
+use Symfony\Component\Console\Output\ConsoleSectionOutput;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 
 /**
  * A native live-render engine: redraws any {@see Renderable} in place via a
@@ -59,7 +59,7 @@ final class Live implements Interactive
      * Redraw the live region $steps times, calling $producer($step) for each frame.
      * Non-interactive: draws only the final frame, once.
      *
-     * @param  callable(int):(Renderable|Stringable|string)  $producer
+     * @param callable(int):(Renderable|Stringable|string) $producer
      */
     public function refresh(callable $producer, int $steps, int $intervalMs = 80): self
     {
@@ -83,7 +83,7 @@ final class Live implements Interactive
     /**
      * Cycle through pre-rendered frames.
      *
-     * @param  list<Renderable|Stringable|string>  $frames
+     * @param list<Renderable|Stringable|string> $frames
      */
     public function animate(array $frames, int $loops = 1, int $intervalMs = 80): self
     {

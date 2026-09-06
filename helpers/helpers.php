@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Symfony\Component\Console\Output\OutputInterface;
 use Simtabi\Laranail\Console\Tools\Services\ConsoleWriter;
 use Simtabi\Laranail\Console\Tools\Support\ConsoleWriterFactory;
-use Symfony\Component\Console\Output\OutputInterface;
 
 if (! function_exists('prompter')) {
     /**

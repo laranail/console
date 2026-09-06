@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Prompter\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Prompter;
+use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 
 final class PrompterParityTest extends TestCase
 {
