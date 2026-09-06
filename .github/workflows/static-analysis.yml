@@ -53,7 +53,7 @@ jobs:
         run: composer update --prefer-stable --no-interaction --no-progress
 
       - name: Pint (code style)
-        run: vendor/bin/pint --test
+        run: vendor/bin/laranail-pint --test
 
       - name: PHPStan (level 8)
         run: vendor/bin/phpstan analyse --no-progress --error-format=github
