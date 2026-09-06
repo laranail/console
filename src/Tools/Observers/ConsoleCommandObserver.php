@@ -32,7 +32,7 @@ final class ConsoleCommandObserver
      */
     private $filter;
 
-    private Dispatcher $events;
+    private readonly Dispatcher $events;
 
     public function __construct(
         string|array|callable|null $commandFilter = null,
