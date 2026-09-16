@@ -34,18 +34,6 @@ abstract class Command extends BaseCommand
     use InteractsWithConsoleServices;
     use InteractsWithConsoleWriter;
 
-    /**
-     * Convenience aliases applied after construction — e.g. a bare `make:crud`
-     * alongside the namespaced `laranail::<package-slug>.<command>` name.
-     *
-     * Aliases are written through whatever `setAliases()` is in scope, so a
-     * command that also `use`s {@see Concerns\SupportsNamespacedNames} may list
-     * `::`-namespaced aliases here; otherwise standard Symfony validation applies.
-     *
-     * @var list<string>
-     */
-    protected array $commandAliases = [];
-
     public function __construct()
     {
         parent::__construct();
@@ -54,8 +42,43 @@ abstract class Command extends BaseCommand
         // construction (the trait also boots lazily on run() for trait-only use).
         $this->bootConsoleSupport();
 
-        if ($this->commandAliases !== []) {
-            $this->setAliases($this->commandAliases);
+        $aliases = $this->declaredCommandAliases();
+
+        if ($aliases !== []) {
+            $this->setAliases($aliases);
         }
+    }
+
+    /**
+     * The consuming command's own `$commandAliases`, if it declares one.
+     *
+     * Deliberately NOT a property on this base. A subclass is free to declare
+     * its own with any default, and reading an undeclared one is an
+     * `Undefined property` ErrorException at construction -- which is what
+     * happened the moment the family's bare aliases were deleted and the
+     * declarations went with them. Reading it defensively covers both.
+     *
+     * Aliases are written through whatever `setAliases()` is in scope, so a
+     * command that also `use`s {@see Concerns\SupportsNamespacedNames} may list
+     * `::`-namespaced aliases here; otherwise standard Symfony validation
+     * applies. An alias must itself be vendor-scoped -- a bare `make:crud`
+     * beside `laranail::toolkit.make-crud` hands back exactly the global
+     * collision the namespaced name exists to prevent.
+     *
+     * @return list<string>
+     */
+    private function declaredCommandAliases(): array
+    {
+        if (! property_exists($this, 'commandAliases') || ! is_array($this->commandAliases)) {
+            return [];
+        }
+
+        // Filtered rather than cast: the property is the consuming command's, so
+        // its contents are not this base's to assume. A stray null would reach
+        // Symfony's setAliases() as a type error at boot.
+        return array_values(array_filter(
+            $this->commandAliases,
+            static fn (mixed $alias): bool => is_string($alias) && $alias !== '',
+        ));
     }
 }
