@@ -55,5 +55,22 @@ parameters:
         -
             identifier: trait.unused
             path: src/Testing/InteractsWithConsole.php
+        # `$commandAliases` belongs to the CONSUMING command, not to this base or
+        # trait: PHP rejects a trait and a using class declaring the same property
+        # with different defaults, so it cannot be declared here. PHPStan sees only
+        # the subclasses inside src/ — none of which declare it — and concludes the
+        # property_exists() guard is always false. It is not: a downstream command
+        # may declare one, and reading the property without the guard is the
+        # `Undefined property` at construction this method exists to prevent.
+        -
+            identifier: function.alreadyNarrowedType
+            paths:
+                - src/Tools/Commands/Command.php
+                - src/Tools/Commands/Concerns/SupportsNamespacedNames.php
+        -
+            identifier: function.impossibleType
+            paths:
+                - src/Tools/Commands/Command.php
+                - src/Tools/Commands/Concerns/SupportsNamespacedNames.php
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false
