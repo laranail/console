@@ -36,6 +36,37 @@ trait SupportsNamespacedNames
         return $this;
     }
 
+    /**
+     * The consuming command's own `$commandAliases`, if it declares one.
+     *
+     * Deliberately NOT a property on this trait. PHP rejects a trait and a using
+     * class declaring the same property with different defaults -- a fatal at
+     * composition -- so declaring it here makes the documented usage ("a command
+     * declares its own list") impossible to write. Reading it defensively covers
+     * both that and the opposite bug, where an undeclared property threw
+     * `Undefined property` at construction.
+     *
+     * An alias must itself be vendor-scoped. A bare `env:set` beside
+     * `laranail::env-kit.set` hands back exactly the flat-registry collision the
+     * namespaced name exists to prevent.
+     *
+     * @return list<string>
+     */
+    private function declaredCommandAliases(): array
+    {
+        if (! property_exists($this, 'commandAliases') || ! is_array($this->commandAliases)) {
+            return [];
+        }
+
+        // Filtered rather than cast: the property belongs to the consuming
+        // command, so its contents are not this trait's to assume. A stray null
+        // would reach Symfony's setAliases() as a type error at boot.
+        return array_values(array_filter(
+            $this->commandAliases,
+            static fn (mixed $alias): bool => is_string($alias) && $alias !== '',
+        ));
+    }
+
     private function writeName(string $property, mixed $value): void
     {
         // The properties are private on Symfony's base Command.
