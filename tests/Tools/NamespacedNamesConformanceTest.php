@@ -13,10 +13,14 @@ use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
 /**
  * Conformance for the `laranail::<slug>.<command>` naming trait.
  *
- * This package holds the canonical copy — twenty-nine packages in the family import it. Three others
+ * This package holds the canonical copy — twenty-nine packages in the family import it. Two others
  * carry their own, for reasons that hold: `laranail/package-tools` must keep its `require` free of
- * any `laranail/*` entry, `laranail/db-tools` documents an independence invariant, and
- * `laranail/enumerator` targets PHP ^8.3 while this package targets ^8.4.1.
+ * any `laranail/*` entry, and `laranail/enumerator` targets PHP ^8.3 while this package targets
+ * ^8.4.1.
+ *
+ * `laranail/db-tools` carried a third copy until it took a `laranail/package-tools` dependency in
+ * `require`; the independence invariant that justified that copy no longer held, so the copy went
+ * and it imports package-tools' instead.
  *
  * Copies are tolerable. Copies that quietly stop agreeing are not: one read an undeclared
  * `$commandAliases` and fataled at boot for any command that did not declare the property, and the
