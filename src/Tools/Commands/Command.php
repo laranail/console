@@ -44,7 +44,6 @@ abstract class Command extends BaseCommand
      *
      * @var list<string>
      */
-    protected array $commandAliases = [];
 
     public function __construct()
     {
