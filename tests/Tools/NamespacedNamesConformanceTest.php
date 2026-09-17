@@ -30,6 +30,12 @@ use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
  * The assertions are the shared contract, not the file: each package writes them in its own house
  * style. Here that is a namespaced PHPUnit class — a top-level helper function makes the file
  * unmappable to Infection's coverage log, which fails mutation testing rather than any assertion.
+ *
+ * @trait-copy-canonical This is the copy the family imports; every other carrier is
+ *   measured against it. Read by `scripts/verify-trait-copies.py` in
+ *   `laranail/package-tools`, which exists because the paragraph above went wrong twice
+ *   in one day and nothing failed either time -- the assertions below cover the trait,
+ *   not the tree.
  */
 final class NamespacedNamesConformanceTest extends TestCase
 {
