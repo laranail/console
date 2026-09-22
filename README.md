@@ -1,9 +1,10 @@
 # laranail/console
 
-[![Latest version on Packagist](https://img.shields.io/packagist/v/laranail/console.svg)](https://packagist.org/packages/laranail/console)
 [![Tests](https://github.com/laranail/console/actions/workflows/tests.yml/badge.svg)](https://github.com/laranail/console/actions/workflows/tests.yml)
 [![Static analysis](https://github.com/laranail/console/actions/workflows/static-analysis.yml/badge.svg)](https://github.com/laranail/console/actions/workflows/static-analysis.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+`laranail/console` is not published to Packagist, so there is no registry-version badge to show — see [Install](#install).
 
 > A Rich-class console toolkit for Laravel — fluent terminal **output** (formatter, spinners, progress bars, boxes, trees, tables, charts, a Markdown + typography layer) and **input** (a `laravel/prompts` wrapper with a form builder and 26 validators).
 
