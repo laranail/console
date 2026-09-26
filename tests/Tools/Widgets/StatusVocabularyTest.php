@@ -67,6 +67,12 @@ final class StatusVocabularyTest extends TestCase
         $ascii = Capabilities::fake(unicode: false);
         self::assertSame('[OK]', Status::Success->symbol($ascii));
         self::assertSame('[X]', Status::Failed->symbol($ascii));
+
+        // On/off states read as on/off in ASCII, and never collide with Pending.
+        self::assertSame('[on]', Status::Active->symbol($ascii));
+        self::assertSame('[off]', Status::Inactive->symbol($ascii));
+        self::assertNotSame(Status::Pending->symbol($ascii), Status::Inactive->symbol($ascii));
+        self::assertSame('●', Status::Active->symbol($fancy));
     }
 
     public function test_from_bool(): void
@@ -104,6 +110,37 @@ final class StatusVocabularyTest extends TestCase
         self::assertSame(Status::Success, StatusBadge::fromMap($map, 'up-to-date')->status());
         self::assertSame(Status::Unknown, StatusBadge::fromMap($map, 'never-heard-of-it')->status());
         self::assertSame(Status::Unknown, StatusBadge::fromMap($map, null)->status());
+    }
+
+    public function test_badge_can_keep_the_domain_value_as_its_label(): void
+    {
+        $caps = Capabilities::fake(unicode: true);
+        $map = ['up-to-date' => Status::Success];
+
+        self::assertStringContainsString('✓ up-to-date', StatusBadge::fromMap($map, 'up-to-date', valueAsLabel: true)->capabilities($caps)->render());
+        self::assertStringContainsString('odd-state', StatusBadge::fromMap($map, 'odd-state', valueAsLabel: true)->render());
+        self::assertStringContainsString('Completed', StatusBadge::fromMap($map, 'up-to-date')->render());
+    }
+
+    public function test_table_cells_keep_markup_colour_on_a_decorated_output(): void
+    {
+        $decorated = new BufferedOutput(decorated: true);
+        MetricTable::make()->metric('State', StatusBadge::of(true)->render())->render($decorated);
+        self::assertStringContainsString("\e[", $decorated->fetch());
+
+        $plain = new BufferedOutput(decorated: false);
+        MetricTable::make()->metric('State', StatusBadge::of(true)->render())->render($plain);
+        $text = $plain->fetch();
+        self::assertStringNotContainsString("\e[", $text);
+        self::assertStringNotContainsString('<fg=', $text);
+    }
+
+    public function test_metric_pairs_keep_rows_with_identical_labels(): void
+    {
+        $out = MetricTable::make()->metrics([['Size', '1 KB'], ['Size', '2 KB']])->render();
+
+        self::assertStringContainsString('1 KB', $out);
+        self::assertStringContainsString('2 KB', $out);
     }
 
     public function test_badge_label_is_sanitized(): void
@@ -242,7 +279,7 @@ final class StatusVocabularyTest extends TestCase
 
             public function handle(): int
             {
-                if (! $this->confirmDestructive('Drop everything?')) {
+                if (! $this->confirmDestructive('Drop everything?', yes: 'Yes, drop it', no: 'Keep it')) {
                     return $this->cancelled();
                 }
 

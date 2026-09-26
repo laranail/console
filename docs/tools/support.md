@@ -153,7 +153,7 @@ vocabulary. It has nine cases: `Success`, `Failed`, `Warning`, `Pending`,
 
 | Method | Returns |
 |---|---|
-| `symbol(?Capabilities)` | the [Symbols](#symbols) glyph (`✓` / `[OK]`), or `''` for `Unknown` |
+| `symbol(?Capabilities)` | the [Symbols](#symbols) glyph (`✓` / `[OK]`); `●`/`[on]` and `○`/`[off]` for `Active`/`Inactive`; `''` for `Unknown` |
 | `color()` | the formatter colour used in markup (`green`, `red`, …) |
 | `role()` | the palette role (`success`, `danger`, `warning`, `info`, `muted`) for background-painting widgets such as `Badge` |
 | `label()` | the translated label, from `laranail-console::console.status.<case>` |

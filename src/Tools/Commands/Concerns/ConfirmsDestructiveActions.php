@@ -28,7 +28,7 @@ use Simtabi\Laranail\Console\Tools\Support\Lang;
  */
 trait ConfirmsDestructiveActions
 {
-    protected function confirmDestructive(string $question, ?string $hint = null): bool
+    protected function confirmDestructive(string $question, ?string $hint = null, ?string $yes = null, ?string $no = null): bool
     {
         if ($this->forced()) {
             return true;
@@ -37,8 +37,8 @@ trait ConfirmsDestructiveActions
         return confirm(
             label: $question,
             default: false,
-            yes: Lang::get('confirm.yes', 'Yes, proceed'),
-            no: Lang::get('confirm.no', 'No, cancel'),
+            yes: $yes ?? Lang::get('confirm.yes', 'Yes, proceed'),
+            no: $no ?? Lang::get('confirm.no', 'No, cancel'),
             hint: $hint ?? Lang::get('confirm.irreversible', 'This action cannot be undone.'),
         );
     }

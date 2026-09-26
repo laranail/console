@@ -55,12 +55,22 @@ final class MetricTable implements Stringable
     }
 
     /**
-     * @param array<string, int|float|string|bool|null> $metrics label => value
+     * Either `label => value`, or a list of `[label, value]` pairs -- the pair
+     * form keeps two rows whose (translated) labels happen to be identical,
+     * which a keyed array silently collapses into one.
+     *
+     * @param array<string, int|float|string|bool|null>|list<array{0: string, 1: int|float|string|bool|null}> $metrics
      */
     public function metrics(array $metrics): self
     {
         foreach ($metrics as $label => $value) {
-            $this->metric((string) $label, $value);
+            if (is_int($label) && is_array($value) && array_key_exists(0, $value) && array_key_exists(1, $value)) {
+                $this->metric((string) $value[0], $value[1]);
+
+                continue;
+            }
+
+            $this->metric((string) $label, is_array($value) ? null : $value);
         }
 
         return $this;

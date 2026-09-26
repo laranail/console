@@ -48,11 +48,16 @@ final readonly class StatusBadge implements Stringable
      * as {@see Status::Unknown} rather than failing, since the value usually comes
      * from stored state the command does not control.
      *
+     * Pass `$valueAsLabel` to show the domain value itself (`✓ up-to-date`)
+     * rather than the status's generic word (`✓ Completed`).
+     *
      * @param array<string, Status> $map
      */
-    public static function fromMap(array $map, ?string $value): self
+    public static function fromMap(array $map, ?string $value, bool $valueAsLabel = false): self
     {
-        return new self($value !== null && isset($map[$value]) ? $map[$value] : Status::Unknown);
+        $status = $value !== null && isset($map[$value]) ? $map[$value] : Status::Unknown;
+
+        return new self($status, $valueAsLabel && $value !== null ? $value : null);
     }
 
     /**

@@ -50,19 +50,24 @@ enum Status: string
      */
     public function symbol(?Capabilities $capabilities = null): string
     {
-        $key = match ($this) {
-            self::Success  => 'success',
-            self::Failed   => 'error',
-            self::Warning  => 'warning',
-            self::Pending  => 'pending',
-            self::Running  => 'running',
-            self::Skipped  => 'skipped',
-            self::Active   => 'note',
-            self::Inactive => 'pending',
-            self::Unknown  => null,
-        };
+        $unicode = ($capabilities ?? Capabilities::detect())->symbolMode() === 'fancy';
 
-        return $key === null ? '' : Symbols::for($capabilities ?? Capabilities::detect())->get($key);
+        // Active/Inactive are on/off states, not messages, so they take a filled
+        // and hollow dot rather than the `note` and `pending` symbols -- whose
+        // ASCII forms (`[note]`, and the same `[ ]` as Pending) read wrong here.
+        return match ($this) {
+            self::Active   => $unicode ? '●' : '[on]',
+            self::Inactive => $unicode ? '○' : '[off]',
+            self::Unknown  => '',
+            default        => Symbols::for($capabilities ?? Capabilities::detect())->get(match ($this) {
+                self::Success => 'success',
+                self::Failed  => 'error',
+                self::Warning => 'warning',
+                self::Pending => 'pending',
+                self::Running => 'running',
+                default       => 'skipped',
+            }),
+        };
     }
 
     /**
