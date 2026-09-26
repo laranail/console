@@ -4,7 +4,7 @@ Widgets adapt to the terminal width so content never overflows a narrow terminal
 
 ## How it works
 
-- **On by default.** `config('console.responsive')` (default `true`) toggles it
+- **On by default.** `config('laranail.console.responsive')` (default `true`) toggles it
   globally. Width is resolved by [`Capabilities::width()`](tools/support.md)
   (config → `COLUMNS` → Symfony Terminal → 80).
 - **Explicit width wins.** A widget's `->width($n)` always takes precedence.

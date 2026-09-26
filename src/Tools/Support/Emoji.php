@@ -14,6 +14,11 @@ namespace Simtabi\Laranail\Console\Tools\Support;
  *
  * Configurable globally via config('laranail.console.emoji.mode') and
  * config('laranail.console.emoji.custom'); per call via auto()/unicode()/ascii()/with().
+ *
+ * Names resolve custom first, then the built-in map below, then — when the optional
+ * `laranail/emojis` package is installed — every shortcode in the Unicode catalogue
+ * (see {@see EmojisBridge}). The map wins over the catalogue for its own names, because
+ * several differ on purpose: here `cross` is ❌, where the catalogue's is ✝️.
  */
 final class Emoji
 {
@@ -147,7 +152,7 @@ final class Emoji
 
     public function has(string $name): bool
     {
-        return isset($this->custom[$name]) || isset(self::MAP[$name]);
+        return isset($this->custom[$name]) || isset(self::MAP[$name]) || EmojisBridge::glyph($name, true) !== null;
     }
 
     /**
@@ -158,19 +163,24 @@ final class Emoji
     {
         $entry = $this->custom[$name] ?? self::MAP[$name] ?? null;
 
-        if ($entry === null) {
-            return $default ?? '';
+        if ($entry !== null) {
+            return $this->unicodeActive() ? $entry[0] : $entry[1];
         }
 
-        return $this->unicodeActive() ? $entry[0] : $entry[1];
+        return EmojisBridge::glyph($name, $this->unicodeActive()) ?? $default ?? '';
     }
 
     /**
      * Interpolate `:name:` shortcodes in a string. Unknown shortcodes are left
-     * untouched.
+     * untouched. In ASCII mode with `laranail/emojis` installed, literal emoji in
+     * the text are converted too, so nothing the terminal cannot show gets through.
      */
     public function render(string $text): string
     {
+        if (! $this->unicodeActive()) {
+            $text = EmojisBridge::toShortcodes($text);
+        }
+
         return (string) preg_replace_callback(
             '/:([a-z0-9_+-]+):/i',
             fn (array $m): string => $this->has($m[1]) ? $this->get($m[1]) : $m[0],
@@ -194,13 +204,14 @@ final class Emoji
     }
 
     /**
-     * All known emoji names (built-in + custom).
+     * All known emoji names (built-in + custom, plus the `laranail/emojis`
+     * catalogue's shortcodes when it is installed).
      *
      * @return list<string>
      */
     public function all(): array
     {
-        return array_values(array_unique([...array_keys(self::MAP), ...array_keys($this->custom)]));
+        return array_values(array_unique([...array_keys(self::MAP), ...array_keys($this->custom), ...EmojisBridge::names()]));
     }
 
     private function unicodeActive(): bool

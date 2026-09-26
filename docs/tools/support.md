@@ -116,7 +116,7 @@ Align::LEFT; Align::CENTER; Align::RIGHT; Align::JUSTIFY; // the alignment token
 
 Serves Unicode emoji or an ASCII fallback, decided by mode (`auto` follows
 `Capabilities::supportsUnicode()`). Configurable globally via
-`config('console.emoji.mode')` / `config('console.emoji.custom')`, and per call.
+`config('laranail.console.emoji.mode')` / `config('laranail.console.emoji.custom')`, and per call.
 
 ```php
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
@@ -336,7 +336,7 @@ internally by `Capabilities`, `Banner`, `Menu`, etc.
 ```php
 use Simtabi\Laranail\Console\Tools\Support\Config;
 
-Config::get('output.unicode', 'auto');   // reads config('console.output.unicode')
+Config::get('output.unicode', 'auto');   // reads config('laranail.console.output.unicode')
 Config::locale();                         // console.locale, or null to follow the app locale
 ```
 

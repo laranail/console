@@ -9,7 +9,7 @@ layer — all **responsive** (clamp to the terminal width) and **degradation-saf
 
 | Layer | What | Entry points |
 |-------|------|--------------|
-| **Tokens** | Semantic palette + per-element styles | `Console::theme()` · `config('console.theme.palette')` |
+| **Tokens** | Semantic palette + per-element styles | `Console::theme()` · `config('laranail.console.theme.palette')` |
 | **Primitives** | Colour, Style, Emoji, Symbols, Align, Os | `Console::color()/style()/emoji()/symbol()/os()` |
 | **Typography** | Heading, Paragraph, List, Link, Quote, BlockQuote, Code, Text | `Console::heading()/paragraph()/list()/link()/quote()/blockQuote()/code()/codeBlock()/text()` |
 | **Documents** | Page composer + Markdown subset | `Console::document()` · `Console::markdown()` |
@@ -21,7 +21,7 @@ layer — all **responsive** (clamp to the terminal width) and **degradation-saf
 Override the palette once and the whole UI re-skins:
 
 ```php
-// config/console.php
+// config/laranail/console.php
 'theme' => ['palette' => ['primary' => '#ec4899', 'accent' => '#22d3ee']],
 ```
 
@@ -49,7 +49,7 @@ Or render Markdown: `echo Console::markdown($readme)->render();`
 
 On by default — widgets clamp to the detected terminal width. An explicit
 `->width()` always wins; `->responsive(false)` opts a widget out; set
-`config('console.responsive') = false` to disable globally. See
+`config('laranail.console.responsive') = false` to disable globally. See
 [Responsive output](responsive.md).
 
 ## Graceful degradation

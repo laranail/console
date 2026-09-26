@@ -10,7 +10,7 @@ Roles: `primary`, `accent`, `success`, `warning`, `danger`, `info`, `muted`.
 Set them in config (any [colour spec](colors.md)):
 
 ```php
-// config/console.php
+// config/laranail/console.php
 'theme' => [
     'palette' => [
         'primary' => '#ec4899',
@@ -31,7 +31,7 @@ Five built-in palettes ship ready to use: **`dracula`, `nord`, `solarized`,
 individual roles on top), or build a theme from one directly:
 
 ```php
-// config/console.php — preset as the base, palette overrides on top
+// config/laranail/console.php — preset as the base, palette overrides on top
 'theme' => [
     'preset'  => 'nord',                 // or env('CONSOLE_THEME_PRESET')
     'palette' => ['primary' => '#ec4899'],
@@ -68,7 +68,7 @@ echo new Document(null, $theme)->h1('Hi')->paragraph('...')->render();
 ## Banner themes
 
 Banners have named presets that draw from the palette — `Banner::success()`,
-`->theme('error')`, etc. — plus custom presets in `config('console.banner.themes.*')`.
+`->theme('error')`, etc. — plus custom presets in `config('laranail.console.banner.themes.*')`.
 See [Banner designer](banner.md).
 
 [← Docs index](../../README.md#documentation)

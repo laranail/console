@@ -27,11 +27,11 @@ child providers. The `Console` and `Prompter` facades and the global
 ## Publishing config & translations
 
 ```bash
-php artisan vendor:publish --tag=console-config
-php artisan vendor:publish --tag=console-lang
+php artisan vendor:publish --tag=laranail::console-config
+php artisan vendor:publish --tag=laranail::console-lang
 ```
 
-See [Configuration](configuration.md) for every `config/console.php` key.
+See [Configuration](configuration.md) for every `config/laranail/console.php` key.
 
 ## Verify
 

@@ -71,7 +71,7 @@ are out of scope for now.
 
 ## Configuration
 
-`config/console.php`:
+`config/laranail/console.php`:
 
 ```php
 'menu' => [

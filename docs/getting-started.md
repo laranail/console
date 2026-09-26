@@ -13,8 +13,8 @@ The `Console` and `Prompter` facades + the `prompter()` helper are auto-discover
 config + language files:
 
 ```bash
-php artisan vendor:publish --tag=console-config
-php artisan vendor:publish --tag=console-lang
+php artisan vendor:publish --tag=laranail::console-config
+php artisan vendor:publish --tag=laranail::console-lang
 ```
 
 ## 2. Your first output
@@ -46,7 +46,7 @@ $name = Console::prompter()->text('Your name', required: true)->getResult();
 - [Output widgets](tools/widgets.md) — spinner, progress, box, tree, table, gauge, charts…
 - [Prompts & forms](tools/prompter.md) — the Prompter, forms, and validators.
 - [Design system](design-system.md) — theming, typography, documents, responsiveness.
-- [Configuration](configuration.md) — every `config/console.php` key.
+- [Configuration](configuration.md) — every `config/laranail/console.php` key.
 
 ---
 
