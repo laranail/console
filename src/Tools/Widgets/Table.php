@@ -255,7 +255,9 @@ final class Table implements Stringable
 
     public function render(?OutputInterface $output = null): string
     {
-        $buffer = new BufferedOutput;
+        // Render with the target's decoration, so markup inside a cell (a
+        // StatusBadge, say) keeps its colour on a TTY and is stripped when piped.
+        $buffer = new BufferedOutput(decorated: $output?->isDecorated() ?? false);
         $style = $this->capabilities->supportsUnicode() ? $this->style : 'ascii';
 
         $table = new SymfonyTable($buffer);

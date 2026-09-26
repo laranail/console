@@ -22,6 +22,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Support\Status;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Button;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
@@ -40,6 +41,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Document\Markdown;
+use Simtabi\Laranail\Console\Tools\Widgets\CheckList;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
@@ -51,8 +53,10 @@ use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
+use Simtabi\Laranail\Console\Tools\Widgets\MetricTable;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
+use Simtabi\Laranail\Console\Tools\Widgets\StatusBadge;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
@@ -68,6 +72,9 @@ use Simtabi\Laranail\Console\Tools\Widgets\TaskProgress\TaskProgress;
  * @method static Spinner spinner(string $message = '')
  * @method static ProgressBar progress(?OutputInterface $output = null, int $max = 0)
  * @method static StatusLine status()
+ * @method static StatusBadge statusBadge(Status|bool $status)
+ * @method static CheckList checkList(?string $title = null)
+ * @method static MetricTable metricTable()
  * @method static Rule rule(string $title = '')
  * @method static Box box(array|string $content = [])
  * @method static Tree tree(string $label = '')

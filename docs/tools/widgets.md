@@ -24,6 +24,9 @@ automatically. A runnable demo is at `examples/tools/widgets.php`.
 | `TaskProgress` | `Console::tasks($output)` | `task($name, $total=0): Task`, `draw()`, `finish(): int`, `exitCode(): int` |
 | `Task` | — | `start()`, `advance($n=1)`, `succeed($note='')`, `fail($note='')`, `skip($note='')`, `warn($note='')`, `elapsed()`, `percent()`, `eta()` |
 | `StatusLine` | `Console::status()` | `success/error/warning/info/pending($msg)`, `line($status, $msg)` → **markup string** |
+| `StatusBadge` | `Console::statusBadge($status)` | `StatusBadge::of(Status\|bool)`, `StatusBadge::fromMap($map, $value)`, `label()`, `withoutSymbol()`, `capabilities()`, `render()` → **markup string** |
+| `CheckList` | `Console::checkList(?$title)` | `check($label, bool\|Status, ?$detail)`, `passLabel()`, `failLabel()`, `passes()`, `render()` → **markup string** |
+| `MetricTable` | `Console::metricTable()` | `metric($label, $value)`, `metrics($pairs)`, `headers(?$metric, ?$value)`, `render(?$output)` |
 | `Rule` | `Console::rule($title)` | `style(BorderStyle)`, `width($n)`, `center()`, `render()` |
 | `Box` | `Console::box($content)` | `title()`, `footer()`, `padding($n)`, `width($n)`, `responsive($bool)`, `style(BorderStyle)`, `rounded()`/`double()`/`heavy()`, `render()` |
 | `Tree` | `Console::tree($label)` | `child($label, ?callable)`, `status($status)`, `render()`; static `Tree::fromArray($label, $nested)` |
@@ -116,6 +119,44 @@ A fixed `Box`/`Rule` `width()` is a minimum — content never overflows the fram
 a tree from a nested array (array value → branch, scalar → leaf); `status()` prefixes
 a node with a glyph (`success`/`error`/`warning`/`info`/`pending`/`running`/`skipped`).
 `Console::spinner('Building')->elapsed()->start()` shows elapsed time in manual mode.
+
+## Status badges and checklists
+
+`StatusBadge` and `CheckList` are built on the shared
+[`Status`](support.md#status) vocabulary. Each state's glyph, colour and
+translated label is defined once, so a command does not write its own `match`
+from a status string to a styled label.
+
+```php
+use Simtabi\Laranail\Console\Tools\Support\Status;
+use Simtabi\Laranail\Console\Tools\Widgets\{StatusBadge, CheckList, MetricTable};
+
+$this->line(StatusBadge::of(Status::Running)->render());        // ◉ Processing (yellow)
+$this->line(StatusBadge::of($healthy)->render());               // ✓ Completed / ✗ Failed
+
+// Domain states keep their own names; map them onto the vocabulary.
+// An unmapped value renders as Unknown instead of throwing.
+$badge = StatusBadge::fromMap([
+    'up-to-date'       => Status::Success,
+    'update-available' => Status::Warning,
+], $result->state)->label($translatedState);
+
+$this->line(CheckList::make('Readiness')
+    ->check('Tables', $tablesExist)                              // ✓ Tables:  OK
+    ->check('Seeded', $seeded, 'run the seed command first')     // ✗ Seeded:  NOT READY …
+    ->render());
+
+MetricTable::make()
+    ->metric('Total icons', 121314)                              // 121,314
+    ->metric('Database size', FileSize::format($bytes))
+    ->render($this->output);
+```
+
+A boolean check reads as the pass or fail words (`OK` / `NOT READY`, which are
+translated and can be overridden with `passLabel()` / `failLabel()`). A
+`Status` check reads as that status's own label. `MetricTable` groups integers
+(`12,345`), trims float zeros, prints booleans as `Yes` / `No`, and prints null
+as `—`.
 
 ## Tables, callouts, banners
 
