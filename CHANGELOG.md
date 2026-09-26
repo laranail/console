@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-26
+
 ### Added
 
 - **Optional `laranail/emojis` integration** (suggested, never required). When it is installed,
@@ -18,6 +20,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The dependency points one way: console owns the new `Tools\Contracts\EmojiCatalogue` contract,
   `laranail/emojis` ships the implementation, and console discovers it by name. Console never
   references an emojis class.
+
+### Changed
+
+- **`$commandAliases` is no longer declared on the `Command` base.** The base and the
+  `SupportsNamespacedNames` trait now read the consuming command's own `$commandAliases` if it declares
+  one, and ignore anything that is not a non-empty string. Declaring it on the base made the documented
+  usage impossible from a command that also uses the trait (PHP rejects a trait and a class declaring the
+  same property with different defaults), and reading it undeclared was an `Undefined property` at
+  construction. A subclass that read `$this->commandAliases` without declaring it must now declare it.
+
+- **The config key is `laranail.console`,** published to `config/laranail/console.php`. Every read
+  moves with it — `config('console.theme.preset')` is now
+  `config('laranail.console.theme.preset')`. Laravel's config repository is a flat map and `console`
+  is a name an application could plausibly use for its own file.
+
+- **Publish tags are vendor-scoped:** `console-config` → `laranail::console-config`, `console-lang`
+  → `laranail::console-lang`.
 
 ### Fixed
 
@@ -35,20 +54,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   README, and `docs/i18n.md` told readers to put overrides in `lang/fr/console.php`, which the
   namespaced loader never reads. All now match what the provider registers, and
   `DocumentedNamesTest` checks every documented tag, key and path against the booted application.
-
-## [0.1.0] - 2026-08-15
-
-### Changed
-
-- **The config key is `laranail.console`,** published to `config/laranail/console.php`. Every read
-  moves with it — `config('console.theme.preset')` is now
-  `config('laranail.console.theme.preset')`. Laravel's config repository is a flat map and `console`
-  is a name an application could plausibly use for its own file.
-
-- **Publish tags are vendor-scoped:** `console-config` → `laranail::console-config`, `console-lang`
-  → `laranail::console-lang`.
-
-### Fixed
 
 - **Published translations went to the lang root** rather than to
   `lang/vendor/laranail-console`, which is where the namespaced loader looks — so every published
