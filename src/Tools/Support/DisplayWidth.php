@@ -13,6 +13,11 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
  *
  * All padding, centring and box geometry must route through this rather than
  * strlen(), or aligned output drifts.
+ *
+ * Symfony's width counts a multi-codepoint emoji by its parts — a ZWJ family is
+ * 8 columns to it, 2 on screen. When the optional `laranail/emojis` package is
+ * installed, text containing such sequences is measured by its catalogue instead
+ * (see {@see EmojisBridge}); everything else keeps the Symfony path.
  */
 final class DisplayWidth
 {
@@ -28,7 +33,9 @@ final class DisplayWidth
      */
     public static function of(string $text): int
     {
-        return Helper::width(Helper::removeDecoration(self::$formatter ??= new OutputFormatter, $text));
+        $plain = Helper::removeDecoration(self::$formatter ??= new OutputFormatter, $text);
+
+        return EmojisBridge::width($plain) ?? Helper::width($plain);
     }
 
     /**
@@ -137,6 +144,12 @@ final class DisplayWidth
 
         if (self::of($text) <= $max) {
             return $text;
+        }
+
+        $sequenceSafe = EmojisBridge::truncate($text, $max);
+
+        if ($sequenceSafe !== null) {
+            return $sequenceSafe;
         }
 
         $out = '';

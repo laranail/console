@@ -59,6 +59,7 @@
         "laranail/package-tools": "^0.1"
     },
     "suggest": {
+        "laranail/emojis": "The full Unicode emoji catalogue: Console::emoji() resolves every shortcode, not just its built-in map, and DisplayWidth measures ZWJ/flag/skin-tone sequences as two columns.",
         "symfony/tui": "(experimental, PHP >= 8.4.1) Enables the full-screen TUI integration \u2014 Console::tui() + Console\\Tui\\RenderableWidget."
     },
     "autoload": {
