@@ -58,7 +58,7 @@ throw.
 
 ## Configuration
 
-`config/console.php`:
+`config/laranail/console.php`:
 
 ```php
 'banner' => [

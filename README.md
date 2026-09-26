@@ -17,11 +17,11 @@ composer require laranail/console
 ```
 
 The service provider, the `Console`/`Prompter` facades, and the `prompter()` helper are auto-discovered.
-Publish config/lang if you want to customise them:
+Publish the config and language files if you want to customise them:
 
 ```bash
-php artisan vendor:publish --tag=console-config
-php artisan vendor:publish --tag=console-lang
+php artisan vendor:publish --tag=laranail::console-config
+php artisan vendor:publish --tag=laranail::console-lang
 ```
 
 ## Documentation

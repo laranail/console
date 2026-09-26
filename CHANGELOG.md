@@ -30,6 +30,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   characters takes the old path unchanged; the added byte scan costs about 0.03 µs per call, and
   `truncateAnsi()` is about 8% faster than before.
 
+- **The docs named the pre-namespacing publish tags, config keys and paths** —
+  `--tag=console-config`, `config('console.*')`, `config/console.php` — across eleven pages and the
+  README, and `docs/i18n.md` told readers to put overrides in `lang/fr/console.php`, which the
+  namespaced loader never reads. All now match what the provider registers, and
+  `DocumentedNamesTest` checks every documented tag, key and path against the booted application.
+
 ## [0.1.0] - 2026-08-15
 
 ### Changed

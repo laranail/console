@@ -85,7 +85,7 @@ instead, install the optional package and opt in:
 composer require symfony/tui
 ```
 ```php
-// config/console.php
+// config/laranail/console.php
 'tui' => ['progress' => env('CONSOLE_TUI_PROGRESS', true)],
 ```
 

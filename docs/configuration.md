@@ -3,11 +3,12 @@
 Publish the config file to customise defaults:
 
 ```bash
-php artisan vendor:publish --tag=console-config
+php artisan vendor:publish --tag=laranail::console-config
 ```
 
-This writes `config/console.php`. Every key has a sensible default, and most
-accept an environment override.
+This writes `config/laranail/console.php`. Every key has a sensible default, and most
+accept an environment override. Keys below are relative to `laranail.console`, so
+`emoji.mode` is read as `config('laranail.console.emoji.mode')`.
 
 | Key | Default | Notes |
 |-----|---------|-------|
