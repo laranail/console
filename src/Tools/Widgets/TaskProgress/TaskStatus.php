@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Widgets\TaskProgress;
 
+use Simtabi\Laranail\Console\Tools\Support\Status;
+
 /**
  * Lifecycle states for a tracked task, each with a Unicode and ASCII glyph.
  */
@@ -29,6 +31,23 @@ enum TaskStatus: string
             self::Paused    => $unicode ? '⏸' : '[=]',
             self::Warning   => $unicode ? '⚠' : '[!]',
             self::Cancelled => $unicode ? '⊗' : '[c]',
+        };
+    }
+
+    /**
+     * The shared {@see Status} this task state reads as, for widgets that render
+     * the common vocabulary (badges, checklists).
+     */
+    public function toStatus(): Status
+    {
+        return match ($this) {
+            self::Pending                  => Status::Pending,
+            self::Running                  => Status::Running,
+            self::Success                  => Status::Success,
+            self::Failed                   => Status::Failed,
+            self::Skipped, self::Cancelled => Status::Skipped,
+            self::Paused                   => Status::Inactive,
+            self::Warning                  => Status::Warning,
         };
     }
 }

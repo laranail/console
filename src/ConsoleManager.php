@@ -20,6 +20,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\Badge;
 use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Widgets\Panel;
 use Simtabi\Laranail\Console\Tools\Widgets\Table;
+use Simtabi\Laranail\Console\Tools\Support\Status;
 use Simtabi\Laranail\Console\Tools\Widgets\Banner;
 use Simtabi\Laranail\Console\Tools\Widgets\Button;
 use Simtabi\Laranail\Console\Tools\Widgets\Header;
@@ -39,6 +40,7 @@ use Simtabi\Laranail\Console\Tools\Widgets\KeyValue;
 use Simtabi\Laranail\Console\Tools\Widgets\StepFlow;
 use Simtabi\Laranail\Console\Tools\Document\Document;
 use Simtabi\Laranail\Console\Tools\Document\Markdown;
+use Simtabi\Laranail\Console\Tools\Widgets\CheckList;
 use Simtabi\Laranail\Console\Tools\Widgets\Histogram;
 use Simtabi\Laranail\Console\Tools\Widgets\LineChart;
 use Simtabi\Laranail\Console\Tools\Widgets\Menu\Menu;
@@ -50,8 +52,10 @@ use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
 use Simtabi\Laranail\Console\Tools\Widgets\AnimatedBar;
 use Simtabi\Laranail\Console\Tools\Widgets\ButtonGroup;
 use Simtabi\Laranail\Console\Tools\Widgets\ColumnChart;
+use Simtabi\Laranail\Console\Tools\Widgets\MetricTable;
 use Simtabi\Laranail\Console\Tools\Widgets\ProgressBar;
 use Simtabi\Laranail\Console\Tools\Widgets\ScatterPlot;
+use Simtabi\Laranail\Console\Tools\Widgets\StatusBadge;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Typography\CodeBlock;
 use Simtabi\Laranail\Console\Tools\Typography\ListBlock;
@@ -112,6 +116,30 @@ final class ConsoleManager
     public function status(): StatusLine
     {
         return StatusLine::make();
+    }
+
+    /**
+     * An inline status label (glyph + translated word) for a {@see Status}.
+     */
+    public function statusBadge(Status|bool $status): StatusBadge
+    {
+        return StatusBadge::of($status);
+    }
+
+    /**
+     * An aligned readiness checklist (`✓ Label: OK`).
+     */
+    public function checkList(?string $title = null): CheckList
+    {
+        return CheckList::make($title);
+    }
+
+    /**
+     * A two-column `Metric | Value` table.
+     */
+    public function metricTable(): MetricTable
+    {
+        return MetricTable::make();
     }
 
     /**
