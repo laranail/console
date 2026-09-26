@@ -44,18 +44,32 @@ jobs:
 
       - name: Extract this version's CHANGELOG section
         id: changelog
+        # One moving v0.1.0: whatever sits under [Unreleased] when the tag moves is what ships, yet the
+        # notes come from the [0.1.0] section. Fail rather than publish notes that omit it, and fail
+        # rather than publish a stub when the section is missing.
         run: |
           version="${GITHUB_REF_NAME#v}"
+          unreleased=$(awk '
+            /^## \[Unreleased\]/ { f=1; next }
+            f && /^## \[/ { exit }
+            f && NF { print }
+          ' CHANGELOG.md)
+          if [ -n "$unreleased" ]; then
+            echo "::error::CHANGELOG.md still has entries under [Unreleased]. With one moving tag they are what this release ships: fold them into [$version] before moving the tag." >&2
+            exit 1
+          fi
           notes=$(awk -v v="$version" '
             $0 ~ "^## \\[" v "\\]" { f=1; next }
             f && /^## \[/ { exit }
             f { print }
           ' CHANGELOG.md)
+          if [ -z "$(printf '%s' "$notes" | tr -d '[:space:]')" ]; then
+            echo "::error::CHANGELOG.md has no section for $version; a release without real notes is incomplete." >&2
+            exit 1
+          fi
           {
             echo "body<<__CHANGELOG_EOF__"
-            if [ -n "$notes" ]; then printf '%s\n' "$notes"; else
-              echo "See [CHANGELOG.md](https://github.com/laranail/console/blob/main/CHANGELOG.md)."
-            fi
+            printf '%s\n' "$notes"
             echo
             echo "Full history: [CHANGELOG.md](https://github.com/laranail/console/blob/main/CHANGELOG.md)."
             echo "__CHANGELOG_EOF__"
