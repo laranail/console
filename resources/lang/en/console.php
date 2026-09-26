@@ -49,12 +49,50 @@ return [
             'succeeded' => ':done/:total tasks succeeded',
             'eta'       => 'ETA ',
         ],
+        'check_list' => [
+            'pass' => 'OK',
+            'fail' => 'NOT READY',
+        ],
+        'metric_table' => [
+            'metric' => 'Metric',
+            'value'  => 'Value',
+            'yes'    => 'Yes',
+            'no'     => 'No',
+        ],
         'callout' => [
             'success' => 'Success',
             'error'   => 'Error',
             'warning' => 'Warning',
             'info'    => 'Info',
         ],
+    ],
+
+    // Shared status vocabulary (Tools\Support\Status::label())
+    'status' => [
+        'success'  => 'Completed',
+        'failed'   => 'Failed',
+        'warning'  => 'Warning',
+        'pending'  => 'Pending',
+        'running'  => 'Processing',
+        'skipped'  => 'Skipped',
+        'active'   => 'Active',
+        'inactive' => 'Inactive',
+        'unknown'  => 'Unknown',
+    ],
+
+    // Commands\Concerns\ConfirmsDestructiveActions
+    'confirm' => [
+        'yes'          => 'Yes, proceed',
+        'no'           => 'No, cancel',
+        'irreversible' => 'This action cannot be undone.',
+        'cancelled'    => 'Operation cancelled.',
+    ],
+
+    // Support\ExceptionRenderer
+    'exception' => [
+        'failed' => 'Command failed',
+        'file'   => 'File: :location',
+        'trace'  => 'Trace: :trace',
     ],
 
 ];

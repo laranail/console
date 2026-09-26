@@ -55,6 +55,13 @@ parameters:
         -
             identifier: trait.unused
             path: src/Testing/InteractsWithConsole.php
+        # Consumer-facing command trait, opted into by downstream commands. Not
+        # mixed into the Command base on purpose: consumers already declaring a
+        # confirmDestructive() of their own would inherit a clashing signature.
+        # Covered by tests/Tools/Widgets/StatusVocabularyTest.php.
+        -
+            identifier: trait.unused
+            path: src/Tools/Commands/Concerns/ConfirmsDestructiveActions.php
         # `$commandAliases` belongs to the CONSUMING command, not to this base or
         # trait: PHP rejects a trait and a using class declaring the same property
         # with different defaults, so it cannot be declared here. PHPStan sees only

@@ -152,6 +152,40 @@ Methods: `askText()`, `askPassword()`, `askConfirm()`, `askSelect()`,
 `askMultiSelect()`, `askWithValidation()`, `confirmAction()`, `showSpinner()`,
 `showLoading()`, `setNonInteractive()`, `isNonInteractive()`.
 
+## Confirming destructive actions
+
+The `Concerns\ConfirmsDestructiveActions` trait gives a command one
+confirmation path for irreversible work:
+
+```php
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\ConfirmsDestructiveActions;
+
+final class PurgeCommand extends Command
+{
+    use ConfirmsDestructiveActions;
+
+    protected $signature = 'acme::shop.purge {--force}';
+
+    public function handle(): int
+    {
+        if (! $this->confirmDestructive('Delete every order?')) {
+            return $this->cancelled();          // "Operation cancelled.", exit 0
+        }
+
+        // …
+    }
+}
+```
+
+- **`--force` answers yes without prompting.** A command that asks anyway under
+  `--force` blocks every script that runs it.
+- The question defaults to **no**, with the translated hint *This action cannot
+  be undone.*
+- The `--force` lookup is guarded by `hasOption()`, so a command that does not
+  declare the option still prompts and does not throw.
+- The trait is opt-in rather than mixed into the base, so a command that
+  already declares its own `confirmDestructive()` is not broken by it.
+
 ## Namespaced command names
 
 This package ships its own `Tools\Commands\Concerns\SupportsNamespacedNames` trait
