@@ -20,6 +20,9 @@ final class DisplayWidthBench
 
     private string $styled = "\033[1;31mthe quick\033[0m brown \033[34mfox\033[0m jumps";
 
+    /** Takes the grapheme-cluster path: a ZWJ family, a flag and a VS16 sequence. */
+    private string $emoji = "deploy \u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467} to \u{1F1F0}\u{1F1EA} \u{2139}\u{FE0F} done";
+
     public function benchOfPlain(): void
     {
         DisplayWidth::of($this->plain);
@@ -28,6 +31,11 @@ final class DisplayWidthBench
     public function benchOfStyled(): void
     {
         DisplayWidth::of($this->styled);
+    }
+
+    public function benchOfEmojiSequences(): void
+    {
+        DisplayWidth::of($this->emoji);
     }
 
     public function benchPad(): void

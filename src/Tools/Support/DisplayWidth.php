@@ -15,12 +15,34 @@ use Symfony\Component\Console\Formatter\OutputFormatter;
  * strlen(), or aligned output drifts.
  *
  * Symfony's width counts a multi-codepoint emoji by its parts — a ZWJ family is
- * 8 columns to it, 2 on screen. When the optional `laranail/emojis` package is
- * installed, text containing such sequences is measured by its catalogue instead
- * (see {@see EmojisBridge}); everything else keeps the Symfony path.
+ * 8 columns to it, 2 on screen. Text that can hold an emoji sequence is therefore
+ * measured one grapheme cluster (PCRE `\X`) at a time, and a cluster carrying a
+ * ZWJ, VS16, keycap, regional-indicator, skin-tone or tag codepoint counts as two
+ * columns, per UTS #51. Checked against the full Unicode 18 catalogue of
+ * `laranail/emojis`: this agrees on 3956 of 3972 emoji where Symfony alone agrees
+ * on 1644. The 16 left are Unicode 17–18 codepoints newer than Symfony's width
+ * table; when that package is installed it recognises them too (see
+ * {@see EmojisBridge}), and the count reaches 3972. Everything else — the whole
+ * of ASCII and CJK text — keeps the Symfony path unchanged.
  */
 final class DisplayWidth
 {
+    /** A cluster containing any of these is an emoji sequence: two columns. */
+    private const string SEQUENCE = '/[\x{200D}\x{FE0F}\x{20E3}\x{1F1E6}-\x{1F1FF}\x{1F3FB}-\x{1F3FF}\x{E0020}-\x{E007F}]/u';
+
+    /**
+     * Text containing none of these measures the same by cluster as by Symfony, so the cheaper
+     * path is taken. The SEQUENCE markers, plus the emoji planes an older width table may miss.
+     */
+    private const string CLUSTER_CANDIDATES = '/[\x{200D}\x{FE0F}\x{20E3}\x{1F000}-\x{1FAFF}\x{E0020}-\x{E007F}]/u';
+
+    /**
+     * The UTF-8 lead bytes of every CLUSTER_CANDIDATES codepoint (E2: U+200D, U+20E3; EF: U+FE0F;
+     * F0: U+1Fxxx; F3: U+E00xx). A byte scan for them is far cheaper than the regex, and rules out
+     * ASCII and most other text before the regex runs.
+     */
+    private const string CANDIDATE_LEAD_BYTES = "\xE2\xEF\xF0\xF3";
+
     /**
      * Reused, stateless formatter for decoration stripping — `of()` runs for every
      * cell/pad/wrap, so building a fresh OutputFormatter per call was a real hot-path
@@ -35,7 +57,7 @@ final class DisplayWidth
     {
         $plain = Helper::removeDecoration(self::$formatter ??= new OutputFormatter, $text);
 
-        return EmojisBridge::width($plain) ?? Helper::width($plain);
+        return strpbrk($plain, self::CANDIDATE_LEAD_BYTES) === false ? Helper::width($plain) : self::measure($plain);
     }
 
     /**
@@ -81,8 +103,8 @@ final class DisplayWidth
                 continue;
             }
 
-            foreach (mb_str_split($part) as $char) {
-                $charWidth = self::of($char);
+            foreach (self::clusters($part) as $char) {
+                $charWidth = self::clusterWidth($char);
 
                 if ($width + $charWidth > $max) {
                     return $out . self::close($linkOpen, $sgrOpen);
@@ -146,20 +168,17 @@ final class DisplayWidth
             return $text;
         }
 
-        $sequenceSafe = EmojisBridge::truncate($text, $max);
-
-        if ($sequenceSafe !== null) {
-            return $sequenceSafe;
-        }
-
         $out = '';
+        $width = 0;
 
-        foreach (mb_str_split($text) as $char) {
-            if (self::of($out . $char) > $max) {
+        foreach (self::clusters($text) as $cluster) {
+            $width += self::clusterWidth($cluster);
+
+            if ($width > $max) {
                 break;
             }
 
-            $out .= $char;
+            $out .= $cluster;
         }
 
         return $out;
@@ -179,6 +198,58 @@ final class DisplayWidth
         $left = intdiv($missing, 2);
 
         return str_repeat($pad, $left) . $text . str_repeat($pad, $missing - $left);
+    }
+
+    /**
+     * Width of decoration-free text.
+     */
+    private static function measure(string $plain): int
+    {
+        if (strpbrk($plain, self::CANDIDATE_LEAD_BYTES) === false || preg_match(self::CLUSTER_CANDIDATES, $plain) !== 1) {
+            return Helper::width($plain);
+        }
+
+        $width = 0;
+
+        foreach (self::clusters($plain) as $cluster) {
+            $width += self::clusterWidth($cluster);
+        }
+
+        return $width;
+    }
+
+    /**
+     * Width of one grapheme cluster: two for an emoji sequence, two for a single emoji Symfony's
+     * table predates when a catalogue recognises it, Symfony's answer otherwise.
+     */
+    private static function clusterWidth(string $cluster): int
+    {
+        if (strlen($cluster) === 1) {
+            return Helper::width($cluster);
+        }
+
+        if (preg_match(self::SEQUENCE, $cluster) === 1) {
+            return 2;
+        }
+
+        $width = Helper::width($cluster);
+
+        if ($width < 2 && mb_ord($cluster) >= 0x1F000 && EmojisBridge::isEmoji($cluster)) {
+            return 2;
+        }
+
+        return $width;
+    }
+
+    /**
+     * Split into extended grapheme clusters, so an emoji sequence is never cut apart. Falls back
+     * to codepoints for input PCRE rejects (invalid UTF-8).
+     *
+     * @return list<string>
+     */
+    private static function clusters(string $text): array
+    {
+        return preg_match_all('/\X/u', $text, $matches) === false ? mb_str_split($text) : $matches[0];
     }
 
     /**

@@ -72,13 +72,5 @@ parameters:
             paths:
                 - src/Tools/Commands/Command.php
                 - src/Tools/Commands/Concerns/SupportsNamespacedNames.php
-        # laranail/emojis is suggested, never required (it requires console), so it
-        # is absent when console is analysed alone. The bridge is the one file that
-        # names its classes, behind a class_exists() gate; its API is exercised for
-        # real by EmojisBridgeInstalledTest. Ceiling measured 2026-09-26: 23.
-        -
-            identifier: class.notFound
-            path: src/Tools/Support/EmojisBridge.php
-            count: 23
     reportUnmatchedIgnoredErrors: false
     treatPhpDocTypesAsCertain: false

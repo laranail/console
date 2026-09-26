@@ -5,22 +5,19 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Helper\Helper;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\EmojisBridge;
 
 /**
- * The not-installed path: console on its built-in map and Symfony's width. Runs whether or not
- * `laranail/emojis` is autoloadable, by disabling the bridge.
+ * The not-installed path: console on its built-in map. Forced with fake(null) so it runs the same
+ * whether or not laranail/emojis happens to be autoloadable.
  */
 final class EmojisBridgeFallbackTest extends TestCase
 {
-    private const string FAMILY = "\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}\u{200D}\u{1F466}";
-
     protected function setUp(): void
     {
-        EmojisBridge::disable();
+        EmojisBridge::fake(null);
     }
 
     protected function tearDown(): void
@@ -32,10 +29,9 @@ final class EmojisBridgeFallbackTest extends TestCase
     {
         self::assertFalse(EmojisBridge::available());
         self::assertNull(EmojisBridge::glyph('rocket', true));
-        self::assertNull(EmojisBridge::width(self::FAMILY));
-        self::assertNull(EmojisBridge::truncate(self::FAMILY, 2));
         self::assertSame([], EmojisBridge::names());
         self::assertSame('ship 🚀', EmojisBridge::toShortcodes('ship 🚀'));
+        self::assertFalse(EmojisBridge::isEmoji("\u{1FAEA}"));
     }
 
     public function test_emoji_resolves_the_built_in_map_only(): void
@@ -55,9 +51,15 @@ final class EmojisBridgeFallbackTest extends TestCase
         self::assertSame('ship 🚀 ->', Emoji::make()->ascii()->render('ship 🚀 :rocket:'));
     }
 
-    public function test_display_width_keeps_the_symfony_measurement(): void
+    public function test_emoji_sequences_measure_two_columns_without_the_catalogue(): void
     {
-        self::assertSame(Helper::width(self::FAMILY), DisplayWidth::of(self::FAMILY));
-        self::assertSame(5, DisplayWidth::of('hello'));
+        self::assertSame(2, DisplayWidth::of("\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}\u{200D}\u{1F466}"));
+        self::assertSame(2, DisplayWidth::of("\u{2139}\u{FE0F}"));
+    }
+
+    public function test_an_emoji_newer_than_the_width_table_keeps_the_symfony_measurement(): void
+    {
+        // The documented limit of the fallback: without a catalogue, nothing says U+1FAEA is an emoji.
+        self::assertSame(1, DisplayWidth::of("\u{1FAEA}"));
     }
 }

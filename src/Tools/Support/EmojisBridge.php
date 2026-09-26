@@ -5,72 +5,76 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Support;
 
 use Throwable;
-use Simtabi\Laranail\Emojis\Core\Emojis;
-use Simtabi\Laranail\Emojis\Core\Enums\Mode;
+use Simtabi\Laranail\Console\Tools\Contracts\EmojiCatalogue;
 
 /**
- * The one place console talks to the optional `laranail/emojis` package.
+ * Finds the optional emoji catalogue and shields console from it.
  *
- * Console is a foundation package, so `laranail/emojis` is suggested, never required. When it is
- * installed, {@see Emoji} resolves names outside its own map from the full Unicode catalogue and
- * {@see DisplayWidth} measures emoji sequences with it. When it is not, every method here answers
- * null (or the input unchanged) and callers fall back to their own logic.
+ * Console is a foundation package, so `laranail/emojis` is suggested, never required — and since
+ * emojis requires console, the dependency can only point one way. Console owns the
+ * {@see EmojiCatalogue} contract; emojis ships {@see self::ADAPTER} implementing it, and this class
+ * discovers that adapter by name. When it is absent, every method answers null (or the input
+ * unchanged) and callers keep their built-in behaviour.
  *
- * A failure inside the catalogue — a missing dataset, input it rejects — is treated as "not
- * installed" for that call: console output degrades to its built-in behaviour rather than throwing.
+ * A failure inside the catalogue is treated as "not installed" for that call: console output
+ * degrades to its built-in behaviour rather than throwing.
  *
  * @internal
  */
 final class EmojisBridge
 {
     /**
-     * Sequences Symfony's width miscounts: ZWJ, VS16, keycap, regional indicators, skin-tone
-     * modifiers and tag characters. Anything else is measured correctly already, so the (much
-     * slower) catalogue scan is skipped for it — {@see DisplayWidth::of()} is a hot path.
+     * The adapter `laranail/emojis` ships. Named as a string because console cannot import it; the
+     * emojis suite asserts this constant against the real class, so a rename there fails there.
      */
-    private const string SEQUENCE_MARKERS = '/[\x{200D}\x{FE0F}\x{20E3}\x{1F1E6}-\x{1F1FF}\x{1F3FB}-\x{1F3FF}\x{E0020}-\x{E007F}]/u';
+    public const string ADAPTER = 'Simtabi\\Laranail\\Emojis\\Laravel\\ConsoleEmojiCatalogue';
 
-    private static ?Emojis $standalone = null;
+    private static ?EmojiCatalogue $adapter = null;
 
-    private static bool $disabled = false;
+    private static bool $discovered = false;
+
+    private static ?EmojiCatalogue $fake = null;
+
+    private static bool $faked = false;
+
+    /**
+     * The catalogue in use, or null when none is installed.
+     */
+    public static function catalogue(): ?EmojiCatalogue
+    {
+        if (self::$faked) {
+            return self::$fake;
+        }
+
+        if (! self::$discovered) {
+            self::$discovered = true;
+            self::$adapter = self::discover();
+        }
+
+        return self::$adapter;
+    }
 
     public static function available(): bool
     {
-        return ! self::$disabled && class_exists(Emojis::class);
+        return self::catalogue() instanceof EmojiCatalogue;
     }
 
-    /**
-     * The catalogue glyph for a `:shortcode:` name, or null when the name is unknown or the
-     * package is not installed.
-     */
     public static function glyph(string $name, bool $unicode): ?string
     {
-        return self::attempt(static function (Emojis $emojis) use ($name, $unicode): ?string {
-            $emoji = $emojis->fromShortcode($name);
-
-            if ($emoji === null) {
-                return null;
-            }
-
-            return $emoji->render($unicode ? Mode::Emoji : Mode::Ascii);
-        });
+        return self::attempt(static fn (EmojiCatalogue $catalogue): ?string => $catalogue->glyph($name, $unicode));
     }
 
     /**
-     * Every shortcode the catalogue knows (empty when not installed).
-     *
      * @return list<string>
      */
     public static function names(): array
     {
-        return self::attempt(
-            static fn (Emojis $emojis): array => array_map(strval(...), array_keys($emojis->catalogue()->shortcodeIndex())),
-        ) ?? [];
+        return self::attempt(static fn (EmojiCatalogue $catalogue): array => $catalogue->names()) ?? [];
     }
 
     /**
-     * Rewrite literal Unicode emoji as `:shortcode:` text, so an ASCII-mode render can resolve
-     * them like any other shortcode. Returns the input unchanged when not installed.
+     * Rewrite literal emoji as `:shortcode:` text. Returns the input unchanged when no catalogue is
+     * installed or the text is pure ASCII.
      */
     public static function toShortcodes(string $text): string
     {
@@ -78,83 +82,66 @@ final class EmojisBridge
             return $text;
         }
 
-        return self::attempt(
-            static fn (Emojis $emojis): string => $emojis->text($text)->from(Mode::Unicode)->to(Mode::Ascii),
-        ) ?? $text;
+        return self::attempt(static fn (EmojiCatalogue $catalogue): string => $catalogue->toShortcodes($text)) ?? $text;
+    }
+
+    public static function isEmoji(string $cluster): bool
+    {
+        return self::attempt(static fn (EmojiCatalogue $catalogue): bool => $catalogue->isEmoji($cluster)) ?? false;
     }
 
     /**
-     * Terminal columns for decoration-free text, counting each emoji sequence as two. Null when
-     * the text has no multi-codepoint emoji or the package is not installed.
+     * Use this catalogue instead of discovering one; null behaves as though none were installed.
+     * For tests — mirrors {@see Capabilities::fake()}.
      */
-    public static function width(string $plain): ?int
+    public static function fake(?EmojiCatalogue $catalogue): void
     {
-        if (preg_match(self::SEQUENCE_MARKERS, $plain) !== 1) {
-            return null;
-        }
-
-        return self::attempt(static fn (Emojis $emojis): int => $emojis->text($plain)->from(Mode::Unicode)->width());
-    }
-
-    /**
-     * Cut decoration-free text to a column budget without splitting an emoji sequence. Null
-     * when the text has no multi-codepoint emoji or the package is not installed.
-     */
-    public static function truncate(string $plain, int $max): ?string
-    {
-        if (preg_match(self::SEQUENCE_MARKERS, $plain) !== 1) {
-            return null;
-        }
-
-        return self::attempt(static fn (Emojis $emojis): string => $emojis->text($plain)->from(Mode::Unicode)->truncate($max, ''));
-    }
-
-    /**
-     * Behave as though `laranail/emojis` were not installed. For tests exercising the fallback
-     * in a process where the package is autoloadable.
-     */
-    public static function disable(): void
-    {
-        self::$disabled = true;
+        self::$faked = true;
+        self::$fake = $catalogue;
     }
 
     public static function reset(): void
     {
-        self::$disabled = false;
-        self::$standalone = null;
+        self::$faked = false;
+        self::$fake = null;
+        self::$discovered = false;
+        self::$adapter = null;
     }
 
-    /**
-     * @template T
-     *
-     * @param callable(Emojis): T $call
-     *
-     * @return T|null
-     */
-    private static function attempt(callable $call): mixed
+    private static function discover(): ?EmojiCatalogue
     {
-        if (! self::available()) {
+        $class = self::ADAPTER;
+
+        if (! class_exists($class) || ! is_a($class, EmojiCatalogue::class, true)) {
             return null;
         }
 
         try {
-            return $call(self::instance());
+            return new $class;
         } catch (Throwable) {
             return null;
         }
     }
 
     /**
-     * The application's configured instance when the package's provider has bound one, else a
-     * standalone instance built once per process.
+     * @template T
+     *
+     * @param callable(EmojiCatalogue): T $call
+     *
+     * @return T|null
      */
-    private static function instance(): Emojis
+    private static function attempt(callable $call): mixed
     {
-        if (function_exists('app') && app()->bound(Emojis::class)) {
-            /** @var Emojis */
-            return app(Emojis::class);
+        $catalogue = self::catalogue();
+
+        if (! $catalogue instanceof EmojiCatalogue) {
+            return null;
         }
 
-        return self::$standalone ??= Emojis::create();
+        try {
+            return $call($catalogue);
+        } catch (Throwable) {
+            return null;
+        }
     }
 }
