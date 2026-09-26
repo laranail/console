@@ -65,7 +65,7 @@ final class DocumentedNamesTest extends TestCase
 
         foreach (ServiceProvider::publishableGroups() as $group) {
             foreach (ServiceProvider::pathsToPublish(null, $group) as $to) {
-                $destinations[] = ltrim(str_replace($this->app->basePath(), '', $to), '/');
+                $destinations[] = self::relative($to, $this->app->basePath());
             }
         }
 
@@ -84,6 +84,24 @@ final class DocumentedNamesTest extends TestCase
         }
 
         self::assertGreaterThan(0, $seen, 'no config/ or lang/ path found in the docs; the pattern no longer matches.');
+    }
+
+    public function test_publish_destinations_compare_separator_insensitively(): void
+    {
+        // Windows joins with a backslash, so the docs' forward-slash paths must match either way.
+        self::assertSame('config/laranail/console.php', self::relative('C:\\app\\config\\laranail/console.php', 'C:\\app'));
+        self::assertSame('config/laranail/console.php', self::relative('/app/config/laranail/console.php', '/app'));
+    }
+
+    /**
+     * A published destination relative to the application root, with forward slashes.
+     */
+    private static function relative(string $path, string $base): string
+    {
+        $path = str_replace('\\', '/', $path);
+        $base = rtrim(str_replace('\\', '/', $base), '/');
+
+        return ltrim(str_starts_with($path, $base) ? substr($path, strlen($base)) : $path, '/');
     }
 
     /**
