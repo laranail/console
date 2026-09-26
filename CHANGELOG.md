@@ -30,14 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   returns a success exit code.
 - Facade accessors `Console::statusBadge()`, `Console::checkList()` and `Console::metricTable()`.
 
-### Changed (Table)
+### Changed
 
 - **`Table::render($output)` renders with the target output's decoration.** It used an
   undecorated buffer, so markup inside a cell (a coloured status badge) lost its colour even on a
   TTY. Piped output is still plain.
-
-### Changed
-
 - **`handleException()` now delegates to `ExceptionRenderer`.** The verbosity policy is unchanged.
   Exception messages are now sanitised before they are written, so an escape sequence carried inside
   a message can no longer drive the terminal.
