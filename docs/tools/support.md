@@ -145,6 +145,38 @@ Symbols::fancy()->get('branch');                      // '├─'
 Symbols::ascii()->get('branch');                      // '|-'
 ```
 
+## Status
+
+`Simtabi\Laranail\Console\Tools\Support\Status` is the shared status
+vocabulary. It has nine cases: `Success`, `Failed`, `Warning`, `Pending`,
+`Running`, `Skipped`, `Active`, `Inactive`, `Unknown`. Each case provides:
+
+| Method | Returns |
+|---|---|
+| `symbol(?Capabilities)` | the [Symbols](#symbols) glyph (`✓` / `[OK]`), or `''` for `Unknown` |
+| `color()` | the formatter colour used in markup (`green`, `red`, …) |
+| `role()` | the palette role (`success`, `danger`, `warning`, `info`, `muted`) for background-painting widgets such as `Badge` |
+| `label()` | the translated label, from `laranail-console::console.status.<case>` |
+
+`Status::fromBool($ok)` maps a boolean to `Success` or `Failed`.
+`TaskStatus::toStatus()` maps a task state onto the same vocabulary. Widgets
+built on it: [`StatusBadge`, `CheckList`](widgets.md#status-badges-and-checklists).
+
+## ExceptionRenderer
+
+This class writes a caught exception at the right level of detail:
+
+- the message, always
+- file and line from `-v`
+- the stack trace only from `-vvv`, because a trace can carry credentials
+
+```php
+ExceptionRenderer::make($this->output)->context('Import failed')->render($e);
+```
+
+`Command::handleException()` delegates to this class, so every command follows
+the same policy.
+
 ## BorderStyle
 
 The box-drawing families used by `Box::style()` and `Rule::style()`:
