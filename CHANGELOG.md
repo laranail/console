@@ -5,6 +5,14 @@ All notable changes to `laranail/console` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **`Gauge::color()` and `Gauge::status()`** colour the filled segment, so a progress bar can read
+  the same as the `StatusBadge` beside it. Output stays plain text unless one of them is called,
+  so existing callers that echo a gauge are unaffected.
+
 ## [0.1.2] - 2026-09-26
 
 ### Added
