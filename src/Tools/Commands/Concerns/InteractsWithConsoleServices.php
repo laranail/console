@@ -8,6 +8,7 @@ use Override;
 use Throwable;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\ExceptionRenderer;
 use Simtabi\Laranail\Console\Tools\Commands\Services\CommandServiceManager;
 
 /**
@@ -187,17 +188,9 @@ trait InteractsWithConsoleServices
      */
     protected function handleException(Throwable $e): void
     {
-        $this->error("Command failed: {$e->getMessage()}");
-
-        // File/line on -v; the full stack trace only on -vvv (debug). Traces can
-        // carry sensitive call arguments, so they are not shown at lower levels.
-        if ($this->isVerbose()) {
-            $this->line("File: {$e->getFile()}:{$e->getLine()}");
-        }
-
-        if ($this->isDebug()) {
-            $this->line("Trace: {$e->getTraceAsString()}");
-        }
+        // File/line on -v; the full stack trace only on -vvv (debug). The policy
+        // lives in ExceptionRenderer so every command applies the same one.
+        ExceptionRenderer::make($this->getCliOutput())->render($e);
     }
 
     /**
