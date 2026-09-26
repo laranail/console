@@ -5,12 +5,18 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Widgets;
 
 use Stringable;
+use Simtabi\Laranail\Console\Tools\Support\Status;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\NumberFormat;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 
 /**
  * A single-value horizontal gauge/meter, e.g. `Disk  [██████░░] 72% (180/250)`.
+ *
+ * Plain text by default, so it can be echoed anywhere. {@see color()} or
+ * {@see Status()} colours the filled segment, and the result then carries
+ * Symfony Console markup: write it through an output (or place it in a
+ * {@see Table} cell), the same contract as {@see StatusBadge}.
  */
 final class Gauge implements Stringable
 {
@@ -19,6 +25,8 @@ final class Gauge implements Stringable
     private int $barWidth = 20;
 
     private bool $showValue = false;
+
+    private ?string $color = null;
 
     private readonly bool $unicode;
 
@@ -58,6 +66,26 @@ final class Gauge implements Stringable
         return $this;
     }
 
+    /**
+     * Colour the filled segment with a Symfony formatter colour (`green`,
+     * `yellow`, …). Null restores plain output.
+     */
+    public function color(?string $color): self
+    {
+        $this->color = $color === null ? null : ConsoleUIFormatter::sanitizeText($color);
+
+        return $this;
+    }
+
+    /**
+     * Colour the filled segment by a {@see Status}, so a progress bar reads the
+     * same as the status badge beside it.
+     */
+    public function status(Status $status): self
+    {
+        return $this->color($status->color());
+    }
+
     public function render(): string
     {
         $ratio = $this->max > 0 ? max(0.0, min(1.0, $this->value / $this->max)) : 0.0;
@@ -71,7 +99,9 @@ final class Gauge implements Stringable
         }
 
         [$full, $empty] = $this->unicode ? ['█', '░'] : ['#', '-'];
-        $bar = str_repeat($full, $filled) . str_repeat($empty, $this->barWidth - $filled);
+        $done = str_repeat($full, $filled);
+        $bar = ($this->color !== null && $done !== '' ? "<fg={$this->color}>{$done}</>" : $done)
+            . str_repeat($empty, $this->barWidth - $filled);
         $out = ($this->label !== '' ? $this->label . '  ' : '') . "[{$bar}] {$percent}%";
 
         if ($this->showValue) {

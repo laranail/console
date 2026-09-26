@@ -6,6 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Tests\Widgets;
 
 use RuntimeException;
 use Illuminate\Contracts\Console\Kernel;
+use Simtabi\Laranail\Console\Tools\Widgets\Gauge;
 use Simtabi\Laranail\Console\Tools\Support\Status;
 use Simtabi\Laranail\Console\Tools\Tests\TestCase;
 use Simtabi\Laranail\Console\Tools\Commands\Command;
@@ -141,6 +142,20 @@ final class StatusVocabularyTest extends TestCase
 
         self::assertStringContainsString('1 KB', $out);
         self::assertStringContainsString('2 KB', $out);
+    }
+
+    public function test_gauge_is_plain_by_default_and_coloured_on_request(): void
+    {
+        $caps = Capabilities::fake(unicode: true);
+
+        $plain = new Gauge(50, 100, $caps)->width(4)->render();
+        self::assertSame('[██░░] 50%', $plain);
+
+        $coloured = new Gauge(50, 100, $caps)->width(4)->status(Status::Success)->render();
+        self::assertSame('[<fg=green>██</>░░] 50%', $coloured);
+
+        // An empty bar has nothing to colour, so no empty tag pair is emitted.
+        self::assertSame('[░░░░] 0%', new Gauge(0, 100, $caps)->width(4)->color('red')->render());
     }
 
     public function test_badge_label_is_sanitized(): void
