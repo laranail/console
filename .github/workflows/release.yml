@@ -52,7 +52,7 @@ jobs:
           unreleased=$(awk '
             /^## \[Unreleased\]/ { f=1; next }
             f && /^## \[/ { exit }
-            f && NF { print }
+            f && NF && !/^### / { print }
           ' CHANGELOG.md)
           if [ -n "$unreleased" ]; then
             echo "::error::CHANGELOG.md still has entries under [Unreleased]. With one moving tag they are what this release ships: fold them into [$version] before moving the tag." >&2
