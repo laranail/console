@@ -65,7 +65,7 @@ final class DocumentedNamesTest extends TestCase
 
         foreach (ServiceProvider::publishableGroups() as $group) {
             foreach (ServiceProvider::pathsToPublish(null, $group) as $to) {
-                $destinations[] = self::relative($to, $this->app->basePath());
+                $destinations[] = $this->relative($to, $this->app->basePath());
             }
         }
 
@@ -89,14 +89,14 @@ final class DocumentedNamesTest extends TestCase
     public function test_publish_destinations_compare_separator_insensitively(): void
     {
         // Windows joins with a backslash, so the docs' forward-slash paths must match either way.
-        self::assertSame('config/laranail/console.php', self::relative('C:\\app\\config\\laranail/console.php', 'C:\\app'));
-        self::assertSame('config/laranail/console.php', self::relative('/app/config/laranail/console.php', '/app'));
+        self::assertSame('config/laranail/console.php', $this->relative('C:\\app\\config\\laranail/console.php', 'C:\\app'));
+        self::assertSame('config/laranail/console.php', $this->relative('/app/config/laranail/console.php', '/app'));
     }
 
     /**
      * A published destination relative to the application root, with forward slashes.
      */
-    private static function relative(string $path, string $base): string
+    private function relative(string $path, string $base): string
     {
         $path = str_replace('\\', '/', $path);
         $base = rtrim(str_replace('\\', '/', $base), '/');
