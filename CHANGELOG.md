@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     as an `@method`. `fg()` and `bg()` take any colour `Support\Color` parses.
   - **Text:** `message()` resolves emoji shortcodes through `Support\Emoji`, which uses
     `laranail/emojis` when it is installed. `icon()` adds an emoji in front of the message.
+    Names resolve at render time, so `capabilities()` applies wherever it sits in the chain.
     `bold()`, `underline()`, `blink()`, `reverse()`, `conceal()` and `href()` set the style.
   - **Layout:** `padding()` adds space inside the background, and `lineHeight()` adds blank
     background lines above and below. `addSpaceBefore()` and `addSpaceAfter()` add spaces or

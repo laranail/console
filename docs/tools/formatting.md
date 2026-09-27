@@ -88,6 +88,15 @@ and console's built-in map otherwise. On a terminal without Unicode it falls bac
 ASCII (`🚀` becomes `->`). Widths are measured per grapheme, so a two-column emoji
 still lines up with `padding()` and `lineHeight()`.
 
+Names resolve when the string is rendered, not when `message()` or `icon()` is called,
+so `capabilities()` applies wherever it sits in the chain. With `laranail/emojis`
+installed, a name only its catalogue knows (`:unicorn:`) resolves too; console's own
+map still wins for the names it defines, as in `Emoji`.
+
+```bash
+composer require laranail/emojis   # optional: the full Unicode catalogue
+```
+
 ### Message text is escaped
 
 Tags inside the message are shown literally, so a message carrying `</>` or
