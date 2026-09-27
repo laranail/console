@@ -203,7 +203,7 @@ final class ConsoleUIFormatterTest extends TestCase
 
         $output = new BufferedOutput(decorated: false);
         $text->write($output);
-        self::assertSame("x" . PHP_EOL, $output->fetch());
+        self::assertSame('x' . PHP_EOL, $output->fetch());
 
         self::assertSame("\033[31mx\033[39m", $text->toAnsi(Capabilities::fake(colors: true)));
         self::assertSame('x', $text->toAnsi(Capabilities::fake(colors: false)));
