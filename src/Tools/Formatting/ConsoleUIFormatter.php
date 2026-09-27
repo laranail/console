@@ -5,25 +5,129 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Formatting;
 
 use Stringable;
+use BadMethodCallException;
+use InvalidArgumentException;
+use Simtabi\Laranail\Console\Tools\Support\Color;
+use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Hyperlink;
+use Symfony\Component\Console\Output\OutputInterface;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Symfony\Component\Console\Formatter\OutputFormatter;
+use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
 
 /**
- * Fluent helper class for formatting Symfony Console output with badge support
+ * Fluent builder for one styled string of Symfony Console markup
+ * (`<fg=cyan;bg=white;options=bold>message</>`), with badge and link support.
+ *
+ * The builder is `Stringable`: pass it where `string|Stringable` is accepted, cast
+ * it with `(string)` where a plain `string` is declared (under `strict_types`,
+ * Symfony's `writeln()` rejects the object), or call `write($output)` directly.
  *
  * @example
- * // Regular formatting
- * $output = ConsoleUIFormatter::create()
- *     ->addMessage('Processing...')
- *     ->addTextColor(ConsoleUIFormatter::GREEN)
- *     ->render();
+ * // Fluent
+ * $text = ConsoleUIFormatter::create()
+ *     ->txtColorRed()->bgColorWhite()->bold()
+ *     ->icon('rocket')              // 🚀 (or its ASCII fallback), via Support\Emoji
+ *     ->message('Deployed :tada:')  // shortcodes resolve the same way
+ *     ->padding(2)                  // two spaces either side, inside the background
+ *     ->lineHeight(3)               // one blank background line above and one below
+ *     ->addSpaceBefore(2)           // outside the background: indent by two spaces
+ *     ->addSpaceAfter(1, ConsoleUIFormatter::TAB);
+ * $text->write($output);   // or $output->writeln((string) $text)
  *
- * // Badge formatting
+ * // Badge
  * $badge = ConsoleUIFormatter::create()
  *     ->addMessage('NEW')
  *     ->isBadge(ConsoleUIFormatter::BADGE_STYLE_SUCCESS)
  *     ->render();
+ *
+ * Emoji: `message()` and `icon()` resolve `:shortcodes:` through {@see Emoji}, which
+ * uses the full `laranail/emojis` catalogue when that optional package is installed
+ * and degrades to ASCII on a terminal without Unicode. `addMessage()` keeps the text
+ * exactly as given.
+ *
+ * Colours: Symfony's own names (`red`, `bright-red`, `default`, …) pass through
+ * unchanged; anything else {@see Color::parse()} accepts (`orange`, `#7c3aed`,
+ * `rgb(…)`, `hsl(…)`, `@196`) is converted to hex. An unknown colour throws
+ * {@see InvalidColorException} when it is set, not when the string is written.
+ *
+ * @method self txtColorBlack()
+ * @method self txtColorRed()
+ * @method self txtColorGreen()
+ * @method self txtColorYellow()
+ * @method self txtColorBlue()
+ * @method self txtColorMagenta()
+ * @method self txtColorCyan()
+ * @method self txtColorWhite()
+ * @method self txtColorDefault()
+ * @method self txtColorGray()
+ * @method self txtColorBrightRed()
+ * @method self txtColorBrightGreen()
+ * @method self txtColorBrightYellow()
+ * @method self txtColorBrightBlue()
+ * @method self txtColorBrightMagenta()
+ * @method self txtColorBrightCyan()
+ * @method self txtColorBrightWhite()
+ * @method self txtColorLime()
+ * @method self txtColorGrey()
+ * @method self txtColorSilver()
+ * @method self txtColorMaroon()
+ * @method self txtColorOlive()
+ * @method self txtColorNavy()
+ * @method self txtColorTeal()
+ * @method self txtColorPurple()
+ * @method self txtColorOrange()
+ * @method self txtColorPink()
+ * @method self txtColorBrown()
+ * @method self txtColorGold()
+ * @method self txtColorSlate()
+ * @method self txtColorIndigo()
+ * @method self txtColorViolet()
+ * @method self txtColorCrimson()
+ * @method self txtColorCoral()
+ * @method self txtColorSalmon()
+ * @method self txtColorTurquoise()
+ * @method self txtColorAqua()
+ * @method self txtColorMint()
+ * @method self bgColorBlack()
+ * @method self bgColorRed()
+ * @method self bgColorGreen()
+ * @method self bgColorYellow()
+ * @method self bgColorBlue()
+ * @method self bgColorMagenta()
+ * @method self bgColorCyan()
+ * @method self bgColorWhite()
+ * @method self bgColorDefault()
+ * @method self bgColorGray()
+ * @method self bgColorBrightRed()
+ * @method self bgColorBrightGreen()
+ * @method self bgColorBrightYellow()
+ * @method self bgColorBrightBlue()
+ * @method self bgColorBrightMagenta()
+ * @method self bgColorBrightCyan()
+ * @method self bgColorBrightWhite()
+ * @method self bgColorLime()
+ * @method self bgColorGrey()
+ * @method self bgColorSilver()
+ * @method self bgColorMaroon()
+ * @method self bgColorOlive()
+ * @method self bgColorNavy()
+ * @method self bgColorTeal()
+ * @method self bgColorPurple()
+ * @method self bgColorOrange()
+ * @method self bgColorPink()
+ * @method self bgColorBrown()
+ * @method self bgColorGold()
+ * @method self bgColorSlate()
+ * @method self bgColorIndigo()
+ * @method self bgColorViolet()
+ * @method self bgColorCrimson()
+ * @method self bgColorCoral()
+ * @method self bgColorSalmon()
+ * @method self bgColorTurquoise()
+ * @method self bgColorAqua()
+ * @method self bgColorMint()
  */
 class ConsoleUIFormatter implements Stringable
 {
@@ -180,6 +284,31 @@ class ConsoleUIFormatter implements Stringable
         'reset'     => "\033[0m",
     ];
 
+    /**
+     * Colour names Symfony's formatter understands natively. These pass through
+     * as names, so they keep following the terminal's own palette; every other
+     * colour is converted to hex through {@see Color::parse()}.
+     */
+    public const array SYMFONY_COLORS = [
+        'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'default',
+        'gray', 'bright-red', 'bright-green', 'bright-yellow', 'bright-blue',
+        'bright-magenta', 'bright-cyan', 'bright-white',
+    ];
+
+    /**
+     * The options Symfony's formatter accepts. Anything else makes it throw at
+     * write time, far from the call that set it, so they are checked when set.
+     * `underline` and `hidden` are accepted as aliases, matching the constants.
+     */
+    public const array TEXT_OPTIONS = ['bold', 'underscore', 'blink', 'reverse', 'conceal'];
+
+    /** Whitespace {@see addSpaceBefore()} and {@see addSpaceAfter()} accept. */
+    public const string SPACE = ' ';
+
+    public const string TAB = "\t";
+
+    private const array OPTION_ALIASES = ['underline' => 'underscore', 'hidden' => 'conceal'];
+
     // Badge color schemes
     private const array BADGE_SCHEMES = [
         self::BADGE_STYLE_PRIMARY => [
@@ -243,6 +372,20 @@ class ConsoleUIFormatter implements Stringable
 
     private string $badgePadding = ' ';
 
+    private int $padding = 0;
+
+    private int $lineHeight = 1;
+
+    private bool $allowMarkup = false;
+
+    private string $spaceBefore = '';
+
+    private string $spaceAfter = '';
+
+    private ?Capabilities $capabilities = null;
+
+    private string $icon = '';
+
     // Terminal capability detection
     private readonly bool $supportsColor;
 
@@ -263,8 +406,28 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Create a new instance with fresh state
+     * `txtColor<Name>()` and `bgColor<Name>()` for every name in the class
+     * docblock: `txtColorBrightRed()` sets `bright-red`, `bgColorOrange()` sets
+     * the hex `Color` knows as orange.
+     *
+     * @param array<int, mixed> $arguments
+     *
+     * @throws InvalidColorException for an unknown colour name
      */
+    public function __call(string $method, array $arguments): self
+    {
+        foreach (['txtColor' => false, 'bgColor' => true] as $prefix => $background) {
+            if (str_starts_with($method, $prefix) && strlen($method) > strlen($prefix)) {
+                // StudlyCase to kebab: BrightRed -> bright-red
+                $name = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', substr($method, strlen($prefix))));
+
+                return $background ? $this->bg($name) : $this->fg($name);
+            }
+        }
+
+        throw new BadMethodCallException(sprintf('Call to undefined method %s::%s()', self::class, $method));
+    }
+
     public static function create(): self
     {
         return new self;
@@ -433,6 +596,23 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
+     * Normalise a colour to what Symfony's formatter accepts: one of its own
+     * names, or a `#rrggbb` hex.
+     *
+     * @throws InvalidColorException
+     */
+    public static function resolveColor(string $color): string
+    {
+        $lower = strtolower(trim($color));
+
+        if (in_array($lower, self::SYMFONY_COLORS, true)) {
+            return $lower;
+        }
+
+        return Color::parseStrict($color);
+    }
+
+    /**
      * Get all available badge styles
      */
     public static function getBadgeStyles(): array
@@ -460,6 +640,174 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
+     * Set the message: text, emoji, icons, or several lines. Formatter tags in
+     * it are shown literally unless {@see markup()} is on.
+     */
+    public function message(string|Stringable $message): self
+    {
+        return $this->addMessage($this->emoji()->render((string) $message));
+    }
+
+    /**
+     * Put an emoji in front of the message, by name (`rocket`, `check`, `tada`),
+     * with one space between. Call it before or after {@see message()}; an
+     * unknown name adds nothing.
+     */
+    public function icon(string $name): self
+    {
+        $this->icon = self::sanitizeText($this->emoji()->get($name));
+
+        return $this;
+    }
+
+    /**
+     * Use these capabilities for emoji fallback and {@see toAnsi()}, instead of
+     * detecting the terminal.
+     */
+    public function capabilities(Capabilities $capabilities): self
+    {
+        $this->capabilities = $capabilities;
+
+        return $this;
+    }
+
+    /**
+     * Whitespace before the message, outside its background. Calls add up, so
+     * `addSpaceBefore()->addSpaceBefore(1, self::TAB)` is a space then a tab.
+     *
+     * @param string $with {@see SPACE} or {@see TAB}
+     */
+    public function addSpaceBefore(int $count = 1, string $with = self::SPACE): self
+    {
+        $this->spaceBefore .= $this->whitespace($count, $with);
+
+        return $this;
+    }
+
+    /**
+     * Whitespace after the message, outside its background. Calls add up.
+     *
+     * @param string $with {@see SPACE} or {@see TAB}
+     */
+    public function addSpaceAfter(int $count = 1, string $with = self::SPACE): self
+    {
+        $this->spaceAfter .= $this->whitespace($count, $with);
+
+        return $this;
+    }
+
+    /**
+     * Treat formatter tags inside the message as markup instead of text. Off by
+     * default, so a message carrying `</>` or `<fg=…>` cannot restyle the output.
+     */
+    public function markup(bool $allow = true): self
+    {
+        $this->allowMarkup = $allow;
+
+        return $this;
+    }
+
+    /**
+     * Foreground colour: a Symfony name, a {@see Color} name, hex, rgb(), hsl() or @N.
+     *
+     * @throws InvalidColorException
+     */
+    public function fg(string $color): self
+    {
+        return $this->addTextColor($color);
+    }
+
+    /**
+     * Background colour, accepting the same forms as {@see fg()}.
+     *
+     * @throws InvalidColorException
+     */
+    public function bg(string $color): self
+    {
+        return $this->addBackgroundColor($color);
+    }
+
+    public function bold(): self
+    {
+        return $this->addTextStyles(self::BOLD);
+    }
+
+    public function underline(): self
+    {
+        return $this->addTextStyles(self::UNDERSCORE);
+    }
+
+    public function blink(): self
+    {
+        return $this->addTextStyles(self::BLINK);
+    }
+
+    public function reverse(): self
+    {
+        return $this->addTextStyles(self::REVERSE);
+    }
+
+    public function conceal(): self
+    {
+        return $this->addTextStyles(self::CONCEAL);
+    }
+
+    public function href(string $url): self
+    {
+        return $this->setHref($url);
+    }
+
+    /**
+     * Spaces either side of the message, inside its background.
+     */
+    public function padding(int $spaces): self
+    {
+        if ($spaces < 0) {
+            throw new InvalidArgumentException("Padding cannot be negative, got {$spaces}.");
+        }
+
+        $this->padding = $spaces;
+
+        return $this;
+    }
+
+    /**
+     * Total height in lines. The message sits in the middle, and the extra lines
+     * are blank lines carrying the background, so `lineHeight(3)` puts one line
+     * above and one below. Terminals have no line spacing; this is the nearest
+     * thing, and it only shows when a background is set.
+     */
+    public function lineHeight(int $lines): self
+    {
+        if ($lines < 1) {
+            throw new InvalidArgumentException("Line height must be at least 1, got {$lines}.");
+        }
+
+        $this->lineHeight = $lines;
+
+        return $this;
+    }
+
+    /**
+     * Render and write to an output, one call per line.
+     */
+    public function write(OutputInterface $output): void
+    {
+        $output->writeln($this->render());
+    }
+
+    /**
+     * The rendered string as raw ANSI, ready to echo. Plain text when the
+     * terminal has no colour support.
+     */
+    public function toAnsi(?Capabilities $capabilities = null): string
+    {
+        $decorated = ($capabilities ?? $this->capabilities ?? Capabilities::detect())->supportsColor();
+
+        return new OutputFormatter($decorated)->format($this->render()) ?? '';
+    }
+
+    /**
      * Add text/foreground color with optional predefined style tag or clickable link
      *
      * @param string $text Color name or hex code (e.g., '#ff0000')
@@ -473,7 +821,7 @@ class ConsoleUIFormatter implements Stringable
         bool $isClickable = false,
         ?string $href = null,
     ): self {
-        $this->foregroundColor = $text;
+        $this->foregroundColor = self::resolveColor($text);
         $this->styleTag = $styleTag;
         $this->isClickable = false;
         $this->href = null;
@@ -494,7 +842,7 @@ class ConsoleUIFormatter implements Stringable
      */
     public function addBackgroundColor(string $text): self
     {
-        $this->backgroundColor = $text;
+        $this->backgroundColor = self::resolveColor($text);
 
         return $this;
     }
@@ -508,6 +856,20 @@ class ConsoleUIFormatter implements Stringable
     {
         if (is_string($styles)) {
             $styles = [$styles];
+        }
+
+        foreach ($styles as $i => $style) {
+            $style = self::OPTION_ALIASES[$style] ?? $style;
+
+            if (! in_array($style, self::TEXT_OPTIONS, true)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Invalid text style "%s". Expected one of: %s.',
+                    $style,
+                    implode(', ', [...self::TEXT_OPTIONS, ...array_keys(self::OPTION_ALIASES)]),
+                ));
+            }
+
+            $styles[$i] = $style;
         }
 
         $this->textStyles = array_unique(array_merge($this->textStyles, $styles));
@@ -579,6 +941,12 @@ class ConsoleUIFormatter implements Stringable
         $this->isClickable = false;
         $this->badgeMode = false;
         $this->badgePadding = ' ';
+        $this->padding = 0;
+        $this->lineHeight = 1;
+        $this->allowMarkup = false;
+        $this->spaceBefore = '';
+        $this->spaceAfter = '';
+        $this->icon = '';
 
         return $this;
     }
@@ -592,6 +960,9 @@ class ConsoleUIFormatter implements Stringable
             return $text;
         }
 
+        // The colour constants spell bright colours `bright-red`; ANSI_COLORS keys them `bright_red`.
+        $color = str_replace('-', '_', $color);
+        $background = $background !== null ? str_replace('-', '_', $background) : null;
         $colorCode = self::ANSI_COLORS[$color] ?? '';
         $boldCode = $bold ? self::ANSI_COLORS['bold'] : '';
         // Background colour tokens (e.g. BG_RED = 'red') map to the '*_bg' ANSI key.
@@ -605,7 +976,7 @@ class ConsoleUIFormatter implements Stringable
     }
 
     /**
-     * Render the formatted string
+     * Render the formatted string: Symfony markup, one tag per line.
      */
     public function render(): string
     {
@@ -613,24 +984,63 @@ class ConsoleUIFormatter implements Stringable
             return '';
         }
 
-        // Format message as badge if enabled
-        $displayMessage = $this->badgeMode
-            ? $this->badgePadding . mb_strtoupper($this->message) . $this->badgePadding
-            : $this->message;
+        $message = $this->badgeMode ? mb_strtoupper($this->message) : $this->message;
+        $lines = explode("\n", $this->icon === '' ? $message : $this->icon . ' ' . $message);
+        $width = max(array_map($this->visibleWidth(...), $lines));
+        $pad = ($this->badgeMode ? $this->badgePadding : '') . str_repeat(' ', $this->padding);
 
-        // Use predefined style tag if set and not in badge mode
+        $rendered = [];
+
+        foreach ($lines as $line) {
+            $fill = str_repeat(' ', $width - $this->visibleWidth($line));
+            $text = $this->allowMarkup ? $line : OutputFormatter::escape($line);
+            $rendered[] = $this->spaceBefore . $this->wrap($pad . $text . $fill . $pad, link: true) . $this->spaceAfter;
+        }
+
+        // Extra height is blank lines carrying the background, split around the message.
+        $blank = $this->spaceBefore . $this->wrap(str_repeat(' ', $width + 2 * DisplayWidth::of($pad)), link: false) . $this->spaceAfter;
+        $above = intdiv($this->lineHeight - 1, 2);
+        $below = $this->lineHeight - 1 - $above;
+
+        return implode("\n", [
+            ...array_fill(0, $above, $blank),
+            ...$rendered,
+            ...array_fill(0, $below, $blank),
+        ]);
+    }
+
+    /**
+     * Build the whitespace for addSpaceBefore()/addSpaceAfter().
+     */
+    private function whitespace(int $count, string $with): string
+    {
+        if ($count < 1) {
+            throw new InvalidArgumentException("Space count must be positive, got {$count}.");
+        }
+
+        if ($with !== self::SPACE && $with !== self::TAB) {
+            throw new InvalidArgumentException('Space must be ConsoleUIFormatter::SPACE or ConsoleUIFormatter::TAB.');
+        }
+
+        return str_repeat($with, $count);
+    }
+
+    private function emoji(): Emoji
+    {
+        return Emoji::make($this->capabilities);
+    }
+
+    /**
+     * Wrap one line in the configured tag. `$link` is false for the blank
+     * lineHeight rows, which carry the background but are not clickable.
+     */
+    private function wrap(string $line, bool $link): string
+    {
+        // A predefined style tag wins over custom colours, except in badge mode.
         if ($this->styleTag && ! $this->badgeMode) {
-            return sprintf('<%s>%s</>', $this->styleTag, $displayMessage);
+            return sprintf('<%s>%s</>', $this->styleTag, $line);
         }
 
-        // Use clickable href if set. Escape the URL so it can't inject formatter
-        // tags (e.g. a URL containing `<fg=red>`); Hyperlink vets the scheme, but
-        // `<`/`>` must still be neutralised for the Symfony tag syntax.
-        if ($this->isClickable && $this->href) {
-            return sprintf('<href=%s>%s</>', OutputFormatter::escape($this->href), $displayMessage);
-        }
-
-        // Build custom formatting
         $tags = [];
 
         if ($this->foregroundColor) {
@@ -645,13 +1055,28 @@ class ConsoleUIFormatter implements Stringable
             $tags[] = 'options=' . implode(',', $this->textStyles);
         }
 
-        // No formatting needed
-        if ($tags === []) {
-            return $displayMessage;
+        // Escape the URL so it can't inject formatter tags (e.g. a URL containing
+        // `<fg=red>`); Hyperlink vets the scheme, but `<`/`>` must still be
+        // neutralised for the Symfony tag syntax. (Hyperlink already strips `;`,
+        // which would otherwise end the attribute.)
+        if ($link && $this->isClickable && $this->href) {
+            $tags[] = 'href=' . OutputFormatter::escape($this->href);
         }
 
-        // Build formatted string
-        return sprintf('<%s>%s</>', implode(';', $tags), $displayMessage);
+        return $tags === [] ? $line : sprintf('<%s>%s</>', implode(';', $tags), $line);
+    }
+
+    /**
+     * Columns a line occupies once written: emoji and wide glyphs count as two,
+     * and markup tags (when markup is allowed) count as nothing.
+     */
+    private function visibleWidth(string $line): int
+    {
+        if ($this->allowMarkup) {
+            $line = new OutputFormatter(false)->format($line) ?? '';
+        }
+
+        return DisplayWidth::of($line);
     }
 
     /**
@@ -660,7 +1085,7 @@ class ConsoleUIFormatter implements Stringable
      */
     private function sanitizeColorToken(string $color): string
     {
-        return (string) preg_replace('/[^A-Za-z0-9#]/', '', $color);
+        return (string) preg_replace('/[^A-Za-z0-9#-]/', '', $color);
     }
 
     /**
