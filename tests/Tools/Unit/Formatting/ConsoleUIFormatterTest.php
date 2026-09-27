@@ -12,12 +12,23 @@ use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Support\Color;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
+use Simtabi\Laranail\Console\Tools\Support\EmojisBridge;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Simtabi\Laranail\Console\Tools\Formatting\ConsoleUIFormatter;
 use Simtabi\Laranail\Console\Tools\Exceptions\InvalidColorException;
+use Simtabi\Laranail\Console\Tools\Tests\Support\Fixtures\FakeEmojiCatalogue;
 
 final class ConsoleUIFormatterTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        // Capabilities::fake() and EmojisBridge::fake() are process-wide; never leak them.
+        Capabilities::clearFake();
+        EmojisBridge::reset();
+
+        parent::tearDown();
+    }
+
     public function test_static_message_helpers_return_strings_containing_text(): void
     {
         self::assertStringContainsString('done', ConsoleUIFormatter::success('done'));
@@ -285,5 +296,28 @@ final class ConsoleUIFormatterTest extends TestCase
         $formatter = ConsoleUIFormatter::create()->icon('rocket')->message('x')->addSpaceBefore()->addSpaceAfter();
 
         self::assertSame('y', $formatter->reset()->message('y')->render());
+    }
+
+    public function test_capabilities_set_after_the_message_still_apply(): void
+    {
+        Capabilities::fake(unicode: true);
+        $formatter = ConsoleUIFormatter::create()->message(':tada:')->icon('rocket');
+
+        self::assertSame('-\\> \\o/', $formatter->capabilities(Capabilities::fake(unicode: false))->render());
+    }
+
+    public function test_names_resolve_through_the_emojis_catalogue_when_installed(): void
+    {
+        // unicorn is not in console's own map: only laranail/emojis knows it.
+        EmojisBridge::fake(new FakeEmojiCatalogue);
+
+        $unicode = ConsoleUIFormatter::create()->capabilities(Capabilities::fake(unicode: true));
+        self::assertSame('🦄 hello 🦄', $unicode->icon('unicorn')->message('hello :unicorn:')->render());
+
+        // The map still wins for its own names, as it does in Emoji.
+        self::assertSame('❌ x', ConsoleUIFormatter::create()->capabilities(Capabilities::fake(unicode: true))->icon('cross')->message('x')->render());
+
+        EmojisBridge::fake(null);
+        self::assertSame('hello :unicorn:', ConsoleUIFormatter::create()->capabilities(Capabilities::fake(unicode: true))->message('hello :unicorn:')->render());
     }
 }

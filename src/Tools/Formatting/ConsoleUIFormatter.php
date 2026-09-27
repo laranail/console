@@ -386,6 +386,8 @@ class ConsoleUIFormatter implements Stringable
 
     private string $icon = '';
 
+    private bool $resolveShortcodes = false;
+
     // Terminal capability detection
     private readonly bool $supportsColor;
 
@@ -635,6 +637,7 @@ class ConsoleUIFormatter implements Stringable
     public function addMessage(string $message): self
     {
         $this->message = self::sanitizeText($message);
+        $this->resolveShortcodes = false;
 
         return $this;
     }
@@ -645,7 +648,12 @@ class ConsoleUIFormatter implements Stringable
      */
     public function message(string|Stringable $message): self
     {
-        return $this->addMessage($this->emoji()->render((string) $message));
+        $this->addMessage((string) $message);
+
+        // Resolved at render time, so a capabilities() call later in the chain still applies.
+        $this->resolveShortcodes = true;
+
+        return $this;
     }
 
     /**
@@ -655,7 +663,8 @@ class ConsoleUIFormatter implements Stringable
      */
     public function icon(string $name): self
     {
-        $this->icon = self::sanitizeText($this->emoji()->get($name));
+        // Stored by name and resolved at render time, like message() shortcodes.
+        $this->icon = $name;
 
         return $this;
     }
@@ -947,6 +956,7 @@ class ConsoleUIFormatter implements Stringable
         $this->spaceBefore = '';
         $this->spaceAfter = '';
         $this->icon = '';
+        $this->resolveShortcodes = false;
 
         return $this;
     }
@@ -984,8 +994,11 @@ class ConsoleUIFormatter implements Stringable
             return '';
         }
 
-        $message = $this->badgeMode ? mb_strtoupper($this->message) : $this->message;
-        $lines = explode("\n", $this->icon === '' ? $message : $this->icon . ' ' . $message);
+        $emoji = $this->emoji();
+        $message = $this->resolveShortcodes ? self::sanitizeText($emoji->render($this->message)) : $this->message;
+        $message = $this->badgeMode ? mb_strtoupper($message) : $message;
+        $icon = $this->icon === '' ? '' : self::sanitizeText($emoji->get($this->icon));
+        $lines = explode("\n", $icon === '' ? $message : $icon . ' ' . $message);
         $width = max(array_map($this->visibleWidth(...), $lines));
         $pad = ($this->badgeMode ? $this->badgePadding : '') . str_repeat(' ', $this->padding);
 
