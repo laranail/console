@@ -5,6 +5,53 @@ All notable changes to `laranail/console` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **A fluent API on `ConsoleUIFormatter`.** You can now build a whole style as one chain:
+
+  ```php
+  ConsoleUIFormatter::create()->txtColorRed()->bgColorWhite()->bold()
+      ->message('✓ Deployed 🚀')->padding(2)->lineHeight(3)
+      ->addSpaceBefore()->addSpaceAfter(1, ConsoleUIFormatter::TAB);
+  ```
+
+  - **Colours:** `txtColor<Name>()` and `bgColor<Name>()` for 38 named colours, each declared
+    as an `@method`. `fg()` and `bg()` take any colour `Support\Color` parses.
+  - **Text:** `message()` resolves emoji shortcodes through `Support\Emoji`, which uses
+    `laranail/emojis` when it is installed. `icon()` adds an emoji in front of the message.
+    Names resolve at render time, so `capabilities()` applies wherever it sits in the chain.
+    `bold()`, `underline()`, `blink()`, `reverse()`, `conceal()` and `href()` set the style.
+  - **Layout:** `padding()` adds space inside the background, and `lineHeight()` adds blank
+    background lines above and below. `addSpaceBefore()` and `addSpaceAfter()` add spaces or
+    tabs outside it; each count must be positive, and repeated calls add up.
+  - **Output:** `write()` renders straight to an output, and `toAnsi()` returns raw ANSI.
+  - **Control:** `markup()` lets tags inside the message act as markup, and `capabilities()`
+    pins emoji and colour support.
+
+  The existing methods are unchanged, and a plain message renders exactly as before. See
+  `docs/tools/formatting.md` and `examples/tools/formatting.php`.
+
+### Fixed
+
+- **The 14 `BRIGHT_*` and `BG_BRIGHT_*` constants threw when written.** The colour sanitiser
+  stripped the hyphen, so `bright-red` reached Symfony as `brightred`.
+- **`colorize()` emitted no colour for the `BRIGHT_*` constants**, because it looked them up
+  as `bright-red` in a map keyed `bright_red`.
+- **Colour names that `Support\Color` accepts** (`orange`, `slate`, `crimson`, …) threw when
+  written. They are now converted to hex when set. An unknown colour throws
+  `InvalidColorException` at the call that sets it, not later when the string is written.
+- **An unknown text style**, such as `italic`, which Symfony does not support, now throws when
+  it is set rather than when the string is written.
+- **A clickable text colour lost its colour.** The link path returned before adding `fg`/`bg`.
+
+### Changed
+
+- **Message text is escaped.** A message containing `</>` used to end the style early, and
+  `<fg=red>` inside it took effect. Both now print literally. Call `markup()` to keep the old
+  behaviour for trusted markup.
+
 ## [0.1.3] - 2026-09-26
 
 ### Added

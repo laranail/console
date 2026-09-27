@@ -132,6 +132,9 @@ Console::emoji()->strip('Done :tada:');             // 'Done'  (for plain logs)
 leaves unknown `:shortcodes:` untouched; `with()` adds/overrides
 (`[unicode, ascii]` or a single string); `has()`/`all()` introspect the set.
 
+`ConsoleUIFormatter::message()` and `icon()` resolve names through this same helper, so the
+formatter gets the catalogue and the ASCII fallback too; see [Formatting](formatting.md#emoji).
+
 ## Symbols
 
 One Unicode↔ASCII glyph map (status icons + tree connectors), chosen once from

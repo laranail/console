@@ -10,7 +10,7 @@ Console
 ├── Providers\ConsoleServiceProvider   # config + lang + registers child providers
 ├── Exceptions\ConsoleException        # base, fromKey() with safe fallback
 ├── Tools\                   # OUTPUT
-│   ├── Formatting\          # ConsoleUIFormatter (colour/badge/link primitives)
+│   ├── Formatting\          # ConsoleUIFormatter (fluent markup builder: colour/emoji/badge/link/layout)
 │   ├── Widgets\             # Spinner, ProgressBar, Box, Tree, Table, TaskProgress,
 │   │                        #   Summary, Header, Banner, Panel/PanelBlock, Menu\…
 │   ├── Contracts\           # Renderable, Interactive (panel composition / live)
