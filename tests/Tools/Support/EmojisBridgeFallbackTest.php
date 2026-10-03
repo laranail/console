@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Helper\Helper;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\EmojisBridge;
@@ -60,6 +61,8 @@ final class EmojisBridgeFallbackTest extends TestCase
     public function test_an_emoji_newer_than_the_width_table_keeps_the_symfony_measurement(): void
     {
         // The documented limit of the fallback: without a catalogue, nothing says U+1FAEA is an emoji.
-        self::assertSame(1, DisplayWidth::of("\u{1FAEA}"));
+        // Whatever Symfony itself measures: its width table learns new emoji over time
+        // (8.1.8 widened U+1FAEA to 2), and the fallback promises to agree with it, not with 1.
+        self::assertSame(Helper::width("\u{1FAEA}"), DisplayWidth::of("\u{1FAEA}"));
     }
 }
