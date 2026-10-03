@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Tests\Support;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Helper\Helper;
 use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
 use Simtabi\Laranail\Console\Tools\Support\EmojisBridge;
@@ -77,7 +78,9 @@ final class EmojisBridgeCatalogueTest extends TestCase
         self::assertSame('❌', Emoji::make()->unicode()->get('cross'));
         self::assertSame('', Emoji::make()->get('unicorn'));
         self::assertSame('ship 🚀', Emoji::make()->ascii()->render('ship 🚀'));
-        self::assertSame(1, DisplayWidth::of("\u{1FAEA}"));
+        // Whatever Symfony itself measures: its width table learns new emoji over time
+        // (8.1.8 widened U+1FAEA to 2), and the fallback promises to agree with it, not with 1.
+        self::assertSame(Helper::width("\u{1FAEA}"), DisplayWidth::of("\u{1FAEA}"));
     }
 
     public function test_discovery_finds_the_adapter_exactly_when_it_is_autoloadable(): void

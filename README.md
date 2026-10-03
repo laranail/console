@@ -24,6 +24,28 @@ php artisan vendor:publish --tag=laranail::console-config
 php artisan vendor:publish --tag=laranail::console-lang
 ```
 
+## Quick start
+
+```php
+use Simtabi\Laranail\Console\Facades\Console;
+use Simtabi\Laranail\Console\Tools\Commands\Command;
+
+final class ReleaseSummaryCommand extends Command
+{
+    protected $signature = 'release:summary';
+
+    public function handle(): int
+    {
+        $this->output->writeln(Console::status()->success('Build complete'));
+        echo Console::box(['Version: 2.4.0', 'Env:     production'])->title('Release')->render();
+
+        return self::SUCCESS;
+    }
+}
+```
+
+The full walkthrough is in [Getting started](docs/getting-started.md); everything else is in the [documentation index](#documentation).
+
 ## Documentation
 
 Full documentation is at **[opensource.simtabi.com/documentation/laranail/console](https://opensource.simtabi.com/documentation/laranail/console/)** — installation, getting started, the design system, architecture, configuration, and per-subsystem reference (theming, colours, typography, Markdown, charts, widgets, banners, panels, menus, the full-screen TUI, prompts & forms, and more).
