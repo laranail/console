@@ -24,7 +24,15 @@ php artisan vendor:publish --tag=laranail::console-config
 php artisan vendor:publish --tag=laranail::console-lang
 ```
 
-## Quick start
+## Quick start guide and usage
+
+### Getting started
+
+Nothing to configure: `ConsoleServiceProvider` registers itself through package discovery,
+together with the `Console` and `Prompter` facades and the `prompter()` helper. The config and
+language publishes above are only for customising them.
+
+### Usage
 
 ```php
 use Simtabi\Laranail\Console\Facades\Console;
@@ -42,6 +50,14 @@ final class ReleaseSummaryCommand extends Command
         return self::SUCCESS;
     }
 }
+```
+
+Progress and a prompt:
+
+```php
+Console::spinner('Compiling…')->run(fn () => compile());
+
+$name = Console::prompter()->text('Your name', required: true)->getResult();
 ```
 
 The full walkthrough is in [Getting started](docs/getting-started.md); everything else is in the [documentation index](#documentation).
