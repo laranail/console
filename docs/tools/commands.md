@@ -60,7 +60,9 @@ base — one obvious access path, no Middle-Man indirection.
 ## Use the trait (when you can't extend the base)
 
 The base is just `extends Illuminate\Console\Command` + the
-`Tools\Commands\Concerns\InteractsWithConsoleServices` trait. If your command must
+`Tools\Commands\Concerns\InteractsWithConsoleServices` and `InteractsWithConsoleWriter`
+traits. It does **not** compose `SupportsNamespacedNames`; see
+[Namespaced command names](#namespaced-command-names). If your command must
 extend a different base (a vendor command, Laravel's `GeneratorCommand`, …), `use`
 the trait directly to get the **same** full support — `$this->services`, the managed
 lifecycle, signals, structured exceptions and the verbosity helpers:
@@ -188,10 +190,13 @@ final class PurgeCommand extends Command
 
 ## Namespaced command names
 
-This package ships its own `Tools\Commands\Concerns\SupportsNamespacedNames` trait
-so commands can use the `laranail::<package-slug>.<command>` separator (Symfony's
-validator otherwise rejects the empty `::` segment). `use` it on a command and set a
-`::` name in the `$signature`:
+A `laranail::<package-slug>.<command>` name needs **two** things on the command class:
+extend a command base **and** `use` the `Tools\Commands\Concerns\SupportsNamespacedNames`
+trait. Extending `Tools\Commands\Command` alone is not enough: the base does not compose
+the trait, so the `::` name reaches Symfony's `validateName()` (`^[^:]++(:[^:]++)*$`, which
+rejects the empty segment in `::`) and the constructor throws
+`Command name "laranail::your-package.sync" is invalid.` For a command your provider
+registers, that is when the application boots.
 
 ```php
 use Simtabi\Laranail\Console\Tools\Commands\Command;
@@ -202,17 +207,40 @@ final class SyncCommand extends Command
     use SupportsNamespacedNames;
 
     protected $signature = 'laranail::your-package.sync';
+
+    public function handle(): int
+    {
+        return self::SUCCESS;
+    }
 }
 ```
 
-### Convenience aliases (`$commandAliases`)
+| Command class | `laranail::your-package.sync` |
+|---|---|
+| `extends Command` | throws `InvalidArgumentException` at construction |
+| `extends Command` + `use SupportsNamespacedNames` | accepted, and `php artisan laranail::your-package.sync` dispatches |
+| any other base (e.g. `Illuminate\Console\Command`) + `use SupportsNamespacedNames` | accepted; the trait has no dependency on this package's base |
 
-The base `Command` applies an optional `$commandAliases` list after construction —
-handy for exposing a short, familiar alias alongside the namespaced name (e.g. a bare
-`make:crud` next to `laranail::your-package.make-crud`). Combined with
-`SupportsNamespacedNames`, the aliases may themselves use the `::` separator.
+The trait writes the name and aliases past the validator. Dispatch still works because
+Symfony resolves an exact command name before its `:`-splitting namespace lookup. Both
+cases are pinned by `tests/Tools/Unit/Commands/NamespacedNameRequirementTest.php`.
+
+### Aliases (`$commandAliases`)
+
+The base `Command` applies an optional `$commandAliases` list after construction. It
+writes them through whatever `setAliases()` is in scope, so with
+`SupportsNamespacedNames` an alias may use the `::` separator too; without it, standard
+Symfony validation applies. `$commandAliases` is a feature of this package's base only:
+the trait alone never reads it.
+
+An alias must itself be vendor-scoped. A bare `make:crud` beside
+`laranail::your-package.make-crud` hands back exactly the flat-registry collision the
+namespaced name exists to prevent.
 
 ```php
+use Simtabi\Laranail\Console\Tools\Commands\Command;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+
 final class MakeCrudCommand extends Command
 {
     use SupportsNamespacedNames;
@@ -220,7 +248,12 @@ final class MakeCrudCommand extends Command
     protected $signature = 'laranail::your-package.make-crud';
 
     /** @var list<string> */
-    protected array $commandAliases = ['make:crud'];
+    protected array $commandAliases = ['laranail::your-package.crud'];
+
+    public function handle(): int
+    {
+        return self::SUCCESS;
+    }
 }
 ```
 

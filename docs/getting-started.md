@@ -30,8 +30,18 @@ echo Console::box(['Name: app', 'Env:  prod'])->title('Config')->render();
 echo Console::tree('project')->child('src', fn ($t) => $t->child('Console'))->render();
 ```
 
-Know which of the [three output styles](../README.md#writing-through-an-output) a helper returns — it
+Know which of the [three output styles](#writing-through-an-output) a helper returns — it
 decides whether you `writeln()` or `echo`.
+
+### Writing through an output
+
+| Style | Examples | How to print it |
+|---|---|---|
+| Symfony Console markup (`<fg=green>…</>`) | `Console::status()->success()`, `ConsoleUIFormatter::success()`, `badge()`, `link()` | `$output->writeln(...)` (in a command, `$this->line(...)`). `echo` prints the tags literally. |
+| Finished string | `render()` on `Console::box()`, `Console::tree()`, `Console::table()` and the other string-returning widgets; `colorize()` | `echo`, or `writeln()` |
+| Self-writing | `Spinner`, `ProgressBar`, `TaskProgress` | Nothing to print: they write to the `OutputInterface` they are given and have no `render()`. |
+
+See [Output widgets](tools/widgets.md) and [Formatting](tools/formatting.md) for which helper is which.
 
 ## 3. Progress + a prompt
 
