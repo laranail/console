@@ -62,14 +62,14 @@ $name = Console::prompter()->text('Your name', required: true)->getResult();
 
 The full walkthrough is in [Getting started](docs/getting-started.md); everything else is in the [documentation index](#documentation).
 
-## Documentation
+## <a name="documentation"></a>Documentation
 
 Full documentation is at **[opensource.simtabi.com/documentation/laranail/console](https://opensource.simtabi.com/documentation/laranail/console/)** — installation, getting started, the design system, architecture, configuration, and per-subsystem reference (theming, colours, typography, Markdown, charts, widgets, banners, panels, menus, the full-screen TUI, prompts & forms, and more).
 
 ## Contributing & security
 
 Issues and PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Report vulnerabilities per
-[SECURITY.md](SECURITY.md) (opensource@simtabi.com); participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
+[SECURITY.md](SECURITY.md) (security@simtabi.com); participation follows the [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## License
 

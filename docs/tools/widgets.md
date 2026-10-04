@@ -5,7 +5,7 @@ All widgets live under `Simtabi\Laranail\Console\Tools\Widgets` and most have a
 [Support backbone](support.md), so Unicode/colour degrade to ASCII/plain
 automatically. A runnable demo is at `examples/tools/widgets.php`.
 
-**Two output shapes** (see the README's "Writing through an output"):
+**Two output shapes** (see [Writing through an output](../getting-started.md#writing-through-an-output)):
 
 - **Self-writing** — `Spinner`, `ProgressBar`, `TaskProgress` write to an
   `OutputInterface` you give them (no `render()`).

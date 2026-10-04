@@ -86,6 +86,46 @@ final class DocumentedNamesTest extends TestCase
         self::assertGreaterThan(0, $seen, 'no config/ or lang/ path found in the docs; the pattern no longer matches.');
     }
 
+    public function test_intra_repo_fragment_links_resolve(): void
+    {
+        // getting-started linked ../README.md#writing-through-an-output for months: the file
+        // resolves, only the fragment is wrong, and no link checker reports that.
+        $root = dirname(__DIR__, 3);
+        $seen = 0;
+
+        foreach ($this->pages() as $page => $markdown) {
+            preg_match_all('/\]\(([^)\s#]*)#([^)\s]+)\)/', $this->withoutFences($markdown), $matches, PREG_SET_ORDER);
+
+            foreach ($matches as [, $path, $fragment]) {
+                if (preg_match('#^[a-z][a-z0-9+.-]*:#i', $path) === 1) {
+                    continue; // an external URL
+                }
+
+                $seen++;
+                $target = $path === '' ? $root . '/' . $page : dirname($root . '/' . $page) . '/' . $path;
+
+                self::assertFileExists($target, "{$page} links {$path}#{$fragment}, whose file does not exist.");
+                self::assertContains(
+                    $fragment,
+                    $this->anchors((string) file_get_contents($target)),
+                    "{$page} links {$path}#{$fragment}, but that page has no such heading or anchor.",
+                );
+            }
+        }
+
+        // 62 on 2026-10-04; a pattern that stops matching must fail, not pass empty.
+        self::assertGreaterThanOrEqual(40, $seen, 'too few fragment links found; the pattern no longer matches.');
+    }
+
+    public function test_the_anchor_slugger_matches_github(): void
+    {
+        // The explicit <a name> and the heading slug both yield "documentation"; a fenced line is skipped.
+        self::assertSame(
+            ['quick-start-guide-and-usage', 'documentation', 'documentation', 'contributing--security', 'laranailconsolecheck', 'usage', 'usage-1'],
+            $this->anchors("## Quick start guide and usage\n## <a name=\"documentation\"></a>Documentation\n## Contributing & security\n## `laranail::console.check`\n### Usage\n### Usage\n```\n# not a heading\n```\n"),
+        );
+    }
+
     public function test_publish_destinations_compare_separator_insensitively(): void
     {
         // Windows joins with a backslash, so the docs' forward-slash paths must match either way.
@@ -102,6 +142,43 @@ final class DocumentedNamesTest extends TestCase
         $base = rtrim(str_replace('\\', '/', $base), '/');
 
         return ltrim(str_starts_with($path, $base) ? substr($path, strlen($base)) : $path, '/');
+    }
+
+    /**
+     * Every anchor a page exposes: GitHub's heading slugs (duplicates suffixed -1, -2, ...)
+     * plus explicit `<a name>` / `<a id>` targets. Headings inside code fences are not headings.
+     *
+     * @return list<string>
+     */
+    private function anchors(string $markdown): array
+    {
+        $anchors = [];
+        $counts = [];
+
+        foreach (explode("\n", $this->withoutFences($markdown)) as $line) {
+            preg_match_all('/<a\s+(?:name|id)="([^"]+)"/', $line, $explicit);
+
+            foreach ($explicit[1] as $name) {
+                $anchors[] = $name;
+            }
+
+            if (preg_match('/^#{1,6}\s+(.*?)\s*#*\s*$/', $line, $heading) !== 1) {
+                continue;
+            }
+
+            $text = str_replace('`', '', (string) preg_replace('/<[^>]+>/', '', $heading[1]));
+            $slug = str_replace(' ', '-', (string) preg_replace('/[^\p{L}\p{N}_\- ]/u', '', mb_strtolower(trim($text))));
+            $n = $counts[$slug] ?? 0;
+            $counts[$slug] = $n + 1;
+            $anchors[] = $n === 0 ? $slug : "{$slug}-{$n}";
+        }
+
+        return $anchors;
+    }
+
+    private function withoutFences(string $markdown): string
+    {
+        return (string) preg_replace('/^[ \t]*```.*?^[ \t]*```[^\n]*$/ms', '', $markdown);
     }
 
     /**
