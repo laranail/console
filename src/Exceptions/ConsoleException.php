@@ -6,12 +6,13 @@ namespace Simtabi\Laranail\Console\Exceptions;
 
 use Throwable;
 use RuntimeException;
+use Simtabi\Laranail\Console\Tools\Support\Translations;
 
 /**
  * Base exception for the laranail/console package.
  *
  * All Tools and Prompter exceptions extend this, so consumers can catch the
- * whole package with a single type. Messages are resolved from the `laranail-console::`
+ * whole package with a single type. Messages are resolved from the `laranail/console::`
  * translation namespace with a safe fallback, so a missing key never produces
  * an empty-message exception.
  *
@@ -35,16 +36,12 @@ class ConsoleException extends RuntimeException
      */
     protected static function resolveMessage(string $key, array $replace = []): string
     {
-        $namespaced = "laranail-console::{$key}";
+        // Translations::get() only uses the translator when a container has
+        // bound it, so the exception is still usable outside a booted application.
+        $message = Translations::get($key, $replace);
 
-        // Only use the translator when a container has actually bound it, so
-        // the exception is still usable outside a booted Laravel application.
-        if (function_exists('app') && app()->bound('translator')) {
-            $message = trans($namespaced, $replace);
-
-            if (is_string($message) && $message !== $namespaced) {
-                return $message;
-            }
+        if ($message !== Translations::key($key)) {
+            return $message;
         }
 
         // Fallback: humanise the leaf key and interpolate replacements.

@@ -13,6 +13,7 @@ use function Laravel\Prompts\password;
 use function Laravel\Prompts\multiselect;
 
 use Simtabi\Laranail\Console\Tools\Support\Config;
+use Simtabi\Laranail\Console\Tools\Support\Translations;
 use Simtabi\Laranail\Console\Tools\Exceptions\NonInteractiveException;
 
 /**
@@ -141,7 +142,7 @@ class CommandInteractionService
                 return $answer;
             }
 
-            error(__('laranail-console::console.invalid_input'));
+            error(Translations::get('console.invalid_input'));
         } while (true);
     }
 

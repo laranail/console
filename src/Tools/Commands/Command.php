@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Simtabi\Laranail\Console\Tools\Commands;
 
 use Illuminate\Console\Command as BaseCommand;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\WarnsOnDeprecatedAlias;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleWriter;
 use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleServices;
 
@@ -25,6 +26,10 @@ use Simtabi\Laranail\Console\Tools\Commands\Concerns\InteractsWithConsoleService
  * All of that behaviour lives in {@see InteractsWithConsoleServices} — `use` that
  * trait directly when you must extend a different command base.
  *
+ * Old names a command must keep answering to go in `$deprecatedCommandAliases`
+ * ({@see WarnsOnDeprecatedAlias}): they stay registered and print a one-line
+ * warning naming the canonical command when used.
+ *
  * @see https://laravel.com/docs/artisan
  *
  * @api Stable command base (SemVer-covered).
@@ -33,6 +38,7 @@ abstract class Command extends BaseCommand
 {
     use InteractsWithConsoleServices;
     use InteractsWithConsoleWriter;
+    use WarnsOnDeprecatedAlias;
 
     public function __construct()
     {
@@ -63,7 +69,9 @@ abstract class Command extends BaseCommand
      * `::`-namespaced aliases here; otherwise standard Symfony validation
      * applies. An alias must itself be vendor-scoped -- a bare `make:crud`
      * beside `laranail::toolkit.make-crud` hands back exactly the global
-     * collision the namespaced name exists to prevent.
+     * collision the namespaced name exists to prevent. The one exception is
+     * an old name kept for compatibility, which belongs in
+     * `$deprecatedCommandAliases` so it warns ({@see WarnsOnDeprecatedAlias}).
      *
      * @return list<string>
      */

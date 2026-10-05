@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Deprecated command aliases.** A command lists old names in `$deprecatedCommandAliases`;
+  they stay registered, and invoking the command by one prints a single line naming the
+  canonical command before anything runs. The canonical name and `$commandAliases` entries
+  print nothing. The base `Command` composes the new `WarnsOnDeprecatedAlias` trait, and a
+  command on any other base can `use` it directly. This is the one sanctioned way for a bare
+  name to stay registered beside a `laranail::<slug>.<command>` one. See
+  `docs/tools/commands.md`.
+- **`laranail/console::` is the canonical translation namespace**, the composer package name,
+  and `vendor:publish --tag=laranail::console-lang` now publishes into
+  `lang/vendor/laranail/console/`.
+
+### Changed
+
+- The package's own strings are looked up through `laranail/console::`. Overrides made
+  against `laranail-console::` (files under the old `vendor/laranail-console/` directory, or
+  `addLines()` on that namespace) still apply whenever the canonical namespace has no override
+  for the same key.
+- `composer.json` declares `illuminate/http`, which `Tools\Events\CommandEvents` imports, and
+  excludes `laranail/*` from Packagist so the family resolves only through its VCS
+  repositories.
+
+### Deprecated
+
+- **The `laranail-console::` translation namespace.** It is still registered over the same
+  files, so existing `__('laranail-console::…')` calls resolve; use `laranail/console::`.
+  Removal no earlier than the next minor after 0.1.
+
 ## [0.1.4] - 2026-09-27
 
 ### Added

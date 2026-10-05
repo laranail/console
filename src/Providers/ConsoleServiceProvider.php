@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Providers;
 use Override;
 use Illuminate\Support\ServiceProvider;
 use Simtabi\Laranail\Console\ConsoleManager;
+use Simtabi\Laranail\Console\Tools\Support\Translations;
 use Simtabi\Laranail\Console\Exceptions\ConsoleException;
 use Simtabi\Laranail\Console\Tools\Support\ConfigValidator;
 use Simtabi\Laranail\Console\Tools\Providers\ToolsServiceProvider;
@@ -40,18 +41,23 @@ final class ConsoleServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->loadTranslationsFrom(self::LANG_PATH, 'laranail-console');
+        // The canonical namespace is the composer package name, so overrides land in
+        // lang/vendor/laranail/console. The hyphen form is the pre-0.1.5 namespace,
+        // kept over the same files so `__('laranail-console::…')` still resolves;
+        // Translations::get() also honours overrides a host made against it.
+        $this->loadTranslationsFrom(self::LANG_PATH, Translations::NAMESPACE);
+        $this->loadTranslationsFrom(self::LANG_PATH, Translations::LEGACY_NAMESPACE);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 self::CONFIG_PATH => $this->app->configPath('laranail/console.php'),
             ], 'laranail::console-config');
 
-            // vendor/laranail-console, matching the namespace registered above.
-            // Publishing to the lang root put the files where the namespaced
-            // loader never looks, so every published override was ignored.
+            // vendor/laranail/console, matching the canonical namespace above
+            // (Laravel reads overrides from lang/vendor/{namespace}). Publishing to
+            // the lang root put the files where the namespaced loader never looks.
             $this->publishes([
-                self::LANG_PATH => $this->app->langPath('vendor/laranail-console'),
+                self::LANG_PATH => $this->app->langPath('vendor/' . Translations::NAMESPACE),
             ], 'laranail::console-lang');
 
             // Opt-in fail-fast: validate console.* config at boot (console only, so
