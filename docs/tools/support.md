@@ -159,7 +159,7 @@ vocabulary. It has nine cases: `Success`, `Failed`, `Warning`, `Pending`,
 | `symbol(?Capabilities)` | the [Symbols](#symbols) glyph (`✓` / `[OK]`); `●`/`[on]` and `○`/`[off]` for `Active`/`Inactive`; `''` for `Unknown` |
 | `color()` | the formatter colour used in markup (`green`, `red`, …) |
 | `role()` | the palette role (`success`, `danger`, `warning`, `info`, `muted`) for background-painting widgets such as `Badge` |
-| `label()` | the translated label, from `laranail-console::console.status.<case>` |
+| `label()` | the translated label, from `laranail/console::console.status.<case>` |
 
 `Status::fromBool($ok)` maps a boolean to `Success` or `Failed`.
 `TaskStatus::toStatus()` maps a task state onto the same vocabulary. Widgets
@@ -348,7 +348,7 @@ Validate the `console.*` config with [`Console::validateConfig()`](../configurat
 
 ## Lang
 
-Resolves widget strings from the `laranail-console::console.*` translations, honouring
+Resolves widget strings from the `laranail/console::console.*` translations, honouring
 `console.locale` **without** mutating the host app's global locale; falls back to the
 given default (with `:placeholder` interpolation) when no translation exists.
 

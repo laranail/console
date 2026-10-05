@@ -10,7 +10,7 @@ namespace Simtabi\Laranail\Console\Tools\Support;
  * consumer never hand-writes a `match` from a status string to a styled label.
  *
  * Glyphs come from {@see Symbols} (Unicode or ASCII per {@see Capabilities});
- * labels resolve through {@see Lang} under `laranail-console::console.status.*`
+ * labels resolve through {@see Lang} under `laranail/console::console.status.*`
  * with an English fallback, so the enum works outside a booted application.
  *
  * @api Stable enum (SemVer-covered).

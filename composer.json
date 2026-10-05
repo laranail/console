@@ -39,6 +39,7 @@
         "ext-mbstring": "*",
         "illuminate/console": "^13.0",
         "illuminate/contracts": "^13.0",
+        "illuminate/http": "^13.0",
         "illuminate/support": "^13.0",
         "laravel/prompts": "^0.3.18|^1.0",
         "symfony/console": "^8.0"
@@ -148,6 +149,16 @@
         {
             "type": "vcs",
             "url": "https://github.com/laranail/package-tools"
+        },
+        {
+            "type": "composer",
+            "url": "https://repo.packagist.org",
+            "exclude": [
+                "laranail/*"
+            ]
+        },
+        {
+            "packagist.org": false
         }
     ]
 }

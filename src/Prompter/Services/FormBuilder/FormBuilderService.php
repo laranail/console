@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Prompter\Services\FormBuilder;
 use Closure;
 use Laravel\Prompts\FormBuilder as PromptsFormBuilder;
 use Simtabi\Laranail\Console\Prompter\Enums\FieldType;
+use Simtabi\Laranail\Console\Tools\Support\Translations;
 use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Validators\RadioFieldValidator;
@@ -132,7 +133,7 @@ class FormBuilderService
             $isEmpty = in_array($value, [null, '', []], true);
 
             if ($formField->required && $isEmpty) {
-                return $formField->customErrorMessage ?? __('laranail-console::prompter.field_required');
+                return $formField->customErrorMessage ?? Translations::get('prompter.field_required');
             }
 
             if ($isEmpty) {

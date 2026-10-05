@@ -60,8 +60,8 @@ base — one obvious access path, no Middle-Man indirection.
 ## Use the trait (when you can't extend the base)
 
 The base is just `extends Illuminate\Console\Command` + the
-`Tools\Commands\Concerns\InteractsWithConsoleServices` and `InteractsWithConsoleWriter`
-traits. It does **not** compose `SupportsNamespacedNames`; see
+`Tools\Commands\Concerns\InteractsWithConsoleServices`, `InteractsWithConsoleWriter` and
+`WarnsOnDeprecatedAlias` traits. It does **not** compose `SupportsNamespacedNames`; see
 [Namespaced command names](#namespaced-command-names). If your command must
 extend a different base (a vendor command, Laravel's `GeneratorCommand`, …), `use`
 the trait directly to get the **same** full support — `$this->services`, the managed
@@ -235,7 +235,8 @@ the trait alone never reads it.
 
 An alias must itself be vendor-scoped. A bare `make:crud` beside
 `laranail::your-package.make-crud` hands back exactly the flat-registry collision the
-namespaced name exists to prevent.
+namespaced name exists to prevent. The one exception is an old name a command must keep
+answering to, and that goes in `$deprecatedCommandAliases` (below), never here.
 
 ```php
 use Simtabi\Laranail\Console\Tools\Commands\Command;
@@ -256,6 +257,79 @@ final class MakeCrudCommand extends Command
     }
 }
 ```
+
+### Deprecated aliases (`$deprecatedCommandAliases`)
+
+When a command is renamed to the `laranail::<package-slug>.<command>` shape, its old name
+stays registered as a deprecated alias so existing scripts, scheduler entries and
+`Artisan::call()` keep working. Invoking the command by that alias prints one line naming
+the canonical command, before any prompt and before `handle()` runs:
+
+```text
+Deprecated: [make:crud] is a deprecated alias and will be removed in the next minor after 0.1. Use [laranail::your-package.make-crud] instead.
+```
+
+The canonical name and the aliases in `$commandAliases` print nothing. On a real terminal
+the line goes to stderr, so piped output is unchanged.
+
+This is the only way a bare generic name may stay registered beside a vendor-scoped one: the
+warning names the replacement, which makes the alias a migration path rather than a second
+name.
+
+```php
+use Simtabi\Laranail\Console\Tools\Commands\Command;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+
+final class MakeCrudCommand extends Command
+{
+    use SupportsNamespacedNames;
+
+    protected $signature = 'laranail::your-package.make-crud';
+
+    /** @var list<string> */
+    protected array $deprecatedCommandAliases = ['make:crud'];
+
+    public function handle(): int
+    {
+        return self::SUCCESS;
+    }
+}
+```
+
+The base `Command` composes the `Tools\Commands\Concerns\WarnsOnDeprecatedAlias` trait.
+A command on any other base gets the same behaviour by using the trait itself, and the
+trait registers the deprecated aliases on its own, so no `$commandAliases` support is needed:
+
+```php
+use Illuminate\Console\Command;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\WarnsOnDeprecatedAlias;
+use Simtabi\Laranail\Console\Tools\Commands\Concerns\SupportsNamespacedNames;
+
+final class SyncCommand extends Command
+{
+    use SupportsNamespacedNames;
+    use WarnsOnDeprecatedAlias;
+
+    protected $signature = 'laranail::your-package.sync';
+
+    /** @var list<string> */
+    protected array $deprecatedCommandAliases = ['your-package:sync'];
+
+    public function handle(): int
+    {
+        return self::SUCCESS;
+    }
+}
+```
+
+| Member | What it does |
+|---|---|
+| `getAliases()` | every alias, the deprecated ones included, so the application registers them all |
+| `deprecatedCommandAliases()` | the declared deprecated aliases, without the command's own name |
+| `initialize()` | prints the warning when the command was invoked by a deprecated alias |
+
+A command that overrides `initialize()` must call `parent::initialize()`, or the warning
+never prints. The behaviour is pinned by `tests/Tools/Unit/Commands/DeprecatedAliasTest.php`.
 
 ## `laranail::console.check`
 

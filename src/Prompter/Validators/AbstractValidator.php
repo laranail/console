@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Prompter\Validators;
 
+use Simtabi\Laranail\Console\Tools\Support\Translations;
 use Simtabi\Laranail\Console\Prompter\Contracts\ValidatorInterface;
 
 /**
@@ -90,7 +91,7 @@ abstract class AbstractValidator implements ValidatorInterface
     protected function resolvedMessage(): string
     {
         return $this->customMessage
-            ?? __('laranail-console::validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
+            ?? Translations::get('validators.' . $this->messageKey, $this->replace, $this->locale ?? self::configuredLocale());
     }
 
     /**
