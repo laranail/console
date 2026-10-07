@@ -5,6 +5,23 @@ All notable changes to `laranail/console` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **Deprecated-alias warnings went to stdout, not stderr.** `Illuminate\Console\Command::run()`
+  wraps the terminal output in an `OutputStyle` before `initialize()` runs, and `OutputStyle` is
+  not a `ConsoleOutputInterface`, so `WarnsOnDeprecatedAlias` never found the error stream and
+  the warning became the first line of stdout. A script parsing a bare alias's output got an
+  extra line. The warning now goes to stderr on a real terminal, as documented; under
+  `Artisan::call()`, which has no separate error stream, it is still part of the captured
+  output.
+- **`ConsoleWriter` errors went to stdout inside a command**, for the same reason: `error()`,
+  `danger()` and `toStderr()` are routed to stderr only when the writer can see a console
+  output, and the writer `InteractsWithConsoleWriter` builds is handed the command's
+  `OutputStyle`. Both now resolve the error stream through `Tools\Support\ErrorOutput`, which
+  unwraps the style first.
+
 ## [0.1.5] - 2026-10-05
 
 ### Added
@@ -180,4 +197,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial public release.
 
-[Unreleased]: https://github.com/laranail/console/compare/v0.1.4...HEAD
+[Unreleased]: https://github.com/laranail/console/compare/v0.1.5...HEAD

@@ -50,7 +50,9 @@ unchanged.
 
 Ready-to-use, coloured glyph + message (rendered via
 [`StatusLine`](widgets.md); glyphs degrade to ASCII without Unicode). `error()` and
-`danger()` are written to **stderr**.
+`danger()` are written to **stderr** — including from a command's own writer, whose output
+Laravel wraps in an `OutputStyle`. An output with no error stream, such as the buffer
+`Artisan::call()` uses, receives them instead.
 
 ```php
 $w->success('Deployed');   // ✓ green   ([OK] without Unicode)
