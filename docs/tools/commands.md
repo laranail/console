@@ -270,7 +270,8 @@ Deprecated: [make:crud] is a deprecated alias and will be removed in the next mi
 ```
 
 The canonical name and the aliases in `$commandAliases` print nothing. On a real terminal
-the line goes to stderr, so piped output is unchanged.
+the line goes to stderr, so piped output is unchanged. `Artisan::call()` captures into a single
+buffer with no error stream, so there the line is part of `Artisan::output()`.
 
 This is the only way a bare generic name may stay registered beside a vendor-scoped one: the
 warning names the replacement, which makes the alias a migration path rather than a second

@@ -8,9 +8,9 @@ use Simtabi\Laranail\Console\Tools\Support\Emoji;
 use Simtabi\Laranail\Console\Tools\Support\Symbols;
 use Symfony\Component\Console\Output\OutputInterface;
 use Simtabi\Laranail\Console\Tools\Widgets\StatusLine;
+use Simtabi\Laranail\Console\Tools\Support\ErrorOutput;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 
@@ -362,9 +362,7 @@ class ConsoleWriter
     private function status(string $status, array $lines): self
     {
         $forceErr = $status === 'error' || $status === 'danger';
-        $stream = ($forceErr || $this->stderr) && $this->output instanceof ConsoleOutputInterface
-            ? $this->output->getErrorOutput()
-            : $this->output;
+        $stream = $forceErr || $this->stderr ? ErrorOutput::of($this->output) : $this->output;
 
         $statusLine = StatusLine::make($this->caps());
 
@@ -396,11 +394,7 @@ class ConsoleWriter
 
     private function stream(): OutputInterface
     {
-        if ($this->stderr && $this->output instanceof ConsoleOutputInterface) {
-            return $this->output->getErrorOutput();
-        }
-
-        return $this->output;
+        return $this->stderr ? ErrorOutput::of($this->output) : $this->output;
     }
 
     private function formatter(): OutputFormatterInterface

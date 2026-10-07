@@ -6,7 +6,7 @@ namespace Simtabi\Laranail\Console\Tools\Commands\Concerns;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\ErrorOutput;
 
 /**
  * Keeps a command's old names working as DEPRECATED aliases that say so when used.
@@ -37,7 +37,9 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
  * token for `php artisan`, `Artisan::call()` and `$this->call()` alike, while `getName()` is
  * always the canonical name. Symfony calls `initialize()` after binding the input and before
  * `interact()`, so the warning prints before any prompt. On a real terminal it goes to stderr,
- * so piped output is unchanged.
+ * so piped output is unchanged: the output reaching `initialize()` is Laravel's `OutputStyle`
+ * wrapper, which {@see ErrorOutput} sees through. Under `Artisan::call()` there is no separate
+ * error stream, and the warning is captured with the rest of the output.
  *
  * @api Stable extension point (SemVer-covered).
  */
@@ -87,9 +89,7 @@ trait WarnsOnDeprecatedAlias
             return;
         }
 
-        $target = $output instanceof ConsoleOutputInterface ? $output->getErrorOutput() : $output;
-
-        $target->writeln(sprintf(
+        ErrorOutput::of($output)->writeln(sprintf(
             '<comment>Deprecated:</comment> [%s] is a deprecated alias and will be removed in the next minor after 0.1. Use [%s] instead.',
             $invokedAs,
             (string) $this->getName(),
