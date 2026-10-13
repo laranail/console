@@ -26,8 +26,18 @@ final class ErrorOutput
 {
     public static function of(OutputInterface $output): OutputInterface
     {
-        $inner = $output instanceof OutputStyle ? $output->getOutput() : $output;
+        $inner = self::unwrap($output);
 
         return $inner instanceof ConsoleOutputInterface ? $inner->getErrorOutput() : $output;
+    }
+
+    /**
+     * The output a command's {@see OutputStyle} wraps, or the output itself when it is not one.
+     *
+     * The one implementation of the unwrap; {@see LiveOutput} uses it too.
+     */
+    public static function unwrap(OutputInterface $output): OutputInterface
+    {
+        return $output instanceof OutputStyle ? $output->getOutput() : $output;
     }
 }
