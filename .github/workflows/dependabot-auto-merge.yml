@@ -34,8 +34,25 @@ jobs:
         id: meta
         uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
 
+      # The merge steps below call `gh pr merge --auto`, which GitHub refuses outright ("Auto merge
+      # is not allowed for this repository") while the repository setting is off. That failed this
+      # job on every Dependabot pull request and showed a red check on each one. Read the setting
+      # first: when it is off, say so and leave the pull request for a person to merge.
+      - name: Check that the repository allows auto-merge
+        id: repo
+        run: |
+          allowed=$(gh api "repos/$REPO" --jq .allow_auto_merge)
+          echo "allowed=$allowed" >> "$GITHUB_OUTPUT"
+          if [ "$allowed" != "true" ]; then
+            echo "::notice title=Auto-merge is off for this repository::Leaving $PR_URL for a manual merge. Enable 'Allow auto-merge' in the repository settings to have minor and patch updates merge themselves."
+          fi
+        env:
+          REPO: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Enable auto-merge for patch & minor updates
-        if: ${{ steps.meta.outputs.update-type == 'version-update:semver-patch' || steps.meta.outputs.update-type == 'version-update:semver-minor' }}
+        if: ${{ steps.repo.outputs.allowed == 'true' && (steps.meta.outputs.update-type == 'version-update:semver-patch' || steps.meta.outputs.update-type == 'version-update:semver-minor') }}
         run: gh pr merge --auto --merge --delete-branch "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
