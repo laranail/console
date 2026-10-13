@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **`Prompter::canPrompt(?InputInterface $input = null)`** says whether a prompt asked now can
+  reach a person: not under a non-interactive input, yes when prompts are answered through
+  Laravel's question-helper fallback (Windows, the test harness), and otherwise only when stdin
+  is a terminal. Without a terminal laravel/prompts returns each prompt's default instead of
+  asking, so a prompt with no usable default fails with "Required."; a command can check first
+  and name its non-interactive alternative. A package no longer has to reach into
+  `Laravel\Prompts\SelectPrompt` to ask.
+- **`InteractsWithConsole::withPromptFallback()`** turns on Laravel's fakeable prompt fallback,
+  for a test that switches the app out of the `testing` environment and still answers a
+  command's prompts with `expectsQuestion()`.
+
 ### Fixed
 
 - **`Live` and `TaskProgress` never rendered live inside a command.** Both tested

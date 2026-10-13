@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Simtabi\Laranail\Console\Tools\Tests\Testing;
 
+use ReflectionProperty;
+use Laravel\Prompts\Prompt;
 use PHPUnit\Framework\TestCase;
 use Simtabi\Laranail\Console\Tools\Widgets\Box;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
@@ -44,5 +46,20 @@ final class InteractsWithConsoleTest extends TestCase
 
         Capabilities::clearFake();
         self::assertIsBool(Capabilities::detect()->supportsUnicode());
+    }
+
+    public function test_with_prompt_fallback_turns_on_the_fakeable_fallback(): void
+    {
+        $flag = new ReflectionProperty(Prompt::class, 'shouldFallback');
+        $before = $flag->getValue();
+        $flag->setValue(null, false);
+
+        try {
+            $this->withPromptFallback();
+
+            self::assertTrue($flag->getValue());
+        } finally {
+            $flag->setValue(null, $before);
+        }
     }
 }

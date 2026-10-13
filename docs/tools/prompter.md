@@ -39,6 +39,37 @@ prompter()->context()->warning('Heads up');
 prompter()->number('Port', default: 8080)->getResult();   // newer prompts helpers too
 ```
 
+### Checking that a prompt can be answered
+
+`Prompter::canPrompt()` says whether a prompt asked now can reach a person. Without a
+terminal, laravel/prompts stops asking and returns each prompt's default, so a prompt
+with no usable default fails with "Required.". Check before a loop of prompts and point
+the user at the non-interactive alternative:
+
+```php
+use Simtabi\Laranail\Console\Prompter\Prompter;
+
+public function handle(): int
+{
+    if (! Prompter::canPrompt($this->input)) {
+        $this->error('acme:setup needs an interactive terminal. Use acme:setup:apply instead.');
+
+        return self::INVALID;
+    }
+
+    $driver = Prompter::create()->select('Driver', ['mysql', 'pgsql'])->getResult();
+    // ...
+}
+```
+
+| Situation | Result |
+|---|---|
+| `$input` is non-interactive (`--no-interaction`, or no terminal on stdin) | `false` |
+| Prompts are answered through Laravel's question-helper fallback (Windows, the test harness) | `true` |
+| Otherwise | whether stdin is a terminal |
+
+`$input` is optional; without it only the last two rows apply.
+
 ## Forms
 
 `prompter()->form()` returns a raw `Laravel\Prompts\FormBuilder`. For richer,

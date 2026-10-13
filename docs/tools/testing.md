@@ -56,6 +56,24 @@ $name = Console::prompter()->text('Your name?')->getResult();
 self::assertSame('Imani', $name);
 ```
 
+### Answering a command's prompts outside the `testing` environment
+
+`Illuminate\Console\Command` routes prompts through its fakeable question-helper
+fallback only on Windows or while the app runs unit tests. A test that switches the
+app to another environment loses it, and `expectsQuestion()` then has nothing to
+answer. `withPromptFallback()` turns the fallback back on:
+
+```php
+$this->app['env'] = 'production';
+$this->withPromptFallback();
+
+$this->artisan('acme:setup')
+    ->expectsQuestion('Driver', 'mysql')
+    ->assertExitCode(0);
+```
+
+laravel/prompts keeps the flag for the rest of the process; it cannot be turned off.
+
 ## Without the trait
 
 The same primitives are available directly:

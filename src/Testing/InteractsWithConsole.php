@@ -47,6 +47,21 @@ trait InteractsWithConsole
         Prompt::fake($keys);
     }
 
+    /**
+     * Route prompts through Laravel's fakeable question-helper fallback, so a
+     * command's prompts can be answered with `expectsQuestion()` and friends.
+     *
+     * `Illuminate\Console\Command` enables the fallback itself only on Windows or
+     * while the app runs unit tests, so a test that switches the app to another
+     * environment (`production`, say) needs this to keep its prompts fakeable.
+     * laravel/prompts keeps the flag for the rest of the process: it cannot be
+     * turned back off.
+     */
+    protected function withPromptFallback(): void
+    {
+        Prompt::fallbackWhen(true);
+    }
+
     #[After]
     protected function restoreConsoleCapabilities(): void
     {

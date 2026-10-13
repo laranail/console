@@ -6,10 +6,12 @@ namespace Simtabi\Laranail\Console\Prompter;
 
 use Closure;
 use Laravel\Prompts\FormBuilder;
+use Laravel\Prompts\SelectPrompt;
 
 use function Laravel\Prompts\form;
 
 use Illuminate\Support\Collection;
+use Symfony\Component\Console\Input\InputInterface;
 use Simtabi\Laranail\Console\Prompter\Services\PromptService;
 use Simtabi\Laranail\Console\Prompter\Exceptions\PrompterException;
 use Simtabi\Laranail\Console\Prompter\Services\Components\ContextBuilderService;
@@ -107,6 +109,35 @@ class Prompter
     public static function create(): self
     {
         return new self;
+    }
+
+    /**
+     * Whether a prompt asked now can reach a person.
+     *
+     * - Not when `$input` is non-interactive: `--no-interaction`, or Symfony found
+     *   no terminal on stdin.
+     * - Yes when prompts are answered through Laravel's question-helper fallback,
+     *   which `Illuminate\Console\Command` turns on for Windows and under the test
+     *   harness. Laravel registers that fallback for every prompt together, so
+     *   `SelectPrompt` answers for all of them.
+     * - Otherwise only when stdin is a terminal. That is the check laravel/prompts
+     *   makes before it stops asking and returns each prompt's default instead, so a
+     *   prompt with no usable default fails with "Required.".
+     *
+     * Ask this before a loop of prompts, and fail with a message naming the
+     * non-interactive alternative when it is false.
+     */
+    public static function canPrompt(?InputInterface $input = null): bool
+    {
+        if ($input instanceof InputInterface && ! $input->isInteractive()) {
+            return false;
+        }
+
+        if (SelectPrompt::shouldFallback()) {
+            return true;
+        }
+
+        return defined('STDIN') && stream_isatty(STDIN);
     }
 
     /**
