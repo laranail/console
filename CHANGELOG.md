@@ -5,6 +5,25 @@ All notable changes to `laranail/console` are documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **`Live` and `TaskProgress` never rendered live inside a command.** Both tested
+  `$output instanceof ConsoleOutputInterface`, and `Illuminate\Console\Command::run()` hands
+  `handle()` an `OutputStyle`, which is not one, so a command's spinners, animated bars and task
+  trees always took the static path even on a terminal. They now resolve the console through the
+  new internal `Tools\Support\LiveOutput`, which unwraps the style with
+  `ErrorOutput::unwrap()` (the one implementation of the unwrap, now shared with
+  `ErrorOutput::of()`).
+
+### Changed
+
+- **Live rendering now also requires a decorated output.** An undecorated console output
+  (`--no-ansi`, `NO_COLOR` on a TTY) takes the static path instead of receiving cursor-control
+  sequences, the same rule Symfony's `ProgressBar` applies before overwriting. A TTY is still
+  required, as before, through `Capabilities::isInteractive()`.
+
 ## [0.1.6] - 2026-10-12
 
 ### Fixed

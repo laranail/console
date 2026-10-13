@@ -45,8 +45,10 @@ final class Live implements Interactive
     {
         $text = implode("\n", $this->lines($content));
 
-        if ($this->capabilities->isInteractive() && $this->output instanceof ConsoleOutputInterface) {
-            $this->section ??= $this->output->section();
+        $console = $this->liveOutput();
+
+        if ($console instanceof ConsoleOutputInterface) {
+            $this->section ??= $console->section();
             $this->section->overwrite($text);
         } else {
             $this->output->writeln($text);
@@ -101,7 +103,16 @@ final class Live implements Interactive
 
     private function canAnimate(): bool
     {
-        return $this->capabilities->isInteractive() && $this->output instanceof ConsoleOutputInterface;
+        return $this->liveOutput() instanceof ConsoleOutputInterface;
+    }
+
+    /**
+     * The console to redraw on, or null for a static render: a TTY, and a decorated console
+     * output seen through the `OutputStyle` a command hands out ({@see LiveOutput}).
+     */
+    private function liveOutput(): ?ConsoleOutputInterface
+    {
+        return $this->capabilities->isInteractive() ? LiveOutput::of($this->output) : null;
     }
 
     /**

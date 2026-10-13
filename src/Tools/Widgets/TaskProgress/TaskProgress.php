@@ -7,6 +7,7 @@ namespace Simtabi\Laranail\Console\Tools\Widgets\TaskProgress;
 use Simtabi\Laranail\Console\Tools\Support\Lang;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Simtabi\Laranail\Console\Tools\Support\LiveOutput;
 use Simtabi\Laranail\Console\Tools\Support\TimeFormat;
 use Simtabi\Laranail\Console\Tools\Support\Capabilities;
 use Simtabi\Laranail\Console\Tools\Support\DisplayWidth;
@@ -27,8 +28,6 @@ final class TaskProgress
 
     private readonly Capabilities $capabilities;
 
-    private readonly bool $interactive;
-
     private ?ConsoleSectionOutput $section = null;
 
     /** @var array<int, TaskStatus> last status emitted on a non-TTY, per task */
@@ -38,10 +37,11 @@ final class TaskProgress
     {
         $this->output = $output ?? new ConsoleOutput;
         $this->capabilities = $capabilities ?? Capabilities::detect();
-        $this->interactive = $this->capabilities->isInteractive() && $this->output instanceof ConsoleOutputInterface;
+        // LiveOutput sees through the OutputStyle a command hands out, and requires decoration.
+        $console = $this->capabilities->isInteractive() ? LiveOutput::of($this->output) : null;
 
-        if ($this->interactive && $this->output instanceof ConsoleOutputInterface) {
-            $this->section = $this->output->section();
+        if ($console instanceof ConsoleOutputInterface) {
+            $this->section = $console->section();
         }
     }
 
