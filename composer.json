@@ -57,7 +57,7 @@
         "rector/rector": "^2.5.8",
         "roave/security-advisories": "dev-latest",
         "symfony/tui": "^8.2@dev",
-        "laranail/package-tools": "^0.1"
+        "laranail/package-tools": "^0.1.10"
     },
     "suggest": {
         "laranail/emojis": "The full Unicode emoji catalogue: Console::emoji() resolves every shortcode, not just its built-in map, and DisplayWidth measures ZWJ/flag/skin-tone sequences as two columns.",

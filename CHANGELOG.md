@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- A guard now keeps literal credentials out of the tests, and every credential the tests generate is named with a single-word purpose, so secret scanning has nothing to report. `laranail/package-tools` in `require-dev` is now `^0.1.10`, the first release with the purpose check.
+
 ## [0.1.7] - 2026-10-13
 
 ### Added
