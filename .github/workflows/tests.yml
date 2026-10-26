@@ -173,6 +173,12 @@ jobs:
           extensions: dom, curl, libxml, mbstring, zip, fileinfo, pdo, sqlite3, pdo_sqlite
           coverage: none
           ini-values: error_reporting=E_ALL
+        env:
+          # The Windows and macOS images ship PHP, and setup-php reuses that copy unless `update`
+          # is set (an env var in setup-php 2.x, not an input). A security release then lags there,
+          # and roave/security-advisories refuses to install on the vulnerable patch (8.5.11 vs
+          # 8.5.12, 2026-10-26). Linux installs fresh, so it is left alone.
+          update: ${{ runner.os != 'Linux' }}
 
       - name: Install dependencies
         run: composer update --prefer-stable --no-interaction --no-progress
