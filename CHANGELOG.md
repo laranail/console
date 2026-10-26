@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Windows CI installs the current PHP patch.** setup-php reused the PHP the Windows image
+  ships (8.5.11) after 8.5.12 fixed a security issue, so `roave/security-advisories` refused
+  to install and the Windows leg failed on every pull request. The cross-platform job now
+  sets setup-php's `update` (an environment variable) off Linux, so it upgrades to the latest patch.
+
 ## [0.1.8] - 2026-10-20
 
 ### Changed
