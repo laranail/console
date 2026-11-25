@@ -58,7 +58,7 @@ jobs:
             echo "::error::CHANGELOG.md still has entries under [Unreleased]. With one moving tag they are what this release ships: fold them into [$version] before moving the tag." >&2
             exit 1
           fi
-          notes=$(awk -v v="$version" '
+          notes=$(awk -v v="${version%%-*}" '
             $0 ~ "^## \\[" v "\\]" { f=1; next }
             f && /^## \[/ { exit }
             f { print }
@@ -78,6 +78,8 @@ jobs:
       - name: Create GitHub release
         uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3 # v3.0.4
         with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          make_latest: ${{ !contains(github.ref_name, '-') }}
           generate_release_notes: true
           body: ${{ steps.changelog.outputs.body }}
           files: console.cdx.json
